@@ -1,7 +1,7 @@
 'use client';
 
-import { Header } from "@/components/Header";
-import { EnhancedFooter } from "@/components/EnhancedFooter";
+import Header from "@/components/Header";
+import EnhancedFooter from "@/components/EnhancedFooter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Send, HelpCircle } from "lucide-react";

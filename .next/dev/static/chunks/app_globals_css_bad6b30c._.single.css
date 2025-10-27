@@ -1254,6 +1254,11 @@ body {
   margin-bottom: .25rem;
 }
 
+.my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
 .-ml-4 {
   margin-left: -1rem;
 }
@@ -1787,6 +1792,10 @@ body {
 
 .min-w-\[var\(--radix-select-trigger-width\)\] {
   min-width: var(--radix-select-trigger-width);
+}
+
+.min-w-\[140px\] {
+  min-width: 140px;
 }
 
 .max-w-2xl {
@@ -4881,6 +4890,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .sm\:justify-end {
     justify-content: flex-end;
+  }
+
+  .sm\:justify-center {
+    justify-content: center;
   }
 
   .sm\:gap-2\.5 {
