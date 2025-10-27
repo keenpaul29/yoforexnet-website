@@ -31,7 +31,7 @@ export function CRMTab() {
     queryKey: ["/api/me/customers", filters],
   });
 
-  const { data: statsData, isLoading: statsLoading } = useQuery({
+  const { data: statsData, isLoading: statsLoading } = useQuery<{ retentionRate?: number }>({
     queryKey: ["/api/me/customer-stats"],
   });
 

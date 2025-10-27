@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import UserProfileClient from './UserProfileClient';
-import type { User, Badge as BadgeType, Content, ForumThread } from '@shared/schema';
+import ProfileClient from './ProfileClient';
 
 // Express API base URL
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
@@ -9,14 +8,21 @@ const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:500
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const { username } = await params;
   try {
-    const res = await fetch(`${EXPRESS_URL}/api/users/username/${username}`, { cache: 'no-store' });
+    const res = await fetch(`${EXPRESS_URL}/api/user/${username}/profile`, { cache: 'no-store' });
     if (!res.ok) {
       return {
         title: 'User Not Found | YoForex Community',
       };
     }
 
-    const user: User = await res.json();
+    const profileData = await res.json();
+    const user = profileData?.user;
+    
+    if (!user) {
+      return {
+        title: 'User Not Found | YoForex Community',
+      };
+    }
     
     return {
       title: `${user.username}'s Profile | YoForex Community`,
@@ -44,64 +50,25 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
 export default async function UserProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
   
-  // Fetch user with error handling that doesn't trigger Next.js 404
-  let user: User | null = null;
+  // Fetch profile data from the comprehensive profile endpoint
+  let profileData = null;
   try {
-    const userRes = await fetch(`${EXPRESS_URL}/api/users/username/${username}`, { 
+    const profileRes = await fetch(`${EXPRESS_URL}/api/user/${username}/profile`, { 
       cache: 'no-store',
     });
-    if (userRes.ok) {
-      user = await userRes.json();
+    if (profileRes.ok) {
+      profileData = await profileRes.json();
     }
   } catch (error) {
-    // Swallow error - we'll show custom error card
-    user = null;
+    // Swallow error - ProfileClient will show custom error card
+    profileData = null;
   }
 
-  // If user not found, return Client Component with null user to show custom error card
-  if (!user) {
-    return (
-      <UserProfileClient
-        username={username}
-        initialUser={null}
-        initialBadges={[]}
-        initialContent={[]}
-        initialThreads={[]}
-      />
-    );
-  }
-
-  // Fetch all additional data in parallel
-  const [badgesRes, contentRes, threadsRes] = await Promise.all([
-    // Fetch user badges
-    user.id 
-      ? fetch(`${EXPRESS_URL}/api/users/${user.id}/badges`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-    
-    // Fetch user's content (EAs/Indicators)
-    user.id 
-      ? fetch(`${EXPRESS_URL}/api/user/${user.id}/content`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-    
-    // Fetch user's threads
-    user.id 
-      ? fetch(`${EXPRESS_URL}/api/user/${user.id}/threads`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-  ]);
-
-  // Parse responses
-  const badges = badgesRes?.ok ? await badgesRes.json() : [];
-  const content = contentRes?.ok ? await contentRes.json() : [];
-  const threads = threadsRes?.ok ? await threadsRes.json() : [];
-
-  // Pass all data to Client Component
+  // Pass profile data to Client Component
   return (
-    <UserProfileClient
+    <ProfileClient
       username={username}
-      initialUser={user}
-      initialBadges={badges}
-      initialContent={content}
-      initialThreads={threads}
+      initialData={profileData}
     />
   );
 }

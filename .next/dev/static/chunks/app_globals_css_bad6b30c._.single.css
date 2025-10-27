@@ -1311,6 +1311,10 @@ body {
   bottom: 0;
 }
 
+.-bottom-1 {
+  bottom: -.25rem;
+}
+
 .-bottom-12 {
   bottom: -3rem;
 }
@@ -1538,6 +1542,10 @@ body {
   margin-left: -1rem;
 }
 
+.-mt-16 {
+  margin-top: -4rem;
+}
+
 .-mt-4 {
   margin-top: -1rem;
 }
@@ -1624,6 +1632,10 @@ body {
 
 .mt-24 {
   margin-top: 6rem;
+}
+
+.mt-3 {
+  margin-top: .75rem;
 }
 
 .mt-4 {
@@ -2091,6 +2103,10 @@ body {
 
 .min-w-\[40px\] {
   min-width: 40px;
+}
+
+.min-w-\[80px\] {
+  min-width: 80px;
 }
 
 .min-w-\[8rem\] {
@@ -2589,6 +2605,10 @@ body {
   border-width: 2px;
 }
 
+.border-4 {
+  border-width: 4px;
+}
+
 .border-\[1\.5px\] {
   border-width: 1.5px;
 }
@@ -3039,8 +3059,16 @@ body {
   background-color: #eab3081a;
 }
 
+.bg-\[url\(\'\/pattern\.svg\'\)\] {
+  background-image: url("/pattern.svg");
+}
+
 .bg-gradient-to-br {
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
 .from-blue-500 {
@@ -3061,10 +3089,31 @@ body {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-primary\/10 {
+  --tw-gradient-from: hsl(var(--primary) / .1) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-primary\/20 {
+  --tw-gradient-from: hsl(var(--primary) / .2) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .from-yellow-500 {
   --tw-gradient-from: #eab308 var(--tw-gradient-from-position);
   --tw-gradient-to: #eab30800 var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.via-primary\/10 {
+  --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--primary) / .1) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+.to-accent\/10 {
+  --tw-gradient-to: hsl(var(--accent) / .1) var(--tw-gradient-to-position);
 }
 
 .to-blue-600 {
@@ -3077,6 +3126,10 @@ body {
 
 .to-orange-700 {
   --tw-gradient-to: #c2410c var(--tw-gradient-to-position);
+}
+
+.to-primary\/10 {
+  --tw-gradient-to: hsl(var(--primary) / .1) var(--tw-gradient-to-position);
 }
 
 .to-yellow-600 {
@@ -3170,6 +3223,11 @@ body {
   padding-right: 1.25rem;
 }
 
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 .px-8 {
   padding-left: 2rem;
   padding-right: 2rem;
@@ -3232,8 +3290,16 @@ body {
   padding-bottom: 1rem;
 }
 
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
 .pl-10 {
   padding-left: 2.5rem;
+}
+
+.pl-11 {
+  padding-left: 2.75rem;
 }
 
 .pl-2\.5 {
@@ -3278,6 +3344,10 @@ body {
 
 .pt-1 {
   padding-top: .25rem;
+}
+
+.pt-16 {
+  padding-top: 4rem;
 }
 
 .pt-2 {
@@ -3333,6 +3403,11 @@ body {
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .text-\[0\.8rem\] {
@@ -3647,6 +3722,10 @@ body {
   opacity: 0;
 }
 
+.opacity-10 {
+  opacity: .1;
+}
+
 .opacity-40 {
   opacity: .4;
 }
@@ -3752,6 +3831,11 @@ body {
 
 .ring-offset-background {
   --tw-ring-offset-color: hsl(var(--background) / 1);
+}
+
+.grayscale {
+  --tw-grayscale: grayscale(100%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .filter {
@@ -5304,6 +5388,10 @@ input[type="search"]::-webkit-search-cancel-button {
     max-width: 24rem;
   }
 
+  .sm\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .sm\:flex-row {
     flex-direction: row;
   }
@@ -5312,12 +5400,24 @@ input[type="search"]::-webkit-search-cancel-button {
     flex-direction: column;
   }
 
+  .sm\:items-start {
+    align-items: flex-start;
+  }
+
+  .sm\:items-center {
+    align-items: center;
+  }
+
   .sm\:justify-end {
     justify-content: flex-end;
   }
 
   .sm\:justify-center {
     justify-content: center;
+  }
+
+  .sm\:justify-between {
+    justify-content: space-between;
   }
 
   .sm\:gap-2\.5 {
@@ -5376,6 +5476,10 @@ input[type="search"]::-webkit-search-cancel-button {
   .sm\:py-8 {
     padding-top: 2rem;
     padding-bottom: 2rem;
+  }
+
+  .sm\:pt-0 {
+    padding-top: 0;
   }
 
   .sm\:text-left {

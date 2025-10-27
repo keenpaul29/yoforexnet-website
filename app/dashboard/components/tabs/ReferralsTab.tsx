@@ -67,6 +67,7 @@ export function ReferralsTab() {
           trendLabel="this month"
           loading={statsLoading}
           color="text-blue-500"
+          data-testid="kpi-total-referrals"
         />
         <KPICard
           title="Total Earnings"
@@ -75,6 +76,7 @@ export function ReferralsTab() {
           trend={18.5}
           loading={statsLoading}
           color="text-green-500"
+          data-testid="kpi-referral-total-earnings"
         />
         <KPICard
           title="This Month"
@@ -82,6 +84,7 @@ export function ReferralsTab() {
           icon={TrendingUp}
           loading={statsLoading}
           color="text-purple-500"
+          data-testid="kpi-referral-month-earnings"
         />
         <KPICard
           title="Avg per User"
@@ -89,6 +92,7 @@ export function ReferralsTab() {
           icon={DollarSign}
           loading={statsLoading}
           color="text-orange-500"
+          data-testid="kpi-referral-avg-per-user"
         />
       </div>
 

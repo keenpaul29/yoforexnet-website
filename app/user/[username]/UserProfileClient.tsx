@@ -90,10 +90,8 @@ export default function UserProfileClient({
     mutationFn: async () => {
       if (!currentUser?.id) throw new Error("You must be logged in to follow");
       if (!userData?.id) throw new Error("User not loaded");
-      const res = await apiRequest("POST", `/api/users/${userData.id}/follow`, {
-        followerId: currentUser.id,
-        followingId: userData.id,
-      });
+      // Server gets followerId from authenticated session, not from body
+      const res = await apiRequest("POST", `/api/users/${userData.id}/follow`, {});
       return res.json();
     },
     onSuccess: () => {
@@ -117,10 +115,8 @@ export default function UserProfileClient({
     mutationFn: async () => {
       if (!currentUser?.id) throw new Error("You must be logged in to unfollow");
       if (!userData?.id) throw new Error("User not loaded");
-      const res = await apiRequest("DELETE", `/api/users/${userData.id}/follow`, {
-        followerId: currentUser.id,
-        followingId: userData.id,
-      });
+      // Server gets followerId from authenticated session, not from body
+      const res = await apiRequest("DELETE", `/api/users/${userData.id}/unfollow`, {});
       return res.json();
     },
     onSuccess: () => {

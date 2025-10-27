@@ -59,10 +59,7 @@ export function MarketingTab() {
 
   const createCampaignMutation = useMutation({
     mutationFn: async (campaignData: any) => {
-      return await apiRequest("/api/campaigns", {
-        method: "POST",
-        body: JSON.stringify(campaignData),
-      });
+      return await apiRequest("POST", "/api/campaigns", campaignData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/me/campaigns"] });
@@ -190,7 +187,7 @@ export function MarketingTab() {
                   id="campaign-name"
                   placeholder="e.g., Summer Sale 2024"
                   value={newCampaign.name}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setNewCampaign({ ...newCampaign, name: e.target.value })
                   }
                   data-testid="input-campaign-name"
@@ -200,7 +197,7 @@ export function MarketingTab() {
                 <Label htmlFor="campaign-type">Type</Label>
                 <Select
                   value={newCampaign.type}
-                  onValueChange={(value) =>
+                  onValueChange={(value: string) =>
                     setNewCampaign({ ...newCampaign, type: value })
                   }
                 >
@@ -220,7 +217,7 @@ export function MarketingTab() {
                   id="campaign-subject"
                   placeholder="e.g., Get 50% off all EAs this week!"
                   value={newCampaign.subject}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setNewCampaign({ ...newCampaign, subject: e.target.value })
                   }
                   data-testid="input-campaign-subject"
@@ -233,7 +230,7 @@ export function MarketingTab() {
                   placeholder="Write your campaign message..."
                   rows={5}
                   value={newCampaign.content}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setNewCampaign({ ...newCampaign, content: e.target.value })
                   }
                   data-testid="textarea-campaign-content"

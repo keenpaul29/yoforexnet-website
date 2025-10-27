@@ -3007,41 +3007,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== USER PROFILES ENDPOINTS =====
-  
-  // Get extended user profile
-  app.get("/api/user/:userId/profile", async (req, res) => {
-    const user = await storage.getUser(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    // Get additional profile data
-    const badges = await storage.getUserBadges(req.params.userId);
-    
-    // TODO: Get following/followers count from storage
-    const followersCount = 0;
-    const followingCount = 0;
-    
-    // Get content stats
-    const userContent = await storage.getUserContent(req.params.userId);
-    const contentCount = userContent.length;
-    
-    // Get thread stats (TODO: optimize with dedicated storage method)
-    const threads = await storage.listForumThreads({ limit: 1000 });
-    const userThreads = threads.filter(t => t.authorId === req.params.userId);
-    const threadCount = userThreads.length;
-    
-    res.json({
-      ...user,
-      badges,
-      stats: {
-        followersCount,
-        followingCount,
-        contentCount,
-        threadCount,
-      },
-    });
-  });
+  // NOTE: The /api/user/:username/profile route is defined later in this file (around line 3474)
+  // It handles fetching user profiles by username
   
   // Update user profile
   app.patch("/api/user/profile", isAuthenticated, async (req, res) => {
@@ -3473,11 +3440,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/user/:username/profile", async (req, res) => {
     try {
-      const profile = await storage.getProfileByUsername(req.params.username);
-      if (!profile) {
-        return res.status(404).json({ error: "Profile not found" });
+      const username = req.params.username;
+      
+      // Get user by username
+      const user = await storage.getUserByUsername(username);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
       }
-      res.json(profile);
+
+      // Check if authenticated user is following this user
+      let isFollowing = false;
+      if (req.isAuthenticated()) {
+        const claims = (req.user as any)?.claims;
+        if (claims?.sub && claims.sub !== user.id) {
+          const follow = await storage.getFollow(claims.sub, user.id);
+          isFollowing = !!follow;
+        }
+      }
+
+      // Fetch all profile data in parallel
+      const [badges, content, threads, reviews] = await Promise.all([
+        storage.getUserBadges(user.id).catch(() => []),
+        storage.getUserContent(user.id).catch(() => []),
+        storage.getUserThreads(user.id).catch(() => []),
+        storage.getContentReviews().then(allReviews => 
+          allReviews.filter(r => {
+            const reviewContent = content.find(c => c.id === r.contentId);
+            return reviewContent?.sellerId === user.id;
+          })
+        ).catch(() => [])
+      ]);
+
+      // Calculate stats
+      const totalRevenue = content.reduce((sum, c) => sum + ((c.priceCoins || 0) * (c.downloads || 0)), 0);
+      const totalSales = content.reduce((sum, c) => sum + (c.downloads || 0), 0);
+      const totalDownloads = content.reduce((sum, c) => sum + (c.downloads || 0), 0);
+      
+      const averageRating = reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0;
+
+      // Calculate rating breakdown
+      const ratingBreakdown = {
+        averageRating,
+        totalReviews: reviews.length,
+        breakdown: {
+          5: reviews.filter(r => r.rating === 5).length,
+          4: reviews.filter(r => r.rating === 4).length,
+          3: reviews.filter(r => r.rating === 3).length,
+          2: reviews.filter(r => r.rating === 2).length,
+          1: reviews.filter(r => r.rating === 1).length,
+        }
+      };
+
+      // Build comprehensive profile response
+      const profileData = {
+        user,
+        isFollowing,
+        badges,
+        content,
+        stats: {
+          followers: 0, // TODO: Implement follower count
+          following: 0, // TODO: Implement following count
+          posts: threads.length,
+          content: content.length,
+          totalRevenue,
+          totalSales,
+          averageRating,
+          totalDownloads,
+        },
+        reviews: reviews.slice(0, 10), // Limit to 10 most recent
+        ratingBreakdown
+      };
+
+      res.json(profileData);
     } catch (error) {
       console.error("Error fetching profile:", error);
       res.status(500).json({ error: "Failed to fetch profile" });

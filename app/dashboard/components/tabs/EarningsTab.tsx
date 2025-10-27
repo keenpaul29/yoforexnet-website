@@ -50,6 +50,7 @@ export function EarningsTab() {
           trendLabel="vs last month"
           loading={isLoading}
           color="text-yellow-500"
+          data-testid="kpi-total-earnings"
         />
         <KPICard
           title="This Month"
@@ -58,6 +59,7 @@ export function EarningsTab() {
           trend={8.2}
           loading={isLoading}
           color="text-green-500"
+          data-testid="kpi-month-earnings"
         />
         <KPICard
           title="Current Balance"
@@ -65,6 +67,7 @@ export function EarningsTab() {
           icon={Wallet}
           loading={isLoading}
           color="text-blue-500"
+          data-testid="kpi-current-balance"
         />
         <KPICard
           title="Pending Withdrawal"
@@ -72,6 +75,7 @@ export function EarningsTab() {
           icon={ArrowUpRight}
           loading={isLoading}
           color="text-purple-500"
+          data-testid="kpi-pending-withdrawal"
         />
       </div>
 

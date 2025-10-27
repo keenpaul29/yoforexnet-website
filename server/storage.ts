@@ -98,7 +98,8 @@ import { eq, and, or, desc, asc, sql, count, inArray, gt, gte } from "drizzle-or
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<any>;
+  getUserThreads(userId: string): Promise<ForumThread[]>;
   createUser(user: InsertUser | UpsertUser): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserCoins(userId: string, coins: number): Promise<User | undefined>;
@@ -197,6 +198,7 @@ export interface IStorage {
   
   createUserFollow(data: InsertUserFollow): Promise<UserFollow>;
   deleteUserFollow(followerId: string, followingId: string): Promise<void>;
+  getFollow(followerId: string, followingId: string): Promise<UserFollow | null>;
   getUserFollowers(userId: string): Promise<User[]>;
   getUserFollowing(userId: string): Promise<User[]>;
   checkIfFollowing(followerId: string, followingId: string): Promise<boolean>;
@@ -444,9 +446,17 @@ export class MemStorage implements IStorage {
     return this.users.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
+  async getUserByUsername(username: string): Promise<any> {
+    const user = Array.from(this.users.values()).find(
       (user) => user.username === username,
+    );
+    if (!user) return null;
+    return { ...user, profile: null };
+  }
+
+  async getUserThreads(userId: string): Promise<ForumThread[]> {
+    return Array.from(this.forumThreadsMap.values()).filter(
+      (thread) => thread.authorId === userId
     );
   }
 
@@ -1609,6 +1619,13 @@ export class MemStorage implements IStorage {
     }
   }
 
+  async getFollow(followerId: string, followingId: string): Promise<UserFollow | null> {
+    const follow = Array.from(this.userFollowsMap.values()).find(
+      (f) => f.followerId === followerId && f.followingId === followingId
+    );
+    return follow || null;
+  }
+
   async getUserFollowers(userId: string): Promise<User[]> {
     const followerIds = Array.from(this.userFollowsMap.values())
       .filter((f) => f.followingId === userId)
@@ -2036,9 +2053,17 @@ export class DrizzleStorage implements IStorage {
     return user;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<any> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user;
+    if (!user) return null;
+    
+    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id));
+    
+    return { ...user, profile };
+  }
+
+  async getUserThreads(userId: string): Promise<ForumThread[]> {
+    return await db.select().from(forumThreads).where(eq(forumThreads.authorId, userId)).orderBy(desc(forumThreads.createdAt));
   }
 
   async createUser(insertUser: InsertUser | UpsertUser): Promise<User> {
@@ -3136,6 +3161,19 @@ export class DrizzleStorage implements IStorage {
           eq(userFollows.followingId, followingId)
         )
       );
+  }
+
+  async getFollow(followerId: string, followingId: string): Promise<UserFollow | null> {
+    const [follow] = await db
+      .select()
+      .from(userFollows)
+      .where(
+        and(
+          eq(userFollows.followerId, followerId),
+          eq(userFollows.followingId, followingId)
+        )
+      );
+    return follow || null;
   }
 
   async getUserFollowers(userId: string): Promise<User[]> {

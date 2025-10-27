@@ -68,6 +68,7 @@ export function GoalsTab() {
           icon={Target}
           loading={isLoading}
           color="text-blue-500"
+          data-testid="kpi-active-goals"
         />
         <KPICard
           title="Completed"
@@ -75,6 +76,7 @@ export function GoalsTab() {
           icon={CheckCircle}
           loading={isLoading}
           color="text-green-500"
+          data-testid="kpi-completed-goals"
         />
         <KPICard
           title="In Progress"
@@ -82,6 +84,7 @@ export function GoalsTab() {
           icon={TrendingUp}
           loading={isLoading}
           color="text-purple-500"
+          data-testid="kpi-in-progress-goals"
         />
         <KPICard
           title="Pending"
@@ -89,6 +92,7 @@ export function GoalsTab() {
           icon={Clock}
           loading={isLoading}
           color="text-orange-500"
+          data-testid="kpi-pending-goals"
         />
       </div>
 

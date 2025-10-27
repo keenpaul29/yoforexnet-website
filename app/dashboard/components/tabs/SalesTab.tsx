@@ -46,6 +46,7 @@ export function SalesTab() {
           trendLabel="vs last month"
           loading={isLoading}
           color="text-green-500"
+          data-testid="kpi-total-revenue"
         />
         <KPICard
           title="Total Sales"
@@ -54,6 +55,7 @@ export function SalesTab() {
           trend={8.7}
           loading={isLoading}
           color="text-blue-500"
+          data-testid="kpi-total-sales"
         />
         <KPICard
           title="Avg Sale Value"
@@ -62,6 +64,7 @@ export function SalesTab() {
           trend={-2.4}
           loading={isLoading}
           color="text-purple-500"
+          data-testid="kpi-avg-sale-value"
         />
         <KPICard
           title="Conversion Rate"
@@ -70,6 +73,7 @@ export function SalesTab() {
           trend={4.1}
           loading={isLoading}
           color="text-orange-500"
+          data-testid="kpi-conversion-rate"
         />
       </div>
 

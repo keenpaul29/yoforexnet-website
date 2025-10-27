@@ -39,6 +39,7 @@ export function AnalyticsTab() {
           trendLabel="vs last month"
           loading={isLoading}
           color="text-blue-500"
+          data-testid="kpi-total-views"
         />
         <KPICard
           title="Total Downloads"
@@ -47,6 +48,7 @@ export function AnalyticsTab() {
           trend={8.3}
           loading={isLoading}
           color="text-green-500"
+          data-testid="kpi-total-downloads"
         />
         <KPICard
           title="Avg Rating"
@@ -54,6 +56,7 @@ export function AnalyticsTab() {
           icon={Star}
           loading={isLoading}
           color="text-yellow-500"
+          data-testid="kpi-avg-rating"
         />
         <KPICard
           title="Total Reviews"
@@ -62,6 +65,7 @@ export function AnalyticsTab() {
           trend={15.2}
           loading={isLoading}
           color="text-purple-500"
+          data-testid="kpi-total-reviews"
         />
       </div>
 

@@ -24,7 +24,7 @@ async function getUserSettings() {
   const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.getAll()
-    .map(cookie => `${cookie.name}=${cookie.value}`)
+    .map((cookie: { name: string; value: string }) => `${cookie.name}=${cookie.value}`)
     .join('; ');
 
   try {
@@ -55,7 +55,7 @@ async function getUserCoins() {
   const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.getAll()
-    .map(cookie => `${cookie.name}=${cookie.value}`)
+    .map((cookie: { name: string; value: string }) => `${cookie.name}=${cookie.value}`)
     .join('; ');
 
   try {

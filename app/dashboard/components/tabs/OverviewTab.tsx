@@ -41,6 +41,7 @@ export function OverviewTab() {
           trendLabel="vs last week"
           loading={salesLoading}
           color="text-green-500"
+          data-testid="kpi-total-revenue"
         />
         <KPICard
           title="Total Sales"
@@ -50,6 +51,7 @@ export function OverviewTab() {
           trendLabel="vs last week"
           loading={salesLoading}
           color="text-blue-500"
+          data-testid="kpi-total-sales"
         />
         <KPICard
           title="Avg Sale Value"
@@ -58,6 +60,7 @@ export function OverviewTab() {
           trend={3.1}
           loading={salesLoading}
           color="text-purple-500"
+          data-testid="kpi-avg-sale-value"
         />
         <KPICard
           title="Active Goals"
@@ -65,6 +68,7 @@ export function OverviewTab() {
           icon={Users}
           loading={goalsLoading}
           color="text-orange-500"
+          data-testid="kpi-active-goals"
         />
       </div>
 
