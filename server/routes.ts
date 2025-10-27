@@ -2294,13 +2294,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(category);
   });
   
-  // Get threads in category
+  // Get threads in category with filtering
   app.get("/api/categories/:slug/threads", async (req, res) => {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-    const threads = await storage.listForumThreads({ 
+    const tab = req.query.tab as string | undefined; // latest | trending | answered
+    const searchQuery = req.query.q as string | undefined;
+    
+    let threads = await storage.listForumThreads({ 
       categorySlug: req.params.slug,
-      limit 
+      limit: 100 // Fetch more for filtering
     });
+    
+    // Apply search filter if query exists
+    if (searchQuery && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      threads = threads.filter(t => 
+        t.title.toLowerCase().includes(query) || 
+        (t.metaDescription && t.metaDescription.toLowerCase().includes(query))
+      );
+    }
+    
+    // Apply tab-specific filtering and sorting
+    if (tab === "trending") {
+      const { getTrendingThreads } = await import("./algorithms/trending");
+      threads = getTrendingThreads(threads, limit);
+    } else if (tab === "answered") {
+      // Filter for threads with accepted replies or replies > 0
+      threads = threads
+        .filter(t => t.replyCount > 0 || t.isSolved)
+        .sort((a, b) => b.replyCount - a.replyCount)
+        .slice(0, limit);
+    } else {
+      // Default: latest (by lastActivityAt)
+      threads = threads
+        .sort((a, b) => new Date(b.lastActivityAt).getTime() - new Date(a.lastActivityAt).getTime())
+        .slice(0, limit);
+    }
+    
     res.json(threads);
   });
   

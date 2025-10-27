@@ -1,0 +1,43 @@
+Fix the forum flow so that threads and publishing are two different things.
+	1.	New Thread behavior
+
+	•	On any Category page, the New Thread button must open the Create Thread screen, not the “Publish EA / Indicator” screen.
+	•	If the category has sub-categories, ask the user to choose a sub-category first (simple dropdown or list).
+	•	After posting, send the user to the new thread and show a short success message.
+
+	2.	Publish EA / Indicator
+
+	•	Keep Publish EA / Indicator as a separate action only inside the Tools / Marketplace area.
+	•	Do not show “Publish EA / Indicator” when the user is inside a discussion category.
+
+	3.	Category page layout
+
+	•	At the top: Category title, short description, and a visible New Thread button.
+	•	Below that: a Sub-categories section (cards or chips). Each sub-category has its own New Thread button that starts a thread inside that sub-category.
+	•	Show counts: “X threads · Y posts”. If there are no threads, show “No threads yet — be the first to post” with a big Start New Thread button.
+
+	4.	Tabs that must work
+
+	•	Latest = newest threads in this category (and its sub-categories).
+	•	Trending = threads with the most views/likes/replies in the last few days.
+	•	Answered = threads marked solved or with an accepted answer.
+	•	Switching tabs must update the list instantly and keep the user on the same page.
+
+	5.	Search on category
+
+	•	The search box on a category page must search within this category and its sub-categories.
+	•	Show a small line under the search: “Searching in: [Category Name]”.
+
+	6.	Thread compose screen
+
+	•	Fields: Title, Sub-category (if needed), Body, optional Tags.
+	•	Show simple posting rules under the editor (be polite, no spam, etc.).
+	•	If the user isn’t logged in, tapping New Thread asks them to log in or sign up, then returns them to the compose screen.
+
+	7.	Navigation & clarity
+
+	•	Add breadcrumbs: Home → Category → Sub-category.
+	•	Keep the Publish EA / Indicator button only where it belongs (Tools/Marketplace).
+	•	Make sure all buttons are tap-friendly on mobile and easy to see in both light and dark modes.
+
+Goal: When a user clicks New Thread inside a category, they create a discussion thread in that category (or its chosen sub-category). Publishing EAs/Indicators stays separate. The Latest / Trending / Answered tabs work reliably, and sub-categories are the place where users open new threads.

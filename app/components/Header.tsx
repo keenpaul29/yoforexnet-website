@@ -62,6 +62,14 @@ export default function Header() {
   const userCoins = coinsData?.totalCoins ?? 0;
   const userCoinsUSD = coinsToUSD(userCoins);
 
+  // Conditionally show "Release EA" dropdown only on marketplace/content/publish pages
+  const showReleaseEA = pathname === "/marketplace" || 
+                        pathname?.startsWith("/content/") || 
+                        pathname === "/publish";
+
+  // Show "New Thread" button only on category pages
+  const showNewThread = pathname?.startsWith("/category/");
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto px-4">
@@ -97,39 +105,41 @@ export default function Header() {
               </Button>
             </Link>
             
-            {/* Release EA Dropdown with Hover */}
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 text-sm font-medium" data-testid="button-release-ea">
-                    Release EA
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[500px] gap-2 p-4 md:grid-cols-2" data-testid="menu-release-categories">
-                      {publishCategories.map((cat) => (
-                        <li key={cat.slug}>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href={`/publish?category=${cat.slug}`}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                              data-testid={`link-publish-${cat.slug}`}
-                            >
-                              <div className="flex items-center gap-2">
-                                <cat.icon className="h-4 w-4" />
-                                <div className="text-sm font-medium leading-none">{cat.name}</div>
-                              </div>
-                              <p className="line-clamp-1 text-xs leading-snug text-muted-foreground">
-                                {cat.hint}
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            {/* Release EA Dropdown - Only visible on marketplace/content/publish pages */}
+            {showReleaseEA && (
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="h-9 text-sm font-medium" data-testid="button-release-ea">
+                      Release EA
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[500px] gap-2 p-4 md:grid-cols-2" data-testid="menu-release-categories">
+                        {publishCategories.map((cat) => (
+                          <li key={cat.slug}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={`/publish?category=${cat.slug}`}
+                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                data-testid={`link-publish-${cat.slug}`}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <cat.icon className="h-4 w-4" />
+                                  <div className="text-sm font-medium leading-none">{cat.name}</div>
+                                </div>
+                                <p className="line-clamp-1 text-xs leading-snug text-muted-foreground">
+                                  {cat.hint}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            )}
             
             <Link href="/brokers">
               <Button 
@@ -171,12 +181,15 @@ export default function Header() {
         <div className="flex items-center gap-2">
           {isAuthenticated && (
             <>
-              <Link href="/new-thread">
-                <Button size="sm" className="hidden sm:flex" data-testid="button-new-thread">
-                  <Plus className="h-4 w-4 mr-1" />
-                  New Thread
-                </Button>
-              </Link>
+              {/* Show "New Thread" button only on category pages */}
+              {showNewThread && (
+                <Link href="/new-thread">
+                  <Button size="sm" className="hidden sm:flex" data-testid="button-new-thread">
+                    <Plus className="h-4 w-4 mr-1" />
+                    New Thread
+                  </Button>
+                </Link>
+              )}
               
               <Link href="/recharge">
                 <div className="hidden md:flex flex-col gap-0 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer">

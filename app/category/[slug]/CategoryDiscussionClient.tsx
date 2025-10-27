@@ -1,13 +1,24 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import type { ForumThread, ForumCategory } from "@shared/schema";
 import Header from "@/components/Header";
 import EnhancedFooter from "@/components/EnhancedFooter";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { useAuthPrompt } from "@/hooks/useAuthPrompt";
 import { 
@@ -16,7 +27,9 @@ import {
   Plus,
   TrendingUp,
   Clock,
-  Star
+  Star,
+  Search,
+  Home
 } from "lucide-react";
 
 interface CategoryDiscussionClientProps {
@@ -30,7 +43,20 @@ export default function CategoryDiscussionClient({
   initialCategory,
   initialThreads,
 }: CategoryDiscussionClientProps) {
+  const router = useRouter();
   const { requireAuth, AuthPrompt } = useAuthPrompt("create a thread");
+  
+  const [activeTab, setActiveTab] = useState<"latest" | "trending" | "answered">("latest");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const { data: category, isLoading: categoryLoading } = useQuery<ForumCategory>({
     queryKey: ['/api/categories', slug],
@@ -38,14 +64,38 @@ export default function CategoryDiscussionClient({
     enabled: !!slug,
   });
 
+  const { data: allCategories } = useQuery<ForumCategory[]>({
+    queryKey: ['/api/categories'],
+  });
+
+  const { data: subcategories } = useQuery<ForumCategory[]>({
+    queryKey: ['/api/categories', slug, 'subcategories'],
+    enabled: !!slug,
+  });
+
   const { data: threads, isLoading: threadsLoading } = useQuery<ForumThread[]>({
-    queryKey: ['/api/categories', slug, 'threads'],
+    queryKey: ['/api/categories', slug, 'threads', activeTab, debouncedSearch],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        tab: activeTab,
+      });
+      if (debouncedSearch) {
+        params.append('q', debouncedSearch);
+      }
+      const res = await fetch(`/api/categories/${slug}/threads?${params}`);
+      if (!res.ok) throw new Error('Failed to fetch threads');
+      return res.json();
+    },
     initialData: initialThreads,
     enabled: !!slug,
-    refetchInterval: 15000, // Real-time updates every 15s
   });
 
   const isLoading = categoryLoading || threadsLoading;
+
+  // Get parent category for breadcrumbs
+  const parentCategory = category?.parentSlug 
+    ? allCategories?.find(c => c.slug === category.parentSlug)
+    : null;
 
   // Error state - category not found
   if (!category && !isLoading) {
@@ -67,7 +117,7 @@ export default function CategoryDiscussionClient({
   }
 
   // Loading state
-  if (isLoading) {
+  if (isLoading && !category) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -89,6 +139,31 @@ export default function CategoryDiscussionClient({
       <Header />
       
       <main className="container max-w-7xl mx-auto px-4 py-8">
+        {/* Breadcrumbs */}
+        <Breadcrumb className="mb-6" data-testid="breadcrumb-navigation">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" data-testid="breadcrumb-home">
+                <Home className="h-4 w-4" />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            {parentCategory && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/category/${parentCategory.slug}`} data-testid="breadcrumb-parent">
+                    {parentCategory.name}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+              </>
+            )}
+            <BreadcrumbItem>
+              <BreadcrumbPage data-testid="breadcrumb-current">{category?.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         {/* Category Header */}
         <Card className="mb-8" data-testid="card-category-header">
           <CardHeader>
@@ -124,8 +199,7 @@ export default function CategoryDiscussionClient({
                 size="default" 
                 data-testid="button-create-thread"
                 onClick={() => requireAuth(() => {
-                  // Navigate to publish page for thread creation
-                  window.location.href = '/publish';
+                  router.push(`/discussions/new?category=${slug}`);
                 })}
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -135,18 +209,103 @@ export default function CategoryDiscussionClient({
           </CardHeader>
         </Card>
 
-        {/* Filter/Sort Options */}
+        {/* Subcategories Section */}
+        {subcategories && subcategories.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4" data-testid="heading-subcategories">
+              Subcategories
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {subcategories.map((subcat) => (
+                <Card 
+                  key={subcat.slug} 
+                  className="hover-elevate active-elevate-2 cursor-pointer" 
+                  data-testid={`card-subcategory-${subcat.slug}`}
+                >
+                  <Link href={`/category/${subcat.slug}`}>
+                    <CardHeader>
+                      <CardTitle className="text-base" data-testid={`text-subcat-name-${subcat.slug}`}>
+                        {subcat.name}
+                      </CardTitle>
+                      <CardDescription className="text-sm" data-testid={`text-subcat-desc-${subcat.slug}`}>
+                        {subcat.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground" data-testid={`stat-subcat-threads-${subcat.slug}`}>
+                          {subcat.threadCount} threads
+                        </span>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            requireAuth(() => {
+                              router.push(`/discussions/new?category=${subcat.slug}`);
+                            });
+                          }}
+                          data-testid={`button-new-thread-${subcat.slug}`}
+                        >
+                          <Plus className="w-3 h-3 mr-1" />
+                          New
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Link>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Search Input */}
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder={`Search within ${category?.name}...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+              data-testid="input-category-search"
+            />
+          </div>
+          {debouncedSearch && (
+            <p className="text-sm text-muted-foreground mt-2" data-testid="text-search-info">
+              Searching in: {category?.name}
+            </p>
+          )}
+        </div>
+
+        {/* Filter/Sort Tabs */}
         <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
           <div className="flex items-center gap-2">
-            <Button variant="default" size="sm" data-testid="filter-latest">
+            <Button 
+              variant={activeTab === "latest" ? "default" : "ghost"} 
+              size="sm" 
+              onClick={() => setActiveTab("latest")}
+              data-testid="filter-latest"
+            >
               <Clock className="w-4 h-4 mr-2" />
               Latest
             </Button>
-            <Button variant="ghost" size="sm" data-testid="filter-trending">
+            <Button 
+              variant={activeTab === "trending" ? "default" : "ghost"} 
+              size="sm" 
+              onClick={() => setActiveTab("trending")}
+              data-testid="filter-trending"
+            >
               <TrendingUp className="w-4 h-4 mr-2" />
               Trending
             </Button>
-            <Button variant="ghost" size="sm" data-testid="filter-answered">
+            <Button 
+              variant={activeTab === "answered" ? "default" : "ghost"} 
+              size="sm" 
+              onClick={() => setActiveTab("answered")}
+              data-testid="filter-answered"
+            >
               <Star className="w-4 h-4 mr-2" />
               Answered
             </Button>
@@ -158,7 +317,11 @@ export default function CategoryDiscussionClient({
 
         {/* Thread List */}
         <div className="space-y-4">
-          {threads && threads.length > 0 ? (
+          {threadsLoading && !threads ? (
+            Array(5).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-32" />
+            ))
+          ) : threads && threads.length > 0 ? (
             threads.map((thread) => (
               <Link key={thread.id} href={`/thread/${thread.slug}`} data-testid={`link-thread-${thread.id}`}>
                 <Card className="hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-thread-${thread.id}`}>
@@ -172,6 +335,11 @@ export default function CategoryDiscussionClient({
                           {thread.isPinned && (
                             <Badge variant="secondary" data-testid={`badge-pinned-${thread.id}`}>
                               Pinned
+                            </Badge>
+                          )}
+                          {thread.isSolved && (
+                            <Badge variant="default" data-testid={`badge-solved-${thread.id}`}>
+                              Solved
                             </Badge>
                           )}
                         </div>
@@ -200,37 +368,29 @@ export default function CategoryDiscussionClient({
           ) : (
             <Card className="p-12 text-center" data-testid="card-no-threads">
               <MessageSquare className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-semibold mb-2">No threads yet</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                {debouncedSearch ? "No threads found" : "No threads yet"}
+              </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Be the first to start a discussion in this category!
+                {debouncedSearch 
+                  ? `No threads match your search for "${debouncedSearch}"`
+                  : "Be the first to start a discussion in this category!"
+                }
               </p>
-              <Button 
-                data-testid="button-create-first-thread"
-                onClick={() => requireAuth(() => {
-                  window.location.href = '/publish';
-                })}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create First Thread
-              </Button>
+              {!debouncedSearch && (
+                <Button 
+                  data-testid="button-create-first-thread"
+                  onClick={() => requireAuth(() => {
+                    router.push(`/discussions/new?category=${slug}`);
+                  })}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create First Thread
+                </Button>
+              )}
             </Card>
           )}
         </div>
-
-        {/* Pagination Placeholder */}
-        {threads && threads.length > 20 && (
-          <div className="mt-8 flex justify-center gap-2">
-            <Button variant="outline" size="sm" disabled data-testid="button-prev-page">
-              Previous
-            </Button>
-            <Button variant="outline" size="sm" data-testid="button-page-1">1</Button>
-            <Button variant="ghost" size="sm" data-testid="button-page-2">2</Button>
-            <Button variant="ghost" size="sm" data-testid="button-page-3">3</Button>
-            <Button variant="outline" size="sm" data-testid="button-next-page">
-              Next
-            </Button>
-          </div>
-        )}
       </main>
 
       <EnhancedFooter />
