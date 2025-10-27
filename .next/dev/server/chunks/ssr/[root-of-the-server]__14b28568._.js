@@ -3124,7 +3124,7 @@ function CategoryDiscussionClient({ slug, initialCategory, initialThreads }) {
                                         size: "default",
                                         "data-testid": "button-create-thread",
                                         onClick: ()=>requireAuth(()=>{
-                                                router.push(`/thread/create?category=${slug}`);
+                                                router.push(`/discussions/new?category=${slug}`);
                                             }),
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
@@ -3225,7 +3225,7 @@ function CategoryDiscussionClient({ slug, initialCategory, initialThreads }) {
                                                                 onClick: (e)=>{
                                                                     e.preventDefault();
                                                                     requireAuth(()=>{
-                                                                        router.push(`/thread/create?category=${subcat.slug}`);
+                                                                        router.push(`/discussions/new?category=${subcat.slug}`);
                                                                     });
                                                                 },
                                                                 "data-testid": `button-new-thread-${subcat.slug}`,
@@ -3612,7 +3612,7 @@ function CategoryDiscussionClient({ slug, initialCategory, initialThreads }) {
                                 !debouncedSearch && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                     "data-testid": "button-create-first-thread",
                                     onClick: ()=>requireAuth(()=>{
-                                            router.push(`/thread/create?category=${slug}`);
+                                            router.push(`/discussions/new?category=${slug}`);
                                         }),
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
