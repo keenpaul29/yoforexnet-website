@@ -70,8 +70,8 @@ export default function StatsBar() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat) => (
             <div key={stat.key} className="flex items-center gap-3">
-              <div className="bg-primary/10 rounded-lg p-2.5">
-                <stat.icon className="h-5 w-5 text-primary" />
+              <div className="bg-primary/10 dark:bg-primary/20 rounded-lg p-2.5">
+                <stat.icon className="h-5 w-5 text-primary dark:text-primary" />
               </div>
               <div>
                 <div className="text-2xl font-bold" data-testid={`text-stat-${stat.key}`}>{stat.value}</div>

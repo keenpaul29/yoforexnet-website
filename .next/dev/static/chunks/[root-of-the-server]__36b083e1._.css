@@ -3761,16 +3761,16 @@ input[type="search"]::-webkit-search-cancel-button {
   --sidebar: 220 13% 13%;
   --sidebar-foreground: 220 13% 95%;
   --sidebar-border: 220 13% 17%;
-  --sidebar-primary: 217 91% 35%;
-  --sidebar-primary-foreground: 217 91% 98%;
+  --sidebar-primary: 217 91% 60%;
+  --sidebar-primary-foreground: 217 91% 10%;
   --sidebar-accent: 220 13% 17%;
   --sidebar-accent-foreground: 220 13% 95%;
   --sidebar-ring: 217 91% 60%;
   --popover: 220 13% 15%;
   --popover-foreground: 220 13% 95%;
   --popover-border: 220 13% 20%;
-  --primary: 217 91% 35%;
-  --primary-foreground: 217 91% 98%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 217 91% 10%;
   --secondary: 220 13% 19%;
   --secondary-foreground: 220 13% 95%;
   --muted: 220 15% 17%;
@@ -4882,6 +4882,10 @@ input[type="search"]::-webkit-search-cancel-button {
   background-color: rgb(67 20 7 / var(--tw-bg-opacity, 1));
 }
 
+.dark\:bg-primary\/20:is(.dark *) {
+  background-color: hsl(var(--primary) / .2);
+}
+
 .dark\:bg-purple-950:is(.dark *) {
   --tw-bg-opacity: 1;
   background-color: rgb(59 7 100 / var(--tw-bg-opacity, 1));
@@ -4947,6 +4951,11 @@ input[type="search"]::-webkit-search-cancel-button {
   color: rgb(251 146 60 / var(--tw-text-opacity, 1));
 }
 
+.dark\:text-primary:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: hsl(var(--primary) / var(--tw-text-opacity, 1));
+}
+
 .dark\:text-purple-300:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(216 180 254 / var(--tw-text-opacity, 1));
@@ -4965,6 +4974,11 @@ input[type="search"]::-webkit-search-cancel-button {
 .dark\:text-red-400:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(248 113 113 / var(--tw-text-opacity, 1));
+}
+
+.dark\:text-white:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .dark\:text-yellow-400:is(.dark *) {

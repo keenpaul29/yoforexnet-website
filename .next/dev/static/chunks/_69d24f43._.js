@@ -2606,9 +2606,9 @@ function StatsBar() {
                         className: "flex items-center gap-3",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "bg-primary/10 rounded-lg p-2.5",
+                                className: "bg-primary/10 dark:bg-primary/20 rounded-lg p-2.5",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(stat.icon, {
-                                    className: "h-5 w-5 text-primary"
+                                    className: "h-5 w-5 text-primary dark:text-primary"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/StatsBar.tsx",
                                     lineNumber: 74,
@@ -2822,7 +2822,7 @@ function CategoryTree({ categories }) {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: `p-2 rounded-lg ${category.color}`,
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$folder$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Folder$3e$__["Folder"], {
-                                            className: "w-5 h-5 text-white"
+                                            className: "w-5 h-5 text-white dark:text-white"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/CategoryTree.tsx",
                                             lineNumber: 36,
@@ -6859,7 +6859,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     "data-testid": "link-forum-rules",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"], {
-                                                            className: "w-4 h-4 text-primary"
+                                                            className: "w-4 h-4 text-primary dark:text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
                                                             lineNumber: 173,
@@ -6884,7 +6884,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     "data-testid": "link-safe-download",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$download$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Download$3e$__["Download"], {
-                                                            className: "w-4 h-4 text-primary"
+                                                            className: "w-4 h-4 text-primary dark:text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
                                                             lineNumber: 181,
@@ -6909,7 +6909,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     "data-testid": "link-verified-brokers",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2d$big$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle$3e$__["CheckCircle"], {
-                                                            className: "w-4 h-4 text-primary"
+                                                            className: "w-4 h-4 text-primary dark:text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
                                                             lineNumber: 189,
@@ -6934,7 +6934,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     "data-testid": "link-ea-coding-rules",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Shield$3e$__["Shield"], {
-                                                            className: "w-4 h-4 text-primary"
+                                                            className: "w-4 h-4 text-primary dark:text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
                                                             lineNumber: 197,

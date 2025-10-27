@@ -170,7 +170,7 @@ export default function HomeClient({
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-forum-rules"
                 >
-                  <BookOpen className="w-4 h-4 text-primary" />
+                  <BookOpen className="w-4 h-4 text-primary dark:text-primary" />
                   <span>Forum Rules</span>
                 </a>
                 <a 
@@ -178,7 +178,7 @@ export default function HomeClient({
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-safe-download"
                 >
-                  <Download className="w-4 h-4 text-primary" />
+                  <Download className="w-4 h-4 text-primary dark:text-primary" />
                   <span>Safe Download Guide</span>
                 </a>
                 <a 
@@ -186,7 +186,7 @@ export default function HomeClient({
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-verified-brokers"
                 >
-                  <CheckCircle className="w-4 h-4 text-primary" />
+                  <CheckCircle className="w-4 h-4 text-primary dark:text-primary" />
                   <span>Verified Brokers</span>
                 </a>
                 <a 
@@ -194,7 +194,7 @@ export default function HomeClient({
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-ea-coding-rules"
                 >
-                  <Shield className="w-4 h-4 text-primary" />
+                  <Shield className="w-4 h-4 text-primary dark:text-primary" />
                   <span>EA Coding Rules</span>
                 </a>
               </CardContent>

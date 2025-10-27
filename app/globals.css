@@ -150,9 +150,9 @@
 
   --sidebar-border: 220 13% 17%;
 
-  --sidebar-primary: 217 91% 35%;
+  --sidebar-primary: 217 91% 60%;
 
-  --sidebar-primary-foreground: 217 91% 98%;
+  --sidebar-primary-foreground: 217 91% 10%;
 
   --sidebar-accent: 220 13% 17%;
 
@@ -166,9 +166,9 @@
 
   --popover-border: 220 13% 20%;
 
-  --primary: 217 91% 35%;
+  --primary: 217 91% 60%;
 
-  --primary-foreground: 217 91% 98%;
+  --primary-foreground: 217 91% 10%;
 
   --secondary: 220 13% 19%;
 

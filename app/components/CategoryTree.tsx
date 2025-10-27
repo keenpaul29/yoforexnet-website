@@ -33,7 +33,7 @@ export function CategoryTree({ categories }: CategoryTreeProps) {
             <Link href={`/category/${category.slug}`} className="block mb-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className={`p-2 rounded-lg ${category.color}`}>
-                  <Folder className="w-5 h-5 text-white" />
+                  <Folder className="w-5 h-5 text-white dark:text-white" />
                 </div>
                 <h3 className="font-semibold text-lg">{category.name}</h3>
               </div>
