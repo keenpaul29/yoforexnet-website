@@ -1,322 +1,108 @@
-import { db } from '@/lib/db';
-import { users, forumThreads, content, userFollows } from '../../../shared/schema';
-import { eq, count as drizzleCount, desc } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { formatDistanceToNow } from 'date-fns';
-import {
-  User as UserIcon,
-  Calendar,
-  Star,
-  TrendingUp,
-  MessageSquare,
-  Package,
-  Award,
-  Users,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FollowButton } from './FollowButton';
-import { Header } from '../../components/Header';
-import { Footer } from '../../components/Footer';
+import { Metadata } from 'next';
+import UserProfileClient from './UserProfileClient';
+import type { User, Badge as BadgeType, Content, ForumThread } from '@shared/schema';
+
+// Express API base URL
+const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: { username: string } }): Promise<Metadata> {
-  const user = await db.query.users.findFirst({
-    where: eq(users.username, params.username),
-  });
+  try {
+    const res = await fetch(`${EXPRESS_URL}/api/users/username/${params.username}`, { cache: 'no-store' });
+    if (!res.ok) {
+      return {
+        title: 'User Not Found | YoForex Community',
+      };
+    }
 
-  if (!user) {
+    const user: User = await res.json();
+    
     return {
-      title: 'User Not Found',
+      title: `${user.username}'s Profile | YoForex Community`,
+      description: `View ${user.username}'s profile, badges, contributions, and reputation on YoForex`,
+      keywords: `forex trader, ${user.username}, MT4, MT5, expert advisor`,
+      openGraph: {
+        title: `${user.username}'s Profile`,
+        description: `View ${user.username}'s profile, badges, contributions, and reputation on YoForex`,
+        type: 'profile',
+      },
+      twitter: {
+        card: 'summary',
+        title: `${user.username}'s Profile`,
+        description: `View ${user.username}'s profile, badges, contributions, and reputation on YoForex`,
+      },
+    };
+  } catch (error) {
+    return {
+      title: 'User Not Found | YoForex Community',
     };
   }
-
-  const description = user.bio || `${user.username} on YoForex - Expert Advisor Forum`;
-
-  return {
-    title: `${user.username} - YoForex Profile`,
-    description,
-    openGraph: {
-      title: `${user.username} - YoForex Profile`,
-      description,
-      type: 'profile',
-      username: user.username || '',
-    },
-    twitter: {
-      card: 'summary',
-      title: `${user.username} - YoForex Profile`,
-      description,
-    },
-    alternates: {
-      canonical: `/user/${params.username}`,
-    },
-  };
 }
 
-// Main User Profile Page (Server Component)
+// Main page component (Server Component)
 export default async function UserProfilePage({ params }: { params: { username: string } }) {
-  // Fetch user
-  const user = await db.query.users.findFirst({
-    where: eq(users.username, params.username),
-  });
-
-  if (!user) {
-    notFound();
+  // Fetch user with error handling that doesn't trigger Next.js 404
+  let user: User | null = null;
+  try {
+    const userRes = await fetch(`${EXPRESS_URL}/api/users/username/${params.username}`, { 
+      cache: 'no-store',
+    });
+    if (userRes.ok) {
+      user = await userRes.json();
+    }
+  } catch (error) {
+    // Swallow error - we'll show custom error card
+    user = null;
   }
 
-  // Fetch user's threads
-  const userThreads = await db.query.forumThreads.findMany({
-    where: eq(forumThreads.authorId, user.id),
-    orderBy: [desc(forumThreads.createdAt)],
-    limit: 10,
-  });
-
-  // Fetch user's content
-  const userContent = await db.query.content.findMany({
-    where: eq(content.authorId, user.id),
-    orderBy: [desc(content.createdAt)],
-    limit: 10,
-  });
-
-  // Count followers
-  const [followerCount] = await db
-    .select({ count: drizzleCount() })
-    .from(userFollows)
-    .where(eq(userFollows.followingId, user.id));
-
-  // Count following
-  const [followingCount] = await db
-    .select({ count: drizzleCount() })
-    .from(userFollows)
-    .where(eq(userFollows.followerId, user.id));
-
-  // Generate JSON-LD Person Schema
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: user.username,
-    ...(user.bio && { description: user.bio }),
-    url: `/user/${params.username}`,
-    interactionStatistic: [
-      {
-        '@type': 'InteractionCounter',
-        interactionType: 'https://schema.org/FollowAction',
-        userInteractionCount: followerCount?.count || 0,
-      },
-    ],
-  };
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+  // If user not found, return Client Component with null user to show custom error card
+  if (!user) {
+    return (
+      <UserProfileClient
+        username={params.username}
+        initialUser={null}
+        initialBadges={[]}
+        initialContent={[]}
+        initialThreads={[]}
       />
+    );
+  }
 
-      {/* Header */}
-      <Header />
+  // Fetch all additional data in parallel
+  const [badgesRes, contentRes, threadsRes] = await Promise.all([
+    // Fetch user badges
+    user.id 
+      ? fetch(`${EXPRESS_URL}/api/users/${user.id}/badges`, { cache: 'no-store' }).catch(() => null)
+      : Promise.resolve(null),
+    
+    // Fetch user's content (EAs/Indicators)
+    user.id 
+      ? fetch(`${EXPRESS_URL}/api/user/${user.id}/content`, { cache: 'no-store' }).catch(() => null)
+      : Promise.resolve(null),
+    
+    // Fetch user's threads
+    user.id 
+      ? fetch(`${EXPRESS_URL}/api/user/${user.id}/threads`, { cache: 'no-store' }).catch(() => null)
+      : Promise.resolve(null),
+  ]);
 
-      <main className="container mx-auto p-6">
-        <div className="max-w-5xl mx-auto space-y-6">
-          {/* Profile Header */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-6">
-                {/* Avatar */}
-                <Avatar className="h-24 w-24">
-                  <AvatarFallback className="text-3xl">
-                    {user.username?.[0]?.toUpperCase() || 'U'}
-                  </AvatarFallback>
-                </Avatar>
+  // Parse responses
+  const badges = badgesRes?.ok ? await badgesRes.json() : [];
+  const content = contentRes?.ok ? await contentRes.json() : [];
+  const threads = threadsRes?.ok ? await threadsRes.json() : [];
 
-                {/* User Info */}
-                <div className="flex-1">
-                  <div className="flex items-start justify-between flex-wrap gap-4">
-                    <div>
-                      <h1 className="text-3xl font-bold mb-2">{user.username}</h1>
-                      {user.bio && (
-                        <p className="text-muted-foreground mb-4">{user.bio}</p>
-                      )}
-                    </div>
-                    <FollowButton userId={user.id} username={user.username || ''} />
-                  </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                    <div>
-                      <div className="text-2xl font-bold text-primary">
-                        {user.coins || 0}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Coins</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">
-                        {user.reputationScore || 0}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Reputation</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">
-                        {followerCount?.count || 0}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Followers</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">
-                        {followingCount?.count || 0}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Following</div>
-                    </div>
-                  </div>
-
-                  {/* Meta Info */}
-                  <div className="flex flex-wrap gap-4 mt-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>
-                        Joined{' '}
-                        {user.createdAt && formatDistanceToNow(new Date(user.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tabs - Threads, Content, Badges */}
-          <Tabs defaultValue="threads" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="threads">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Threads ({userThreads.length})
-              </TabsTrigger>
-              <TabsTrigger value="content">
-                <Package className="h-4 w-4 mr-2" />
-                Content ({userContent.length})
-              </TabsTrigger>
-              <TabsTrigger value="badges">
-                <Award className="h-4 w-4 mr-2" />
-                Badges
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Threads Tab */}
-            <TabsContent value="threads" className="space-y-4">
-              {userThreads.length === 0 ? (
-                <Card>
-                  <CardContent className="p-8 text-center text-muted-foreground">
-                    No threads yet
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {userThreads.map((thread) => (
-                    <Card key={thread.id}>
-                      <CardContent className="p-4">
-                        <Link
-                          href={`/thread/${thread.slug}`}
-                          className="text-lg font-semibold hover:text-primary"
-                        >
-                          {thread.title}
-                        </Link>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                          <span>{thread.views || 0} views</span>
-                          <span>•</span>
-                          <span>{thread.replyCount || 0} replies</span>
-                          <span>•</span>
-                          <span>
-                            {thread.createdAt && formatDistanceToNow(new Date(thread.createdAt), {
-                              addSuffix: true,
-                            })}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-
-            {/* Content Tab */}
-            <TabsContent value="content" className="space-y-4">
-              {userContent.length === 0 ? (
-                <Card>
-                  <CardContent className="p-8 text-center text-muted-foreground">
-                    No content published yet
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid md:grid-cols-2 gap-4">
-                  {userContent.map((item) => (
-                    <Card key={item.id}>
-                      <CardContent className="p-4">
-                        <Link
-                          href={`/content/${item.slug}`}
-                          className="text-lg font-semibold hover:text-primary"
-                        >
-                          {item.title}
-                        </Link>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Badge variant="outline">{item.type}</Badge>
-                          {item.price && item.price > 0 ? (
-                            <Badge className="bg-primary">{item.price} coins</Badge>
-                          ) : (
-                            <Badge className="bg-green-600">FREE</Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Star className="h-3 w-3" />
-                            {item.averageRating?.toFixed(1) || 'N/A'}
-                          </span>
-                          <span>•</span>
-                          <span>{item.views || 0} views</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-
-            {/* Badges Tab */}
-            <TabsContent value="badges">
-              <Card>
-                <CardContent className="p-8 text-center text-muted-foreground">
-                  Badge display coming soon
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <Footer />
-    </div>
+  // Pass all data to Client Component
+  return (
+    <UserProfileClient
+      username={params.username}
+      initialUser={user}
+      initialBadges={badges}
+      initialContent={content}
+      initialThreads={threads}
+    />
   );
 }
 
-// Enable ISR - 60s revalidation
-export const revalidate = 60;
-
-// Generate static params for top users
-export async function generateStaticParams() {
-  const topUsers = await db.query.users.findMany({
-    limit: 100,
-    orderBy: (users, { desc }) => [desc(users.reputationScore)],
-  });
-
-  return topUsers.map((user) => ({
-    username: user.username,
-  }));
-}
+// Enable dynamic rendering with no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
