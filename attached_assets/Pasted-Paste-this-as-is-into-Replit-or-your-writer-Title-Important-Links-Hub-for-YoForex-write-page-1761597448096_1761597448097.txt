@@ -1,0 +1,101 @@
+Paste this as-is into Replit (or your writer):
+
+Title: “Important Links Hub for YoForex — write pages + 1-line blurbs”
+
+Goal
+Expand the “Important Links” section and auto-generate short, human-friendly pages for each link. Keep language simple, encouraging, and practical. Avoid jargon. Make the copy feel like a helpful community guide (not corporate). Each page should help users get seen/ranked and stay safe.
+
+Deliverables
+	1.	A list of link cards (title + 1-line description) for the homepage/sidebar “Important Links”.
+	2.	A separate page (300–600 words) for each link in clean Markdown (H1, short intro, bullets, numbered steps, mini-FAQ).
+	3.	Use friendly headings, short paragraphs, and checklists.
+	4.	Do not mention “SEO” too much—say “how to get seen/found” instead.
+
+⸻
+
+Link cards to create (with pages)
+	1.	Forum Rules – Simple do’s & don’ts so everyone feels welcome.
+	2.	Safe Download Guide – How to share files safely (and what to avoid).
+	3.	Verified Brokers – What “verified” means here + the current list.
+	4.	EA Coding Rules – Fair play for code sharing, forks, and credits.
+	5.	How to Earn Coins – Easy ways to earn coins by helping others.
+	6.	How to Get Your Thread Seen – Quick tweaks so more people find your post.
+	7.	How to Rank Your Articles/Blogs – Write naturally, add details people search for.
+	8.	How to Rank EA Publications – Titles, versions, proof, and good screenshots.
+	9.	New Member Quickstart – Post your first thread without overthinking it.
+	10.	Report a Scam (Safely) – What evidence to include and what to blur.
+	11.	Community Badges & Levels – What badges mean and how to level up.
+	12.	Marketplace Seller Guide – Listing rules, screenshots, and honest claims.
+	13.	Beginner Thread Template – A fill-in outline for your first post.
+	14.	EA/Indicator Review Template – Pros/cons, metrics, and fair ratings.
+	15.	Trading Journal Template – A simple weekly format you can keep up with.
+
+⸻
+
+Writing style & structure (apply to every page)
+	•	Tone: friendly, practical, calm. Talk to one person (“you”).
+	•	Intro (2–3 lines): why this page matters.
+	•	Quick Wins box: 3–5 bullets of the fastest improvements.
+	•	Steps: 5–8 numbered steps users can follow right away.
+	•	Mini-FAQ: 3–5 common questions with short answers.
+	•	End note: one line: “If you’re stuck, ask in the category and we’ll help.”
+
+⸻
+
+Page-specific guidance (key points to cover)
+
+How to Earn Coins
+	•	Earning basics: +10 new thread, +2 helpful reply, +1 upvote received, +15 accepted answer.
+	•	Extra nudges: add timeframe/instrument/broker, attach set file/screenshot.
+	•	Good examples of helpful replies (one-liners are fine; show 2–3).
+	•	“No spam” reminder: low-effort posts don’t earn.
+
+How to Get Your Thread Seen (avoid the word “SEO” where possible)
+	•	Clear title formula: [Instrument] [Timeframe] – what you tried / what you need.
+	•	Body must include: instrument, timeframe, broker, rules, results (if any), 1 question.
+	•	Add 2–5 tags (chips): e.g., xauusd, m5, scalping, mt5, ic-markets.
+	•	One sentence “summary” at top (we can prompt them in UI).
+	•	Attach one clean screenshot if relevant.
+	•	Link to 2–3 related threads (same instrument/timeframe).
+
+How to Rank Your Articles/Blogs
+	•	Natural headline (avoid shouting).
+	•	First paragraph answers “who/what/when/result.”
+	•	Use sub-headings for each idea; keep paragraphs short.
+	•	Add a small checklist at the end: titles, summary, tags, links to 2–3 related posts.
+	•	Friendly examples of strong vs weak titles (3 of each).
+
+How to Rank EA Publications
+	•	Title format: EA Name + version + platform + pair/timeframe.
+	•	Include: what it does (1 line), requirements (account type, lot min, VPS?), tested pairs/timeframes, proof (equity curve or stats), known limits (e.g., news).
+	•	3 screenshots: settings, chart example, results snippet.
+	•	Add 5–8 tags (pair, timeframe, platform, strategy type).
+	•	Be honest about risk; never claim guaranteed profit.
+
+Report a Scam (Safely)
+	•	Evidence list: dates, amounts, tickets, screenshots (mask account IDs).
+	•	What to blur: account numbers, personal IDs.
+	•	How to stay factual (no insults, just facts).
+	•	Where to escalate (regulators, support channels).
+
+Templates (Thread / Review / Journal)
+	•	Provide copy-paste outlines with prompts like:
+	•	Thread: “Pair + timeframe, your rules, what happened, what you want help with.”
+	•	Review: “What you tested, where, for how long, pros/cons, 1–2 real metrics.”
+	•	Journal: “Week number, pairs traded, wins/losses, changes for next week.”
+
+⸻
+
+Formatting & length
+	•	Link card descriptions: max 14 words each.
+	•	Guide pages: 300–600 words, scannable, use bullets.
+	•	Use plain words like “get seen”, “show up,” “help others find your post.”
+	•	Avoid heavy jargon; only use platform names, pairs, timeframes, and “tags.”
+
+⸻
+
+Output format
+	•	Return a Markdown file per page (15 files) + one Markdown index that lists all link cards (title + 1 line) with relative links to each page.
+	•	File names: forum-rules.md, safe-download-guide.md, verified-brokers.md, ea-coding-rules.md, how-to-earn-coins.md, how-to-get-your-thread-seen.md, how-to-rank-articles-blogs.md, how-to-rank-ea-publications.md, new-member-quickstart.md, report-a-scam.md, badges-levels.md, marketplace-seller-guide.md, template-beginner-thread.md, template-ea-review.md, template-trading-journal.md, and IMPORTANT-LINKS-INDEX.md.
+
+Done = a friendly “Important Links” hub with 15 cards and 15 short, useful guide pages that help users post better, get seen more, and stay safe—without ever feeling like homework.
