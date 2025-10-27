@@ -503,6 +503,40 @@ export const dashboardPreferences = pgTable("dashboard_preferences", {
   userIdIdx: index("idx_dashboard_preferences_user_id").on(table.userId),
 }));
 
+// Daily Activity Tracking - To enforce daily limits
+export const dailyActivityLimits = pgTable("daily_activity_limits", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  activityDate: timestamp("activity_date").notNull().defaultNow(),
+  repliesCount: integer("replies_count").notNull().default(0),
+  reportsCount: integer("reports_count").notNull().default(0),
+  backtestsCount: integer("backtests_count").notNull().default(0),
+  lastCheckinAt: timestamp("last_checkin_at"),
+  consecutiveDays: integer("consecutive_days").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userDateIdx: uniqueIndex("idx_daily_activity_user_date").on(table.userId, table.activityDate),
+  userIdIdx: index("idx_daily_activity_user_id").on(table.userId),
+}));
+
+// Referral System - Track referrals and commissions
+export const referrals = pgTable("referrals", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  referrerId: varchar("referrer_id").notNull().references(() => users.id),
+  referredUserId: varchar("referred_user_id").notNull().references(() => users.id),
+  signupBonus: integer("signup_bonus").notNull().default(10),
+  firstPostBonus: integer("first_post_bonus").notNull().default(0),
+  firstPurchaseBonus: integer("first_purchase_bonus").notNull().default(0),
+  lifetimeCommissionEarned: integer("lifetime_commission_earned").notNull().default(0),
+  status: text("status").notNull().$type<"active" | "inactive">().default("active"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  referrerIdx: index("idx_referrals_referrer_id").on(table.referrerId),
+  referredIdx: uniqueIndex("idx_referrals_referred_user_id").on(table.referredUserId),
+}));
+
 // Upsert User schema for Replit Auth (OIDC)
 export const upsertUserSchema = createInsertSchema(users).pick({
   id: true,
@@ -938,3 +972,11 @@ export const BADGE_METADATA: Record<BadgeType, {
     color: 'text-green-500',
   },
 };
+
+// Daily Activity Limits types
+export type DailyActivityLimit = typeof dailyActivityLimits.$inferSelect;
+export type InsertDailyActivityLimit = typeof dailyActivityLimits.$inferInsert;
+
+// Referral types
+export type Referral = typeof referrals.$inferSelect;
+export type InsertReferral = typeof referrals.$inferInsert;

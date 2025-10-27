@@ -1,0 +1,347 @@
+# **💰 YOFOREX GOLD COIN SYSTEM - FINAL IMPLEMENTATION GUIDE**
+
+## **📝 COPY THIS ENTIRE SECTION TO REPLIT AGENT**
+
+***
+
+## **🎯 MAIN OBJECTIVE**
+
+Update YoForex's gold coin system with affordable pricing and balanced earning mechanics. Base rate: **100 coins = $5.50 USD** (each coin = $0.055)
+
+***
+
+## **💵 COIN PURCHASE PACKAGES (EXACT IMPLEMENTATION)**
+
+Display only USD pricing, no other currencies.
+
+| Package Name | Base Coins | Bonus Coins | Total Coins | Price USD |
+|--------------|------------|-------------|-------------|-----------|
+| Mini | 100 | +10 | **110 coins** | **$5.50** |
+| Starter | 300 | +40 | **340 coins** | **$16.50** |
+| Basic | 500 | +75 | **575 coins** | **$27.50** |
+| Popular ⭐ | 1000 | +200 | **1200 coins** | **$55.00** |
+| Pro | 2000 | +450 | **2450 coins** | **$110.00** |
+| Business | 5000 | +1250 | **6250 coins** | **$275.00** |
+| Enterprise | 10000 | +3000 | **13000 coins** | **$550.00** |
+
+**Important Display Requirements:**
+- Mark "Popular" package with special badge and highlighting
+- Show savings percentage on each package (calculate: bonus ÷ base × 100)
+- Display "Best Value" tag on Enterprise package
+- Show only USD prices, nothing else
+
+***
+
+## **🎁 HOW USERS EARN COINS (REDUCED AMOUNTS)**
+
+### **Free Earning Methods - Lower Rewards to Prevent Abuse**
+
+***
+
+### **1. Publish EA or Indicator**
+
+**What Happens:**
+- User uploads EA or indicator to marketplace
+- User sets their own selling price (minimum 20 coins, no maximum)
+- After admin approves, user gets instant publishing bonus
+- Each time someone buys, seller gets percentage of price
+
+**Rewards:**
+- Publishing bonus: **10 coins** (one-time when approved)
+- Per sale: **Seller keeps 80%**, platform keeps 20%
+- Quality bonus: If EA gets 10+ sales AND 4+ star rating, award extra **25 coins**
+
+**Daily Limits:** No limit on publishing, but each item only earns publishing bonus once
+
+**Example:** User uploads EA priced at 500 coins. Gets 10 coins instantly. When someone buys it, seller receives 400 coins (80%), platform keeps 100 coins (20%).
+
+***
+
+### **2. Share Set Files**
+
+**What Happens:**
+- User uploads optimized configuration files for EAs
+- User sets price (minimum 5 coins, no maximum)
+- Gets instant bonus after approval
+
+**Rewards:**
+- Publishing bonus: **5 coins** (one-time)
+- Per download: **Seller keeps 75%**, platform keeps 25%
+
+**Daily Limits:** No limit
+
+***
+
+### **3. Write Articles**
+
+**What Happens:**
+- User writes tutorials, strategies, reviews, guides
+- User sets selling price (minimum 10 coins, no maximum)
+- Must be at least 500 words to qualify
+
+**Rewards:**
+- Publishing bonus: **10 coins** (one-time after approval)
+- Per sale: **Seller keeps 80%**, platform keeps 20%
+- Featured bonus: If admin features article, award extra **50 coins**
+
+**Daily Limits:** No limit on publishing
+
+***
+
+### **4. Community Help (Replies & Answers)**
+
+**What Happens:**
+- User posts helpful replies to threads
+- Thread author can mark one reply as "Best Answer"
+
+**Rewards:**
+- Regular reply: **1 coin** per reply
+- Reply must be minimum 50 characters
+- Best Answer: **10 coins** when marked by thread author
+- Daily reply limit: Maximum **20 replies per day** (20 coins max)
+- No daily limit on Best Answers
+
+**Example:** User posts 20 replies (20 coins) and gets 2 marked as Best Answer (20 coins). Total: 40 coins that day.
+
+***
+
+### **5. Share Backtest Reports**
+
+**What Happens:**
+- User posts detailed backtest results with screenshots
+- Must include verified MyFxBook link or broker statements
+
+**Rewards:**
+- Basic report: **10 coins** per report
+- Quality bonus: If includes 12+ months data, add **10 more coins**
+- Featured bonus: If admin features it, add **25 coins**
+- Daily limit: Maximum **3 reports per day**
+
+**Example:** User shares 2-year backtest with MyFxBook. Gets 10 + 10 quality = 20 coins.
+
+***
+
+### **6. Report Violations**
+
+**What Happens:**
+- User reports spam, scams, or malicious content
+- Admin reviews and verifies the report
+
+**Rewards:**
+- Spam report (verified): **5 coins**
+- Scam report (verified): **25 coins**
+- Malicious EA report (verified): **50 coins**
+- First reporter gets the reward
+- False reports: **Lose 10 coins** as penalty
+
+**Daily Limits:** Maximum 5 reports per day
+
+***
+
+### **7. Daily Activity**
+
+**What Happens:**
+- User logs in daily and clicks check-in button
+- System tracks consecutive days
+
+**Rewards:**
+- Daily login: **2 coins** automatically when logging in
+- Check-in button: **1 coin** when clicked (once per day)
+- 7-day streak: **10 coins bonus** every 7 consecutive days
+- 30-day perfect month: **50 coins bonus** if logged in all 30 days
+
+**Monthly Maximum from Daily Activity:**
+- Daily login: 60 coins (2 × 30)
+- Check-in: 30 coins (1 × 30)
+- Weekly streaks: 40 coins (10 × 4)
+- Monthly bonus: 50 coins
+- **Total: 180 coins per month** (worth $9.90) just for logging in
+
+***
+
+### **8. Referral Program**
+
+**What Happens:**
+- User shares referral link: https://yoforex.net/?ref=USERNAME
+- When someone signs up using link, both get rewards
+
+**Rewards:**
+- New signup: **10 coins** when referral creates account
+- First post: **10 coins** when referral creates first thread
+- First purchase: **5%** of their purchase amount (maximum 50 coins)
+- Lifetime: **3%** of all coins referral earns from content sales (ongoing forever)
+
+**No Daily Limits**
+
+**Example:** Refer 3 friends who each sign up (30 coins), post content (30 coins), and buy Popular package (3 × 60 = 180 coins). Total: 240 coins + ongoing 3% commission.
+
+***
+
+## **💸 SPENDING SYSTEM**
+
+### **How Pricing Works:**
+
+**DO NOT set fixed prices for content categories.** Let publishers decide their own prices for:
+- EAs (Expert Advisors)
+- Indicators
+- Set files
+- Articles and guides
+- Source code
+- Any other content
+
+**Only Set Minimum Prices:**
+- EAs: Minimum 20 coins
+- Indicators: Minimum 10 coins
+- Set files: Minimum 5 coins
+- Articles: Minimum 10 coins
+- Source code: Minimum 50 coins
+
+Publishers can set any price above these minimums. Platform takes commission (20-25% depending on content type).
+
+**Display Format:**
+When showing content price, always display: "X coins ($Y.YY USD)"
+
+Example: "500 coins ($27.50 USD)"
+
+***
+
+## **🔄 WITHDRAWAL SYSTEM**
+
+**Rules:**
+- Minimum withdrawal: **1000 coins** = $55 USD
+- Withdrawal fee: **5%** platform fee
+- Available methods: Cryptocurrency (BTC, ETH, USDT)
+- Processing time: 1-3 business days
+- User receives: 1000 coins - 5% = 950 coins worth = $52.25 USD
+
+**Important:** Show clear calculation on withdrawal page:
+"Withdrawing 1000 coins = $55.00 minus 5% fee ($2.75) = $52.25 you receive"
+
+***
+
+## **📍 DISPLAY LOCATIONS**
+
+### **1. Header (Always Visible)**
+- Show coin balance: "💰 1,245 coins"
+- Make clickable - opens purchase modal
+- Display on every page
+
+### **2. User Dashboard**
+Display coin widget showing:
+- Current balance (large text)
+- This month earned
+- This month spent
+- Quick links: "Buy Coins" and "Earn Guide"
+
+### **3. Content Purchase Pages**
+- Show price as: "500 coins ($27.50 USD)"
+- If user has insufficient balance: "You need 500 coins but have 200. Buy more or earn free."
+- Two buttons: "Buy Coins" and "Learn to Earn"
+
+### **4. Earning Notifications**
+Show popup after earning coins:
+- "+10 coins earned!"
+- "Published: [EA Name]"
+- Auto-dismiss after 3 seconds
+
+***
+
+## **📚 CREATE EARNING GUIDE ARTICLE**
+
+**Article Title:** "Complete Guide: Earn and Use YoForex Gold Coins"
+
+**Where to Post:** Create as pinned thread in "Announcements" category
+
+**Content to Include:**
+
+**Section 1: What Are Gold Coins?**
+- Explain: Virtual currency for YoForex platform
+- Exchange rate: 100 coins = $5.50 USD
+- Can earn free or purchase
+
+**Section 2: How to Earn (Free Methods)**
+- List all 8 earning methods in table format
+- Show coin amounts for each activity
+- Include realistic monthly earning examples:
+  - Passive user (daily login only): ~180 coins/month ($9.90 value)
+  - Active helper (replies + answers): ~400 coins/month ($22 value)
+  - Content creator (selling EAs): 1000+ coins/month ($55+ value)
+
+**Section 3: How to Purchase**
+- Show all 7 packages in table
+- Display bonus percentages
+- Note: Only show USD prices
+
+**Section 4: What You Can Buy**
+- Explain: Publishers set their own prices
+- Typical price ranges for reference only
+- Emphasize quality content costs more
+
+**Section 5: Withdrawal**
+- Minimum: 1000 coins ($55 USD)
+- Show fee calculation example
+- List supported cryptocurrencies
+
+**Section 6: FAQ**
+- Do coins expire? No
+- Can I transfer coins? Yes, minimum 50 coins
+- How long for withdrawals? 1-3 days
+- What if I want refund? Link to refund policy
+
+***
+
+## **✅ TESTING REQUIREMENTS**
+
+Before launching, verify:
+
+1. ✅ New user receives 100 welcome bonus coins
+2. ✅ Daily login awards 2 coins automatically
+3. ✅ Check-in button awards 1 coin
+4. ✅ Creating thread awards correct amount based on what you set
+5. ✅ Posting reply awards 1 coin (max 20 per day enforced)
+6. ✅ Best Answer awards 10 coins
+7. ✅ Publishing EA awards 10 coins + shows in balance
+8. ✅ Buying EA deducts correct coins, credits seller 80%
+9. ✅ All prices show both coins AND USD: "X coins ($Y.YY)"
+10. ✅ Purchase modal shows all 7 packages with only USD pricing
+11. ✅ Withdrawal page calculates: amount - 5% fee correctly
+12. ✅ Earning guide article is pinned at top of Announcements
+13. ✅ Coin balance updates in real-time in header
+14. ✅ Daily limits enforce correctly (20 replies max, etc.)
+
+***
+
+## **🎯 ECONOMIC BALANCE**
+
+**Why These Lower Earning Amounts?**
+
+The reduced free earning ensures:
+- Coins have real value (not given away too freely)
+- Users appreciate earned coins more
+- Quality over quantity (encourages better contributions)
+- Sustainable economy (supply doesn't exceed demand)
+- Incentivizes purchases for users who want instant access
+- Rewards consistent daily activity over long term
+
+**Monthly Free Earning Potential:**
+- Ultra-passive (login only): 180 coins ($9.90)
+- Moderately active (login + 10 replies daily): 480 coins ($26.40)
+- Very active (above + answers + reports): 700 coins ($38.50)
+- Content sellers: Unlimited based on sales
+
+This creates healthy balance where free users can participate but committed users either purchase or earn through quality contributions.
+
+***
+
+**END OF IMPLEMENTATION GUIDE**
+
+This system makes earning possible but intentionally slow for passive activities, while rewarding quality content creation and sales. The affordable $5.50 entry point encourages purchases while maintaining coin value. Publishers control all content pricing, creating a free market.
+
+Sources
+[1] Forex Trading Costs, Fees & Spreads https://www.tastyfx.com/accounts/pricing/
+[2] FX Trading Pricing | Our Pricing https://www.oanda.com/us-en/trading/our-pricing/
+[3] Understanding Forex Broker Fees: Fixed vs. Variable ... https://www.investopedia.com/articles/forex/08/forex-commission-spread.asp
+[4] How Much Are Crypto Exchange Fees? Breaking Down the ... https://alphapoint.com/blog/how-much-are-crypto-exchange-fees/
+[5] All Types Of Forex Fees And Hidden Costs Explained https://tradersunion.com/interesting-articles/brokerage-fees-definition-and-comparison/forex-fees-and-costs/
+[6] Forex Trading Charges & Fees | Trading Cost https://www.oanda.com/us-en/trading/our-charges/
+[7] Typical costs of starting a crypto exchange in 2025 https://innowise.com/blog/crypto-exchange-software-development-cost/
