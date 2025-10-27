@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 
 async function fetchData(url: string) {
   try {
-    const expressUrl = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+    // Server-side: fetch directly from Express on port 3001
+    const expressUrl = process.env.EXPRESS_URL || 'http://localhost:3001';
     const res = await fetch(`${expressUrl}${url}`, {
       cache: 'no-store',
       headers: {
@@ -32,16 +33,16 @@ async function fetchData(url: string) {
 
 export default async function HomePage() {
   // Parallel data fetching from Express API
-  const [stats, categories, threads] = await Promise.all([
+  const [stats, categoryTree, threads] = await Promise.all([
     fetchData('/api/stats'),
-    fetchData('/api/categories'),
+    fetchData('/api/categories/tree/all'),  // Fetch category tree instead of flat list
     fetchData('/api/threads'),
   ]);
 
   return (
     <HomeClient 
       initialStats={stats}
-      initialCategories={categories}
+      initialCategories={categoryTree}
       initialThreads={threads}
     />
   );

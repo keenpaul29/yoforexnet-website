@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/Header";
 import StatsBar from "@/components/StatsBar";
-import CategoryCard from "@/components/CategoryCard";
+import { CategoryTree } from "@/components/CategoryTree";
 import ForumThreadCard from "@/components/ForumThreadCard";
 import CoinBalance from "@/components/CoinBalance";
 import Leaderboard from "@/components/Leaderboard";
@@ -68,9 +68,9 @@ export default function HomeClient({
   initialCategories, 
   initialThreads 
 }: HomeClientProps) {
-  // Fetch real categories with 60s auto-refresh
+  // Fetch real categories with 60s auto-refresh (now using tree endpoint)
   const { data: categoriesData, isLoading: isLoadingCategories } = useQuery({
-    queryKey: ['/api/categories'],
+    queryKey: ['/api/categories/tree/all'],
     initialData: initialCategories,
     refetchInterval: 60000, // Auto-refresh every 60 seconds
     staleTime: 50000,
@@ -84,11 +84,8 @@ export default function HomeClient({
     staleTime: 50000,
   });
 
-  // Map categories with icons from real API data
-  const categories = (categoriesData as any[] || []).map((cat: any) => ({
-    ...cat,
-    icon: iconMap[cat.icon] || Lightbulb,
-  }));
+  // Flatten category tree for use in CategoryTree component
+  const categories = (categoriesData as any[] || []);
 
   // Create a map of categorySlug to category name for thread mapping
   const categoryMap = new Map(
@@ -141,11 +138,7 @@ export default function HomeClient({
                 <p className="text-xs sm:text-sm text-muted-foreground">Choose the right category for your discussion</p>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-                {categories.map((category) => (
-                  <CategoryCard key={category.slug} {...category} />
-                ))}
-              </div>
+              <CategoryTree categories={categories} />
             </section>
 
             <section>

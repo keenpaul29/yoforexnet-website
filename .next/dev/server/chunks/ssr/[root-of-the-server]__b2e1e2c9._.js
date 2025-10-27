@@ -75,7 +75,8 @@ const metadata = {
 };
 async function fetchData(url) {
     try {
-        const expressUrl = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
+        // Server-side: fetch directly from Express on port 3001
+        const expressUrl = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:3001';
         const res = await fetch(`${expressUrl}${url}`, {
             cache: 'no-store',
             headers: {
@@ -94,18 +95,18 @@ async function fetchData(url) {
 }
 async function HomePage() {
     // Parallel data fetching from Express API
-    const [stats, categories, threads] = await Promise.all([
+    const [stats, categoryTree, threads] = await Promise.all([
         fetchData('/api/stats'),
-        fetchData('/api/categories'),
+        fetchData('/api/categories/tree/all'),
         fetchData('/api/threads')
     ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$HomeClient$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
         initialStats: stats,
-        initialCategories: categories,
+        initialCategories: categoryTree,
         initialThreads: threads
     }, void 0, false, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 42,
+        lineNumber: 43,
         columnNumber: 5
     }, this);
 }
