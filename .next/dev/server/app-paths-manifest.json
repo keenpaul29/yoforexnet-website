@@ -1,5 +1,6 @@
 {
   "/earn/page": "app/earn/page.js",
   "/page": "app/page.js",
+  "/publish/page": "app/publish/page.js",
   "/recharge/page": "app/recharge/page.js"
 }
