@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import Header from "@/components/Header";
 import StatsBar from "@/components/StatsBar";
 import { CategoryTree } from "@/components/CategoryTree";
@@ -34,7 +35,14 @@ import {
   ShieldAlert,
   Shield,
   Download,
-  CheckCircle
+  CheckCircle,
+  Coins,
+  Eye,
+  Target,
+  FileText,
+  AlertTriangle,
+  Store,
+  ClipboardList
 } from "lucide-react";
 
 // Icon mapping for category icons
@@ -160,43 +168,131 @@ export default function HomeClient({
             <TopSellers />
             <Leaderboard />
             
-            <Card className="sticky top-24">
+            <Card className="sticky top-24" id="important-links">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Important Links</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-1">
-                <a 
-                  href="#" 
+              <CardContent className="space-y-1 max-h-[600px] overflow-y-auto">
+                <Link 
+                  href="/guides/forum-rules" 
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-forum-rules"
                 >
-                  <BookOpen className="w-4 h-4 text-primary dark:text-primary" />
+                  <BookOpen className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
                   <span>Forum Rules</span>
-                </a>
-                <a 
-                  href="#" 
+                </Link>
+                <Link 
+                  href="/guides/safe-download-guide" 
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-safe-download"
                 >
-                  <Download className="w-4 h-4 text-primary dark:text-primary" />
+                  <Download className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
                   <span>Safe Download Guide</span>
-                </a>
-                <a 
-                  href="#" 
+                </Link>
+                <Link 
+                  href="/guides/verified-brokers" 
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-verified-brokers"
                 >
-                  <CheckCircle className="w-4 h-4 text-primary dark:text-primary" />
+                  <CheckCircle className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
                   <span>Verified Brokers</span>
-                </a>
-                <a 
-                  href="#" 
+                </Link>
+                <Link 
+                  href="/guides/ea-coding-rules" 
                   className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
                   data-testid="link-ea-coding-rules"
                 >
-                  <Shield className="w-4 h-4 text-primary dark:text-primary" />
+                  <Shield className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
                   <span>EA Coding Rules</span>
-                </a>
+                </Link>
+                <Link 
+                  href="/guides/how-to-earn-coins" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-earn-coins"
+                >
+                  <Coins className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>How to Earn Coins</span>
+                </Link>
+                <Link 
+                  href="/guides/how-to-get-your-thread-seen" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-thread-visibility"
+                >
+                  <Eye className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Get Your Thread Seen</span>
+                </Link>
+                <Link 
+                  href="/guides/how-to-rank-articles-blogs" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-rank-articles"
+                >
+                  <Target className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Rank Articles & Blogs</span>
+                </Link>
+                <Link 
+                  href="/guides/how-to-rank-ea-publications" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-rank-ea"
+                >
+                  <TrendingUp className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Rank EA Publications</span>
+                </Link>
+                <Link 
+                  href="/guides/new-member-quickstart" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-quickstart"
+                >
+                  <Rocket className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>New Member Quickstart</span>
+                </Link>
+                <Link 
+                  href="/guides/report-a-scam" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-report-scam"
+                >
+                  <AlertTriangle className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Report a Scam</span>
+                </Link>
+                <Link 
+                  href="/guides/badges-levels" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-badges"
+                >
+                  <Award className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Badges & Levels</span>
+                </Link>
+                <Link 
+                  href="/guides/marketplace-seller-guide" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-seller-guide"
+                >
+                  <Store className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Marketplace Seller Guide</span>
+                </Link>
+                <Link 
+                  href="/guides/template-beginner-thread" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-template-thread"
+                >
+                  <FileText className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Template: Beginner Thread</span>
+                </Link>
+                <Link 
+                  href="/guides/template-ea-review" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-template-review"
+                >
+                  <ClipboardList className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Template: EA Review</span>
+                </Link>
+                <Link 
+                  href="/guides/template-trading-journal" 
+                  className="flex items-center gap-3 p-2 rounded-lg text-sm text-foreground hover-elevate active-elevate-2 transition-colors"
+                  data-testid="link-template-journal"
+                >
+                  <Activity className="w-4 h-4 text-primary dark:text-primary flex-shrink-0" />
+                  <span>Template: Trading Journal</span>
+                </Link>
               </CardContent>
             </Card>
           </aside>
