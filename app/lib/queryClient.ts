@@ -12,9 +12,11 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  // Client-side: Use same origin (empty) so Next.js rewrites to Express
+  // Server-side: Use http://localhost:3001 (direct to Express API)
   const EXPRESS_URL = typeof window !== 'undefined'
-    ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
-    : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+    ? '' // Same origin, will be rewritten by Next.js
+    : (process.env.EXPRESS_URL || 'http://localhost:3001');
   
   const fullUrl = url.startsWith('http') ? url : `${EXPRESS_URL}${url}`;
   
@@ -53,9 +55,11 @@ export const getQueryFn: <T>(options: {
   };
 
 // Get Express API URL from environment or use default
+// Client-side: Use empty string (same origin) so Next.js rewrites to Express on port 3001
+// Server-side: Use http://localhost:3001 (direct to Express API)
 const EXPRESS_API_URL = typeof window !== 'undefined' 
-  ? (process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000')
-  : (process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000');
+  ? '' // Empty string means same origin, will be rewritten by Next.js
+  : (process.env.EXPRESS_URL || 'http://localhost:3001');
 
 export const queryClient = new QueryClient({
   defaultOptions: {

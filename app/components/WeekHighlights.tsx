@@ -138,42 +138,33 @@ export default function WeekHighlights({
 }: WeekHighlightsProps) {
   const router = useRouter();
 
-  // Fetch real trending threads from API
+  // Fetch real trending threads from API (uses relative URL for Next.js rewrite)
   const { data: trendingData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'trending', limit: 3 }],
     queryFn: async () => {
-      const EXPRESS_URL = typeof window !== 'undefined'
-        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
-        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=trending&limit=3`);
+      const res = await fetch('/api/threads?sortBy=trending&limit=3', { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch trending threads');
       return res.json();
     },
     refetchInterval: 60000, // Refresh every minute
   });
 
-  // Fetch newest threads
+  // Fetch newest threads (uses relative URL for Next.js rewrite)
   const { data: newData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'newest', limit: 3 }],
     queryFn: async () => {
-      const EXPRESS_URL = typeof window !== 'undefined'
-        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
-        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=newest&limit=3`);
+      const res = await fetch('/api/threads?sortBy=newest&limit=3', { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch newest threads');
       return res.json();
     },
     refetchInterval: 60000,
   });
 
-  // Fetch solved threads (answered)
+  // Fetch solved threads (answered) (uses relative URL for Next.js rewrite)
   const { data: solvedData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'answered', limit: 3 }],
     queryFn: async () => {
-      const EXPRESS_URL = typeof window !== 'undefined'
-        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
-        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=answered&limit=3`);
+      const res = await fetch('/api/threads?sortBy=answered&limit=3', { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch answered threads');
       return res.json();
     },

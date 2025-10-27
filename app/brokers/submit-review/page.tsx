@@ -28,7 +28,7 @@ async function checkAuth() {
       return null;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/me`, {
+    const response = await fetch(`${process.env.EXPRESS_URL || "http://localhost:3001"}/api/me`, {
       headers: { Cookie: `connect.sid=${sessionCookie.value}` },
       cache: "no-store",
     });
@@ -48,7 +48,7 @@ async function getBrokers() {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("connect.sid");
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/brokers`, {
+    const response = await fetch(`${process.env.EXPRESS_URL || "http://localhost:3001"}/api/brokers`, {
       headers: sessionCookie ? { Cookie: `connect.sid=${sessionCookie.value}` } : {},
       cache: "no-store",
     });

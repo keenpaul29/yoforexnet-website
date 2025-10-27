@@ -24,7 +24,7 @@ async function getCategories() {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("connect.sid");
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/publish/categories`, {
+    const response = await fetch(`${process.env.EXPRESS_URL || "http://localhost:3001"}/api/publish/categories`, {
       headers: sessionCookie ? { Cookie: `connect.sid=${sessionCookie.value}` } : {},
       cache: "no-store",
     });
@@ -49,7 +49,7 @@ async function checkAuth() {
       return null;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/me`, {
+    const response = await fetch(`${process.env.EXPRESS_URL || "http://localhost:3001"}/api/me`, {
       headers: { Cookie: `connect.sid=${sessionCookie.value}` },
       cache: "no-store",
     });
