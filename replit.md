@@ -3,7 +3,7 @@
 ## Overview
 YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform for algorithmic trading on MT4/MT5. It aims to be the go-to platform for traders to discuss strategies, share EAs, and find reliable brokers. The platform features real-time components, sophisticated ranking, a gold coin economy, a comprehensive forum, a broker directory, and a marketplace for trading tools. 
 
-**Current Migration Status**: Copying React SPA (client/src/*) to Next.js 16 (app/*) for SEO/SSR benefits while maintaining identical design and Express backend. See `REACT_TO_NEXTJS_COPY_PLAN.md` for detailed plan.
+**Current Migration Status**: ✅ **Homepage Complete!** Successfully copied React homepage to Next.js 16 (app/*) with 100% design parity. Next.js provides SEO/SSR while Express backend handles all authentication and data mutations. See `REACT_TO_NEXTJS_COPY_PLAN.md` for full plan.
 
 ## User Preferences
 - Design: Modern, clean interface with gamification elements
@@ -63,13 +63,15 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - **Trending**: "What's Hot" and "Week Highlights" sections based on algorithms.
 
 ### Frontend Architecture
-- **Framework**: React 18 + TypeScript.
-- **Styling**: Tailwind CSS + shadcn/ui components.
-- **Routing**: Wouter.
-- **State Management**: TanStack Query v5 (React Query).
+- **React SPA**: React 18 + TypeScript running on Vite (client/src/*), served by Express at port 5000.
+- **Next.js SSR**: Next.js 16 App Router (app/*) running at port 3000 for SEO-optimized pages.
+- **Styling**: Tailwind CSS + shadcn/ui components (shared between React & Next.js).
+- **Routing**: Wouter (React SPA) and next/link (Next.js).
+- **State Management**: TanStack Query v5 (React Query) configured to fetch from Express API.
 - **Forms**: React Hook Form + Zod validation.
 - **Real-time**: Custom `useRealtimeUpdates` hook for polling.
-- **Hybrid Architecture**: Next.js 15 App Router is used for critical SEO pages (`/thread/[slug]`, `/content/[slug]`, `/user/[username]`, `/category/[slug]`) leveraging Server Components, direct PostgreSQL queries, ISR, and static generation for performance and SEO.
+- **Hybrid Architecture**: Next.js Server Components fetch initial data from Express API and hydrate Client Components for interactivity, maintaining 100% design parity with React SPA.
+- **Completed Pages**: Homepage (/) ✅
 
 ### Backend Architecture
 - **Server**: Express.js (for authentication and mutations).

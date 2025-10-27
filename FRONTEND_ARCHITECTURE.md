@@ -18,23 +18,42 @@
 
 ## Technology Stack
 
+### Dual Frontend Architecture (Oct 27, 2025)
+YoForex runs **two frontend servers** for different purposes:
+
+1. **React SPA** (Port 5000 - Express + Vite)
+   - Original app in `client/src/*`
+   - Used for development and testing
+   - Wouter routing
+   - Served by Express at http://localhost:5000
+
+2. **Next.js SSR** (Port 3000 - Next.js 16 App Router)
+   - SEO-optimized version in `app/*`
+   - 100% design parity with React SPA
+   - Server Components for initial data fetching
+   - Client Components for interactivity
+   - next/link routing
+   - All API calls route to Express backend
+
 ### Core Libraries
-- **React 18** - UI framework
+- **React 18** - UI framework (shared by both apps)
 - **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
+- **Vite** - React SPA build tool
+- **Next.js 16** - SSR framework with App Router
 - **TanStack Query v5** - Server state management
-- **Wouter** - Lightweight routing
+- **Wouter** - Routing (React SPA)
+- **next/link** - Routing (Next.js)
 - **React Hook Form** - Form management
 - **Zod** - Schema validation
 
-### UI Components
+### UI Components (Shared)
 - **shadcn/ui** - Component library (Radix UI primitives)
 - **Tailwind CSS** - Utility-first styling
 - **Lucide React** - Icon library
 - **Framer Motion** - Animations (optional)
 
 ### Backend Integration
-- **Express.js** - REST API server
+- **Express.js** - REST API server (port 5000)
 - **Drizzle ORM** - Database queries
 - **PostgreSQL** - Production database
 
@@ -50,14 +69,10 @@
 ## Project Structure
 
 ```
-client/
+client/                      # React SPA (Port 5000)
 ├── src/
 │   ├── components/
-│   │   ├── ui/              # shadcn components
-│   │   │   ├── button.tsx
-│   │   │   ├── card.tsx
-│   │   │   ├── form.tsx
-│   │   │   └── ...
+│   │   ├── ui/              # shadcn components (original)
 │   │   ├── Header.tsx        # Global header with coin balance
 │   │   ├── EnhancedFooter.tsx
 │   │   ├── CoinBalance.tsx
@@ -67,31 +82,63 @@ client/
 │   │   ├── CategoriesPage.tsx        # All 16 forum categories grid
 │   │   ├── CategoryDiscussionPage.tsx # Individual category threads
 │   │   ├── ThreadDetailPage.tsx      # Thread view with nested replies
-│   │   ├── PublishPage.tsx  # EABOOK-style EA/Indicator release form (NEW Oct 26)
+│   │   ├── PublishPage.tsx  # EABOOK-style EA/Indicator release form
 │   │   ├── MembersPage.tsx  # Leaderboard and community stats
 │   │   ├── MarketplacePage.tsx
 │   │   ├── ContentDetailPage.tsx
 │   │   ├── RechargePage.tsx
 │   │   └── TransactionHistoryPage.tsx
 │   ├── lib/
-│   │   ├── queryClient.ts   # TanStack Query setup
+│   │   ├── queryClient.ts   # TanStack Query setup (fetches from Express)
 │   │   └── utils.ts         # Helper functions
 │   ├── hooks/
 │   │   └── use-toast.ts     # Toast notifications
-│   ├── App.tsx              # Root component with routing
+│   ├── App.tsx              # Root component with Wouter routing
 │   └── index.css            # Global styles + theme
 ├── public/
 └── index.html
 
+app/                         # Next.js SSR (Port 3000) - NEW Oct 27, 2025
+├── components/              # Copied from client/src/components with "use client"
+│   ├── ui/                  # shadcn components (Next.js compatible)
+│   ├── providers/
+│   │   └── AppProviders.tsx # QueryClient + Auth + Theme wrapper
+│   ├── Header.tsx           # Next.js version (uses next/link)
+│   ├── EnhancedFooter.tsx   # Next.js version
+│   ├── ThemeToggle.tsx      # Next.js version
+│   ├── StatsBar.tsx         # Homepage stats widget
+│   ├── CategoryCard.tsx     # Forum category display
+│   ├── ForumThreadCard.tsx  # Thread preview card
+│   ├── CoinBalance.tsx      # User coin widget
+│   ├── Leaderboard.tsx      # Top users widget
+│   ├── WeekHighlights.tsx   # Trending threads tabs
+│   ├── TrustLevel.tsx       # User rank widget
+│   ├── WhatsHot.tsx         # Hot threads widget
+│   ├── TopSellers.tsx       # Best selling EAs widget
+│   └── OnboardingChecklist.tsx # New user checklist
+├── contexts/
+│   ├── AuthContext.tsx      # Authentication state
+│   └── ThemeContext.tsx     # Dark/light theme state
+├── lib/
+│   ├── queryClient.ts       # TanStack Query (routes to Express API)
+│   └── utils.ts             # Helper functions
+├── hooks/
+│   └── use-toast.ts         # Toast notifications
+├── HomeClient.tsx           # Client Component for homepage interactivity
+├── page.tsx                 # Server Component - fetches from Express ✅
+├── layout.tsx               # Root layout with AppProviders
+├── globals.css              # Tailwind + custom CSS
+└── next.config.ts           # Next.js configuration
+
 server/
-├── routes.ts                # API endpoints (50+)
+├── routes.ts                # API endpoints (60+) - used by both React & Next.js
 ├── storage.ts               # Database layer
 ├── seo-engine.ts            # Auto-SEO generation
 ├── seed.ts                  # Database seed data
-└── index.ts                 # Express server
+└── index.ts                 # Express server (port 5000)
 
 shared/
-└── schema.ts                # TypeScript types + Drizzle schemas
+└── schema.ts                # TypeScript types + Drizzle schemas (shared)
 ```
 
 ---
