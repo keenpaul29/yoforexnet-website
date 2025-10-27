@@ -83,7 +83,7 @@ export function FilterPanel({
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
-            {categories.map(cat => (
+            {categories.map((cat: string) => (
               <SelectItem key={cat} value={cat}>
                 {cat}
               </SelectItem>
@@ -98,7 +98,7 @@ export function FilterPanel({
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            {statuses.map(stat => (
+            {statuses.map((stat: string) => (
               <SelectItem key={stat} value={stat}>
                 {stat}
               </SelectItem>

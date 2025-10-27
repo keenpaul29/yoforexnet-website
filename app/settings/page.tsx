@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import UserSettingsClient from "./UserSettingsClient";
+import SettingsClient from "./SettingsClient";
 
 export const metadata: Metadata = {
-  title: "Account Settings | YoForex",
-  description: "Manage your YoForex account settings, profile, notifications, and preferences.",
-  keywords: "settings, account settings, profile settings, preferences",
+  title: "Settings | YoForex",
+  description: "Manage your YoForex account settings, profile, notifications, security, and preferences.",
+  keywords: "settings, account settings, profile settings, preferences, security, notifications",
   openGraph: {
-    title: "Account Settings | YoForex",
-    description: "Manage your YoForex account settings, profile, notifications, and preferences.",
+    title: "Settings | YoForex",
+    description: "Manage your YoForex account settings, profile, notifications, security, and preferences.",
     type: "website",
     siteName: "YoForex",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Account Settings | YoForex",
-    description: "Manage your YoForex account settings, profile, notifications, and preferences.",
+    title: "Settings | YoForex",
+    description: "Manage your YoForex account settings, profile, notifications, security, and preferences.",
   },
 };
 
@@ -90,7 +90,7 @@ export default async function SettingsPage() {
 
   const coinsData = await getUserCoins();
 
-  return <UserSettingsClient initialUser={user} initialCoins={coinsData} />;
+  return <SettingsClient initialUser={user} initialCoins={coinsData} />;
 }
 
 export const dynamic = 'force-dynamic';

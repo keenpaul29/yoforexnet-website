@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { storage } from "./storage.js";
+import { setupAuth, isAuthenticated } from "./replitAuth.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,8 +25,8 @@ import {
   BADGE_METADATA,
   type BadgeType,
   coinTransactions
-} from "../shared/schema";
-import { db } from "./db";
+} from "../shared/schema.js";
+import { db } from "./db.js";
 import { eq, and, gt, asc } from "drizzle-orm";
 import {
   sanitizeRequestBody,
@@ -34,14 +34,14 @@ import {
   validatePrice,
   validateSufficientCoins,
   runValidators,
-} from "./validation";
+} from "./validation.js";
 import {
   coinOperationLimiter,
   contentCreationLimiter,
   reviewReplyLimiter,
-} from "./rateLimiting";
-import { generateSlug, generateFocusKeyword, generateMetaDescription as generateMetaDescriptionOld, generateImageAltTexts } from './seo';
-import { emailService } from './services/emailService';
+} from "./rateLimiting.js";
+import { generateSlug, generateFocusKeyword, generateMetaDescription as generateMetaDescriptionOld, generateImageAltTexts } from './seo.js';
+import { emailService } from './services/emailService.js';
 import { 
   RECHARGE_PACKAGES, 
   EARNING_REWARDS, 
@@ -50,13 +50,13 @@ import {
   calculateWithdrawal,
   coinsToUSD,
   formatCoinPrice
-} from '../shared/coinUtils';
+} from '../shared/coinUtils.js';
 import {
   generateFullSlug,
   generateMetaDescription,
   deduplicateTags,
   countWords,
-} from '../shared/threadUtils';
+} from '../shared/threadUtils.js';
 
 // Helper function to get authenticated user ID from session
 function getAuthenticatedUserId(req: any): string {
@@ -263,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const badges = user.badges || [];
-      const badgeDetails = badges.map(badgeId => ({
+      const badgeDetails = badges.map((badgeId: string) => ({
         id: badgeId,
         ...BADGE_METADATA[badgeId as BadgeType],
       }));
@@ -314,7 +314,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const achievements = {
         uploads: userContent.length,
-        verifiedSets: badges.filter(b => b.includes('verified')).length,
+        verifiedSets: badges.filter((b: string) => b.includes('verified')).length,
         solutionsMarked: acceptedAnswersCount
       };
 
@@ -336,7 +336,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = getAuthenticatedUserId(req);
       const newBadges = await storage.checkAndAwardBadges(userId);
       
-      const badgeDetails = newBadges.map(badgeId => ({
+      const badgeDetails = newBadges.map((badgeId: string) => ({
         id: badgeId,
         ...BADGE_METADATA[badgeId as BadgeType],
       }));
@@ -400,7 +400,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Populate content details for each purchase
       const purchasesWithContent = await Promise.all(
-        purchases.map(async (purchase) => {
+        purchases.map(async (purchase: any) => {
           const content = await storage.getContent(purchase.contentId);
           return {
             ...purchase,
@@ -422,21 +422,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const content = await storage.getUserContent(userId);
       
       // Get content IDs to query sales
-      const contentIds = content.map(c => c.id);
+      const contentIds = content.map((c: any) => c.id);
       
       // Calculate total revenue from actual sales/downloads
       // Revenue comes from the downloads field which represents successful purchases
-      const totalRevenue = content.reduce((sum, item) => {
+      const totalRevenue = content.reduce((sum: number, item: any) => {
         // Calculate revenue from downloads (80% commission for EA/indicators/articles, 75% for set files)
         const commission = item.type === 'source_code' ? 0.75 : 0.8;
         const salesRevenue = (item.downloads || 0) * item.priceCoins * commission;
         return sum + salesRevenue;
       }, 0);
       
-      const totalDownloads = content.reduce((sum, item) => sum + (item.downloads || 0), 0);
-      const totalViews = content.reduce((sum, item) => sum + (item.views || 0), 0);
+      const totalDownloads = content.reduce((sum: number, item: any) => sum + (item.downloads || 0), 0);
+      const totalViews = content.reduce((sum: number, item: any) => sum + (item.views || 0), 0);
       const avgRating = content.length > 0 
-        ? content.reduce((sum, item) => sum + (item.averageRating || 0), 0) / content.length 
+        ? content.reduce((sum: number, item: any) => sum + (item.averageRating || 0), 0) / content.length 
         : 0;
 
       res.json({
@@ -479,7 +479,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Group transactions by date and sum revenue
       const trendMap = new Map<string, { revenueCoins: number; downloads: number }>();
       
-      revenueTransactions.forEach((transaction) => {
+      revenueTransactions.forEach((transaction: any) => {
         const date = transaction.createdAt.toISOString().split('T')[0];
         const existing = trendMap.get(date) || { revenueCoins: 0, downloads: 0 };
         existing.revenueCoins += transaction.amount;
@@ -2155,18 +2155,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     // Apply sorting (clone array to avoid mutating storage data)
     if (sortBy === "trending") {
-      const { getTrendingThreads } = await import("./algorithms/trending");
+      const { getTrendingThreads } = await import("./algorithms/trending.js");
       threads = getTrendingThreads(threads, filters.limit);
     } else if (sortBy === "newest") {
       // Clone, sort by creation date (newest first), then limit
       threads = [...threads]
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, filters.limit);
     } else if (sortBy === "answered") {
       // Clone, filter for threads with replies, sort by reply count, then limit
       threads = [...threads]
-        .filter(t => t.replyCount > 0)
-        .sort((a, b) => b.replyCount - a.replyCount)
+        .filter((t: any) => t.replyCount > 0)
+        .sort((a: any, b: any) => b.replyCount - a.replyCount)
         .slice(0, filters.limit);
     }
     
@@ -2186,11 +2186,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       
       const hotThreads = threads
-        .filter(t => new Date(t.createdAt) >= sevenDaysAgo)
-        .sort((a, b) => (b.engagementScore || 0) - (a.engagementScore || 0))
+        .filter((t: any) => new Date(t.createdAt) >= sevenDaysAgo)
+        .sort((a: any, b: any) => (b.engagementScore || 0) - (a.engagementScore || 0))
         .slice(0, 10);
       
-      const threadsWithAuthors = await Promise.all(hotThreads.map(async (thread) => {
+      const threadsWithAuthors = await Promise.all(hotThreads.map(async (thread: any) => {
         const author = await storage.getUserById(thread.authorId);
         return {
           ...thread,
@@ -2223,24 +2223,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       
-      let filteredThreads = threads.filter(t => new Date(t.createdAt) >= oneWeekAgo);
+      let filteredThreads = threads.filter((t: any) => new Date(t.createdAt) >= oneWeekAgo);
       
       // Sort based on tab
       if (tab === 'trending') {
-        filteredThreads = filteredThreads.sort((a, b) => (b.engagementScore || 0) - (a.engagementScore || 0));
+        filteredThreads = filteredThreads.sort((a: any, b: any) => (b.engagementScore || 0) - (a.engagementScore || 0));
       } else if (tab === 'solved') {
         // TODO: Add solved status tracking
-        filteredThreads = filteredThreads.sort((a, b) => b.replyCount - a.replyCount);
+        filteredThreads = filteredThreads.sort((a: any, b: any) => b.replyCount - a.replyCount);
       } else {
         // new
-        filteredThreads = filteredThreads.sort((a, b) => 
+        filteredThreads = filteredThreads.sort((a: any, b: any) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       }
       
       const highlights = filteredThreads.slice(0, 10);
       
-      const threadsWithAuthors = await Promise.all(highlights.map(async (thread) => {
+      const threadsWithAuthors = await Promise.all(highlights.map(async (thread: any) => {
         const author = await storage.getUserById(thread.authorId);
         return {
           ...thread,
@@ -2552,7 +2552,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     const categories = await storage.listForumCategories();
     // Filter to active categories only
-    const activeCategories = categories.filter(c => c.isActive);
+    const activeCategories = categories.filter((c: any) => c.isActive);
     res.json(activeCategories);
   });
   
@@ -2579,7 +2579,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Apply search filter if query exists
     if (searchQuery && searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
-      threads = threads.filter(t => 
+      threads = threads.filter((t: any) => 
         t.title.toLowerCase().includes(query) || 
         (t.metaDescription && t.metaDescription.toLowerCase().includes(query))
       );
@@ -2587,18 +2587,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     // Apply tab-specific filtering and sorting
     if (tab === "trending") {
-      const { getTrendingThreads } = await import("./algorithms/trending");
+      const { getTrendingThreads } = await import("./algorithms/trending.js");
       threads = getTrendingThreads(threads, limit);
     } else if (tab === "answered") {
       // Filter for threads with accepted replies or replies > 0
       threads = threads
-        .filter(t => t.replyCount > 0 || t.isSolved)
-        .sort((a, b) => b.replyCount - a.replyCount)
+        .filter((t: any) => t.replyCount > 0 || t.isSolved)
+        .sort((a: any, b: any) => b.replyCount - a.replyCount)
         .slice(0, limit);
     } else {
       // Default: latest (by lastActivityAt)
       threads = threads
-        .sort((a, b) => new Date(b.lastActivityAt).getTime() - new Date(a.lastActivityAt).getTime())
+        .sort((a: any, b: any) => new Date(b.lastActivityAt).getTime() - new Date(a.lastActivityAt).getTime())
         .slice(0, limit);
     }
     
@@ -2612,13 +2612,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       const categories = await storage.listForumCategories();
-      const activeCategories = categories.filter(c => c.isActive);
+      const activeCategories = categories.filter((c: any) => c.isActive);
       
       // Build hierarchical tree structure
-      const mainCategories = activeCategories.filter(c => !c.parentSlug);
-      const tree = mainCategories.map(main => ({
+      const mainCategories = activeCategories.filter((c: any) => !c.parentSlug);
+      const tree = mainCategories.map((main: any) => ({
         ...main,
-        children: activeCategories.filter(c => c.parentSlug === main.slug)
+        children: activeCategories.filter((c: any) => c.parentSlug === main.slug)
       }));
       
       res.json(tree);
@@ -2631,7 +2631,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/categories/:parentSlug/subcategories", async (req, res) => {
     try {
       const categories = await storage.listForumCategories();
-      const subcategories = categories.filter(c => 
+      const subcategories = categories.filter((c: any) => 
         c.parentSlug === req.params.parentSlug && c.isActive
       );
       res.json(subcategories);
@@ -2649,7 +2649,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const categories = await storage.listForumCategories();
-      const children = categories.filter(c => c.parentSlug === req.params.slug && c.isActive);
+      const children = categories.filter((c: any) => c.parentSlug === req.params.slug && c.isActive);
       
       res.json({
         ...category,

@@ -33,8 +33,8 @@ export function DataTable({ columns, data, loading, searchable = true, pageSize 
   const [page, setPage] = useState(0);
 
   const filtered = search
-    ? data.filter(row =>
-        columns.some(col =>
+    ? data.filter((row: any) =>
+        columns.some((col: Column) =>
           String(row[col.key]).toLowerCase().includes(search.toLowerCase())
         )
       )
@@ -60,7 +60,7 @@ export function DataTable({ columns, data, loading, searchable = true, pageSize 
           <Input
             placeholder="Search..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             className="pl-9"
           />
         </div>
