@@ -62,7 +62,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$categories$2f$Categor
 ;
 // Express API base URL
 const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
-const revalidate = 0;
+const revalidate = 60;
 const metadata = {
     title: 'Forum Categories | YoForex',
     description: 'Browse all forum categories on YoForex. Find discussions about expert advisors, indicators, brokers, trading strategies, and more.',
@@ -84,7 +84,9 @@ async function CategoriesPage() {
     let initialCategories = [];
     try {
         const res = await fetch(`${EXPRESS_URL}/api/categories`, {
-            cache: 'no-store'
+            next: {
+                revalidate: 60
+            }
         });
         if (res.ok) {
             initialCategories = await res.json();
