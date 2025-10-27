@@ -23,8 +23,11 @@ import {
   insertMessageSchema,
   updateUserProfileSchema,
   BADGE_METADATA,
-  type BadgeType
+  type BadgeType,
+  coinTransactions
 } from "../shared/schema";
+import { db } from "./db";
+import { eq, and, gt, asc } from "drizzle-orm";
 import {
   sanitizeRequestBody,
   validateCoinAmount,
@@ -373,6 +376,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       await storage.dismissOnboarding(userId);
       res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/me/content - Get current user's published content
+  app.get("/api/me/content", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const content = await storage.getUserContent(userId);
+      res.json(content);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/me/purchases - Get current user's purchases with populated content details
+  app.get("/api/me/purchases", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const purchases = await storage.getUserPurchases(userId);
+      
+      // Populate content details for each purchase
+      const purchasesWithContent = await Promise.all(
+        purchases.map(async (purchase) => {
+          const content = await storage.getContent(purchase.contentId);
+          return {
+            ...purchase,
+            content: content || null
+          };
+        })
+      );
+      
+      res.json(purchasesWithContent);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/me/dashboard-metrics - Get dashboard aggregate metrics
+  app.get("/api/me/dashboard-metrics", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const content = await storage.getUserContent(userId);
+      
+      // Get content IDs to query sales
+      const contentIds = content.map(c => c.id);
+      
+      // Calculate total revenue from actual sales/downloads
+      // Revenue comes from the downloads field which represents successful purchases
+      const totalRevenue = content.reduce((sum, item) => {
+        // Calculate revenue from downloads (80% commission for EA/indicators/articles, 75% for set files)
+        const commission = item.type === 'source_code' ? 0.75 : 0.8;
+        const salesRevenue = (item.downloads || 0) * item.priceCoins * commission;
+        return sum + salesRevenue;
+      }, 0);
+      
+      const totalDownloads = content.reduce((sum, item) => sum + (item.downloads || 0), 0);
+      const totalViews = content.reduce((sum, item) => sum + (item.views || 0), 0);
+      const avgRating = content.length > 0 
+        ? content.reduce((sum, item) => sum + (item.averageRating || 0), 0) / content.length 
+        : 0;
+
+      res.json({
+        totalRevenue: Math.floor(totalRevenue),
+        totalDownloads,
+        totalViews,
+        avgRating,
+        publishedCount: content.length
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/me/revenue-trend - Get 30-day revenue trend
+  app.get("/api/me/revenue-trend", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      
+      // Query coin transactions for last 30 days to get real revenue data
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      // Get all "earn" type transactions (revenue) from the last 30 days
+      const revenueTransactions = await db
+        .select({
+          amount: coinTransactions.amount,
+          createdAt: coinTransactions.createdAt,
+        })
+        .from(coinTransactions)
+        .where(
+          and(
+            eq(coinTransactions.userId, userId),
+            eq(coinTransactions.type, 'earn'),
+            gt(coinTransactions.createdAt, thirtyDaysAgo)
+          )
+        )
+        .orderBy(asc(coinTransactions.createdAt));
+      
+      // Group transactions by date and sum revenue
+      const trendMap = new Map<string, { revenueCoins: number; downloads: number }>();
+      
+      revenueTransactions.forEach((transaction) => {
+        const date = transaction.createdAt.toISOString().split('T')[0];
+        const existing = trendMap.get(date) || { revenueCoins: 0, downloads: 0 };
+        existing.revenueCoins += transaction.amount;
+        trendMap.set(date, existing);
+      });
+      
+      // Convert map to array and fill in missing dates with zeros
+      const trend: { date: string; revenueCoins: number; downloads: number }[] = [];
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        const data = trendMap.get(dateStr) || { revenueCoins: 0, downloads: 0 };
+        trend.push({
+          date: dateStr,
+          revenueCoins: data.revenueCoins,
+          downloads: data.downloads
+        });
+      }
+      
+      res.json(trend);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

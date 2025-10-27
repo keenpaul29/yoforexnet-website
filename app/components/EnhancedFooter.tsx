@@ -1,104 +1,218 @@
 "use client";
 
-import { Activity, Wifi, Code } from "lucide-react";
+import { Activity, Users, MessageSquare, TrendingUp } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface StatsResponse {
-  forumThreads: number;
-  communityMembers: number;
-  totalReplies: number;
+  totalThreads: number;
+  totalMembers: number;
+  totalPosts: number;
   activeToday: number;
-  lastUpdated: string;
 }
 
 export default function EnhancedFooter() {
   const { data: stats } = useQuery<StatsResponse>({
     queryKey: ['/api/stats'],
-    refetchInterval: 60000, // Update every 60 seconds
+    refetchInterval: 60000,
     staleTime: 50000,
   });
 
-  const version = "v1.2.3";
-  const serverStatus = "stable";
-  
-  const getStatusText = () => {
-    if (serverStatus === "stable") return { text: "✓ Stable", color: "text-chart-3" };
-    if (serverStatus === "degraded") return { text: "⚠ Degraded", color: "text-chart-4" };
-    return { text: "✗ Down", color: "text-destructive" };
-  };
-
-  const status = getStatusText();
-  const onlineUsers = stats?.activeToday ?? 0;
-
   return (
-    <footer className="border-t py-8 mt-16 bg-muted/30">
-      <div className="container max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-          <div>
-            <h4 className="font-semibold mb-3 text-sm">About YoForex</h4>
-            <p className="text-sm text-muted-foreground mb-4">
-              Professional EA forum for algorithmic trading. Share strategies, EAs, and earn gold coins for quality contributions.
-            </p>
-            <div className="flex gap-4 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground" data-testid="link-terms">Terms</a>
-              <a href="#" className="hover:text-foreground" data-testid="link-privacy">Privacy</a>
-              <a href="#" className="hover:text-foreground" data-testid="link-guidelines">Guidelines</a>
+    <footer className="border-t mt-auto">
+      <div className="container max-w-7xl mx-auto px-4 py-12">
+        {/* Live Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
+            <MessageSquare className="h-8 w-8 text-primary flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold" data-testid="stat-threads">{stats?.totalThreads?.toLocaleString() ?? '0'}</p>
+              <p className="text-xs text-muted-foreground">Discussions</p>
             </div>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-3 text-sm">Community</h4>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <a 
-                href="https://t.me/+AIByvTkkIwM3MjFl" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block hover:text-foreground" 
-                data-testid="link-telegram"
-              >
-                Join Our Telegram
-              </a>
-              <Link href="/feedback" className="block hover:text-foreground" data-testid="link-feedback">
-                Submit Feedback
-              </Link>
-              <Link href="/api-docs" className="block hover:text-foreground" data-testid="link-api">
-                API Documentation
-              </Link>
-              <Link href="/support" className="block hover:text-foreground" data-testid="link-support">
-                Contact Support
-              </Link>
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
+            <Users className="h-8 w-8 text-chart-2 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold" data-testid="stat-members">{stats?.totalMembers?.toLocaleString() ?? '0'}</p>
+              <p className="text-xs text-muted-foreground">Members</p>
             </div>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-3 text-sm">Live Stats</h4>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm">
-                <Activity className="h-4 w-4 text-chart-3" />
-                <span className="text-muted-foreground">Active Today:</span>
-                <span className="font-semibold" data-testid="text-online-users">{onlineUsers}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Wifi className="h-4 w-4 text-chart-3" />
-                <span className="text-muted-foreground">Server Status:</span>
-                <span className={`font-semibold ${status.color}`} data-testid="text-server-status">
-                  {status.text}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Code className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Latest Build:</span>
-                <span className="font-mono text-xs" data-testid="text-version">{version}</span>
-              </div>
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
+            <MessageSquare className="h-8 w-8 text-chart-3 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold" data-testid="stat-posts">{stats?.totalPosts?.toLocaleString() ?? '0'}</p>
+              <p className="text-xs text-muted-foreground">Total Posts</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
+            <Activity className="h-8 w-8 text-chart-4 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold" data-testid="stat-active">{stats?.activeToday?.toLocaleString() ?? '0'}</p>
+              <p className="text-xs text-muted-foreground">Active Today</p>
             </div>
           </div>
         </div>
-        
-        <div className="pt-6 border-t text-center">
-          <p className="text-sm text-muted-foreground">
-            © 2025 YoForex. All rights reserved. Made for Traders.
+
+        {/* Main Footer Content - 5 Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+          {/* Column 1: About YoForex */}
+          <div>
+            <h3 className="font-semibold mb-4">About YoForex</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Professional EA forum for algorithmic trading. Share strategies, EAs, and earn gold coins for quality contributions.
+            </p>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p className="font-medium">Address:</p>
+              <p>44 Tunnel Avenue</p>
+              <p>London, United Kingdom</p>
+            </div>
+          </div>
+
+          {/* Column 2: Legal */}
+          <div>
+            <h3 className="font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/terms" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-terms">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-privacy">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/refund-policy" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-refund">
+                  Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/guides/forum-rules" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-rules">
+                  Forum Rules
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Support */}
+          <div>
+            <h3 className="font-semibold mb-4">Support</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a 
+                  href="mailto:support@yoforex.net" 
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="footer-link-email"
+                >
+                  support@yoforex.net
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="mailto:abuse@yoforex.net" 
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="footer-link-abuse"
+                >
+                  Report Abuse
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://t.me/+AIByvTkkIwM3MjFl" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="footer-link-telegram"
+                >
+                  Telegram Support
+                </a>
+              </li>
+              <li>
+                <Link href="/support" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-contact">
+                  Contact Support
+                </Link>
+              </li>
+              <li>
+                <Link href="/feedback" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-feedback">
+                  Submit Feedback
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Community */}
+          <div>
+            <h3 className="font-semibold mb-4">Community</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/discussions" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-discussions">
+                  Join Discussions
+                </Link>
+              </li>
+              <li>
+                <Link href="/guides/new-member-quickstart" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-quickstart">
+                  New Member Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/api-docs" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-api">
+                  API Documentation
+                </Link>
+              </li>
+              <li>
+                <Link href="/brokers" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-brokers">
+                  Broker Directory
+                </Link>
+              </li>
+              <li>
+                <Link href="/marketplace" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-marketplace">
+                  Marketplace
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 5: Opportunities */}
+          <div>
+            <h3 className="font-semibold mb-4">Opportunities</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/partnerships" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-partnerships">
+                  Partnerships
+                </Link>
+              </li>
+              <li>
+                <Link href="/careers" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-careers">
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link href="/guides/marketplace-seller-guide" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-seller">
+                  Become a Seller
+                </Link>
+              </li>
+              <li>
+                <Link href="/earn" className="text-muted-foreground hover:text-foreground" data-testid="footer-link-earn">
+                  Earn Coins
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Disclaimer & Copyright */}
+        <div className="border-t pt-8 space-y-4">
+          <p className="text-xs text-muted-foreground">
+            <strong>Disclaimer:</strong> YoForex is a community-driven platform. While we moderate content, we are not responsible for user-generated posts, trading advice, or Expert Advisors shared by members. All trading involves risk. For content removal requests, contact abuse@yoforex.net or use our Telegram support for faster action.
           </p>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+            <p>© {new Date().getFullYear()} YoForex. All rights reserved.</p>
+            <p>Version v1.2.3 • Build {Date.now()}</p>
+          </div>
         </div>
       </div>
     </footer>
