@@ -124,6 +124,10 @@ app/                         # Next.js SSR (Port 3000) - NEW Oct 27, 2025
 │   └── utils.ts             # Helper functions
 ├── hooks/
 │   └── use-toast.ts         # Toast notifications
+├── thread/
+│   └── [slug]/
+│       ├── ThreadDetailClient.tsx  # Client Component for thread interactivity
+│       └── page.tsx                # Server Component - SEO + SSR ✅
 ├── HomeClient.tsx           # Client Component for homepage interactivity
 ├── page.tsx                 # Server Component - fetches from Express ✅
 ├── layout.tsx               # Root layout with AppProviders
