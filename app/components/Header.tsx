@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Menu, User, Bell, MessageSquare, Coins, LogIn, LogOut, Lightbulb, HelpCircle, TrendingUp, Settings, Code, Award, BookOpen, Activity, Wrench, FileCode, GraduationCap, MessageCircle as MessageCircleIcon, Trophy, BarChart3, Rocket, ShieldAlert, Plus, LayoutDashboard } from "lucide-react";
+import { Search, Menu, User, Bell, MessageSquare, Coins, LogIn, LogOut, Lightbulb, HelpCircle, TrendingUp, Settings, Code, Award, BookOpen, Activity, Wrench, FileCode, GraduationCap, MessageCircle as MessageCircleIcon, Trophy, BarChart3, Rocket, ShieldAlert, Plus, LayoutDashboard, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -51,6 +59,7 @@ const publishCategories = [
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, isLoading: isAuthLoading, isAuthenticated, login, logout } = useAuth();
   
@@ -269,9 +278,138 @@ export default function Header() {
           
           <ThemeToggle />
           
-          <Button variant="ghost" size="icon" className="md:hidden" data-testid="button-menu">
-            <Menu className="h-5 w-5" />
-          </Button>
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden" data-testid="button-menu">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-4 mt-6">
+                {/* User Profile Section */}
+                {isAuthenticated && user && (
+                  <>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.profileImageUrl || undefined} alt={user.username} />
+                        <AvatarFallback>{(user.firstName?.[0] || user.username?.[0] || 'U').toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="font-semibold text-sm">
+                          {user.firstName && user.lastName 
+                            ? `${user.firstName} ${user.lastName}` 
+                            : user.username}
+                        </p>
+                        <Link href="/recharge" onClick={() => setMobileMenuOpen(false)}>
+                          <div className="flex items-center gap-1 mt-1">
+                            <Coins className="h-3 w-3 text-primary" />
+                            <span className="text-xs font-medium">{userCoins.toLocaleString()} coins</span>
+                            <span className="text-xs text-muted-foreground">(${userCoinsUSD.toFixed(2)})</span>
+                          </div>
+                        </Link>
+                      </div>
+                    </div>
+                    <Separator />
+                  </>
+                )}
+
+                {/* Navigation Links */}
+                <nav className="flex flex-col gap-2">
+                  <Link href="/categories" onClick={() => setMobileMenuOpen(false)}>
+                    <Button 
+                      variant={pathname === "/categories" ? "default" : "ghost"} 
+                      className="w-full justify-start"
+                      data-testid="mobile-link-categories"
+                    >
+                      Categories
+                    </Button>
+                  </Link>
+                  <Link href="/discussions" onClick={() => setMobileMenuOpen(false)}>
+                    <Button 
+                      variant={pathname === "/discussions" ? "default" : "ghost"} 
+                      className="w-full justify-start"
+                      data-testid="mobile-link-discussions"
+                    >
+                      Discussions
+                    </Button>
+                  </Link>
+                  <Link href="/brokers" onClick={() => setMobileMenuOpen(false)}>
+                    <Button 
+                      variant={pathname === "/brokers" ? "default" : "ghost"} 
+                      className="w-full justify-start"
+                      data-testid="mobile-link-brokers"
+                    >
+                      Broker Reviews
+                    </Button>
+                  </Link>
+                  <Link href="/members" onClick={() => setMobileMenuOpen(false)}>
+                    <Button 
+                      variant={pathname === "/members" ? "default" : "ghost"} 
+                      className="w-full justify-start"
+                      data-testid="mobile-link-members"
+                    >
+                      Members
+                    </Button>
+                  </Link>
+                </nav>
+
+                {isAuthenticated && (
+                  <>
+                    <Separator />
+                    {/* User Menu Items */}
+                    <nav className="flex flex-col gap-2">
+                      <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start" data-testid="mobile-link-dashboard">
+                          <User className="mr-2 h-4 w-4" />
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <Link href="/messages" onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start" data-testid="mobile-link-messages">
+                          <MessageSquare className="mr-2 h-4 w-4" />
+                          Messages
+                        </Button>
+                      </Link>
+                      <Link href="/notifications" onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start relative" data-testid="mobile-link-notifications">
+                          <Bell className="mr-2 h-4 w-4" />
+                          Notifications
+                          <Badge className="ml-auto h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
+                            3
+                          </Badge>
+                        </Button>
+                      </Link>
+                      <Link href="/settings" onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start" data-testid="mobile-link-settings">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Settings
+                        </Button>
+                      </Link>
+                    </nav>
+                    <Separator />
+                    <Button variant="ghost" className="w-full justify-start text-destructive" onClick={() => { logout(); setMobileMenuOpen(false); }} data-testid="mobile-button-logout">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </>
+                )}
+
+                {!isAuthenticated && !isAuthLoading && (
+                  <>
+                    <Separator />
+                    <Button onClick={() => { login(); setMobileMenuOpen(false); }} data-testid="mobile-button-login">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Login
+                    </Button>
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
