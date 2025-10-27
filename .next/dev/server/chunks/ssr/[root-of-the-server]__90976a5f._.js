@@ -65,8 +65,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$category$2f5b$slug$5d
 // Express API base URL
 const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
 async function generateMetadata({ params }) {
+    const { slug } = await params;
     try {
-        const res = await fetch(`${EXPRESS_URL}/api/categories/${params.slug}`, {
+        const res = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, {
             cache: 'no-store'
         });
         if (!res.ok) {
@@ -97,10 +98,11 @@ async function generateMetadata({ params }) {
     }
 }
 async function CategoryDiscussionPage({ params }) {
+    const { slug } = await params;
     // Fetch category with error handling that doesn't trigger Next.js 404
     let category = null;
     try {
-        const categoryRes = await fetch(`${EXPRESS_URL}/api/categories/${params.slug}`, {
+        const categoryRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, {
             cache: 'no-store'
         });
         if (categoryRes.ok) {
@@ -113,7 +115,7 @@ async function CategoryDiscussionPage({ params }) {
     // Fetch threads with error handling
     let threads = [];
     try {
-        const threadsRes = await fetch(`${EXPRESS_URL}/api/categories/${params.slug}/threads`, {
+        const threadsRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}/threads`, {
             cache: 'no-store'
         });
         if (threadsRes.ok) {
@@ -125,12 +127,12 @@ async function CategoryDiscussionPage({ params }) {
     }
     // Pass all data to Client Component
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$category$2f5b$slug$5d2f$CategoryDiscussionClient$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
-        slug: params.slug,
+        slug: slug,
         initialCategory: category,
         initialThreads: threads
     }, void 0, false, {
         fileName: "[project]/app/category/[slug]/page.tsx",
-        lineNumber: 74,
+        lineNumber: 77,
         columnNumber: 5
     }, this);
 }

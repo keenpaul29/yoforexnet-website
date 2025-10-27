@@ -6,9 +6,10 @@ import type { User, Badge as BadgeType, Content, ForumThread } from '@shared/sch
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { username: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const { username } = await params;
   try {
-    const res = await fetch(`${EXPRESS_URL}/api/users/username/${params.username}`, { cache: 'no-store' });
+    const res = await fetch(`${EXPRESS_URL}/api/users/username/${username}`, { cache: 'no-store' });
     if (!res.ok) {
       return {
         title: 'User Not Found | YoForex Community',
@@ -40,11 +41,13 @@ export async function generateMetadata({ params }: { params: { username: string 
 }
 
 // Main page component (Server Component)
-export default async function UserProfilePage({ params }: { params: { username: string } }) {
+export default async function UserProfilePage({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params;
+  
   // Fetch user with error handling that doesn't trigger Next.js 404
   let user: User | null = null;
   try {
-    const userRes = await fetch(`${EXPRESS_URL}/api/users/username/${params.username}`, { 
+    const userRes = await fetch(`${EXPRESS_URL}/api/users/username/${username}`, { 
       cache: 'no-store',
     });
     if (userRes.ok) {
@@ -59,7 +62,7 @@ export default async function UserProfilePage({ params }: { params: { username: 
   if (!user) {
     return (
       <UserProfileClient
-        username={params.username}
+        username={username}
         initialUser={null}
         initialBadges={[]}
         initialContent={[]}
@@ -94,7 +97,7 @@ export default async function UserProfilePage({ params }: { params: { username: 
   // Pass all data to Client Component
   return (
     <UserProfileClient
-      username={params.username}
+      username={username}
       initialUser={user}
       initialBadges={badges}
       initialContent={content}

@@ -6,9 +6,10 @@ import type { ForumCategory, ForumThread } from '@shared/schema';
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   try {
-    const res = await fetch(`${EXPRESS_URL}/api/categories/${params.slug}`, { cache: 'no-store' });
+    const res = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, { cache: 'no-store' });
     if (!res.ok) {
       return {
         title: 'Category Not Found | YoForex',
@@ -40,11 +41,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 // Main page component (Server Component)
-export default async function CategoryDiscussionPage({ params }: { params: { slug: string } }) {
+export default async function CategoryDiscussionPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  
   // Fetch category with error handling that doesn't trigger Next.js 404
   let category: ForumCategory | null = null;
   try {
-    const categoryRes = await fetch(`${EXPRESS_URL}/api/categories/${params.slug}`, { 
+    const categoryRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, { 
       cache: 'no-store',
     });
     if (categoryRes.ok) {
@@ -58,7 +61,7 @@ export default async function CategoryDiscussionPage({ params }: { params: { slu
   // Fetch threads with error handling
   let threads: ForumThread[] = [];
   try {
-    const threadsRes = await fetch(`${EXPRESS_URL}/api/categories/${params.slug}/threads`, { 
+    const threadsRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}/threads`, { 
       cache: 'no-store',
     });
     if (threadsRes.ok) {
@@ -72,7 +75,7 @@ export default async function CategoryDiscussionPage({ params }: { params: { slu
   // Pass all data to Client Component
   return (
     <CategoryDiscussionClient
-      slug={params.slug}
+      slug={slug}
       initialCategory={category}
       initialThreads={threads}
     />

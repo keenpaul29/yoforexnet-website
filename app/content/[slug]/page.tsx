@@ -6,13 +6,14 @@ import type { Content, User as UserType, ContentReview } from '@shared/schema';
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   try {
     // Check if slug is UUID format
-    const isUUID = params.slug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+    const isUUID = slug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
     const endpoint = isUUID 
-      ? `${EXPRESS_URL}/api/content/${params.slug}`
-      : `${EXPRESS_URL}/api/content/slug/${params.slug}`;
+      ? `${EXPRESS_URL}/api/content/${slug}`
+      : `${EXPRESS_URL}/api/content/slug/${slug}`;
 
     const res = await fetch(endpoint, { cache: 'no-store' });
     if (!res.ok) {
@@ -61,12 +62,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 // Main page component (Server Component)
-export default async function ContentDetailPage({ params }: { params: { slug: string } }) {
+export default async function ContentDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  
   // Check if slug is UUID format
-  const isUUID = params.slug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+  const isUUID = slug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
   const contentEndpoint = isUUID 
-    ? `${EXPRESS_URL}/api/content/${params.slug}`
-    : `${EXPRESS_URL}/api/content/slug/${params.slug}`;
+    ? `${EXPRESS_URL}/api/content/${slug}`
+    : `${EXPRESS_URL}/api/content/slug/${slug}`;
 
   // Fetch content with error handling that doesn't trigger Next.js 404
   let content: Content | null = null;
@@ -87,7 +90,7 @@ export default async function ContentDetailPage({ params }: { params: { slug: st
   if (!content) {
     return (
       <ContentDetailClient
-        slug={params.slug}
+        slug={slug}
         initialContent={null}
         initialAuthor={null}
         initialReviews={[]}
@@ -129,7 +132,7 @@ export default async function ContentDetailPage({ params }: { params: { slug: st
   // Pass all data to Client Component
   return (
     <ContentDetailClient
-      slug={params.slug}
+      slug={slug}
       initialContent={content}
       initialAuthor={author}
       initialReviews={reviews}

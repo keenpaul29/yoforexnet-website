@@ -61,7 +61,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$categories$2f$Categor
 ;
 ;
 // Express API base URL
-const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:3001") || 'http://localhost:5000';
+const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
 const revalidate = 0;
 const metadata = {
     title: 'Forum Categories | YoForex',

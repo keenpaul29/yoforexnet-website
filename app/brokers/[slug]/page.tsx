@@ -33,9 +33,10 @@ type BrokerReview = {
 };
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   try {
-    const res = await fetch(`${EXPRESS_URL}/api/brokers/slug/${params.slug}`, { cache: 'no-store' });
+    const res = await fetch(`${EXPRESS_URL}/api/brokers/slug/${slug}`, { cache: 'no-store' });
     if (!res.ok) {
       return {
         title: 'Broker Not Found | YoForex',
@@ -73,11 +74,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 // Main page component (Server Component)
-export default async function BrokerProfilePage({ params }: { params: { slug: string } }) {
+export default async function BrokerProfilePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  
   // Fetch broker with error handling that doesn't trigger Next.js 404
   let broker: Broker | null = null;
   try {
-    const brokerRes = await fetch(`${EXPRESS_URL}/api/brokers/slug/${params.slug}`, { 
+    const brokerRes = await fetch(`${EXPRESS_URL}/api/brokers/slug/${slug}`, { 
       cache: 'no-store',
     });
     if (brokerRes.ok) {
@@ -92,7 +95,7 @@ export default async function BrokerProfilePage({ params }: { params: { slug: st
   if (!broker) {
     return (
       <BrokerProfileClient
-        slug={params.slug}
+        slug={slug}
         initialBroker={null}
         initialReviews={[]}
       />
@@ -116,7 +119,7 @@ export default async function BrokerProfilePage({ params }: { params: { slug: st
   // Pass all data to Client Component
   return (
     <BrokerProfileClient
-      slug={params.slug}
+      slug={slug}
       initialBroker={broker}
       initialReviews={reviews}
     />
