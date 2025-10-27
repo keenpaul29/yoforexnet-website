@@ -1,0 +1,309 @@
+1.1 Database Migration & Double-Entry Ledger
+Migrate from MemStorage to PostgreSQL via Drizzle ORM with full schema from COMPLETE_PLATFORM_GUIDE.​
+
+Implement immutable double-entry coin ledger: coin_journal table (append-only) with debit/credit entries, user_wallet with running balances, nightly reconciliation job to detect drift.​
+
+Add database-level constraints: CHECK (totalCoins >= 0), UNIQUE (userId, contentId) for purchases, SELECT FOR UPDATE on balance rows for atomic spend operations.​
+
+Create 25 performance indexes from guide: forum threads/replies (category, createdAt, lastActivity), content (type, authorId, views), coins (userId, createdAt), broker reviews (brokerId, rating, isScamReport).​
+
+1.2 Auth, Sessions & Security Hardening
+Complete Replit Auth OIDC integration with session revocation, refresh token rotation, device/session listing UI in settings.​
+
+Implement role-based access control (RBAC): user, moderator, admin endpoints with middleware guards.​
+
+Expand rate limiting: per-IP and per-user scopes, progressive throttling for new accounts (<7 days or <100 XP), gate link posting/file uploads behind reputation thresholds.​
+
+Add first-post and first-upload manual review queue for trust level 0-1 users to prevent spam.​
+
+1.3 Idempotency & Transaction Safety
+Add idempotencyKey column to transactions, purchases, and recharge orders; enforce uniqueness at DB level.​
+
+Implement idempotent POST handlers: check existing record before insert, return 200 with existing result if duplicate key.​
+
+Use outbox pattern for side effects (email notifications, coin awards) to ensure exactly-once delivery on retries.​
+
+Phase 2: EABOOK-Style Publishing & Upload Flow (Week 2-3)
+2.1 "Release EA" Composer with Category Hover Menu
+Build hover-activated category dropdown on "Release EA" nav item: 150ms delay, keyboard/mouse navigable, Esc to close, arrow keys, ARIA menu roles.​
+
+Populate dropdown from 16 categories (Strategy, Beginner, Performance, Support, Dev, Success, EA Library, Indicators, Tools, Source Code, Learning, Q&A, Bounties, Rankings, Commercial, Scam Watch) with icons and mini descriptions.​
+
+Pre-fill category when user clicks from hover menu; remember last-used category in localStorage.​
+
+2.2 Structured EA Release Form
+Required fields: Title (10-120 chars), platform (MT4/MT5), version (semantic), price in coins (0-10,000 or Free toggle), category/subcategory, description (≥300 chars, markdown + code blocks), tags (≤8), at least 1 file upload, at least 1 image (cover + gallery).​
+
+Optional but encouraged: Broker compatibility, minimum deposit, compatibility (hedging/netting), change log, license note.​
+
+Evidence-required mode: If "Performance Report" tag selected, require equity curve image, PF, DD, Win%, broker, months traded, strategy model quality fields before publish.​
+
+Client-side validation via React Hook Form + Zod schema; real-time character counters; disabled submit until valid.​
+
+2.3 Upload Pipeline with Security
+Drag-and-drop file widget with progress bars, retry, versioned file sets (v1.0, v1.1, etc.), max 5 files per release.​
+
+Server-side: MIME sniffing, AV scanning (ClamAV or cloud API), checksum (SHA-256) generation, disallow nested archives, max 50 MB per file.​
+
+Display checksum to buyers in download UI; log all download events (userId, IP, timestamp) for abuse detection.​
+
+Image uploads: max 5 for gallery, automatic watermarking with "YoForex.net" + author username for piracy deterrence.​
+
+2.4 Auto-SEO Engine
+On publish, backend auto-generates: slug (title → kebab-case), focusKeyword (title keywords), metaDescription (first 155 chars), autoImageAltTexts (array of descriptive alt text per image).​
+
+Persist SEO fields in content/thread tables; render in SSR/SSG pages for crawlers.​
+
+2.5 Post Detail Page Layout
+Match EABOOK screenshot structure: hero title, meta row (author, date, platform, version), badges (Free/Paid/Verified), file block with checksum, key specs table, description with headings, tags, action buttons (Download/Buy with coins).​
+
+Right-rail modules: "Similar EAs," "Author's Other Releases," "Top This Week," "Important Links" (How to Download, Safe Download Policy, Posting Guidelines).​
+
+Inline help links exactly where EABOOK shows them: "How to Download" near Download button, "Safe Download Policy" near file block, "Posting Guidelines" near Publish button.​
+
+Phase 3: Gold Coin Economy & Payments (Week 3-4)
+3.1 Coin Earning & Spending Rules
+Earn events (from EABOOK model): Publish EA (50 coins), Share set file (25), Quality article (20-40), Backtest report (20), Helpful reply (5), Accepted answer (25 bonus), Daily active (5), Referral (30), Scam report verified (50-150).​
+
+Spend events: Purchase EA/content (buyer debited, seller credited per split 90% seller, 10% platform), unlock premium thread, boost post visibility (future).​
+
+Caps: Max 5 likes/day earn, max 2 bounties/week create, no self-dealing (can't buy own content).​
+
+Implement all earning hooks: createThread, createReply, markAsAccepted, likeContent, publishContent, verifyScamReport trigger createCoinTransaction("earn", amount, description).​
+
+3.2 Purchase Flow with Atomic Transactions
+Client: User clicks "Buy for 100 coins" → confirmation modal (current balance, after balance, content preview) → confirm.​
+
+Server: POST /api/content/purchase with idempotency key → BEGIN transaction → validate balance → debit buyer 100 → credit seller 90 → credit platform 10 → insert purchase record → COMMIT → return success + download URL.​
+
+Error handling: Insufficient balance (400), already purchased (200 with existing record), content not found (404), seller == buyer (403).​
+
+Optimistic UI: Show "Processing..." → update balance immediately on success, invalidate queries for balance + purchases.​
+
+3.3 Recharge with USDT & Stripe
+Package UI: 6 tiers from guide: 22 coins ($1.99), 52+10 bonus ($4.99, "Best Value"), 200+50 ($16.99), 500+150 ($39.99, "Popular"), 1000+350 ($69.99), 2000+800 ($129.99, "Best Deal").​
+
+Payment methods:
+
+Stripe: Create checkout session, redirect to Stripe, webhook /api/stripe/webhook with HMAC signature verification, on checkout.session.completed → complete order + credit coins.​
+
+USDT (CoinPayments): Create invoice with CoinPayments API, show QR code + address, poll get_tx_info every 5s, on status=100 → complete order + credit coins.​
+
+Webhook idempotency: Check event.id or invoice ID uniqueness before crediting to prevent double credits.​
+
+India localization: Add UPI/INR option via Stripe India or Razorpay for domestic users.​
+
+Compliance: Non-refundable notice in checkout, coins are digital credits not currency, display in receipts and terms.​
+
+3.4 AML & Velocity Controls
+Cap recharge velocity: max $500/day, max $2000/month per user; flag anomalies for manual review.​
+
+Detect circular flows: if user A buys from B, then B buys from A repeatedly, flag for investigation.​
+
+Country/IP risk checks: block sanctioned regions, log high-risk countries for compliance.​
+
+7-day seller holdback for new accounts: coins earned from sales held for 7 days before spendable, with dispute UI.​
+
+Phase 4: Forum, Threads & Nested Replies (Week 4-5)
+4.1 Thread Creation & Management
+Thread schema: userId, categorySlug, title, body (markdown), imageUrls[], isPinned, isLocked, isAnswered, views, replyCount, lastActivityAt, slug (SEO), focusKeyword, metaDescription.​
+
+Create endpoint: POST /api/threads → sanitize HTML with DOMPurify, generate SEO fields, insert → award 25 coins to author → return thread.​
+
+List by category: GET /api/categories/:slug/threads?sort=latest|trending|answered with pagination (cursor-based) ​.
+
+Trending algorithm from guide: hotScore = (views^0.1 + replies*5 + pinnedBonus*100) / (ageInHours + 2)^1.8, server-side cache 5 min.​
+
+4.2 Nested Replies (Unlimited Depth)
+Reply schema: threadId, userId, parentId (nullable for root), body, slug (SEO), helpful (upvote count), isAccepted, isVerified.​
+
+Recursive component: ReplyCard renders self + children, 2rem left margin per depth, infinite depth support.​
+
+Actions per reply: "Mark Helpful" (increment count, disable if already voted), "Accept Answer" (author only, unmarks others), "Reply" (opens nested form).​
+
+Real-time polling: replies refetch every 15s via TanStack Query for active discussions.​
+
+4.3 Duplicate Detection & Similar Threads
+On compose, run semantic search (vector embeddings or TF-IDF) against existing titles: show "Possible duplicates" with similarity score >0.7.​
+
+Inline "Similar threads" hint during typing with debounce 500ms; user can click to view existing solutions before posting.​
+
+4.4 Moderation Queue & Tools
+Auto-moderation: Profanity filter, link shortener blocker, duplicate detector (exact body match), velocity spike (>10 posts/hour) auto-locks thread.​
+
+Manual queue: First-post, first-upload, reported content, scam reports → /admin/moderation page with approve/reject/ban actions.​
+
+Shadow-ban: User posts are hidden except to themselves; no notification.​
+
+Escalation: Broker defamation claims go to admin with evidence review workflow.​
+
+Phase 5: Trust, Reputation & Gamification (Week 5-6)
+5.1 Trust Level System
+5 levels: Newbie (0-500 XP), Member (500-1000), Contributor (1000-2000), Regular (2000-5000), Leader (5000+).​
+
+XP earning: Create thread (+50 XP), Reply (+10 XP), Accepted answer (+100 XP), Helpful vote received (+5 XP), Publish EA (+200 XP), Daily active (+20 XP).​
+
+Unlocks by level: Level 0-1 (manual review), Level 2 (upload files), Level 3 (post external links), Level 4 (start bounties), Level 5 (edit others' posts, nominate mods).​
+
+Display level badge next to username everywhere; progress bar in profile.​
+
+5.2 Leaderboards
+3 tabs on /members: Top by Coins, Top Contributors (threads+replies), Top Sellers (content uploads).​
+
+Top 10 shown with rank badges: #1 Crown (gold), #2 Medal (silver), #3 Medal (bronze), #4-10 Trophy (outline).​
+
+Real-time polling 30s; cache rankings server-side for 2 min.​
+
+Top stats cards above tabs: Top Earner, Top Contributor, Top Seller with large numbers and "Want to rank up?" CTA.​
+
+5.3 Badges & Achievements
+Badges: Verified Trader (linked Myfxbook), Top Contributor (monthly award), EA Master (50+ uploads), Helpful (100+ helpful votes), Early Adopter (first 100 users), Bug Hunter (reported bugs).​
+
+Display in profile, next to username in threads, in leaderboard.​
+
+One-time coin rewards: YouTube link (50 coins), Myfxbook link (100 coins), Investor credentials (75 coins).​
+
+5.4 Onboarding Checklist
+Non-blocking checklist on first login: Create profile (10 coins), First reply (15 coins), First report (20 coins), First upload (50 coins), Link social (30 coins).​
+
+Progress bar widget in right sidebar; dismiss button.​
+
+Phase 6: Broker Directory & Scam Watch (Week 6)
+6.1 Broker Listings
+Broker schema: name, slug, websiteUrl, logoUrl, yearFounded, regulationSummary, overallRating (calculated average), reviewCount, scamReportCount, isVerified (admin only).​
+
+List page /brokers with filters: Verified only, Rating (5★/4★/3★), Founded year, Show scam reports only.​
+
+Detail page /brokers/:slug: header (logo, name, rating), stats (reviews, rating breakdown), tabs (All Reviews, Scam Reports Only).​
+
+6.2 Review & Scam Reporting
+Review form: Star rating (1-5), title, body (100-2000 chars), "This is a scam report" checkbox.​
+
+If scam report: require proof (screenshots, links), higher coin reward (150 vs 50), red badge on review, increments scamReportCount.​
+
+Verification tiers: Reviewers disclose account type (demo/live), months traded; verified reviewers (linked account) get badge.​
+
+Moderation: All reviews pending approval; scam reports escalated to admin with evidence review; false reports = ban.​
+
+6.3 Safe-Harbor & Takedown
+TOS includes safe-harbor provisions: user content not endorsed by YoForex, rapid moderation escalation for broker complaints.​
+
+Takedown procedure: broker submits form → admin reviews → removes if defamatory → notifies user.​
+
+Phase 7: Real-Time, SSR & Performance (Week 7)
+7.1 WebSockets for Real-Time Updates
+Migrate hot paths from polling to WebSockets/SSE: thread replies, coin balance, leaderboards, notification badge.​
+
+Fallback to 10-30s polling where sockets unavailable; graceful degradation.​
+
+Server: Socket.io or native WebSocket with Redis pub/sub for multi-instance scaling.​
+
+7.2 SSR/SSG for SEO
+Implement SSR for key surfaces: home, categories, thread detail, content detail using Vite SSR or Next.js migration.​
+
+Generate static pages for evergreen content (guides, help articles) at build time.​
+
+Dynamic sitemaps: /sitemap-threads.xml, /sitemap-content.xml, /sitemap-brokers.xml with daily splits.​
+
+RSS/Atom feeds per category and user profile for discovery.​
+
+7.3 Caching & CDN
+Redis for sessions, rate-limits, derived counters (thread views, reply counts), trending cache (5 min TTL).​
+
+CDN for static assets (images, EA files, CSS/JS bundles) with aggressive cache headers.​
+
+HTTP cache headers for public pages: Cache-Control: public, max-age=60, stale-while-revalidate=300.​
+
+7.4 Pagination & Virtualization
+Cursor-based pagination for threads/replies: ?cursor=lastSeenId&limit=20.​
+
+Virtualize long reply threads (>100 replies) with TanStack Virtual to avoid large DOM trees.​
+
+Lazy-load images with loading="lazy" and blur placeholder.​
+
+Phase 8: SEO, i18n & Content (Week 8)
+8.1 SEO Enhancements
+Meta tags per page: unique title, description, OG tags, Twitter cards.​
+
+Structured data: Organization, Website, DiscussionForumPosting, Product (for EAs), Review (for broker reviews), HowTo (for guides).​
+
+Canonical URLs: for duplicate content (same thread in multiple categories).​
+
+hreflang tags: for EN/中文 toggles if bilingual.​
+
+8.2 Bilingual Support (Optional)
+Toggle in header: EN / 中文; persist in localStorage.​
+
+i18n library (react-i18next) with JSON string files.​
+
+Categories, UI chrome, and help articles translated; user-generated content stays original language.​
+
+8.3 Help Articles & Policies
+Write and publish: How to Download EAs, Safe Download Policy, Posting Guidelines, Performance Report Template, Recharge Coins Guide, Forum Rules, Verified Brokers List.​
+
+Link in exact UI positions from EABOOK screenshots.​
+
+SEO-optimize each article with HowTo schema.​
+
+Phase 9: Observability, Testing & QA (Week 9)
+9.1 Structured Logging & Tracing
+Structured JSON logs with correlation IDs (request trace across services).​
+
+Log levels: DEBUG (dev), INFO (prod normal), WARN (recoverable errors), ERROR (alerts).​
+
+Distributed tracing (OpenTelemetry) for critical flows: purchase, webhook, coin award.​
+
+9.2 SLOs & Alerting
+SLOs: Create thread <500ms p95, Purchase <1.5s p95, Webhook completion <3s p95, Homepage <1s LCP.​
+
+Alert on burn-rate: if error budget consumed >2x expected in 1 hour, page on-call.​
+
+Dashboard: Grafana with request rate, error rate, p50/p95/p99 latencies, coin balance sum (should equal ledger sum).​
+
+9.3 Testing
+Unit tests: Coin ledger invariants (sum of journal = balances, no negatives), purchase atomicity, idempotency.​
+
+Integration tests: Full purchase flow (balance check → debit → credit → record), recharge webhook handling.​
+
+E2E tests (Playwright): New user registration → create thread → earn coins → purchase EA → download.​
+
+Property-based tests (fast-check): Coin transactions commute, idempotent webhook never double-credits.​
+
+9.4 Moderation QA Loop
+Weekly sampling: 50 accepted solutions, 20 top uploads; measure false positive/negative rates of filters.​
+
+Adjust trust thresholds and reward amounts based on abuse patterns.​
+
+Phase 10: Launch Prep & Go-Live (Week 10)
+10.1 Production Checklist
+ Migrate to PostgreSQL with backups (pg_dump daily to S3).​
+
+ Stripe/CoinPayments in production mode with webhook HMAC.​
+
+ SSL/TLS for all endpoints.​
+
+ Rate limits tuned for production traffic.​
+
+ GDPR/CCPA compliance: privacy policy, data export, deletion endpoints.​
+
+ Terms of Service with non-refundable coin policy, broker review safe-harbor.​
+
+ Core Web Vitals <2.5s LCP, <100ms FID, <0.1 CLS on 3G.​
+
+ Seed data: 16 categories, 50 demo threads, 20 EAs, 10 brokers, help articles.​
+
+10.2 Soft Launch
+Invite 50 beta users from your YouTube/Telegram.​
+
+Monitor: coin transactions, purchase flow success rate, webhook failures, moderation queue depth.​
+
+Collect feedback on UX pain points, missing features.​
+
+10.3 Marketing & Growth
+SEO: Submit sitemaps to Google/Bing, build backlinks from MQL5/TradingView/FPA forums.​
+
+Content marketing: Publish "Top 10 XAUUSD EAs 2025" on YoForex blog → link to forum.​
+
+Social: Share leaderboard winners, top EAs, scam alerts on Telegram/Instagram.​
+
+Referral program: 30 coins for each new user who completes onboarding.​

@@ -1,0 +1,242 @@
+1. High-Level Features Overview
+
+The Gold Coin feature will be a reward system that allows users to earn coins based on their activity in the forum, particularly when they:
+
+Contribute high-quality posts.
+
+Share EAs with performance data.
+
+Help other users by answering questions.
+
+Participate in community-driven challenges or bounties.
+
+Users can then redeem these coins for special benefits like:
+
+Access to exclusive content or resources.
+
+Custom titles or badges.
+
+Enhanced privileges (posting in commercial sections, starting bounties, etc.).
+
+2. Backend Development
+
+The backend will manage the coin balance for each user and handle actions related to coin earning and redemption. Here’s how to structure the development:
+
+a) Database Schema
+
+You’ll need to add a coins table to your database to store user balances and transactions.
+
+CREATE TABLE user_coins (
+    user_id INT PRIMARY KEY,
+    total_coins INT DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE coin_transactions (
+    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    coin_amount INT,
+    action_type ENUM('earned', 'redeemed', 'bought') NOT NULL,
+    description TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+b) Coin Earning Logic
+
+For earning coins, define the types of actions that users can perform to earn coins. Some examples:
+
+Posting a thread or comment: +10 coins (valid only for "high-quality" posts, which can be validated by upvotes).
+
+Uploading a verified EA: +50 coins for each verified EA shared with proof of performance.
+
+Solving a technical support issue: +20 coins per accepted solution.
+
+Bounties: Users who contribute solutions to active bounties earn coins based on the bounty size.
+
+You can create a backend function to update the user’s coin balance each time an event occurs:
+
+def earn_coins(user_id, coin_amount, action_type, description):
+    # Add coins to user balance
+    cursor.execute("""
+        UPDATE user_coins
+        SET total_coins = total_coins + %s, last_updated = CURRENT_TIMESTAMP
+        WHERE user_id = %s
+    """, (coin_amount, user_id))
+
+    # Log the transaction
+    cursor.execute("""
+        INSERT INTO coin_transactions (user_id, coin_amount, action_type, description)
+        VALUES (%s, %s, %s, %s)
+    """, (user_id, coin_amount, action_type, description))
+    
+    connection.commit()
+
+c) Coin Redemption Logic
+
+To allow users to redeem their coins, you can implement a redemption endpoint. The process will:
+
+Check if the user has sufficient coins.
+
+Deduct the coins from their balance.
+
+Process the reward (access, badge, etc.).
+
+def redeem_coins(user_id, coin_amount, reward):
+    # Check if user has enough coins
+    cursor.execute("""
+        SELECT total_coins FROM user_coins WHERE user_id = %s
+    """, (user_id,))
+    result = cursor.fetchone()
+    if result and result['total_coins'] >= coin_amount:
+        # Deduct coins
+        cursor.execute("""
+            UPDATE user_coins
+            SET total_coins = total_coins - %s, last_updated = CURRENT_TIMESTAMP
+            WHERE user_id = %s
+        """, (coin_amount, user_id))
+
+        # Log the redemption transaction
+        cursor.execute("""
+            INSERT INTO coin_transactions (user_id, coin_amount, action_type, description)
+            VALUES (%s, %s, 'redeemed', 'Redeemed for reward: %s')
+        """, (user_id, coin_amount, reward))
+        
+        # Process the reward (send access, issue badge, etc.)
+        process_reward(user_id, reward)
+
+        connection.commit()
+        return True
+    else:
+        return False
+
+d) Leaderboards and Badges
+
+You will need to create a leaderboard for the users with the most coins earned. This will be a dynamic leaderboard that updates every time users earn or redeem coins.
+
+def get_top_contributors():
+    cursor.execute("""
+        SELECT user_id, total_coins FROM user_coins ORDER BY total_coins DESC LIMIT 10
+    """)
+    return cursor.fetchall()
+
+3. Frontend Development (UI/UX)
+
+The frontend will display users' coin balances, leaderboards, and allow users to redeem their coins. Below are some key components.
+
+a) User Profile Page: Display Coin Balance and Redeem Button
+
+You can add a Gold Coin Widget to user profiles to show the total coins they have, their current rank (based on coins), and an option to redeem coins for rewards.
+
+<div class="profile-widget">
+    <h3>{User's Name}</h3>
+    <div class="coins">
+        <p>Total Gold Coins: <span id="coins-count">{UserCoinBalance}</span></p>
+        <button onclick="redeemCoins()">Redeem Coins</button>
+    </div>
+    <div class="leaderboard">
+        <h4>Top Contributors</h4>
+        <ul id="leaderboard">
+            <!-- List of top contributors -->
+        </ul>
+    </div>
+</div>
+
+.profile-widget {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.coins {
+    background-color: gold;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #000;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+b) Leaderboard Section:
+
+The leaderboard can display the top users based on coin balance, motivating users to contribute more.
+
+<div class="leaderboard">
+    <h4>Top Contributors</h4>
+    <ul id="leaderboard">
+        <!-- Dynamically populated list of top users -->
+    </ul>
+</div>
+
+c) Coin Redemption Modal:
+
+A modal for users to redeem their coins and see available rewards.
+
+<div id="redeem-modal" class="modal">
+    <div class="modal-content">
+        <h4>Redeem Your Coins</h4>
+        <p>Total Coins: <span id="total-coins"></span></p>
+        <select id="redeem-reward">
+            <option value="premium-access">Premium EA Access - 100 coins</option>
+            <option value="vip-group">VIP Group - 150 coins</option>
+        </select>
+        <button onclick="redeemReward()">Redeem</button>
+    </div>
+</div>
+
+4. Coin Usage System
+
+The coin rewards system should allow for dynamic reward creation:
+
+Create a "store" where users can see what rewards they can claim for a certain amount of coins.
+
+Allow admins to add, remove, or modify rewards easily from the backend (e.g., reward access to new EAs, or exclusive content).
+
+Example:
+Reward Store - Backend admin can configure:
+
+{
+  "rewards": [
+    {
+      "id": 1,
+      "name": "Premium EA Access",
+      "coins_required": 100,
+      "description": "Unlock access to exclusive EAs."
+    },
+    {
+      "id": 2,
+      "name": "VIP Group Access",
+      "coins_required": 150,
+      "description": "Join VIP discussion groups."
+    }
+  ]
+}
+
+5. Testing & Launch
+
+Unit Tests: Write unit tests for:
+
+Coin transactions (earn and redeem).
+
+Leaderboard calculation.
+
+Rewards redemption system.
+
+Load Testing: Test with a large number of users earning and redeeming coins simultaneously to ensure no performance issues.
+
+Beta Testing: Have a small group of users test the feature in a staging environment.
+
+6. Future Enhancements
+
+Real-Time Coin Updates: Use WebSockets to update coin balances in real-time across the platform.
+
+Coin Boosters: Implement boosters that temporarily double the coins earned by users.
+
+Referral Program: Reward users with coins for referring new users to the forum.

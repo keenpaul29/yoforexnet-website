@@ -1,0 +1,68 @@
+A mandatory, high-priority pivot from a static "Product Page" to an eabook.cn-style "Community Thread" layout.
+
+1. The Problem
+Our current layout is wrong for a community-driven marketplace. It's an isolated sales page. It creates friction by hiding reviews and support behind tabs, killing all conversation and social proof.
+
+2. The Solution
+We will deconstruct this page and rebuild it as a single, full-width forum thread. The "Original Post" (OP) will contain all the product info, and the "Replies" will be the unified feed for all reviews, questions, and discussions.
+
+3. Detailed Implementation Plan
+Initiative 1: Deconstruct the Static Layout
+Kill the 2-Column Layout: Remove the right-hand sidebar (the "Buy" box) entirely. The page will become a single, full-width content column.
+
+Kill the Tabs: Remove the "Description," "Reviews (234)," and "Support" tabs. All this content will be merged into the new single-feed layout.
+
+Initiative 2: Build the "Original Post" (OP) Block
+This is the new "header" of the page. It will be a large, visually distinct block at the very top of the thread.
+
+Container: Create a styled div (e.g., with a light background or border) that clearly contains all the original poster's content.
+
+Content (from old "Description" tab):
+
+The post's main image (the chart) goes at the top.
+
+Post Title ("Gold Hedger EA 2025..."), Tags ("MT5", "XAUUSD"), and Stats (Views, Downloads) go directly under the image.
+
+The "Overview," "Key Features," "Performance," and "What's Included" sections will be displayed in full, exactly as they are.
+
+Author Info: The "About the Seller" box will be integrated inside this OP block, at the bottom.
+
+"Buy Now" / Price Integration:
+
+The "Buy" button must be central to this new layout.
+
+We will add a "Purchase Bar" inside the OP block, right below the title/tags.
+
+This bar will clearly show: "Gold Coins: 500" and a prominent "Purchase Now" button. This places the purchase action directly with the product.
+
+Initiative 3: Implement the "Unified Reply Feed"
+This is the most critical part. This feed will appear directly below the "Original Post" block.
+
+Data Migration:
+
+Action: Write a one-time migration script. All existing entries from the "Reviews" tab must be converted into standard "Comments" or "Replies."
+
+Logic: These 234 reviews will become the first 234 posts in the new reply feed, retaining their original author and date.
+
+New Reply System:
+
+This will be our standard forum reply system.
+
+Users can ask questions, leave new reviews, and (most importantly) post their own screenshots and results.
+
+The "Author" (TraderJohn) can reply directly to user questions, and his replies should be highlighted (e.g., "Author" badge).
+
+"Post Reply" Editor:
+
+At the very bottom of the entire page (below all replies), the standard "Post a Reply" text editor will be shown, allowing new users to join the conversation.
+
+4. Summary of the New User Flow
+A user lands on the page.
+
+They see the Original Post block, which contains all the product info, author info, and the "Purchase" button.
+
+They scroll down immediately into the Unified Reply Feed.
+
+They see old reviews, new questions from other users, and replies from the author.
+
+This continuous, single-page experience allows them to see the product, the social proof, and the live support all in one place.

@@ -1,0 +1,214 @@
+1. Recharge System Overview
+
+Your system will allow users to purchase Gold Coins using USDT (Tether) or other supported cryptocurrencies via a coin payments API. Users can then use the coins to download EAs or access premium content, as seen in eabook.cn.
+
+2. Recharge Process Flow
+a) Coin Recharge Page
+
+Users can top up their coin balance by selecting a specific amount of coins (e.g., 22, 52, 200, 500, etc.).
+
+Each amount corresponds to a fixed USD price (as shown in your images: 22 gold coins = 22 yuan, etc.).
+
+Users can pay using USDT (TRC20/ERC20) or other cryptocurrencies.
+
+b) Top-Up System Features
+
+Display available coin amounts (with bonus coins for larger purchases).
+
+Implement a coin payments API to handle the transaction securely.
+
+Provide a success page upon successful transaction.
+
+Integrate a wallet tracking system to ensure the right amount of coins are credited after the payment.
+
+3. Backend Implementation
+a) Database Structure
+
+Add new fields to track the user's coin balance and transaction history.
+
+CREATE TABLE user_wallet (
+    user_id INT PRIMARY KEY,
+    total_coins INT DEFAULT 0,
+    last_recharge TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE recharge_transactions (
+    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    amount_usd DECIMAL(10, 2),
+    amount_coins INT,
+    payment_method ENUM('USDT', 'CoinPayment', 'Others'),
+    status ENUM('pending', 'completed', 'failed'),
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+b) Recharge API Integration
+
+Integrate CoinPayments API to accept USDT (Tether) or other cryptocurrencies.
+
+Use CoinPayments API to create payment transactions and handle payment confirmations.
+
+import requests
+
+def create_coinpayment_transaction(user_id, coin_amount, amount_usd):
+    url = "https://www.coinpayments.net/api.php"
+    payload = {
+        'cmd': 'create_transaction',
+        'api_key': 'YOUR_API_KEY',
+        'currency1': 'USDT',  # USDT or desired crypto
+        'currency2': 'USD',
+        'amount': amount_usd,  # USD amount to be charged
+        'address': 'USER_WALLET_ADDRESS',  # Crypto address for receiving payment
+        'item_name': 'Gold Coins Recharge',
+        'item_number': '1234',
+        'quantity': 1,
+    }
+    
+    response = requests.post(url, data=payload)
+    return response.json()
+
+c) Coin Payment Confirmation
+
+After the transaction is completed, the system will check for payment confirmation via the CoinPayments API.
+
+Once confirmed, credit the user's coin balance.
+
+def verify_payment(transaction_id):
+    url = "https://www.coinpayments.net/api.php"
+    payload = {
+        'cmd': 'get_tx_info',
+        'api_key': 'YOUR_API_KEY',
+        'txid': transaction_id,
+    }
+    
+    response = requests.post(url, data=payload)
+    transaction_info = response.json()
+    
+    if transaction_info['status'] == '1':  # Payment confirmed
+        # Credit the user's coin balance
+        credit_coins(transaction_info['user_id'], transaction_info['amount_coins'])
+    else:
+        print("Payment not completed.")
+
+4. Frontend Implementation
+a) Recharge Page (UI)
+
+Users can select a recharge amount (22, 52, 200, etc.) or enter a custom amount, then choose their payment method.
+
+<div class="recharge-page">
+    <h2>Recharge Gold Coins</h2>
+    <p>Top up your account to access premium content and EAs!</p>
+    
+    <!-- Recharge Amount Options -->
+    <div class="amount-options">
+        <button onclick="topUp(22)">22 Gold Coins - 22 Yuan</button>
+        <button onclick="topUp(52)">52 Gold Coins - 52 Yuan</button>
+        <button onclick="topUp(200)">200 Gold Coins - 200 Yuan</button>
+        <button onclick="topUp(500)">500 Gold Coins - 500 Yuan</button>
+        <input type="number" id="customAmount" placeholder="Custom Amount">
+    </div>
+    
+    <!-- Payment Method Selection -->
+    <div class="payment-methods">
+        <button onclick="selectPaymentMethod('USDT')">Pay with USDT</button>
+        <button onclick="selectPaymentMethod('CoinPayment')">Pay with Coin Payments</button>
+    </div>
+    
+    <div id="confirmationMessage"></div>
+</div>
+
+.recharge-page {
+    padding: 20px;
+    text-align: center;
+}
+
+.amount-options button {
+    margin: 5px;
+    padding: 10px;
+    background-color: #f5a623;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.payment-methods button {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#confirmationMessage {
+    margin-top: 20px;
+    font-size: 18px;
+    color: green;
+}
+
+b) JavaScript: Handling User Actions
+
+When users select a top-up option, the selected amount will be passed to the backend for payment.
+
+function topUp(amount) {
+    let paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+    
+    // Send request to server for creating a payment transaction
+    fetch('/create_transaction', {
+        method: 'POST',
+        body: JSON.stringify({ amount: amount, payment_method: paymentMethod }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            // Display success message and redirect to payment gateway
+            document.getElementById("confirmationMessage").textContent = "Your payment is being processed. Please follow the instructions.";
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+5. Coin Recharge Success & Notification
+
+Once the payment is successful:
+
+Notify the user via a success page.
+
+Display their updated coin balance.
+
+6. Security Measures
+
+Ensure SSL encryption for all sensitive payment data.
+
+Regularly audit transactions to prevent fraud.
+
+Restrict access to payment API endpoints with strong authentication (API keys, tokens, etc.).
+
+7. Testing
+
+Unit Testing: Ensure API calls work properly for payment creation and confirmation.
+
+End-to-End Testing: Simulate top-up transactions to verify the entire flow works correctly, from payment to coin balance update.
+
+Load Testing: Simulate heavy traffic to ensure the system can handle multiple transactions simultaneously.
+
+8. Payment API Integration (Alternative)
+
+If you want to use USDT directly, consider integrating a USDT wallet API (such as TronLink or BitGo for easy USDT transfers) to simplify the payment process.
+
+9. User Experience
+
+Display real-time coin balance updates after each transaction.
+
+Provide clear instructions for top-ups and coin usage on the platform.
+
+10. Future Enhancements
+
+Auto-Currency Conversion: Allow users to top-up in different currencies (USD, EUR, etc.).
+
+Referral Program: Award users with coins for referring new members to your platform.
+
+Custom Coin Packs: Allow users to create custom recharge amounts, with discounts for bulk top-ups.

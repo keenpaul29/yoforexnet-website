@@ -1,0 +1,63 @@
+The single-column vertical layout is inefficient. It's the old "blog feed" style. It forces users to scroll, has low information density, and wastes 60-70% of the horizontal space on a desktop. It fails to present all our platform's options "above the fold."
+
+The solution is to change the layout from a vertical list to a responsive grid.
+
+This is a high-priority, non-negotiable change. It's more professional, space-efficient, and allows users to see all categories at a glance, then immediately see the "Recent Discussions" feed below it without excessive scrolling.
+
+Here is the development prompt.
+
+MASTER PROMPT: Forum Category Grid Implementation
+To: UI/UX & Frontend Development From: CTO Re: Fixing the "Forum Categories" layout to improve space efficiency and scannability.
+
+1. The Problem
+The current "Forum Categories" layout (per image_218f3a.png, image_2191e4.png) is a single-column, 100%-width list. This consumes the entire page, pushing all other important modules (like "Recent Discussions") far down the page and requiring users to scroll endlessly.
+
+2. The Solution: Responsive Grid Layout
+We will immediately convert this vertical list into a modern, responsive grid.
+
+Action: All category "cards" will be placed inside a container that uses CSS Grid or Flexbox (flex-wrap).
+
+Result: This will create a clean, multi-column layout on desktops and tablets, while preserving the single-column layout for mobile.
+
+3. Technical Specifications (The "How-To")
+The internal design of each card (icon, title, description, stats) is good. Do not change it. This task is purely about changing the container's layout.
+
+A. Responsive Grid Breakpoints:
+
+Desktop (screens > 1200px): Display a 3-column grid.
+
+Tablet (screens 768px - 1200px): Display a 2-column grid.
+
+Mobile (screens < 768px): Display a 1-column list (this is the current behavior, which is correct for mobile).
+
+B. Conceptual CSS (for the container):
+
+CSS
+
+.forum-category-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* Default to 3 columns */
+  grid-gap: 20px; /* Space between the cards */
+}
+
+/* Tablet Breakpoint */
+@media (max-width: 1200px) {
+  .forum-category-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  }
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 768px) {
+  .forum-category-list {
+    grid-template-columns: 1fr; /* 1 column */
+  }
+}
+4. CTO's Rationale (The "Why")
+Scannability: Users will see all 8-10 categories in a single glance, allowing them to choose their destination instantly.
+
+Space Efficiency: This change will reduce the vertical height of this section by 60-70%.
+
+Prioritizing Content: This moves the most important part of the homepage—the "Recent Discussions" and "What's Hot" modules—much higher up the page, drastically improving user engagement.
+
+Execute this change. It's a simple fix with a massive positive impact on the user experience.

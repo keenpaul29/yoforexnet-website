@@ -1,0 +1,373 @@
+IMPLEMENT real-time auto-updates and smart ranking algorithm:
+
+PART 1: AUTO-REFRESH SYSTEM (Real-Time Updates)
+================================================
+
+GOAL: Auto-update stats, leaderboard, threads, and highlights every 30 seconds without page refresh.
+
+1. CREATE polling system for real-time data:
+
+   File: /client/hooks/useRealtimeUpdates.ts
+   
+import { useEffect, useState } from 'react';
+
+export function useRealtimeUpdates(endpoint: string, interval = 30000) {
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+
+text
+ useEffect(() => {
+   // Initial fetch
+   fetchData();
+   
+   // Auto-refresh every 30 seconds
+   const intervalId = setInterval(fetchData, interval);
+   
+   return () => clearInterval(intervalId);
+ }, [endpoint]);
+ 
+ async function fetchData() {
+   try {
+     const response = await fetch(endpoint);
+     const newData = await response.json();
+     setData(newData);
+     setLoading(false);
+   } catch (error) {
+     console.error('Realtime update failed:', error);
+   }
+ }
+ 
+ return { data, loading, refresh: fetchData };
+}
+
+text
+
+2. APPLY auto-updates to these components:
+
+A. Stats Bar (Forum Threads, Members, Replies, Active Today):
+// components/StatsBar.tsx
+const { data: stats } = useRealtimeUpdates('/api/stats', 30000);
+
+// Updates every 30 seconds
+// Shows: 15,234 → 15,235 → 15,236 as threads increase
+
+text
+
+B. Leaderboard (Top contributors):
+// components/Leaderboard.tsx
+const { data: leaderboard } = useRealtimeUpdates('/api/leaderboard', 30000);
+
+// Refreshes rankings every 30 seconds
+// Users move up/down as they earn points
+
+text
+
+C. What's Hot (Trending threads):
+// components/WhatsHot.tsx
+const { data: hotThreads } = useRealtimeUpdates('/api/threads/hot', 30000);
+
+// Auto-updates trending discussions
+
+text
+
+D. This Week's Highlights:
+// components/WeekHighlights.tsx
+const { data: highlights } = useRealtimeUpdates('/api/threads/highlights', 30000);
+
+// Refreshes New/Trending/Solved tabs
+
+text
+
+E. Top Sellers (EAs/Indicators):
+// components/TopSellers.tsx
+const { data: topSellers } = useRealtimeUpdates('/api/content/top-sellers', 60000);
+
+// Updates every 60 seconds (less critical)
+
+text
+
+3. ADD visual indicator when updating:
+
+{loading && (
+<div className="absolute top-2 right-2">
+<div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+</div>
+)}
+
+text
+
+Shows small green dot when fetching new data.
+
+4. OPTIMIZE with WebSocket (optional advanced feature):
+
+Instead of polling every 30s, use WebSocket for instant updates:
+
+// server/websocket.ts
+import { WebSocketServer } from 'ws';
+
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on('connection', (ws) => {
+// Send updates when events happen
+on('thread.created', (thread) => {
+ws.send(JSON.stringify({ type: 'thread.new', data: thread }));
+});
+
+text
+ on('reply.created', (reply) => {
+   ws.send(JSON.stringify({ type: 'reply.new', data: reply }));
+ });
+});
+
+text
+
+Real-time updates = 0 delay (instant)!
+
+PART 2: SMART RANKING ALGORITHM
+=================================
+
+GOAL: Rank threads, posts, users, and content based on multiple engagement factors.
+
+1. CREATE scoring algorithm:
+
+File: /server/utils/rankingAlgorithm.ts
+
+interface RankingFactors {
+views: number;
+replies: number;
+likes: number;
+bookmarks: number;
+shares: number;
+downloads?: number;
+purchases?: number;
+recency: Date;
+authorReputation?: number;
+}
+
+/**
+* Calculate engagement score for threads/posts
+* Higher score = higher ranking
+*/
+export function calculateEngagementScore(factors: RankingFactors): number {
+const {
+views,
+replies,
+likes,
+bookmarks,
+shares,
+downloads = 0,
+purchases = 0,
+recency,
+authorReputation = 1
+} = factors;
+
+text
+ // Weight different actions
+ const WEIGHTS = {
+   view: 0.1,        // Low weight - passive action
+   reply: 5.0,       // High weight - active engagement
+   like: 2.0,        // Medium weight
+   bookmark: 3.0,    // Higher than like - shows intent
+   share: 4.0,       // High weight - amplification
+   download: 10.0,   // Very high - conversion
+   purchase: 50.0    // Highest - direct revenue
+ };
+ 
+ // Calculate base score
+ let score = 0;
+ score += views * WEIGHTS.view;
+ score += replies * WEIGHTS.reply;
+ score += likes * WEIGHTS.like;
+ score += bookmarks * WEIGHTS.bookmark;
+ score += shares * WEIGHTS.share;
+ score += downloads * WEIGHTS.download;
+ score += purchases * WEIGHTS.purchase;
+ 
+ // Apply time decay (newer content gets boost)
+ const ageInHours = (Date.now() - new Date(recency).getTime()) / (1000 * 60 * 60);
+ const recencyBoost = Math.exp(-ageInHours / 24); // Decay over 24 hours
+ score *= (1 + recencyBoost);
+ 
+ // Apply author reputation multiplier
+ score *= authorReputation;
+ 
+ return Math.round(score);
+}
+
+/**
+* Calculate user reputation score for leaderboard
+*/
+export function calculateUserReputation(userStats: {
+threadsCreated: number;
+repliesPosted: number;
+likesReceived: number;
+bestAnswers: number;
+contentSales: number;
+followersCount: number;
+verifiedStatus: boolean;
+}): number {
+const {
+threadsCreated,
+repliesPosted,
+likesReceived,
+bestAnswers,
+contentSales,
+followersCount,
+verifiedStatus
+} = userStats;
+
+text
+ let reputation = 0;
+ 
+ // Base activity points
+ reputation += threadsCreated * 10;
+ reputation += repliesPosted * 5;
+ reputation += likesReceived * 2;
+ 
+ // Quality indicators (higher weight)
+ reputation += bestAnswers * 50;        // Solving problems = high value
+ reputation += contentSales * 100;       // Revenue generation
+ reputation += followersCount * 3;
+ 
+ // Verified badge bonus
+ if (verifiedStatus) {
+   reputation *= 1.2; // 20% boost
+ }
+ 
+ return Math.round(reputation);
+}
+
+text
+
+2. IMPLEMENT ranking queries:
+
+A. Hot Threads (What's Hot):
+// GET /api/threads/hot
+const hotThreads = await db
+.select('*')
+.from('threads')
+.where('created_at', '>', subDays(new Date(), 7)) // Last 7 days
+.orderBy('engagement_score', 'desc')
+.limit(10);
+
+// Recalculate scores hourly via cron
+cron.schedule('0 * * * ', async () => {
+const threads = await db.select('').from('threads');
+
+text
+ for (const thread of threads) {
+   const score = calculateEngagementScore({
+     views: thread.view_count,
+     replies: thread.reply_count,
+     likes: thread.like_count,
+     bookmarks: thread.bookmark_count,
+     shares: thread.share_count,
+     recency: thread.created_at,
+     authorReputation: thread.author_reputation
+   });
+   
+   await db
+     .update('threads')
+     .set({ engagement_score: score })
+     .where('id', thread.id);
+ }
+});
+
+text
+
+B. Leaderboard Rankings:
+// GET /api/leaderboard
+const topUsers = await db
+.select('users.*')
+.from('users')
+.orderBy('reputation_score', 'desc')
+.limit(50);
+
+// Recalculate user reputations every 5 minutes
+cron.schedule('*/5 * * * ', async () => {
+const users = await db.select('').from('users');
+
+text
+ for (const user of users) {
+   const stats = await getUserStats(user.id);
+   const reputation = calculateUserReputation(stats);
+   
+   await db
+     .update('users')
+     .set({ reputation_score: reputation })
+     .where('id', user.id);
+ }
+});
+
+text
+
+C. Top Sellers (EAs/Indicators):
+// GET /api/content/top-sellers
+const topContent = await db
+.select('content.*')
+.from('content')
+.orderBy('sales_score', 'desc')
+.limit(10);
+
+// Calculate sales score (revenue + reviews + rating)
+function calculateSalesScore(content) {
+const revenueScore = content.total_sales * content.price;
+const reviewScore = content.review_count * 10;
+const ratingBonus = content.avg_rating * 50;
+
+text
+ return revenueScore + reviewScore + ratingBonus;
+}
+
+text
+
+3. ADD database columns for scores:
+
+-- Add to threads table
+ALTER TABLE threads ADD COLUMN engagement_score INTEGER DEFAULT 0;
+
+-- Add to users table
+ALTER TABLE users ADD COLUMN reputation_score INTEGER DEFAULT 0;
+
+-- Add to content table
+ALTER TABLE content ADD COLUMN sales_score INTEGER DEFAULT 0;
+
+-- Create indexes for fast sorting
+CREATE INDEX idx_threads_engagement ON threads(engagement_score DESC);
+CREATE INDEX idx_users_reputation ON users(reputation_score DESC);
+CREATE INDEX idx_content_sales ON content(sales_score DESC);
+
+text
+
+4. CREATE background job scheduler:
+
+File: /server/jobs/rankings.ts
+
+import cron from 'node-cron';
+
+// Update thread engagement scores every hour
+cron.schedule('0 * * * *', updateThreadScores);
+
+// Update user reputation every 5 minutes
+cron.schedule('*/5 * * * *', updateUserReputations);
+
+// Update top sellers every 15 minutes
+cron.schedule('*/15 * * * *', updateTopSellers);
+
+// Cleanup old "hot" threads daily
+cron.schedule('0 0 * * *', cleanupOldHotThreads);
+
+text
+
+PART 3: REAL-TIME ACTIVITY FEED
+=================================
+
+BONUS: Show live activity feed (like Stack Overflow)
+
+// components/LiveActivityFeed.tsx
+const { data: activities } = useRealtimeUpdates('/api/activity/recent', 10000);
+
+// Shows:
+// "John replied to XAUUSD M1 scalping - 2 seconds ago"
+// "Sarah purchased Gold Hedger EA - 5 seconds ago"
+// "Mike bookmarked BTCUSD strategy - 8 seconds ago"

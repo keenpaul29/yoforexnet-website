@@ -1,0 +1,137 @@
+Goal: Design and populate a modern, high-trust forum for algorithmic trading (MT4/MT5 EAs, indicators, strategies). Output production-ready UX copy, category descriptions, post templates, and 50+ seed thread titles.
+
+Brand
+
+Name: {Your Forum Name}
+
+Tone: helpful, expert, zero hype, compliant
+
+Audience: new→pro EA users, quants, MQL4/5 devs
+
+Design System (deliver concrete UI copy + component specs)
+
+Category Cards (grid, 2–3 columns on desktop, 1 on mobile): title, 1-line description, icon, counters (threads, posts), last activity.
+
+Thread List: badges (Solved, Guide, Code, Backtest, Set-file), mini-stats (views/replies), author chip, last reply time.
+
+Post Composer with tabs: Write, Attach, Backtest, Set Files, Code.
+
+“EA Card” component for uploads: hero image/logo, pair/timeframe tags, features list, risk label, version, changelog, links (demo/backtest/drive), Download CTA.
+
+“Performance Report” component: equity screenshot, period, PF, DD, win-rate, model quality note, broker/account type, spread/VPS.
+
+“How-To Template” & “Bug Report Template” blocks (auto-inserted when user picks a tag).
+
+Right sidebar: Top Contributors, Trending EAs, Newest Set Files, Live Leaderboard, Quick Links (Rules, Safe Download, Broker/Account Guide).
+
+Global features: tag filters (pair, TF, style, risk), code syntax highlighting (MQL4/5), versioned attachments, “Mark as Solved”, reactions, bookmark, follow thread, Bounty/悬赏 tag, Leaderboard/排名 page, Help/下载问题 sticky thread, multilingual toggle (EN/中文).
+
+Category Architecture (merge best of global + CN communities)
+Create short descriptions + example sub-tags for each:
+
+Strategy Discussion — setups, market structure, execution discipline (tags: Trend, Range, Breakout, News, Grid, Martingale-free).
+
+Beginner Questions — onboarding FAQs, glossary, safe broker/account basics.
+
+Performance Reports — backtests, forward tests, equity curves, weekly/monthly journals.
+
+Technical Support — installs, VPS, slippage, latency, symbol mapping, data quality.
+
+EA Development (MQL4/5) — code help, architecture, optimization, portable patterns.
+
+Success Stories — risk-aware wins, lessons learned.
+
+EA Library (inspired by EAhub/EABOOK) — curated EA uploads with “EA Card” (sub-tags: Gold/XAUUSD, EURUSD, GBPUSD, US30, BTCUSD/ETHUSD; TF: M1…H4). (Derived from the EA-focused menus on both sites. 
+EAHub
+)
+
+Indicators Library — non-repaint vs utility indicators; strategy recipes. (From “指标/Indicators” sections. 
+EAHub
+)
+
+Tools & Utilities — trade managers, panel UIs, optimizers, data tools (QuantAnalyzer, set-file managers). (Matches “工具/Tools”. 
+EAHub
+)
+
+Source Code (EA/Indicator) — open-source drops, snippets, learning repos. (Reflects “外汇EA源码”. 
+EABOOK
+)
+
+Learning Hub — step-by-step courses, checklists, booklets (mirrors “学院/外汇EA学习”). 
+EAHub
++1
+
+Q&A / Help — rapid answers to install/download issues; sticky “Download Troubleshooting” thread at top. (Matches EABOOK’s download-issue help threads. 
+EABOOK
+)
+
+Bounties (悬赏) — pay/points for code fixes, set-file tuning, research tasks. (From “悬赏”. 
+EAHub
+)
+
+Rankings / Leaderboard (排名) — top EAs, top contributors, weekly movers (present on both communities). 
+EAHub
++1
+
+Commercial Trials — broker-neutral area for vendor demos with strict proof/rules (parallels “商业外汇EA”). 
+EABOOK
+
+Seed Thread Titles (generate 6–10 per category)
+
+Use practical, specific titles: “Best scalping settings for EURUSD M5 under RAW ECN (spread ≤ 3, LP depth?)”, “Gold M1: controlling slippage during CPI—real fills and VPS latency benchmarks”, “Share your set for XAUUSD H1 (target DD < 8%)”, etc.
+
+Post Templates (render as fill-in forms)
+
+Performance Report: Pair/TF • Period • Deposit • Net P/L • PF • Max DD • Trades • Win% • Broker/Account • Spread • VPS • Model quality • Set-file link • Screenshots.
+
+EA Release: Name • Version • Pairs/TF • Strategy logic • Required conditions (RAW/commission) • Inputs summary • Risk guidance • Backtest pack (years, tick modeling) • Known limits • Changelog.
+
+Bug Report: Platform • EA/Indi name & version • Steps • Logs • Broker/symbol • Screens • Expected vs actual.
+
+How-To: Goal • Prereqs • Steps • Gotchas • Checklist.
+
+Gamification & Trust
+
+Badges: Helpful, Backtest Pro, Risk-First, Code Mentor, Uploader, Verified Author.
+
+Reputation: upvotes + “Solution accepted”; unlocks: attach files, post in Commercial Trials, set bounty.
+
+Anti-spam: rate limits, first-post approval, link trust score, no external shortened links.
+
+Compliance & Safety Copy
+
+Clear risk disclaimer; broker-neutral stance; ban performance claims without files; watermark equity screenshots.
+
+“Safe Download” explainer: checksum, virus scan steps, allowed archive formats.
+
+SEO/UX
+
+Category and thread slugs, OpenGraph per thread, schema for Q&A and HowTo, internal link blocks (“related threads”), multilingual titles (EN/中文).
+
+Deliverables
+
+A polished category grid with 1-line descriptions.
+
+UX copy for every component listed.
+
+50+ seed thread titles grouped by category.
+
+4 full post-templates.
+
+A short Style Guide (tone, formatting, tag etiquette).
+
+Quick add-ons for your homepage (design ideas)
+
+“Start Here” strip for newcomers: Pick your goal → Get a template → Post your first thread.
+
+Micro-filters under the search: Pair, TF, Style, Risk, Platform (MT4/MT5), Asset (Gold/Forex/Indices/Crypto).
+
+Solved/Unsolved toggle in lists; “Has Set-file” filter.
+
+Right rail modules: Top Set Files this week, New Open-Source EAs, Download Help (links to the sticky). (EABOOK has a visible download-issues help thread you can mirror.) 
+EABOOK
+
+悬赏/Bounty CTA in header to encourage expert replies (inspired by EAHub). 
+EAHub
+
+Rankings widget: Top Contributors / Top EAs (7-day). (Both communities surface rankings.)

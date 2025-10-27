@@ -1,0 +1,219 @@
+You are building a production-ready EA hub and community website (EA listings + forum + performance reports) for Forex Expert Advisors. Prioritize **UI & UX first**, then implement backend, integrations, SEO, and deployment. Follow this step-by-step roadmap, deliverables, acceptance criteria, timeline estimates, and tech-stack decisions. Communicate weekly progress and provide demos after each milestone.
+
+**Project summary & objective**
+
+* Build a modern, SEO-friendly EA marketplace + forum where users can browse, upload, review, and discuss Forex EAs (MT4/MT5).
+* Key goals: fast load times, excellent mobile UX, SEO-first architecture, secure file handling, and scalable infra.
+
+**Primary tech stack (required)**
+
+* Frontend: Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui (optional)
+* Backend: Next.js API routes (edge/server actions) or Node.js/Express for heavy logic
+* Database: PostgreSQL (Prisma ORM)
+* Search: Meilisearch (or Algolia)
+* File storage: AWS S3 or Cloudflare R2
+* Auth: NextAuth.js (email + OAuth)
+* Hosting: Vercel (frontend) + Supabase or Railway for DB
+* Analytics / SEO: Google Search Console, GA4, structured data (JSON-LD)
+
+---
+
+## Phase 1 — UI / Design (Priority #1) — Deliver in 7–10 days
+
+**Deliverables**
+
+1. Figma (or equivalent) design system + components library: colors, typography, spacing, buttons, forms, modals, cards, inputs, icons.
+2. High-fidelity screens (desktop & mobile):
+
+   * Homepage
+   * EA listing grid
+   * EA detail page (metadata, screenshots, reviews, performance snapshot)
+   * Forum category page
+   * Thread page (Q&A style)
+   * User profile / dashboard
+   * Upload EA flow (multi-step)
+   * Admin/moderator panel
+3. Interactive prototype of main flows (clickable).
+
+**Tasks**
+
+* Establish responsive breakpoints and accessibility baseline (WCAG AA).
+* Create reusable UI components in Figma.
+* Provide an exportable token set or Tailwind config.
+
+**Acceptance criteria**
+
+* Figma links delivered with component library.
+* Clickable prototype demonstrating all core user flows.
+* Designer walkthrough recorded (5–10 min).
+
+---
+
+## Phase 2 — Frontend Implementation (SSG/SSR focus) — 10–14 days
+
+**Deliverables**
+
+* Component library implemented in Next.js (TypeScript).
+* Static/ISR pages for EA listings and EA detail pages (good for SEO).
+* SSR pages for forum listing + thread for freshness.
+* Responsive UI for all screens from Phase 1.
+* Client-side form validation + friendly error states.
+
+**Tasks**
+
+* Implement SEO helper components (Meta, Open Graph, JSON-LD generator).
+* Implement breadcrumbs, clean slug-based routes (`/ea/[slug]`, `/forum/[category]/[slug]`, `/user/[username]`).
+* Implement pagination with rel="prev/next" and paged canonicalization.
+
+**Acceptance criteria**
+
+* Lighthouse scores: Performance >= 85, Accessibility >= 90 for main pages.
+* Mobile UX validated manually on Android & iOS.
+* 100% of UI screens implemented and linked.
+
+---
+
+## Phase 3 — Core Backend & Database (10–14 days)
+
+**Deliverables**
+
+* Prisma schema with models for User, EA, Post, Reply, Review, Upload, Admin.
+* Auth via NextAuth (email + Google).
+* API endpoints (CRUD) for EA, forum, uploads, search proxy.
+* Signed S3 upload flow and server-side virus/extension checks.
+* Admin endpoints for moderation (ban user, remove upload, DMCA takedown).
+
+**Tasks**
+
+* Implement rate-limiting and file validation (type/size).
+* Implement pagination and efficient querying (indexes).
+* Seed script to import initial dataset.
+
+**Acceptance criteria**
+
+* Endpoints documented (OpenAPI or README).
+* All endpoints covered by basic integration tests.
+* Uploads require login; download gating configurable.
+
+---
+
+## Phase 4 — Search, Filters & Performance Tracking (7–10 days)
+
+**Deliverables**
+
+* Meilisearch integration for full-text EA & forum search with filters (platform, strategy, rating).
+* EA detail page hooks for performance (Myfxbook/Aggregate or manual upload support).
+* EA review and rating system.
+
+**Acceptance criteria**
+
+* Search returns results in <200ms for demo dataset.
+* Filter UI works with live search.
+* Performance badges render on EA pages when data exists.
+
+---
+
+## Phase 5 — SEO, Localization & Legal (5–7 days)
+
+**Deliverables**
+
+* Sitemap.xml and robots.txt auto-generated.
+* JSON-LD for SoftwareApplication / Product on EA pages and DiscussionForumPosting on threads.
+* Hreflang/canonical tagging for multi-language site (English + Chinese + Bengali).
+* Legal pages: Terms, Privacy, Copyright, DMCA takedown workflow, Risk disclaimer.
+
+**Acceptance criteria**
+
+* Search Console verification steps included and sitemap submitted.
+* SEO meta templates implemented and test-crawled (showing title/meta).
+* Hreflang implemented for sample translated pages.
+
+---
+
+## Phase 6 — QA, Testing & Security (5–7 days)
+
+**Deliverables**
+
+* Unit tests (Jest) for critical modules.
+* E2E tests (Playwright/ Cypress) for main user journeys.
+* Pen test checklist + basic remediation (OWASP Top 10).
+* Load/perf tests for pages that will serve high traffic.
+
+**Acceptance criteria**
+
+* E2E scripts covering signup, upload, create thread, post review.
+* Security issues documented and fixed or acknowledged as backlog.
+
+---
+
+## Phase 7 — Deployment, Monitoring & Handoff (3–5 days)
+
+**Deliverables**
+
+* CI/CD pipeline (GitHub Actions): preview deploys, production deploys.
+* Production deployment on Vercel; DB on Supabase/Railway.
+* Error monitoring (Sentry), uptime monitoring (UptimeRobot), performance alerts.
+* Developer handoff docs: env vars, runbook, scaling plan.
+
+**Acceptance criteria**
+
+* Production site deployed and accessible.
+* Sentry and uptime checks active.
+* On-call and escalation plan documented.
+
+---
+
+## Milestones & Timeline (Summary)
+
+* UI / Design: 7–10 days
+* Frontend (MVP): 10–14 days
+* Backend & DB: 10–14 days
+* Search & Performance: 7–10 days
+* SEO & Legal: 5–7 days
+* QA & Security: 5–7 days
+* Deployment & Handoff: 3–5 days
+
+**Estimated total (MVP): 6–8 weeks** with a focused team.
+
+---
+
+## Team & roles (recommendation)
+
+* 1 Product Manager / Owner
+* 1 UI/UX Designer
+* 2 Frontend Engineers (Next.js)
+* 1 Backend Engineer (Prisma / API)
+* 1 QA Engineer
+* 1 DevOps engineer (small part-time)
+* Optional: Community manager / content writer
+
+---
+
+## Acceptance metrics / KPIs (first 3 months)
+
+* Indexed pages in Google: >1,000
+* Organic search visitors / month: target 1K by month 3
+* Active daily users (from your base): keep 50%+ retention
+* Lighthouse performance: P >= 85, FCP < 1.5s
+* Error rate: <1% for main user flows
+
+---
+
+## Communication & delivery cadence
+
+* Daily standups (optional) / asynchronous updates in Slack
+* Weekly demo at the end of each sprint
+* PRs for code review; no merge to main without passing CI & tests
+
+---
+
+### Final notes
+
+* Prioritize **UI & prototype** first — this reduces rework and clarifies UX for backend APIs.
+* Keep legal & DMCA workflows integrated early to avoid takedown/brand risk.
+* Seed initial content and activate your 500 users during Phase 2–3 to create immediate indexing signals.
+
+If you want, I can refine this into:
+
+* a one-page brief for hiring contractors, or
+* a Trello/Jira-ready task list with epics, user stories, and subtasks.

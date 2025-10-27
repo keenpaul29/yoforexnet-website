@@ -1,0 +1,106 @@
+Initiative 1: Layout Overhaul (The "Great Consolidation")
+The current 3-column layout is cluttered. The hero image is for a blog, not a community. We are moving to a clean, modern 2-column layout.
+Action: Remove the entire hero image/banner section from the forum homepage
+Reason: It's distracting. The "Forum Categories" and "Recent Discussions" are the true homepage content.
+nitiative 2: New Social Features (The "Community" Engine)
+This initiative drives user-to-user engagement and retention.
+
+1. "Follow" System:
+
+Database: Create new table user_follows (follower_id, following_id).
+
+UI:
+
+Add a "Follow [Username]" button to all user profiles and user mini-profiles (by their post avatar).
+
+Add "Followers" and "Following" tabs to the main User Profile page.
+
+Logic: When a user is followed, their new posts trigger the Email Notification System.
+
+2. Private Messaging (PM) System:
+
+Database: Create messages table (sender_id, recipient_id, body, is_read, timestamp) and a conversations table.
+
+UI:
+
+Add a "Messages" (envelope) icon to the main site header.
+
+Add a "Send Private Message" button to user profiles.
+
+The "Messages" page will be a mini-inbox (Inbox, Sent, New Message).
+
+3. Email Notification System:
+
+Trigger: When a user (User A) creates a new post (a new thread, not a reply).
+
+Action: The backend queries user_follows for all users following User A.
+
+Job: For each follower, queue a plain-text email: "Hi [FollowerName], [UserA_Name] just posted a new thread: '[PostTitle]'. View it here: [Link]".
+
+Mandatory Opt-Out: In User Settings, add a checkbox (default: on): "Notify me by email when a user I follow posts a new thread."
+
+Initiative 3: The "Trust" Engine (Profile & Verification)
+This is our most critical new feature. It's how we build authority and reward real traders.
+
+1. New Profile Fields (in User Settings):
+
+Create a new "My Profile & Verification" tab in the User Settings page.
+
+Add the following fields:
+
+YouTube URL (e.g., https://youtube.com/c/...)
+
+Instagram Handle (e.g., @...)
+
+Telegram Handle (e.g., @...)
+
+Myfxbook Link (Must be a valid myfxbook.com URL).
+
+Investor ID (Read-Only)
+
+Investor Password (Read-Only)
+
+Security Mandate: The Investor ID and Password fields MUST be encrypted in the database at all times. They are never displayed publicly. They are only for admin verification.
+
+2. The "Verified Trader" System:
+
+Flow: When a user submits an Investor ID/Password, it flags their account for admin review.
+
+Admin Action: This is a manual process. An admin must log in (read-only) to verify the account is real.
+
+Reward: If verified, the admin checks a is_verified_trader boolean in the users table.
+
+Public UI: The user receives a "Verified Trader" badge next to their name on all posts and on their profile. This is the ultimate status symbol on our site.
+
+3. Public Profile Display:
+
+The public user profile will now display the YouTube, Instagram, and Myfxbook links (if filled out).
+
+It will NEVER display the investor credentials.
+
+Initiative 4: Upgraded Gamification (The "Incentive")
+We must incentivize users to fill out these new fields. This is how we bootstrap the "Trust" system.
+
+1. Gold Coin Rewards (One-Time Bonus):
+
+In the User Settings page, display the reward next to the field:
+
+Myfxbook Link: [_____] (Earn +100 Gold Coins)
+
+YouTube URL: [_____] (Earn +25 Gold Coins)
+
+Investor ID: [_____] (Submit for Verification & Earn +250 Gold Coins)
+
+Logic: When the user saves their profile, the backend checks if the field was previously empty and is now filled. If so, award the coins and log the transaction (e.g., "One-time bonus for adding Myfxbook").
+
+2. Reward Hierarchy:
+
+Simple social links = Small reward (+25).
+
+High-value links (Myfxbook) = Medium reward (+100).
+
+High-trust data (Investor credentials) = High reward (+250).
+
+The "Verified Trader" badge is the final, non-coin reward.
+
+This prompt covers every request. It transforms the site from a simple forum into a full-featured, trust-based social community. Execute these initiatives in order.

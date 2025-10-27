@@ -1,0 +1,124 @@
+Building our platform's "immune system." We are implementing two major features: a structured Broker Directory (like WikiFX) and a community-driven Scam Watch.
+
+This initiative is our #1 priority for building platform authority. It will be broken into two parallel developments.
+
+Initiative 1: The "YoForex Broker Directory" (Structured Reviews)
+This feature is a permanent asset, a new content vertical for the site. It requires its own database and pages.
+
+1. Navigation & UI:
+
+Add a new, top-level item in the main navigation bar: "Broker Reviews".
+
+This link leads to a new "Broker Directory" homepage (not a forum page).
+
+2. Database Schema:
+
+Table brokers:
+
+broker_id
+
+name (e.g., "IC Markets")
+
+slug (e.g., "ic-markets")
+
+website_url
+
+logo_url
+
+admin_notes (e.g., "Regulated by ASIC, CySEC")
+
+average_rating (Auto-calculated from reviews)
+
+is_verified_by_us (Admin flag)
+
+Table broker_reviews:
+
+review_id
+
+broker_id (links to brokers)
+
+user_id (links to users)
+
+rating (1-5 stars)
+
+title
+
+review_body (text)
+
+is_scam_report (Boolean: 0 or 1)
+
+date_posted
+
+admin_approved (Boolean: 0 or 1)
+
+3. Core Pages:
+
+A) Directory Homepage:
+
+Search Bar: "Find a Broker..."
+
+Filters: "Top Rated," "Most Reviewed," "Scam Alerts."
+
+CTA Button: "Submit Your Broker Review."
+
+B) Broker Profile Page (e.g., yoforex.net/brokers/ic-markets):
+
+Header: Broker Logo, Name, Website Link, average_rating.
+
+Admin Info: Our admin_notes on their regulation.
+
+Tabs:
+
+"User Reviews": All reviews for this broker, sorted new-to-old.
+
+"Scam Reports": Filters to show only reviews where is_scam_report = 1.
+
+C) Submission Form:
+
+User selects broker from a drop-down list (which searches the brokers table).
+
+User provides 1-5 star rating.
+
+User writes title and review_body.
+
+Critical Checkbox: [ ] This is a SCAM REPORT.
+
+Incentive: Display text: "Submit a quality review (200+ words) and earn +50 Gold Coins once approved."
+
+Initiative 2: The "Community Scam Watch" (Flexible Reports)
+This is for "scam telegram sellers" and other flexible reports. It's faster to implement because we can leverage our existing forum structure.
+
+1. New Forum Category:
+
+Action: Add a new card to our "Forum Categories" grid.
+
+Title: Scam Watch & Alerts
+
+Icon: A red shield (🛡️) or warning (⚠️) icon.
+
+Description: "Report scam Telegram sellers, fake EAs, or bad actors. Protect the community."
+
+2. Custom Post Template:
+
+Action: When a user clicks "New Thread" in this specific category, the text editor will be pre-filled with a template to guide them:
+
+Markdown
+
+**Scammer's Name / Handle:**
+(e.g., Telegram @scam_user, Discord user#1234)
+
+**What They Were Selling:**
+(e.g., "A 'guaranteed profit' Gold EA," "A signals service")
+
+**What Happened (Provide Proof):**
+(Your story here. **You MUST upload screenshots** of the conversation, payment, etc. Reports without proof will be deleted.)
+
+**Gold Coins / Money Lost:**
+(e.g., "1500 Gold Coins," "$200 USDT")
+3. Gold Coin Incentive (The Bounty):
+
+Action: We will display this rule in the "Scam Watch" category description and as a pinned post.
+
+Rule: "Protect the YoForex community. If you post a verified scam report with clear proof (screenshots, transaction IDs), an Admin will review it. If confirmed, you will be awarded +150 Gold Coins as a thank you."
+
+Logic: This turns our users into a paid, decentralized moderation team. It's a powerful incentive.

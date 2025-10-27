@@ -1,0 +1,189 @@
+Implement a Gold Coin Recharge System to allow users to top up their coin balance using USDT or coin payments API, similar to the eabook.cn platform, to access premium content and download EAs.
+
+1. Database Structure
+
+Add new tables to your database for managing coin balances and recharge transactions.
+
+CREATE TABLE user_wallet (
+    user_id INT PRIMARY KEY,
+    total_coins INT DEFAULT 0,
+    last_recharge TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE recharge_transactions (
+    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    amount_usd DECIMAL(10, 2),
+    amount_coins INT,
+    payment_method ENUM('USDT', 'CoinPayment', 'Others'),
+    status ENUM('pending', 'completed', 'failed'),
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+2. Backend API: Handling Payments and Coin Credit
+a) Create a Payment Request
+
+When the user selects the amount to recharge, create a payment transaction using the CoinPayments API.
+
+import requests
+
+def create_coinpayment_transaction(user_id, coin_amount, amount_usd):
+    url = "https://www.coinpayments.net/api.php"
+    payload = {
+        'cmd': 'create_transaction',
+        'api_key': 'YOUR_API_KEY',
+        'currency1': 'USDT',  # USDT or other crypto
+        'currency2': 'USD',
+        'amount': amount_usd,  # USD equivalent for recharge amount
+        'address': 'USER_WALLET_ADDRESS',  # User’s crypto address for payment
+        'item_name': 'Gold Coins Recharge',
+        'item_number': '1234',
+        'quantity': 1,
+    }
+
+    response = requests.post(url, data=payload)
+    return response.json()
+
+b) Verify Payment Confirmation
+
+After the user makes the payment, use the CoinPayments API to confirm the payment.
+
+def verify_payment(transaction_id):
+    url = "https://www.coinpayments.net/api.php"
+    payload = {
+        'cmd': 'get_tx_info',
+        'api_key': 'YOUR_API_KEY',
+        'txid': transaction_id,
+    }
+
+    response = requests.post(url, data=payload)
+    transaction_info = response.json()
+    
+    if transaction_info['status'] == '1':  # Payment confirmed
+        # Update user’s coin balance after payment confirmation
+        credit_coins(transaction_info['user_id'], transaction_info['amount_coins'])
+    else:
+        print("Payment not completed.")
+
+c) Credit Coins to User
+
+Once the payment is confirmed, update the user’s coin balance in the database.
+
+def credit_coins(user_id, coin_amount):
+    cursor.execute("""
+        UPDATE user_wallet
+        SET total_coins = total_coins + %s, last_recharge = CURRENT_TIMESTAMP
+        WHERE user_id = %s
+    """, (coin_amount, user_id))
+    
+    # Log the recharge transaction
+    cursor.execute("""
+        INSERT INTO recharge_transactions (user_id, amount_usd, amount_coins, payment_method, status)
+        VALUES (%s, %s, %s, 'USDT', 'completed')
+    """, (user_id, amount_usd, coin_amount))
+    
+    connection.commit()
+
+3. Frontend: User Interface
+a) Recharge Page
+
+Create a page where users can choose how many coins to purchase and select a payment method.
+
+<div class="recharge-page">
+    <h2>Recharge Gold Coins</h2>
+    <p>Top up your account to access premium content and EAs!</p>
+    
+    <!-- Recharge Amount Options -->
+    <div class="amount-options">
+        <button onclick="topUp(22)">22 Gold Coins - 22 Yuan</button>
+        <button onclick="topUp(52)">52 Gold Coins - 52 Yuan</button>
+        <button onclick="topUp(200)">200 Gold Coins - 200 Yuan</button>
+        <button onclick="topUp(500)">500 Gold Coins - 500 Yuan</button>
+        <input type="number" id="customAmount" placeholder="Custom Amount">
+    </div>
+    
+    <!-- Payment Method Selection -->
+    <div class="payment-methods">
+        <button onclick="selectPaymentMethod('USDT')">Pay with USDT</button>
+        <button onclick="selectPaymentMethod('CoinPayment')">Pay with Coin Payments</button>
+    </div>
+    
+    <div id="confirmationMessage"></div>
+</div>
+
+b) JavaScript for Payment Handling
+
+Use JavaScript to handle the selection and send payment requests to the server.
+
+function topUp(amount) {
+    let paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+    
+    // Send request to backend to create a payment transaction
+    fetch('/create_transaction', {
+        method: 'POST',
+        body: JSON.stringify({ amount: amount, payment_method: paymentMethod }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            // Display success message and redirect to payment gateway
+            document.getElementById("confirmationMessage").textContent = "Your payment is being processed. Please follow the instructions.";
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+4. Coin Recharge Success & Notifications
+a) Confirmation Page
+
+Once the payment is successful, display a confirmation page with the details of the recharge.
+
+<div class="confirmation-page">
+    <h2>Recharge Successful!</h2>
+    <p>Your account has been credited with <span id="coins-count">500</span> gold coins.</p>
+    <button onclick="goToContent()">Go to Premium Content</button>
+</div>
+
+b) Notify User on Payment Completion
+
+Notify the user once the payment is confirmed via email or in-site notification.
+
+5. User Coin Redemption
+
+After accumulating enough coins, users should be able to redeem their coins for premium content or other rewards. This can be done via a redemption page.
+
+<div class="redeem-page">
+    <h2>Redeem Gold Coins</h2>
+    <p>Your current balance: <span id="coin-balance">500</span> coins</p>
+    
+    <div class="rewards">
+        <button onclick="redeemReward('premium-ea')">Premium EA - 100 Coins</button>
+        <button onclick="redeemReward('vip-group')">VIP Group - 200 Coins</button>
+    </div>
+    
+    <div id="redeem-message"></div>
+</div>
+
+function redeemReward(rewardType) {
+    fetch('/redeem_coins', {
+        method: 'POST',
+        body: JSON.stringify({ reward_type: rewardType }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            document.getElementById("redeem-message").textContent = "You have successfully redeemed your reward!";
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+6. Future Enhancements
+
+Coin Bonuses: Implement bonus coins for large recharge amounts (e.g., “Get 10% more coins for recharging 1000 coins”).
+
+Affiliate Program: Allow users to earn coins by referring others to top-up or participate.

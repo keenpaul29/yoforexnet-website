@@ -1,0 +1,83 @@
+FIX "Forum Categories" section - cards have overlapping/overspreading content:
+
+PROBLEM: Category card text and icons are too large, causing content to overflow or take up too much space within each card.
+
+REQUIRED CHANGES:
+
+1. REDUCE icon sizes:
+   - Current: likely w-12 h-12 (48px) or w-10 h-10 (40px)
+   - Change to: w-8 h-8 (32px) for category icons
+   - Icon container background circle should also be 32px
+
+2. REDUCE category title font size:
+   - Current: likely text-lg (18px) or text-base (16px)
+   - Change to: text-sm (14px) font-semibold
+   - Line-height: leading-tight (1.25)
+
+3. REDUCE description font size:
+   - Current: likely text-sm (14px)
+   - Change to: text-xs (12px)
+   - Keep 2-line clamp: line-clamp-2
+
+4. REDUCE stats (threads/posts) font size:
+   - Current: likely text-sm (14px)
+   - Change to: text-xs (12px)
+   - Icon sizes: w-3.5 h-3.5 (14px)
+
+5. ADJUST card padding:
+   - Current: likely p-5 or p-6
+   - Change to: p-4 (16px padding all sides)
+   - This gives more breathing room inside card
+
+6. TIGHTEN vertical spacing inside cards:
+   - Gap between icon/title and description: mb-2 (8px)
+   - Gap between description and stats: mb-3 (12px)
+   - Use space-y-2 for vertical stacking
+
+7. ENSURE consistent card heights:
+   - All category cards should have same height
+   - Use: min-h-[160px] or h-40 for fixed height
+   - Content should align properly within this height
+
+EXAMPLE CARD STRUCTURE:
+
+<div className="bg-white rounded-lg border border-gray-200 p-4 h-40 
+                hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
+  
+  {/* Icon + Title Row */}
+  <div className="flex items-start gap-2 mb-2">
+    <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
+      <Icon className="w-4 h-4 text-white" />
+    </div>
+    <h3 className="text-sm font-semibold text-gray-900 leading-tight line-clamp-1">
+      Strategy Discussion
+    </h3>
+  </div>
+  
+  {/* Description */}
+  <p className="text-xs text-gray-600 leading-relaxed line-clamp-2 mb-3">
+    Share ideas, talk mt5 optimization
+  </p>
+  
+  {/* Stats Row */}
+  <div className="flex items-center gap-3 text-xs text-gray-500 mt-auto">
+    <div className="flex items-center gap-1">
+      <Users className="w-3.5 h-3.5" />
+      <span>1,234 threads</span>
+    </div>
+    <div className="flex items-center gap-1">
+      <MessageSquare className="w-3.5 h-3.5" />
+      <span>5,678 posts</span>
+    </div>
+  </div>
+</div>
+
+GRID LAYOUT (keep current):
+- Desktop: 4 columns (grid-cols-4)
+- Tablet: 3 columns (md:grid-cols-3)
+- Mobile: 1 column (grid-cols-1)
+- Gap: gap-4 or gap-5 between cards
+
+Apply these size reductions to ALL 16 category cards so content fits properly without overlapping or overspreading.
+
+Confirm when complete.

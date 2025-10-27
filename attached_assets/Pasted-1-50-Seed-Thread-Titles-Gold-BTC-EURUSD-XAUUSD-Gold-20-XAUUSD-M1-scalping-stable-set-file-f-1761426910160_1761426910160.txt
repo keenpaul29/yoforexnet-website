@@ -1,0 +1,104 @@
+1) 50 Seed Thread Titles (Gold/BTC/EURUSD)
+XAUUSD (Gold) — 20
+
+XAUUSD M1 scalping: stable set-file for RAW ECN (spread ≤ 20, VPS ≤ 5ms)?
+
+Gold H1 swing: 1:2 RRR with ATR stop—who has live results past 90 days?
+
+XAUUSD NY Open breakout: handling news spikes without widening SL?
+
+Gold Asian session M5: is low-volatility grid still viable without martingale?
+
+Prop-firm safe settings for XAUUSD H4 (max daily DD ≤ 4%) — share stats
+
+XAUUSD trend filter: RSI+EMA or structure-only? Backtests welcome
+
+Gold M15: partial close at 1R then trail to structure—equity curve samples?
+
+XAUUSD scalp manager: best TP in dollars vs pips at 4000 price zone
+
+Gold stop-hunt avoidance: time windows you disable trading? Set examples
+
+XAUUSD multi-timeframe logic (H1 bias, M5 entries) — code patterns?
+
+Gold M5 breakout vs retest entries: which delivers lower variance?
+
+XAUUSD commissions vs spread: broker math for scalpers (show fills)
+
+Gold CPI/NFP handling: disable or reduce lots? Real fills thread
+
+XAUUSD session overlay: London only vs London+NY—what improved PF?
+
+Gold trailing at 1R/2R/3R steps: show best step size & slippage impact
+
+XAUUSD H1 mean-reversion on key levels: DD control strategies
+
+Gold M1 HF entries: how to cap max concurrent trades without choking edge
+
+XAUUSD synthetic hedge (buy/sell ladders): anyone running flat-to-flat?
+
+Gold H4 swing pack: 5-year backtest with tick model + broker details
+
+XAUUSD best VPS regions vs liquidity hubs (LD4/NY4) — latency screenshots
+
+BTCUSD (Crypto) — 15
+
+BTCUSD M1 high-frequency: spread-only brokers—share your real costs
+
+Bitcoin weekend behavior: do you pause? Impact on PF/DD (live curves)
+
+BTCUSD M5 momentum vs mean-reversion—what survives funding rules?
+
+BTCUSDT vs BTCUSD symbols: mapping, contract sizes, and EA lot math
+
+BTC M15 breakout post-ETF hours: session filter times that work
+
+BTC news filter alternatives now that XML feeds are deprecated—ideas?
+
+BTCUSD overnight swaps/fees: how do you avoid bleed on intraday holds?
+
+BTC trend detection with Heikin-Ashi + EMA: code snippet requests
+
+BTCUSD slippage during volatile minutes—VPS + LP tests (share images)
+
+BTC H1 swing with 1:3 RRR: realistic win-rate to pass phase-1?
+
+BTCUSD spread guardrails: aborting entries when spread > X — show logic
+
+BTC M5 grid (non-martingale): equity curve examples with cap on max trades
+
+BTCUSD combined risk with Gold: correlation drawdown—portfolio settings?
+
+BTC partial close ladder: 50/30/20 vs full TP—what reduces variance?
+
+BTCUSD broker symbol suffix issues (.a, .pro, .ecn) — fix list
+
+EURUSD — 15
+
+EURUSD M5 London session scalping: stable set-files for RAW 0.1–0.3 spread
+
+EURUSD H1 breakout after NY open: time filters that reduce fakeouts
+
+EURUSD mean-reversion on ADR extremes: stop & target recipe?
+
+EURUSD M1 low-latency: can we achieve >65% win with 0.2 spread?
+
+EURUSD news blocks: which events do you auto-disable (CPI, PMI, FOMC)?
+
+EURUSD equity-curve optimizer: walk-forward settings that didn’t overfit
+
+EURUSD M15 pullback entry with structure confirmation—share code?
+
+EURUSD swap and commissions math for intraday vs overnight holds
+
+EURUSD H4 swing: best ATR multiplier for SL across 5 years
+
+EURUSD spread spikes at rollover: do you turn off 23:55–00:10? Results
+
+EURUSD partial hedge technique to recover losers—Risk constraints?
+
+EURUSD NY reversal window: seasonal performance—charts welcome
+
+EURUSD M30 EMA crossover + volatility filter: do we need RSI too?
+
+EURUSD prop-firm friendly settings (max 5 trades/day) — share templates

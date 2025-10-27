@@ -1,0 +1,85 @@
+CURRENT STATE:
+- Thread cards appear on plain white background
+- Hard to distinguish where one thread ends and another begins
+- No visual separation between thread items
+
+REQUIRED CHANGES:
+
+1. UPDATE thread card styling to add gray background:
+
+   Change from:
+   <div className="border-b border-gray-200 py-4">
+     {/* thread content */}
+   </div>
+
+   To:
+   <div className="bg-gray-50 rounded-lg p-4 mb-3 border border-gray-200 
+                   hover:bg-gray-100 hover:shadow-md transition-all cursor-pointer">
+     {/* thread content */}
+   </div>
+
+2. SPECIFIC CSS classes to apply:
+
+   Base state:
+   - bg-gray-50 (light gray background)
+   - rounded-lg (8px border radius)
+   - p-4 (16px padding all sides)
+   - mb-3 (12px margin bottom between cards)
+   - border border-gray-200 (subtle border)
+
+   Hover state:
+   - hover:bg-gray-100 (darker gray on hover)
+   - hover:shadow-md (subtle shadow lift effect)
+   - transition-all (smooth animation)
+   - cursor-pointer (show it's clickable)
+
+3. REMOVE the old border-b separator:
+   - Delete "border-b border-gray-200" classes
+   - We're using cards now, not list dividers
+
+4. ADJUST spacing:
+   - Container background should remain white
+   - Each thread card gets gray-50 background
+   - 12px gap between each card (mb-3)
+   - 16px padding inside each card (p-4)
+
+5. ENSURE proper contrast:
+   - Text should remain easily readable on gray-50 background
+   - Keep text colors: gray-900 (titles), gray-600 (metadata)
+   - Badges/tags should still stand out
+
+VISUAL EXAMPLE:
+
+Before (current):
+┌────────────────────────────────────────┐
+│ Thread 1 title                         │
+│ metadata                               │
+├────────────────────────────────────────┤  ← just a line separator
+│ Thread 2 title                         │
+│ metadata                               │
+└────────────────────────────────────────┘
+
+After (with gray backgrounds):
+┌────────────────────────────────────────┐
+│ ╔════════════════════════════════════╗ │
+│ ║ Thread 1 title (on gray-50 bg)    ║ │
+│ ║ metadata                           ║ │
+│ ╚════════════════════════════════════╝ │
+│                                        │ ← white gap
+│ ╔════════════════════════════════════╗ │
+│ ║ Thread 2 title (on gray-50 bg)    ║ │
+│ ║ metadata                           ║ │
+│ ╚════════════════════════════════════╝ │
+└────────────────────────────────────────┘
+
+Apply this styling to:
+- Recent Discussions section (main thread list)
+- This Week's Highlights tabs (if using same component)
+- Search results page (if exists)
+- Category thread listings
+
+DO NOT apply to:
+- Forum category cards (they already have their own styling)
+- Individual thread detail page (just the list views)
+
+Confirm when complete and show screenshot of result.

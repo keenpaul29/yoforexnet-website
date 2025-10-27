@@ -1,0 +1,176 @@
+🔹 1. Add High-Engagement UI Elements
+🏆 Leaderboard Panel (Right Sidebar)
+
+Top Uploaders (EAs, Indicators)
+
+Most Helpful Users (upvotes or “solution accepted”)
+
+Weekly Streaks (activity gamification)
+
+Tooltip: “Earn rank points by sharing strategies, helping users, or posting backtest reports.”
+
+🔔 “What’s New” Carousel (Top of Home)
+
+Rotating banner for:
+
+Latest EAs uploaded
+
+Top-rated strategies
+
+Announcements (e.g., “Forum Update v1.2: Dark Mode Added!”)
+
+📅 “This Week’s Highlights” Bar
+
+3 tabs: New Threads, Trending, Solved Questions
+
+Adds energy and constant freshness to the homepage.
+
+🔹 2. Expand Category Layout
+
+You can enhance your category cards by adding visual icons, color chips, and mini counters.
+Also, include two more sections inspired by fxhub.cn & eabook.cn:
+
+🧠 “Learning & Resources”
+
+“Guides, tutorials, and courses to master EAs and trading automation.”
+
+Subforums: MQL5 Basics, EA Optimization, Broker Guides
+
+🧩 “EA & Indicator Library”
+
+“Curated uploads with verified stats and community reviews.”
+
+Subforums: Gold Bots, BTC Bots, EURUSD Systems, Free Indicators, Premium Indicators
+
+💰 “Bounties & Challenges”
+
+“Offer or earn rewards for coding, strategy building, or backtesting tasks.”
+
+🧾 “Set Files & Configurations”
+
+“Download and share optimized .set files for your EAs.”
+
+🔹 3. Smart Thread Enhancements
+
+Add small but powerful UX improvements:
+
+Feature	Purpose	Tooltip Text
+🟢 “Live Verified” Badge	For posts linked to Myfxbook/FXBlue	“Connected to live trading account.”
+🧩 “Includes Set File” Tag	Show when thread has .set attachment	“This thread includes a downloadable config file.”
+🧮 “Backtest Report” Tab	Attach backtest images directly under post	“View verified performance data.”
+📌 “Pinned Starter Guides”	Top of Beginner category	“Step-by-step guides for new traders.”
+🔹 4. Sidebar & Quick Links Additions
+
+Make the sidebar more functional:
+
+Quick Actions:
+
+“Start Performance Report”
+
+“Share Your EA”
+
+“Ask a Question”
+
+Forum Stats Overview:
+
+Total Downloads
+
+Verified Uploads
+
+Avg Daily Threads
+
+Important Links:
+
+“Safe Download Guide”
+
+“EA Coding Rules”
+
+“Community Verified Brokers”
+
+🔹 5. Community Trust System
+
+Add a visible trust-level bar:
+
+Ranks: Novice → Contributor → Verified Trader → Pro Developer
+
+Each rank unlocks features like:
+
+Posting attachments
+
+Creating polls
+
+Starting bounty threads
+
+Tooltip on hover:
+“Earn XP through participation, uploads, and verified contributions.”
+
+🔹 6. Visual Design Touches
+
+Use subtle gradients for category headers.
+Example:
+
+Strategy (blue)
+
+Performance (green)
+
+Technical (orange)
+
+Development (purple)
+
+Add forum avatars with colored rings (gold = top user, silver = new, purple = dev).
+
+Enable dark mode toggle (essential for traders who stare at charts all day).
+
+🔹 7. Footer Enhancements
+
+Replace plain footer with:
+
+© 2025 {YourForum}. All rights reserved.
+Made for Traders • Join Our Telegram • Submit Feedback • API Docs
+
+
+And show:
+
+“Online Users (Live Count)”
+
+“Server Status: ✅ Stable | Latency 42ms”
+
+“Latest Build: Forum v1.2.3”
+
+🔹 8. Optional: Add These Forum Features (from fxhub.cn / eabook.cn)
+
+EA Marketplace Section:
+“Buy/Sell/Request EAs with verified proof.”
+
+Auto Translator Toggle (EN ⇆ 中文)
+Many CN forums have this for bilingual traders.
+
+EA Comparison Tool:
+“Compare 2 uploaded bots on metrics like PF, DD, trades.”
+
+Search by Pair/TF Filter Chips:
+Add chips like XAUUSD, BTCUSD, EURUSD, M5, H1.
+
+🔹 9. “Starter Content” Ideas
+
+Example pinned threads to seed the community:
+
+🧭 “Getting Started with EAs – Full Beginner Roadmap”
+
+⚙️ “How to Optimize an EA in MT5 (Step-by-Step)”
+
+📈 “The Truth About Backtests – 99% Model Quality Setup”
+
+💡 “10 Common EA Mistakes and How to Fix Them”
+
+🛠 “Best Brokers for Low Spread Gold Scalping”
+
+🔹 10. Add Gamified Stats Panel (like your left one)
+
+Below “Your Balance” card, add tabs:
+
+Achievements: “5 uploads • 2 verified sets • 1 solution marked”
+
+Reputation: “+340 this month • +1,250 total”
+
+Missions: “Upload 1 EA this week → Earn 200 points”

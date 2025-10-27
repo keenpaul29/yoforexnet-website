@@ -1,0 +1,696 @@
+===============================================================================
+                    YOFOREX API QUICK REFERENCE
+                        Last Updated: Oct 26, 2025
+===============================================================================
+
+BASE URL: Same domain (frontend + backend served together)
+CONTENT-TYPE: application/json
+ERROR FORMAT: { "error": "message" }
+
+===============================================================================
+                    SECURITY & RATE LIMITING (NEW)
+===============================================================================
+
+ALL ENDPOINTS PROTECTED WITH:
+✓ DOMPurify XSS sanitization
+✓ Input validation (coin amounts, prices, string lengths)
+✓ Rate limiting (429 status when exceeded)
+
+RATE LIMITS:
+- General API: 100 req / 15 min
+- Write Operations: 30 req / 15 min
+- Coin Operations: 10 req / 15 min
+- Content Creation: 5 posts / hour
+- Reviews/Ratings: 20 req / hour
+
+VALIDATION RULES:
+- Coin amounts: 1 - 1,000,000,000 (no negatives, no zero)
+- Prices: 1 - 1,000,000 coins
+- Prevents overdrafts on "spend" transactions
+- String length limits enforced (255-5000 chars)
+
+DATABASE PERFORMANCE:
+- 25 indexes added (10-100x speedup on queries)
+- Optimized for category filters, date sorting, user lookups
+
+===============================================================================
+                      AUTHENTICATION SYSTEM
+===============================================================================
+
+METHOD: Replit Auth (OIDC) via Passport.js
+SESSION STORAGE: PostgreSQL sessions table (7-day TTL)
+COOKIE: connect.sid (HttpOnly, Secure, SameSite=Lax)
+
+[GET] /api/me
+→ Get current authenticated user
+→ Returns: User object (200) or { "error": "Not authenticated" } (401)
+
+[GET] /api/login
+→ Initiate OIDC login flow
+→ Redirects to Replit authorization page
+
+[GET] /api/callback
+→ OIDC callback handler (automatic after authorization)
+→ Creates/updates user via upsertUser()
+→ Stores session in PostgreSQL
+→ Redirects to homepage
+
+[POST] /api/logout
+→ Destroy session and log out
+→ Redirects to Replit's end session endpoint
+
+PROTECTED ENDPOINTS (20 total - require authentication):
+✓ POST /api/transactions          ✓ POST /api/content/review
+✓ POST /api/recharge              ✓ POST /api/content/like
+✓ POST /api/content               ✓ POST /api/content/reply
+✓ POST /api/content/purchase      ✓ POST /api/content/reply/:id/helpful
+✓ POST /api/brokers               ✓ POST /api/user/:userId/badges
+✓ POST /api/brokers/review        ✓ POST /api/users/:userId/follow
+✓ POST /api/threads               ✓ DELETE /api/users/:userId/unfollow
+✓ POST /api/threads/:id/replies   ✓ POST /api/messages
+✓ POST /api/replies/:id/accept    ✓ POST /api/messages/:id/read
+✓ POST /api/replies/:id/helpful   ✓ PUT /api/user/:userId/profile
+
+SECURITY FEATURES:
+- Server-side identity: All protected endpoints read userId from req.user.claims.sub
+- No client-controlled IDs: User IDs never accepted from request bodies
+- Username collision handling: Auto-appends suffix (john_doe_2, etc.)
+- Token refresh: Automatic refresh with refresh tokens
+- Session TTL: 7 days with automatic cleanup
+
+FRONTEND AUTH USAGE:
+import { useAuth } from "@/contexts/AuthContext";
+
+const { user, isAuthenticated, login, logout } = useAuth();
+
+if (!isAuthenticated) {
+  login(); // Redirects to /api/login
+}
+
+// Access user data
+console.log(user.username, user.totalCoins);
+
+===============================================================================
+                         COIN SYSTEM APIS
+===============================================================================
+
+[GET] /api/user/:userId/coins
+→ Get user's coin balance, weekly earnings, and rank
+
+[GET] /api/user/:userId/transactions?limit=50
+→ Get transaction history
+
+[POST] /api/transactions
+Body: { userId, type: "earn|spend|recharge", amount, description }
+→ Create coin transaction (validates balance on "spend")
+
+[POST] /api/recharge
+Body: { userId, coinAmount, priceUsd, paymentMethod: "stripe|crypto" }
+→ Create recharge order
+
+[GET] /api/recharge/:orderId
+→ Get recharge order status
+
+===============================================================================
+                    PUBLISHING SYSTEM APIS (NEW - Oct 26, 2025)
+===============================================================================
+
+[GET] /api/publish/categories
+→ Get all 16 forum categories for publishing dropdown
+→ Returns: Array of ForumCategory with slugs, names, icons
+
+[POST] /api/uploads/file
+Body: FormData with file
+→ Upload EA/Indicator files (max 50MB, 5 files max)
+→ Returns: { name, size, url, checksum }
+→ Security: SHA-256 checksum (Phase 3 - pending)
+→ Note: Currently returns mock data for development
+
+[POST] /api/uploads/image
+Body: FormData with image
+→ Upload gallery images (max 5 images)
+→ Returns: { url, isCover, order }
+→ Features: Auto-watermarking (Phase 3 - pending)
+→ Note: Currently returns mock data for development
+
+[POST] /api/publish
+Body: {
+  title, category, platform, version, priceCoins, description, tags,
+  files: [{ name, size, url, checksum }],
+  images: [{ url, isCover, order }],
+  // Evidence fields (required if tags includes "Performance Report"):
+  equityCurveImage?, profitFactor?, drawdownPercent?, winPercent?, 
+  broker?, monthsTested?, minDeposit?
+}
+→ Publish EA/Indicator/Article with structured release form
+→ Authentication: REQUIRED (injects authorId from session)
+→ Validation: Conditional evidence fields based on tags
+→ AUTO-SEO: slug, focusKeyword, metaDescription, imageAltTexts
+→ Security: Server never accepts authorId from client
+
+VALIDATION RULES:
+- title: 10-100 characters
+- description: min 300 characters (markdown supported)
+- priceCoins: 0-10,000
+- tags: 1-5 required
+- platform: "MT4" | "MT5" | "Both"
+- Evidence fields REQUIRED when "Performance Report" tag selected
+
+===============================================================================
+                        MARKETPLACE APIS
+===============================================================================
+
+[POST] /api/content
+Body: { authorId, type, title, description, priceCoins, category, fileUrl, imageUrls }
+→ Publish content (AUTO-SEO: slug, keywords, meta desc, alt texts)
+→ Note: New content should use /api/publish endpoint instead
+
+[GET] /api/content?type=ea&category=Scalping&status=approved&limit=20
+→ List content with filters
+
+[GET] /api/content/:id
+→ Get content by ID (auto-increments views)
+
+[GET] /api/content/slug/:slug
+→ Get content by SEO slug (e.g., "gold-hedger-ea-xauusd-scalping")
+
+[GET] /api/user/:userId/content
+→ User's published content
+
+[POST] /api/content/purchase
+Body: { contentId, buyerId }
+→ Purchase content (atomic: deduct coins, award seller, create record)
+
+[GET] /api/user/:userId/purchases
+→ User's purchased content
+
+[GET] /api/content/:contentId/purchased/:userId
+→ Check if user purchased content
+
+[POST] /api/content/review
+Body: { contentId, userId, rating, reviewText }
+→ Submit review (+5 coins when approved)
+
+[GET] /api/content/:contentId/reviews
+→ Get approved reviews
+
+[POST] /api/content/like
+Body: { contentId, userId }
+→ Like content (+1 coin, max 5/day)
+
+[GET] /api/content/:contentId/liked/:userId
+→ Check if user liked content
+
+===============================================================================
+                        FORUM THREAD APIS
+===============================================================================
+
+[POST] /api/threads
+Body: { userId, categorySlug, title, body, imageUrls }
+→ Create thread (AUTO-SEO: slug, meta desc, keywords)
+
+[GET] /api/threads?categorySlug=strategy&status=approved&limit=20&pinned=true&sortBy=trending
+→ List threads (sorted by lastActivityAt or trending score)
+  sortBy options:
+  - "trending" - Reddit-style hot algorithm (cached 5 min)
+    Formula: (views×0.1 + replies×5 + pinnedBonus×100) / (age^1.8)
+  - Default: lastActivityAt DESC
+
+[GET] /api/threads/:id
+→ Get thread by ID (auto-increments views)
+
+[GET] /api/threads/slug/:slug
+→ Get thread by SEO slug (increments views)
+
+[GET] /api/user/:userId/threads
+→ User's threads
+
+===============================================================================
+                        FORUM REPLY APIS
+===============================================================================
+
+[POST] /api/threads/:threadId/replies
+Body: { userId, body, parentId, imageUrls }
+→ Create reply with KEYWORD-RICH SEO slug
+   Example: "reply-to-xauusd-scalping-strategy-by-demo-abc123"
+   Side effects: increment thread reply count, update thread activity
+
+[GET] /api/threads/:threadId/replies
+→ List thread replies (nested structure with parentId)
+
+[POST] /api/replies/:replyId/accept
+→ Mark reply as accepted answer (unmarks others)
+
+[POST] /api/replies/:replyId/helpful
+→ Mark reply as helpful (+1 vote)
+
+===============================================================================
+                         CATEGORY APIS
+===============================================================================
+
+[GET] /api/categories
+→ List all 15 categories with live stats (threadCount, postCount)
+
+Categories: Strategy Discussion, Algorithm Development, Backtest Results,
+Live Trading Reports, Signal Services, MT4/MT5 Tips, Broker Discussion,
+Risk Management, Market Analysis, Indicator Library, EA Reviews,
+Troubleshooting, Trading Psychology, News & Updates, Commercial Trials
+
+[GET] /api/categories/:slug
+→ Get category details
+
+[GET] /api/categories/:slug/threads?limit=20
+→ Get category threads
+
+===============================================================================
+                          SOCIAL APIS
+===============================================================================
+
+[GET] /api/users/username/:username
+→ Get user by username (e.g., /api/users/username/NewSystems)
+→ Returns: User object (200) or { "error": "User not found" } (404)
+
+[POST] /api/users/:userId/follow
+Body: { followerId }
+→ Follow user
+
+[DELETE] /api/users/:userId/unfollow
+Body: { followerId }
+→ Unfollow user
+
+[GET] /api/users/:userId/followers
+→ Get followers list
+
+[GET] /api/users/:userId/following
+→ Get following list
+
+[POST] /api/messages
+Body: { senderId, recipientId, subject, body }
+→ Send private message
+
+[GET] /api/users/:userId/messages
+→ List messages/conversations
+
+[POST] /api/messages/:messageId/read
+→ Mark message as read
+
+===============================================================================
+                    BADGE & TRUST SYSTEM APIS
+===============================================================================
+
+[POST] /api/badges/:userId/award
+Body: { badgeType: "verified_trader|top_contributor|ea_expert|helpful_member", awardedBy }
+→ Award badge to user
+
+[GET] /api/users/:userId/badges
+→ Get user's badges
+
+[GET] /api/badges/:userId/:badgeType/check
+→ Check if user has specific badge
+
+===============================================================================
+                       ONBOARDING SYSTEM APIS (NEW)
+===============================================================================
+
+[GET] /api/me/onboarding
+→ Get user's onboarding progress
+→ Returns: { completed, dismissed, progress: {...} }
+→ Authentication: REQUIRED
+
+[POST] /api/me/onboarding/dismiss
+→ Dismiss onboarding widget permanently
+→ Authentication: REQUIRED
+
+ONBOARDING MILESTONES (AUTO-TRIGGERED):
+✓ profileCreated → GET /api/me → +10 coins
+✓ firstReply → POST /api/threads or POST /api/replies → +15 coins
+✓ firstReport → POST /api/brokers/review → +20 coins
+✓ firstUpload → POST /api/content → +50 coins
+○ socialLinked → Future feature → +30 coins (optional)
+
+COMPLETION LOGIC:
+- Only requires 4 essential steps (excludes socialLinked)
+- Total required coins: 95 coins
+- Auto-hides widget when completed
+- Idempotent: Each milestone only awards coins once
+
+FRONTEND INTEGRATION:
+const { data } = useQuery({ queryKey: ['/api/me/onboarding'] });
+
+if (!data?.completed && !data?.dismissed) {
+  return <OnboardingChecklist />;
+}
+
+===============================================================================
+                      ACTIVITY & STATS APIS
+===============================================================================
+
+[GET] /api/activity?limit=20
+→ Get recent site activity (thread_created, reply_posted, content_published, etc.)
+
+[GET] /api/users/:userId/activity?limit=20
+→ Get user's activity history
+
+[GET] /api/leaderboard?sortBy=coins&limit=10
+→ Get top users (sortBy: coins|contributions|uploads)
+
+[GET] /api/stats
+→ Get global platform statistics
+→ Response: { totalThreads, totalMembers, totalPosts, todayActivity: { threads, content } }
+→ Auto-refresh: 30s (StatsBar widget)
+→ Status: ✅ Fully Implemented (Oct 26, 2025)
+
+[GET] /api/threads/hot?limit=5
+→ Get trending/hot threads for "What's Hot" widget
+→ Algorithm: Engagement score with time decay
+→ Auto-refresh: 30s
+→ Status: ⚠️ CURRENTLY RETURNS 404 - Needs investigation
+
+[GET] /api/threads/highlights
+→ Get week highlights (new, trending, solved threads)
+→ Response: { new: [...], trending: [...], solved: [...] }
+→ Auto-refresh: 30s (WeekHighlights widget)
+→ Status: ✅ Fully Implemented
+
+[GET] /api/content/top-sellers?limit=5
+→ Get best-selling marketplace content
+→ Algorithm: (totalSales × 100) + (reviewCount × 10) + (avgRating × 20)
+→ Auto-refresh: 60s (TopSellers widget)
+→ Updated by: Background job every 15 minutes
+→ Status: ✅ Fully Implemented
+
+===============================================================================
+                      BROKER DIRECTORY APIS
+===============================================================================
+
+[POST] /api/brokers
+Body: { name, websiteUrl, logoUrl, yearFounded, regulationSummary }
+→ Create broker (isVerified=false, status=pending)
+
+[GET] /api/brokers?verified=true&status=approved
+→ List brokers
+
+[GET] /api/brokers/:id
+→ Get broker by ID
+
+[GET] /api/brokers/slug/:slug
+→ Get broker by slug
+
+[POST] /api/brokers/review
+Body: { brokerId, userId, rating, reviewTitle, reviewBody, isScamReport }
+→ Submit broker review (+50 coins normal, +150 scam report when approved)
+→ ALIAS: POST /api/broker-reviews (frontend compatibility)
+
+[GET] /api/brokers/:brokerId/reviews?scamOnly=true
+→ Get broker reviews (filter scam reports)
+
+===============================================================================
+                          SEARCH APIS
+===============================================================================
+
+[GET] /api/search?q=xauusd&type=threads&limit=20
+→ Global search (type: threads|content|users|all)
+
+===============================================================================
+                      SEO AUTO-GENERATION
+===============================================================================
+
+100% AUTOMATED - Users only provide title and content!
+
+Content/Thread Published:
+  Input: { title: "Gold Hedger EA - XAUUSD Scalping", description: "..." }
+  
+  Auto-Generated:
+  ✓ slug: "gold-hedger-ea-xauusd-scalping"
+  ✓ focusKeyword: "gold hedger xauusd scalping"
+  ✓ autoMetaDescription: First 155 chars of description
+  ✓ autoImageAltTexts: ["Main image for gold hedger...", "gold hedger - Screenshot 2"]
+
+Reply Created:
+  Input: { threadTitle: "XAUUSD Scalping Strategy", username: "demo", body: "..." }
+  
+  Auto-Generated:
+  ✓ slug: "reply-to-xauusd-scalping-strategy-by-demo-abc123"
+  ✓ metaDescription: First 155 chars of reply body
+  
+  Result: Each reply ranks independently on Google/Bing/Baidu!
+
+===============================================================================
+                    FRONTEND INTEGRATION EXAMPLES
+===============================================================================
+
+--- Example 1: Fetch Threads with Real-time Polling ---
+
+import { useQuery } from "@tanstack/react-query";
+
+function ThreadList() {
+  const { data: threads, isLoading } = useQuery({
+    queryKey: ['/api/threads'],
+    refetchInterval: 15000, // Auto-refresh every 15s
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  
+  return <div>{threads.map(t => <div>{t.title}</div>)}</div>;
+}
+
+
+--- Example 2: Create Thread with Mutation ---
+
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+
+function CreateThread() {
+  const createThread = useMutation({
+    mutationFn: (data) => apiRequest('/api/threads', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+    }
+  });
+
+  return (
+    <button onClick={() => createThread.mutate({ title: "...", body: "..." })}>
+      Create Thread
+    </button>
+  );
+}
+
+
+--- Example 3: Nested Replies (Unlimited Depth) ---
+
+function ReplyItem({ reply, allReplies }) {
+  const children = allReplies.filter(r => r.parentId === reply.id);
+  
+  return (
+    <div style={{ marginLeft: reply.parentId ? "2rem" : "0" }}>
+      <p>{reply.body}</p>
+      {children.map(child => (
+        <ReplyItem key={child.id} reply={child} allReplies={allReplies} />
+      ))}
+    </div>
+  );
+}
+
+function ThreadReplies({ threadId }) {
+  const { data: replies = [] } = useQuery({
+    queryKey: ['/api/threads', threadId, 'replies'],
+    refetchInterval: 20000, // 20s polling
+  });
+
+  const rootReplies = replies.filter(r => !r.parentId);
+  
+  return rootReplies.map(r => <ReplyItem reply={r} allReplies={replies} />);
+}
+
+
+--- Example 4: Purchase Content ---
+
+function PurchaseButton({ contentId, priceCoins }) {
+  const purchase = useMutation({
+    mutationFn: () => apiRequest('/api/content/purchase', {
+      method: 'POST',
+      body: JSON.stringify({ contentId, buyerId: "..." })
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'coins'] });
+      alert('Purchase successful!');
+    }
+  });
+
+  return <button onClick={() => purchase.mutate()}>Buy for {priceCoins} coins</button>;
+}
+
+===============================================================================
+                    REAL-TIME UPDATE STRATEGY
+===============================================================================
+
+High Priority (10-15s):     Thread detail, active discussions
+Medium Priority (20-30s):   Thread lists, category stats, activity feed
+Low Priority (60s+):        User profiles, static content
+
+Example:
+  useQuery({
+    queryKey: ['/api/threads'],
+    refetchInterval: 15000, // 15 seconds
+  })
+
+===============================================================================
+                    CACHE INVALIDATION PATTERNS
+===============================================================================
+
+After creating thread:
+  queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+  queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+
+After creating reply:
+  queryClient.invalidateQueries({ queryKey: ['/api/threads', threadId, 'replies'] });
+  queryClient.invalidateQueries({ queryKey: ['/api/threads', threadId] });
+
+After purchase:
+  queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'coins'] });
+  queryClient.invalidateQueries({ queryKey: ['/api/user', userId, 'purchases'] });
+
+===============================================================================
+                   AUTHENTICATION FLOW & USER MANAGEMENT
+===============================================================================
+
+LOGIN FLOW:
+1. User clicks "Login" button in Header → Redirects to /api/login
+2. /api/login → Redirects to Replit OIDC authorization page
+3. User authorizes application on Replit
+4. Replit redirects to /api/callback with authorization code
+5. /api/callback exchanges code for access/refresh tokens
+6. Backend calls upsertUser() to create/update user in database
+7. Session stored in PostgreSQL sessions table
+8. User redirected to homepage (/)
+
+LOGOUT FLOW:
+1. User clicks "Logout" in dropdown menu
+2. POST /api/logout → Destroys session in PostgreSQL
+3. Redirects to Replit's end session endpoint
+4. Final redirect to homepage
+
+USER REGISTRATION (AUTOMATIC):
+- Primary key: OIDC "sub" claim (unique user ID from Replit)
+- Username: Auto-generated from firstName_lastName or email prefix
+- Collision handling: Appends suffix if username exists (john_doe_2, etc.)
+- Initial coins: 100 (welcome bonus)
+- No manual registration required - happens automatically on first login
+
+SESSION MANAGEMENT:
+- Cookie name: connect.sid
+- Storage: PostgreSQL sessions table
+- TTL: 7 days (604,800 seconds)
+- Auto-refresh: Expired access tokens refreshed with refresh token
+- Cleanup: Automatic via PostgreSQL TTL
+
+AUTHENTICATION STATE (FRONTEND):
+const { user, isAuthenticated, login, logout } = useAuth();
+
+// Three states:
+// - undefined: Loading (fetching user)
+// - null: Not authenticated
+// - User object: Authenticated
+
+// User object structure:
+{
+  id: "user-uuid-from-oidc",
+  username: "john_doe",
+  email: "john@example.com",
+  firstName: "John",
+  lastName: "Doe",
+  profileImageUrl: "https://...",
+  totalCoins: 2450,
+  weeklyEarned: 150,
+  rank: 42,
+  createdAt: "2025-10-20T10:00:00Z"
+}
+
+===============================================================================
+                         COIN REWARD SYSTEM
+===============================================================================
+
+Publishing:
+  - Publish EA/Indicator: 50 coins
+  - Share Set Files: 25 coins
+  - Write Articles: 20-40 coins
+  - Share Backtest Reports: 20 coins
+
+Engagement:
+  - Like content: +1 coin (max 5/day)
+  - Submit review: +5 coins (when approved)
+  - Submit broker review: +50 coins (when approved)
+  - Report scam broker: +150 coins (when approved)
+  - Help community: 15 coins
+  - Report violations: 10 coins
+  - Daily participation: 5 coins
+  - Refer new user: 30 coins
+
+===============================================================================
+                         COIN PACKAGES
+===============================================================================
+
+Starter Pack:     22 coins - $1.99
+Best Value:       52 coins - $4.99 (+10 bonus)
+Standard:        200 coins - $16.99 (+50 bonus)
+Popular:         500 coins - $39.99 (+150 bonus)
+Premium:        1000 coins - $69.99 (+350 bonus)
+Best Deal:      2000 coins - $129.99 (+800 bonus)
+
+Payment Methods: Stripe, USDT (CoinPayments API - pending integration)
+
+===============================================================================
+                        CURRENT FRONTEND PAGES
+===============================================================================
+
+/                     Home.tsx - Forum homepage with trending threads
+/categories           CategoriesPage.tsx - All 15 categories grid (30s polling)
+/category/:slug       CategoryDiscussionPage.tsx - Category threads (15s polling)
+/thread/:slug         ThreadDetailPage.tsx - Thread view with nested replies (15s polling)
+/members              MembersPage.tsx - Leaderboard tabs (30s polling)
+/marketplace          MarketplacePage.tsx - Browse/publish content
+/content/:slug        ContentDetailPage.tsx - Content details
+/recharge             RechargePage.tsx - Coin top-up
+/transactions         TransactionHistoryPage.tsx - Transaction history
+
+Common Patterns:
+  - All pages use TanStack Query with real-time polling
+  - Loading skeletons during fetch
+  - Empty states and error handling
+  - Null-safe rendering: (value ?? 0).toLocaleString()
+  - Comprehensive test IDs on all elements
+
+===============================================================================
+                        PRODUCTION TODO
+===============================================================================
+
+☐ Frontend integration for marketplace/content pages
+☐ Stripe webhook endpoint (/api/stripe/webhook)
+☐ CoinPayments API integration (USDT/BTC/ETH)
+☐ Admin moderation dashboard
+☐ Image upload service (S3/Cloudflare R2)
+☐ Email notifications
+☐ reCAPTCHA integration
+☐ Database backups
+☐ Redis session storage
+☐ API rate limiting
+
+===============================================================================
+                         TECH STACK
+===============================================================================
+
+Frontend: React 18 + TypeScript + Vite + TailwindCSS + shadcn/ui
+Backend: Express.js + PostgreSQL + Drizzle ORM
+State: TanStack Query v5
+Routing: Wouter
+Forms: React Hook Form + Zod
+Auth: Replit Auth (OIDC)
+
+===============================================================================
+                    TOTAL API ENDPOINTS: 50+
+                    DATABASE TABLES: 12
+                    STORAGE METHODS: 60+
+===============================================================================

@@ -1,0 +1,34 @@
+**MASTER PROMPT: Final v1.0 Alignment & Critical Fixes**
+
+**To:** Development Team
+**From:** CTO
+**Re:** Addressing critical gaps and inconsistencies identified in the v1.0 documentation suite.
+
+The platform architecture is strong, but several discrepancies and missing APIs prevent full functionality and alignment with our "forum-first" vision. Address the following items with high priority:
+
+**1. Implement Missing Backend APIs:**
+    * `GET /api/stats`: Add `onlineUsers` field.
+    * `GET /api/users/:userId/profile`: Create endpoint returning comprehensive public user data (username, join date, badges, trust level XP, all social links).
+    * `PATCH /api/users/:userId/profile`: Create endpoint to update profile settings (social links, bio, notifications). Must trigger one-time coin rewards for social links.
+    * `POST /api/user/verification/submit`: Create endpoint to accept Myfxbook/Investor details (handle password securely) and create a verification request for admin review.
+    * `GET /api/content/:contentId/download`: Create secure endpoint for paid/free resource downloads. MUST verify purchase status before streaming files from PRIVATE storage.
+
+**2. Resolve Documentation Inconsistencies:**
+    * **Homepage Layout:** Update `COMPLETE_PLATFORM_GUIDE (1).md` to reflect the agreed-upon **2-column layout**.
+    * **Content Reviews:**
+        * Remove `/api/content/review` endpoints from all API documentation.
+        * Add `discussionThreadId` (FK to `forum_threads`) to the `content` table schema in `COMPLETE_PLATFORM_GUIDE (1).md`.
+        * Specify that `POST /api/content` automatically creates and links a discussion thread.
+        * Confirm `ContentDetailPage.tsx` uses forum reply APIs for the linked thread.
+    * **Category Count:** Add "Scam Watch & Alerts" (slug: `scam-watch`) to the category lists in `API_DOCUMENTATION (1).md` and `API_QUICK_REFERENCE (1).txt` (making it 16 total).
+    * **Naming Convention:** Perform a global find-and-replace in all docs: "Marketplace" -> "Resource Library/Resources", `/marketplace` -> `/resources`, `MarketplacePage.tsx` -> `ResourceLibraryPage.tsx`.
+
+**3. Clarify Frontend & Backend Logic:**
+    * **Trust Level/XP:** Ensure the new `GET /api/users/:userId/profile` endpoint returns the user's current Trust Level name and XP value needed for the `TrustLevel` widget.
+    * **Publish vs. Create Thread:** Add explicit clarification in `COMPLETE_PLATFORM_GUIDE (1).md` user flows: "Publish Resource" is *only* for downloadable/structured content (free or paid), automatically creating a linked discussion thread. "New Thread" is for general discussion.
+    * **Polling/Caching:** Ensure consistent description of the "Trending" algorithm cache (5 min) and frontend polling intervals across all documents.
+
+**4. Acknowledge Technical Debt:**
+    * Add a note in relevant sections acknowledging that polling (`refetchInterval`) is the v1.0 approach for real-time updates and WebSockets are planned for v2.0 scalability.
+
+Execute these fixes to achieve full v1.0 functionality and documentation alignment.

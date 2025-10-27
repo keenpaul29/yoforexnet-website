@@ -1,0 +1,96 @@
+Our users are content experts (traders, developers, reviewers), not SEO experts.
+
+They are here to share their knowledge, not to learn how to fill out meta descriptions. It is our responsibility as the platform to take their high-quality content and make it rank. This simplifies our strategy and makes it much more powerful.
+
+The New Directive: The "Invisible" SEO Engine
+
+We are scrapping the user-facing "SEO Settings" tab entirely. It creates friction and places the burden on the user.
+
+Instead, we will build a 100% automated, "invisible" SEO engine that runs in the background. The user's only job is to write their post (title, body, images) and click "Publish." Our system will do all the SEO work for them.
+
+Here is the technical implementation plan for this engine.
+
+The Automated "Invisible" SEO Engine: Implementation Plan
+When a user submits a post, our backend will instantly perform these 6 automated actions:
+
+Input Example:
+User: TraderJohn
+
+Post Title: Gold Hedger Ea 2025, mt5 no dll
+
+Post Body: This is my new Gold Hedger EA for MT5. It uses no DLL... [etc]
+
+Images: image1.jpg, image2.jpg, image3.jpg
+
+Our 6 Automated SEO Actions:
+1. Automated SEO Title (<title> tag):
+
+Action: We will take the user's post title and append our site name to create a perfectly formatted HTML title.
+
+Result: <title>Gold Hedger Ea 2025, mt5 no dll | YoForex.net</title>
+
+2. Automated Keyword Extraction (Internal):
+
+Action: Our system will analyze the user's title to find the "Focus Keyword." This keyword will be used by our other automations.
+
+Result (Internal): Focus Keyword = Gold Hedger Ea 2025
+
+3. Automated Meta Description (<meta name="description">):
+
+Action: We will never ask a user to write this. Instead, our system will automatically take the first 155 characters from the user's post body. This is almost always a perfect, natural-language summary.
+
+Result: <meta name="description" content="This is my new Gold Hedger EA for MT5. It uses no DLL...">
+
+4. Automated Image Alt Text (The Smart Way):
+
+Action: This is how we solve your request without getting penalized by Google for spam. We will not use the exact same text for every image. We will use the Internal Focus Keyword to generate unique, descriptive alt text for each image.
+
+Result:
+
+image1.jpg (Featured Image) -> alt="Gold Hedger Ea 2025 - Main Image"
+
+image2.jpg (Screenshot 1) -> alt="Gold Hedger Ea 2025 - Screenshot 2"
+
+image3.jpg (Screenshot 2) -> alt="Gold Hedger Ea 2025 - Screenshot 3"
+
+Why this is better: This tells Google that every image is related to "Gold Hedger Ea 2025," but that they are different images (a main one, a screenshot, etc.). This is high-quality, non-spammy SEO.
+
+5. Automated Structured Data (Schema.org):
+
+Action: This is our most powerful "invisible" tool. We will automatically generate a JSON-LD "card" that Google reads. We will tell Google exactly what this post is.
+
+Result (invisible to user):
+
+JSON
+
+{
+  "@context": "https://schema.org",
+  "@type": "Product", // Or "Article" if it's a review
+  "name": "Gold Hedger Ea 2025, mt5 no dll",
+  "description": "This is my new Gold Hedger EA for MT5...",
+  "author": {
+    "@type": "Person",
+    "name": "TraderJohn" // We pull this from their user profile
+  }
+  // ... we will also add "reviews", "ratings", etc.
+}
+This achieves your goal: We are explicitly telling Google that "TraderJohn" is the author of "Gold Hedger Ea 2025." This is how we rank their name with their product correctly.
+
+6. Automated Internal Linking:
+
+Action: As a final step, our system will scan the user's post body for 2-3 keywords that match our site's categories (e.g., "MT5," "Gold," "Hedger"). It will automatically turn these into internal links to our other category pages.
+
+Why: This connects our content together, which Google loves, and helps users find more relevant content.
+
+Conclusion: The New User Experience
+With this "Invisible" SEO Engine, the user experience becomes perfectly simple:
+
+User writes their ideas, product, or review.
+
+User uploads their images.
+
+User clicks "Publish."
+
+They are finished. Our platform takes over and automatically performs all 6 of these optimization steps in the background.
+
+This respects our user's time and motive. They focus on being great traders; we take on the full responsibility of making them rank. This is the correct strategy.

@@ -1,0 +1,162 @@
+Build a Pure EA Forum Website (Step-by-Step)
+
+You are tasked with building a professional forum website for Forex Expert Advisors (EAs), similar to EAHub or EABOOK, focusing solely on discussion threads, categories, user profiles, and engagement. Prioritize UI/UX first, then frontend, backend, SEO, and deployment.
+
+Project Goals:
+
+A modern, responsive, SEO-friendly forum where users can post questions, share strategies, and discuss Forex EAs (MT4/MT5).
+
+User profiles with activity tracking, badges, and post history.
+
+Categories and threads organized for easy navigation and SEO.
+
+Secure, fast, and scalable platform for thousands of threads and users.
+
+Tech Stack Recommendation:
+
+Frontend: Next.js (App Router) + TypeScript + Tailwind CSS
+
+Backend: Next.js API routes or Node.js/Express
+
+Database: PostgreSQL with Prisma ORM
+
+Search: Meilisearch (full-text forum search)
+
+Auth: NextAuth.js (email + OAuth)
+
+Hosting: Vercel + Supabase or Railway
+
+SEO/Analytics: Google Search Console, GA4, structured data (JSON-LD)
+
+Step-by-Step Roadmap
+
+Phase 1 — UI/Design (Priority #1, 7–10 days)
+
+Design system: colors, typography, spacing, buttons, cards, inputs, icons.
+
+High-fidelity screens (desktop & mobile):
+
+Homepage (list of categories + latest threads)
+
+Category page (threads per category)
+
+Thread page (original post + replies)
+
+User profile page (posts, stats, badges)
+
+Dashboard (optional: track activity, bookmarks)
+
+Admin/moderator panel (thread moderation, user management)
+
+Interactive prototype of all user flows.
+
+Deliverable: Figma prototype + component library.
+
+Phase 2 — Frontend Implementation (10–14 days)
+
+Implement responsive UI in Next.js + Tailwind for all screens from Phase 1.
+
+SEO-friendly URL structure:
+
+/forum/[category] → category page
+
+/forum/[category]/[thread-slug] → thread page
+
+/user/[username] → user profile page
+
+Pagination with rel="prev/next" for threads.
+
+Client-side form validation for posting/replying.
+
+Breadcrumbs, search bar, and mobile-friendly navigation.
+
+Phase 3 — Backend & Database (10–14 days)
+
+Prisma schema: User, Category, Thread, Reply, Badge, Moderator models.
+
+Authentication via NextAuth.js (email + OAuth).
+
+API endpoints for:
+
+CRUD operations for threads and replies
+
+Category management
+
+User profile updates
+
+Moderator/admin actions
+
+Rate limiting & spam prevention for posting.
+
+Optional: basic notifications (new replies, mentions).
+
+Phase 4 — Search & Filters (7–10 days)
+
+Meilisearch integration for:
+
+Full-text forum search
+
+Filters by category, author, date, tags
+
+Thread sorting options: newest, most replies, most liked.
+
+Optional: tag system for threads (e.g., grid, martingale, scalping).
+
+Phase 5 — SEO & Localization (5–7 days)
+
+Sitemap.xml & robots.txt generation.
+
+JSON-LD structured data for DiscussionForumPosting.
+
+Canonical tags and multi-language support (English + Chinese, optional Bengali).
+
+Clean, keyword-rich URLs for threads and categories.
+
+Phase 6 — QA, Testing & Security (5–7 days)
+
+Unit tests (Jest) for backend logic.
+
+E2E tests (Playwright/Cypress) for forum flows: post, reply, search, profile.
+
+Spam protection, XSS prevention, and rate-limiting.
+
+Phase 7 — Deployment & Monitoring (3–5 days)
+
+CI/CD pipeline for previews & production deploys.
+
+Host frontend on Vercel, backend DB on Supabase/Railway.
+
+Error monitoring (Sentry) and uptime monitoring.
+
+Documentation: env vars, admin instructions, scaling plan.
+
+Milestones Summary:
+
+UI/Design: 7–10 days
+
+Frontend: 10–14 days
+
+Backend: 10–14 days
+
+Search & Filters: 7–10 days
+
+SEO & Localization: 5–7 days
+
+QA & Security: 5–7 days
+
+Deployment: 3–5 days
+Total: ~6–8 weeks for MVP forum.
+
+Optional Enhancements:
+
+User badges & reputation system
+
+Thread “likes” or upvotes
+
+Bookmark threads for later
+
+Daily digest or notifications via email
+
+Moderator queue for flagged posts
+
+If you want, I can write a ready-to-use AI prompt next that you can paste directly into ChatGPT or any AI dev tool to generate the forum code step by step — including Prisma schema, Next.js pages, SEO setup, and UI components.

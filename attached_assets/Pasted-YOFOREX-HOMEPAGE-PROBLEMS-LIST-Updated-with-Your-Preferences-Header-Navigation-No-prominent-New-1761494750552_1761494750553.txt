@@ -1,0 +1,118 @@
+YOFOREX HOMEPAGE PROBLEMS LIST (Updated with Your Preferences)
+Header Navigation
+No prominent "New Thread" or "Create" CTA button in header​
+
+Navigation items lack visual hierarchy (all same weight)​
+
+Login button doesn't stand out as primary action​
+
+Stats Bar
+Four stats cards have equal visual weight, no priority​
+
+"Today's Posts" and "Today's Members" labels are confusing/redundant​
+
+No context explaining what these numbers mean to new users​
+
+Left Sidebar - Critical Issues
+"What's Hot" section shows "No trending threads yet" - empty state destroys trust​
+
+"Link Coins" widget name is unclear (what does "Link" mean?)​
+
+Coin balance (2,450) lacks context or explanation of value​
+
+"New Thread" button in sidebar is redundant (should be in header)​
+
+"Quick Actions" section takes up too much space with only 3 items​
+
+"Forum Stats" shows redundant metrics already in top stats bar​
+
+"This Week's Highlights" Section
+Tab labels ("New", "Trending", "Solved") are unclear/vague​
+
+All tabs show empty state with no threads​
+
+Section occupies prime real estate but delivers zero value​
+
+Tabs don't indicate what type of content they display​
+
+Forum Categories
+Category cards are slightly cramped with tight padding​
+
+Thread/post stats are small and hard to scan quickly​
+
+No visible hover states or interaction feedback​
+
+Cards lack visual depth (flat appearance)​
+
+Inconsistent card heights create messy grid​
+
+Recent Discussions
+Missing visual separation between discussion items​
+
+Reply and view counts are too small (hard to scan)​
+
+User avatars are very small (tiny circles with initials)​
+
+No excerpt or preview text for discussions​
+
+Thread titles blend together without spacing​
+
+Right Sidebar
+"Important Links" section lacks visual polish (plain text links)​
+
+Links have no icons or hover states​
+
+Overall Information Architecture
+Multiple competing entry points (categories, trending, discussions)​
+
+Unclear difference between "Discussions" and "Threads" terminology​
+
+Search Functionality
+No search suggestions or autocomplete visible​
+
+Unclear what can be searched (threads? users? EAs?)​
+
+Mobile Responsiveness Concerns
+Left sidebar likely stacks poorly on mobile​
+
+Right sidebar "Top Sellers" probably hidden on mobile​
+
+Header navigation likely collapses to hamburger menu​
+
+Technical SEO Issues
+Missing JSON-LD structured data on homepage​
+
+No Organization schema for YoForex brand​
+
+No WebSite schema with SearchAction​
+
+No CollectionPage schema for forum homepage​
+
+Performance Issues (Likely)
+Large homepage with many sections = potential slow LCP​
+
+Multiple sidebars = heavy DOM tree​
+
+Images likely not lazy-loaded​
+
+No virtualization for long lists​
+
+Content & Trust Issues
+Two major empty states ("What's Hot", "This Week's Highlights") kill credibility​
+
+No social proof or testimonials visible​
+
+No "Recently Active Members" or community indicators​
+
+Missing "Latest Activity" real-time feed​
+
+Visual Design Issues
+Inconsistent spacing between sections​
+
+Lack of visual depth (most elements are flat)​
+
+Poor typographic hierarchy (similar font sizes throughout)​
+
+No clear focal point - eye doesn't know where to look first​
+
+Sidebar clutter competes with main content​

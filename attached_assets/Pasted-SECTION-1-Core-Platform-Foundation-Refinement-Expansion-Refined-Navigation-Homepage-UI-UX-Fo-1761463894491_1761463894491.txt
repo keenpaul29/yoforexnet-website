@@ -1,0 +1,216 @@
+SECTION 1: Core Platform Foundation (Refinement & Expansion)
+Refined Navigation & Homepage (UI/UX Focus)
+
+Header: Retain clean design. Ensure real-time, accurate Members and Online counts. Add Gold Coin Balance for logged-in users. Add a prominent "Top-Up Coins" button beside the balance.
+
+Main Navigation:
+
+Current: Keep "Categories," "Discussions," "Members."
+
+NEW Marketplace Section: Add "EA Marketplace," "Source Code," "Indicators."
+
+NEW Learning Hub: Add "Academy" or "Learning Hub."
+
+Homepage Layout:
+
+Top Banner/Carousel: Feature "Top EAs This Week," "Newest Gold Coins Earners," "Official Announcements."
+
+Enhanced Category Grid: Visual cards for each category with icons, short descriptions, and real-time thread/post counts.
+
+"What's Hot" Modules:
+
+"Trending EAs (Last 7 Days)"
+
+"Top Contributors (Leaderboard Snippet)"
+
+"New Paid Content" (List of latest content available for Gold Coins)
+
+"Recent Discussions": Maintain current layout with clearer tags (e.g., "Answered," "Paid Content," "Free Download").
+
+User Profile / Dashboard (The "Personal Center")
+
+Primary Elements:
+
+Gold Coin Balance (prominent).
+
+Gold Coin Activity Log: Detailed history of earnings (type, amount, linked content), spending (type, amount, linked content), and top-ups.
+
+Content Library: Lists all EAs/Articles published by the user (with stats: views, downloads, coins earned).
+
+Purchased Content: Lists all EAs/Articles purchased by the user.
+
+My Contributions: Overview of user's posts, comments, likes.
+
+"SEO Performance" Tab: (See SECTION 3)
+
+Actionable CTAs: "Top-Up Gold Coins," "Publish New EA," "Check Gold Coin Earnings."
+
+SECTION 2: The Gold Coin Economy - Full Implementation
+This is our monetization and engagement engine.
+
+Gold Coin Earning Mechanisms (Detailed)
+
+A. Content Sales (User-to-User Marketplace)
+
+Mechanism: Users can set a Gold Coin price (from 1 to 10,000) when publishing any EA, Indicator, or Article.
+
+Transaction: Buyer pays coins, seller receives coins instantly.
+
+Refund Policy: "All Gold Coin transactions are final. Please review content thoroughly before purchase."
+
+B. Active Interaction Rewards (Gamified Engagement)
+
+Liking a Post/Comment: +1 Gold Coin (Max 5 coins/day/user).
+
+Posting a Comment: +2 Gold Coins (Max 10 coins/day/user; 1-minute cooldown per post).
+
+Submitting a Review (on EA/Article): +5 Gold Coins (Min. 50 characters, approved by moderation, Max 2 reviews/day/user).
+
+Marking a "Solution" on a Q&A Thread: The solution provider earns +20 Gold Coins (once per thread).
+
+C. Passive Engagement Rewards (Time-on-Site)
+
+Mechanism: For every 10 minutes of active browsing time, award the user +1 Gold Coin.
+
+Active Tracking: Implement robust frontend tracking (mouse movement, scroll, key presses) and backend verification to distinguish active browsing from idle tabs. Capped at 60 coins per day (10 hours).
+
+D. Official Bounties/Challenges:
+
+Mechanism: Admin or selected users can post "Bounties" (e.g., "Fix this MQL4 bug for 500 Gold Coins"). First valid solution claims bounty.
+
+Reward: Bounty creator pays specified Gold Coins to the solver.
+
+E. Malicious Activity Reporting:
+
+Mechanism: Users report spam, scams, or rule violations.
+
+Reward: If the report is valid and the first, admin awards 1-100 Gold Coins (at admin's discretion).
+
+Gold Coin Spending/Redemption Mechanisms
+
+A. Purchasing Content: Primary use case. Users pay Gold Coins to download EAs, indicators, or view paid articles.
+
+B. Accessing Premium Sections: Future: VIP forum access, beta program access.
+
+C. Custom User Titles/Badges: Future: Spend 5000 Gold Coins for a "Legendary Trader" badge.
+
+Gold Coin Top-Up System (Monetization)
+
+Recharge Page: Clear UI with coin packs (e.g., 100GC=$10, 550GC=$50 + bonus, 1200GC=$100 + bonus).
+
+Payment Gateway: Integrate CoinPayments API for USDT (TRC20/ERC20) and other crypto payments.
+
+Workflow:
+
+User selects pack.
+
+System generates unique crypto address/QR code (via API) for the user to send USDT.
+
+System monitors blockchain for payment.
+
+Upon confirmed payment, user_wallet is updated.
+
+Disclaimers (Critical): "Gold Coin top-ups are non-refundable. Gold Coins have no real-world cash value. YoForex.net is not responsible for external crypto wallet issues." (As per eabook.cn's policy.)
+
+SECTION 3: AI-Enhanced & User-Driven SEO (Organic Growth Engine)
+Every piece of user-generated content is a potential SEO asset.
+
+"SEO Settings" Tab in Content Editor (for Users)
+
+When a user creates/edits any post (EA, article, tutorial), they see an "SEO Settings" tab.
+
+A. SEO Title (<title> tag):
+
+Field: "Search Engine Title" (max 60-70 chars).
+
+Default: Pre-fill with post title.
+
+AI Suggestion: Offer 3 AI-generated alternative titles based on common SEO patterns (e.g., "Best [Strategy] EA for [Pair/TF]" or "[Problem] Solved: [Solution Name]").
+
+B. Meta Description (<meta name="description"> tag):
+
+Field: "Search Snippet Description" (max 155-160 chars).
+
+Default: Pre-fill with first sentence of post.
+
+AI Suggestion: Offer 3 AI-generated descriptions that are compelling and keyword-rich.
+
+C. Focus Keywords (for content optimization):
+
+Field: "Primary Keyword(s)" (comma-separated).
+
+AI Assistant: As user types, suggest related keywords and show basic density/prominence in their post content (e.g., "Keyword 'Gold Scalper' appears 5 times. Good!").
+
+D. Image Alt Text (CRITICAL for User-Driven SEO)
+
+Directive: For every image upload within a user's post, the system MUST prompt the user for specific Alt Text.
+
+Default: DO NOT use the user's post title. The default should be empty or use a generic "Image related to [Post Title]."
+
+Prompt/Tooltip: "Describe this image for visually impaired users and search engines. E.g., 'Screenshot of Gold M15 backtest equity curve with 99% modeling quality.' This is important for SEO."
+
+Requirement: Users must provide Alt Text or be given a clear warning about missed SEO opportunity.
+
+E. Canonical URL Management:
+
+Default: Auto-generate clean, SEO-friendly slugs (e.g., yoforex.net/ea/my-awesome-gold-scalper-v2).
+
+Advanced (Admin/Pro Users): Option to set a custom canonical URL for external content if linking back to YoForex.net.
+
+Automated Structured Data (Schema Markup)
+
+Backend: Automatically implement JSON-LD Schema.org markup for every content type.
+
+Product Schema: For EA/Indicator posts. Include name, image, description, sku (post ID), brand (user's name), offers (price=Gold Coin value, priceCurrency='GC', availability), aggregateRating (from user reviews).
+
+Article Schema: For tutorials, guides, reviews. Include headline, image, datePublished, author, publisher, description.
+
+Q&A Schema: For "EA Q&A" threads with accepted solutions.
+
+Review Schema: For user-submitted reviews on EAs.
+
+Internal Linking Optimization (AI-Powered)
+
+"Related Posts" Widget: On every post page, dynamically suggest 3-5 contextually relevant other posts (EAs, articles) from YoForex.net, based on keywords, categories, and tags. This helps crawl depth and user engagement.
+
+"Top Keywords" Cloud: In the sidebar or footer, display an automatically updated "Top Keywords" cloud linking to search results for those terms.
+
+Sitemaps & Indexing
+
+Dynamic Sitemaps: Generate XML sitemaps for all ea posts, article posts, and user profiles. Update daily.
+
+Robots.txt: Configure robots.txt to guide crawlers efficiently.
+
+SECTION 4: User Trust & Compliance
+Clear Disclaimers:
+
+Site-wide: Prominent "Trading involves risk. Never risk money you cannot afford to lose." disclaimer.
+
+EA Posts: Every EA/Indicator post template must include: "Past performance is not indicative of future results. Use on demo first."
+
+Gold Coins: "Gold Coins are virtual, non-refundable, and have no cash value outside YoForex.net."
+
+Moderation Tools:
+
+Admin Dashboard: Robust tools for reviewing reports, approving content, managing Gold Coin adjustments, and user bans.
+
+Content Vetting: Especially for "Commercial Trials," implement an admin review process for posts (e.g., proof of performance required, strict formatting).
+
+Broker Neutrality:
+
+Clearly state YoForex.net is "broker-neutral."
+
+Ban affiliate links for brokers in user posts unless explicitly part of an approved "Partnerships" section.
+
+CTO's Final Directive:
+This is our detailed blueprint. The key is execution. Prioritize the core Gold Coin economy (earning and spending via content sales), the USDT top-up, and the user-driven SEO tools.
+
+Your Immediate Action Items:
+
+Review this Master Prompt with the development and design teams. Ensure full understanding.
+
+Prioritize the Gold Coin sales mechanism (user sets price, buyer pays, seller gets coins). This is the marketplace engine.
+
+Confirm the USDT top-up integration with the payment gateway team.
+
+Start designing the "SEO Settings" tab in the post editor with the specified fields (including Alt Text prompt).

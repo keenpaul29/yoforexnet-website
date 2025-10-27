@@ -1,0 +1,63 @@
+Architecture and data integrity
+Implement a double‑entry ledger for coins (immutable journal + running balance) with nightly reconciliation jobs to catch drift, replacing single‑row balance reliance and strengthening atomicity around purchase/recharge flows.​
+
+Add idempotency keys to all POSTs (transactions, purchases, replies) and to payment webhooks, combined with the outbox pattern for reliable, exactly‑once side effects in retries or network partitions.​
+
+Use database‑level safeguards: CHECK constraints for non‑negative balances, unique composite keys for purchase/user, and SELECT FOR UPDATE on balance rows to prevent race conditions during concurrent spend/purchase.​
+
+Introduce a “financial events” stream (append‑only) for coins, purchases, and rewards to power analytics, refund investigations, and audit trails separate from OLTP tables.​
+
+Security, auth, and trust & safety
+Complete auth hardening with session revocation, refresh token rotation, device/session listing, and role‑based guards for moderation/admin endpoints before opening content creation to the public.​
+
+Expand rate‑limit strategy with per‑IP and per‑user scopes plus progressive throttling for new accounts; gate link posting and file uploads behind reputation thresholds and add first‑post + first‑upload manual review.​
+
+Add robust upload pipeline: AV scanning, archive validation, MIME sniffing, disallow nested archives, and on‑server checksum + visible checksum in UI to support the “Safe Download” policy you already outline.​
+
+Provide granular moderation tools: queue, shadow‑ban, quarantine threads, auto‑lock on velocity spikes, profanity/link‑shortener filters, duplicate detector, and escalation paths for broker defamation claims.​
+
+Payments, compliance, and risk
+Harden webhooks with HMAC signature verification, replay protection (nonce/timestamp windows), allow‑listed origins, and idempotent order finalization to prevent double credits.​
+
+Localize on‑ramps for India: add UPI/INR via Stripe India or a local gateway while keeping USDT/CoinPayments for global users, and present coins as non‑redeemable digital credits with explicit non‑refund terms in checkout and receipts.​
+
+Add AML/ABAC controls: velocity caps on top‑ups, purchase anomalies (self‑dealing, circular flows), country/IP risk checks, and sanctions‑region blocks to reduce abuse of the coin economy.​
+
+Introduce a purchase dispute and holdback system (e.g., 7‑day hold on seller credit for high‑risk accounts) with evidence workflows for content quality or IP violations.​
+
+Forum, marketplace, and content UX
+Enforce structured evidence on “Performance Report” posts: require equity curve image + metrics (PF, DD, Win%) + broker/account + modeling quality fields at submission, with client‑side schema checks so lists remain high‑signal.​
+
+Add “similar threads” inline hints in the composer (semantic search) to reduce duplicates and increase reuse of accepted solutions; surface “possible duplicates” before allowing submit.​
+
+Ship a non‑blocking onboarding checklist (create profile, first reply, first report, first upload) tied to small coin bonuses and unlocks to accelerate trust progression.​
+
+Add seller tooling: versioned files, changelogs, automatic watermarking of images/PDFs, license key injection for EAs, and per‑buyer access logs to discourage piracy.​
+
+Real‑time, performance, and scalability
+Migrate hot paths from polling to WebSockets/SSE for thread replies, leaderboards, and balances, falling back to your current 10–30s polling only where sockets aren’t available.​
+
+Introduce response caching and edge/CDN for public pages; add Redis for sessions, rate‑limits, and derived counters to reduce read load on Postgres as traffic scales.​
+
+Add pagination and windowing to long threads and “infinite depth” replies using virtualization to avoid large DOM trees and keep Time‑to‑Interactive low.​
+
+Define performance budgets and Core Web Vitals thresholds with build‑time bundle analysis and image optimization policies for EA cards and galleries.​
+
+Search and SEO
+Add SSR/SSG for key surfaces (home, categories, thread detail, content detail) to complement the automated SEO engine and improve crawl efficiency on first load.​
+
+Publish dynamic sitemaps per type (threads, replies, content, brokers) with daily splits, plus RSS/Atom feeds for categories and user profiles to drive discovery.​
+
+Implement hreflang and canonical tags for EN/中文 toggles, and add Organization/Website schema site‑wide alongside DiscussionForumPosting/Product/Review where applicable.​
+
+Observability, QA, and reliability
+Add structured logging with correlation IDs, distributed tracing, and SLOs for critical flows (create thread < 500 ms p95, purchase < 1.5 s p95, webhook completion < 3 s p95) with alerting on burn‑rate.​
+
+Cover the coin ledger with property‑based tests and invariants (sum of journal deltas equals user balances; no negative balances; idempotent webhook does not net‑credit), and add e2e tests for purchase/credit paths.​
+
+Create a moderation QA loop: sample accepted solutions and top uploads weekly, measure false positives/negatives of automated filters, and adjust trust thresholds and rewards.​
+
+Broker directory and community safety
+Add verification tiers for brokers, mandatory disclosures for reviewers (account type, months traded), and separate “scam report” workflow with evidence templates and rate‑limited bounty rewards.​
+
+Provide safe‑harbor and takedown procedures in TOS with rapid moderator escalation to reduce legal risk in broker discussions.​

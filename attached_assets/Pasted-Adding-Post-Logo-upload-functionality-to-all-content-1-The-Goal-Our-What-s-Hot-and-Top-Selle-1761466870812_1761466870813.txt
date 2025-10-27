@@ -1,0 +1,48 @@
+Adding "Post Logo" upload functionality to all content.
+
+1. The Goal
+Our "What's Hot" and "Top Sellers" lists (per image_21a59d.png) are functional but impersonal. We will replace the generic numbered box (e.g., the orange "1") with a user-uploaded logo/thumbnail for that specific post. This adds branding, professionalism, and visual identity to every user-created product.
+
+2. The "Create Post" Flow (User-Side)
+Action: When a user creates a new post (EA, Indicator, Article, etc.), they will now see a new, mandatory field:
+
+Field Label: Upload Post Logo / Thumbnail
+
+Helper Text: "Upload a small, square logo for your product. (JPG, PNG, 200x200px recommended)."
+
+UI: A simple file uploader box.
+
+3. Backend & Database
+Action: Modify the posts table in the database.
+
+New Column: Add a column named post_logo_url (VARCHAR, 255).
+
+Logic: When the user uploads their logo, the file is saved (e.g., to S3 or a local folder), and the URL is stored in this new column for that specific post_id.
+
+4. UI Implementation (The Lists)
+This is the key visual change. We will modify the "What's Hot" and "Top Sellers" modules:
+
+Action: The current <div> that contains the number (e.g., the orange box with "1") will be replaced.
+
+New Structure:
+
+The post_logo_url image will now be the background (or content) of that box. This image should be styled to be square (e.g., width: 50px; height: 50px; object-fit: cover; border-radius: 8px;).
+
+The ranking number ("1", "2", "3") will be overlaid as a small "badge" on the top-left corner of the user's logo.
+
+Default Fallback (Critical):
+
+If a user does not upload a logo (or for old posts), we must have a default.
+
+Logic: if (post_logo_url is empty):
+
+Use a default icon based on the post's category (e.g., the "EA" icon, "Indicator" icon, or "Article" icon).
+
+This ensures the UI never looks broken.
+
+5. SEO & Schema Integration
+Action: This new post_logo_url gives us a perfect image for Google.
+
+Logic: The "Invisible" SEO Engine (from our previous plan) will now automatically use this post_logo_url as the main image in the Product or Article Schema.org JSON-LD.
+
+Result: This significantly improves our search result appearance (rich snippets) with no extra work from the user.

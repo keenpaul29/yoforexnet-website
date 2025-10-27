@@ -1,0 +1,810 @@
+## **🎯 COMPLETE BREVO EMAIL AUTOMATION PROMPT FOR REPLIT**
+
+Here's the **comprehensive prompt** covering ALL email scenarios you mentioned. Copy this entire prompt to your Replit Agent:
+
+***
+
+```
+IMPLEMENT COMPLETE EMAIL AUTOMATION SYSTEM USING BREVO
+
+==============================================
+BREVO CREDENTIALS (Add to Replit Secrets):
+==============================================
+
+BREVO_SMTP_HOST=smtp-relay.brevo.com
+BREVO_SMTP_PORT=587
+BREVO_SMTP_USER=9a19ca001@smtp-brevo.com
+BREVO_SMTP_PASSWORD=hxS0cV8bw1Y9Xk32
+BREVO_API_KEY=hxS0cV8bw1Y9Xk32
+BREVO_FROM_EMAIL=noreply@yoforex.net
+BREVO_FROM_NAME=YoForex
+
+==============================================
+REQUIRED: INSTALL DEPENDENCIES
+==============================================
+
+npm install nodemailer @sendinblue/client
+
+==============================================
+PART 1: EMAIL SERVICE SETUP
+==============================================
+
+Create: /server/services/emailService.ts
+
+```
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  host: process.env.BREVO_SMTP_HOST,
+  port: parseInt(process.env.BREVO_SMTP_PORT),
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASSWORD
+  }
+});
+
+// Base email template wrapper
+function createEmailTemplate(content: string) {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
+      <div style="max-width: 600px; margin: 0 auto; background: white;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); padding: 32px 24px; text-align: center;">
+          <h1 style="color: white; margin: 0; font-size: 28px;">YoForex</h1>
+          <p style="color: #e0e7ff; margin: 8px 0 0 0; font-size: 14px;">Your Forex Trading Community</p>
+        </div>
+        
+        <!-- Content -->
+        <div style="padding: 32px 24px;">
+          ${content}
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
+          <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">
+            © 2025 YoForex. All rights reserved.
+          </p>
+          <p style="margin: 0;">
+            <a href="${process.env.BASE_URL}/settings/notifications" style="color: #2563eb; font-size: 12px; text-decoration: none;">Email Preferences</a>
+            <span style="color: #d1d5db; margin: 0 8px;">|</span>
+            <a href="${process.env.BASE_URL}/unsubscribe" style="color: #2563eb; font-size: 12px; text-decoration: none;">Unsubscribe</a>
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+export const emailService = {
+  // 1. COMMENT NOTIFICATION
+  async sendCommentNotification(to: string, commenterName: string, threadTitle: string, commentPreview: string, threadSlug: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">💬 New Comment</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        <strong>${commenterName}</strong> commented on <strong>"${threadTitle}"</strong>
+      </p>
+      <div style="background: #f3f4f6; border-left: 4px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px;">
+        <p style="color: #4b5563; margin: 0; font-size: 14px; line-height: 1.6;">${commentPreview}</p>
+      </div>
+      <a href="${process.env.BASE_URL}/threads/${threadSlug}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Thread</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `${commenterName} commented on "${threadTitle}"`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 2. LIKE NOTIFICATION
+  async sendLikeNotification(to: string, likerName: string, contentType: string, contentTitle: string, contentUrl: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">❤️ New Like</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        <strong>${likerName}</strong> liked your ${contentType}: <strong>"${contentTitle}"</strong>
+      </p>
+      <a href="${process.env.BASE_URL}${contentUrl}" style="display: inline-block; background: #ec4899; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View ${contentType}</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `${likerName} liked your ${contentType}`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 3. FOLLOW NOTIFICATION
+  async sendFollowNotification(to: string, followerName: string, followerUsername: string, followerAvatar?: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">👥 New Follower</h2>
+      <div style="display: flex; align-items: center; margin: 16px 0;">
+        ${followerAvatar ? `<img src="${followerAvatar}" style="width: 64px; height: 64px; border-radius: 50%; margin-right: 16px;" />` : ''}
+        <div>
+          <p style="color: #374151; font-size: 16px; margin: 0; line-height: 1.5;">
+            <strong>${followerName}</strong> started following you!
+          </p>
+          <p style="color: #6b7280; font-size: 14px; margin: 4px 0 0 0;">@${followerUsername}</p>
+        </div>
+      </div>
+      <a href="${process.env.BASE_URL}/users/${followerUsername}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Profile</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `${followerName} started following you`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 4. WITHDRAWAL REQUEST RECEIVED
+  async sendWithdrawalRequestReceived(to: string, amount: number, method: string, requestId: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">💰 Withdrawal Request Received</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        We've received your withdrawal request. Here are the details:
+      </p>
+      <div style="background: #fef3c7; border: 1px solid #fbbf24; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0 0 8px 0; color: #92400e;"><strong>Amount:</strong> $${amount.toFixed(2)}</p>
+        <p style="margin: 0 0 8px 0; color: #92400e;"><strong>Method:</strong> ${method}</p>
+        <p style="margin: 0; color: #92400e;"><strong>Request ID:</strong> #${requestId}</p>
+      </div>
+      <p style="color: #6b7280; font-size: 14px;">Processing time: 1-3 business days</p>
+      <a href="${process.env.BASE_URL}/wallet/withdrawals/${requestId}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Track Status</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `Withdrawal Request #${requestId} - Processing`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 5. WITHDRAWAL SENT (APPROVED)
+  async sendWithdrawalSent(to: string, amount: number, method: string, transactionId: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">✅ Withdrawal Sent</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        Great news! Your withdrawal has been processed successfully.
+      </p>
+      <div style="background: #d1fae5; border: 1px solid #10b981; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0 0 8px 0; color: #065f46;"><strong>Amount:</strong> $${amount.toFixed(2)}</p>
+        <p style="margin: 0 0 8px 0; color: #065f46;"><strong>Method:</strong> ${method}</p>
+        <p style="margin: 0; color: #065f46;"><strong>Transaction ID:</strong> ${transactionId}</p>
+      </div>
+      <p style="color: #6b7280; font-size: 14px;">The funds should arrive in your account within 1-2 business days.</p>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `Withdrawal Successful - $${amount.toFixed(2)} Sent`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 6. COINS RECEIVED
+  async sendCoinsReceived(to: string, amount: number, source: string, newBalance: number) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">🪙 Coins Received!</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        You've earned <strong style="color: #f59e0b; font-size: 20px;">${amount} coins</strong>!
+      </p>
+      <div style="background: #fef3c7; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0 0 8px 0; color: #92400e;"><strong>Source:</strong> ${source}</p>
+        <p style="margin: 0; color: #92400e;"><strong>New Balance:</strong> ${newBalance} coins</p>
+      </div>
+      <a href="${process.env.BASE_URL}/wallet" style="display: inline-block; background: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Wallet</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `You earned ${amount} coins!`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 7. PRODUCT SOLD
+  async sendProductSold(to: string, productName: string, buyerName: string, price: number, earnings: number) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">🎉 Your Product Sold!</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        Congratulations! <strong>${buyerName}</strong> purchased your product.
+      </p>
+      <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 16px; margin: 16px 0; border-radius: 4px;">
+        <p style="margin: 0 0 8px 0; color: #065f46;"><strong>Product:</strong> ${productName}</p>
+        <p style="margin: 0 0 8px 0; color: #065f46;"><strong>Sale Price:</strong> ${price} coins</p>
+        <p style="margin: 0; color: #065f46; font-size: 18px;"><strong>Your Earnings:</strong> +${earnings} coins 💰</p>
+      </div>
+      <a href="${process.env.BASE_URL}/sales" style="display: inline-block; background: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Sales Dashboard</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `Your "${productName}" was purchased!`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 8. PRODUCT PUBLISHED
+  async sendProductPublished(to: string, productName: string, productSlug: string, category: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">✅ Product Published Successfully</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        Your ${category} "<strong>${productName}</strong>" is now live on the marketplace!
+      </p>
+      <div style="background: #dbeafe; border-left: 4px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px;">
+        <p style="margin: 0; color: #1e40af;">Your product is visible to all YoForex members and can now generate sales.</p>
+      </div>
+      <a href="${process.env.BASE_URL}/content/${productSlug}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-right: 12px;">View Listing</a>
+      <a href="${process.env.BASE_URL}/content/${productSlug}/edit" style="display: inline-block; background: white; border: 2px solid #2563eb; color: #2563eb; padding: 10px 22px; text-decoration: none; border-radius: 8px; font-weight: bold;">Edit</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `"${productName}" is now live!`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 9. PASSWORD RESET
+  async sendPasswordReset(to: string, resetToken: string, expiresIn: string) {
+    const resetUrl = `${process.env.BASE_URL}/reset-password?token=${resetToken}`;
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">🔒 Password Reset Request</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        We received a request to reset your password. Click the button below to create a new password:
+      </p>
+      <a href="${resetUrl}" style="display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 16px 0;">Reset Password</a>
+      <p style="color: #6b7280; font-size: 14px;">
+        Or copy this link: <a href="${resetUrl}" style="color: #2563eb;">${resetUrl}</a>
+      </p>
+      <div style="background: #fef2f2; border: 1px solid #fca5a5; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0; color: #991b1b; font-size: 14px;"><strong>⚠️ Security Notice:</strong> This link expires in ${expiresIn}. If you didn't request this, please ignore this email.</p>
+      </div>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: 'Reset your YoForex password',
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 10. USERNAME CHANGE CONFIRMATION
+  async sendUsernameChanged(to: string, oldUsername: string, newUsername: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">✏️ Username Changed</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        Your username has been successfully updated.
+      </p>
+      <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0 0 8px 0; color: #4b5563;"><strong>Old Username:</strong> @${oldUsername}</p>
+        <p style="margin: 0; color: #4b5563;"><strong>New Username:</strong> @${newUsername}</p>
+      </div>
+      <div style="background: #fef2f2; border: 1px solid #fca5a5; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0; color: #991b1b; font-size: 14px;"><strong>⚠️ Important:</strong> If you didn't make this change, please contact support immediately.</p>
+      </div>
+      <a href="${process.env.BASE_URL}/settings" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Settings</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: 'Your username has been changed',
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 11. NEW MESSAGE RECEIVED
+  async sendNewMessage(to: string, senderName: string, senderUsername: string, messagePreview: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">✉️ New Message</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        You received a message from <strong>${senderName}</strong> (@${senderUsername})
+      </p>
+      <div style="background: #f3f4f6; border-left: 4px solid #8b5cf6; padding: 16px; margin: 16px 0; border-radius: 4px;">
+        <p style="color: #4b5563; margin: 0; font-size: 14px; line-height: 1.6;">${messagePreview.substring(0, 200)}${messagePreview.length > 200 ? '...' : ''}</p>
+      </div>
+      <a href="${process.env.BASE_URL}/messages" style="display: inline-block; background: #8b5cf6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Read Message</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `New message from ${senderName}`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 12. EXPERIENCE LEVEL INCREASED
+  async sendLevelUp(to: string, newLevel: number, levelName: string, newBadge: string, rewards: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">🎊 Level Up!</h2>
+      <div style="text-align: center; padding: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; margin: 16px 0;">
+        <p style="color: white; font-size: 48px; margin: 0; font-weight: bold;">${newLevel}</p>
+        <p style="color: #e0e7ff; font-size: 20px; margin: 8px 0 0 0; font-weight: bold;">${levelName}</p>
+      </div>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5; text-align: center;">
+        Congratulations! You've reached Level ${newLevel}
+      </p>
+      <div style="background: #fef3c7; border: 1px solid #fbbf24; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0 0 8px 0; color: #92400e;"><strong>🏆 New Badge:</strong> ${newBadge}</p>
+        <p style="margin: 0; color: #92400e;"><strong>🎁 Rewards:</strong> ${rewards}</p>
+      </div>
+      <a href="${process.env.BASE_URL}/profile" style="display: inline-block; background: #8b5cf6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Profile</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `🎉 You reached Level ${newLevel} - ${levelName}!`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 13. LEADERBOARD ACHIEVEMENT
+  async sendLeaderboardRank(to: string, category: string, rank: number, previousRank: number, prize?: string) {
+    const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '🏆';
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">${rankEmoji} Leaderboard Achievement</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        You're now ranked <strong style="font-size: 24px; color: #f59e0b;">#${rank}</strong> in ${category}!
+      </p>
+      ${previousRank ? `<p style="color: #6b7280; font-size: 14px;">You moved up ${previousRank - rank} ${previousRank - rank === 1 ? 'spot' : 'spots'} from #${previousRank}</p>` : ''}
+      ${prize ? `
+        <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 16px; border-radius: 8px; margin: 16px 0; text-align: center;">
+          <p style="margin: 0; color: #92400e; font-size: 18px;"><strong>🎁 Prize:</strong> ${prize}</p>
+        </div>
+      ` : ''}
+      <a href="${process.env.BASE_URL}/leaderboard" style="display: inline-block; background: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Leaderboard</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `${rankEmoji} You're #${rank} on the ${category} leaderboard!`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 14. EMAIL VERIFICATION
+  async sendEmailVerification(to: string, verificationToken: string) {
+    const verifyUrl = `${process.env.BASE_URL}/verify-email?token=${verificationToken}`;
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">Welcome to YoForex! 🎉</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        Thanks for joining our forex trading community. Please verify your email address to get started:
+      </p>
+      <a href="${verifyUrl}" style="display: inline-block; background: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 16px 0;">Verify Email</a>
+      <p style="color: #6b7280; font-size: 14px;">
+        Or copy this link: <a href="${verifyUrl}" style="color: #2563eb;">${verifyUrl}</a>
+      </p>
+      <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0; color: #4b5563; font-size: 14px;">This link expires in 24 hours. If you didn't create this account, you can safely ignore this email.</p>
+      </div>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: 'Verify your YoForex account',
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 15. PURCHASE RECEIPT
+  async sendPurchaseReceipt(to: string, productName: string, price: number, orderId: string, downloadUrl: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">✅ Purchase Successful</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        Thank you for your purchase! Here are your order details:
+      </p>
+      <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="margin: 0 0 8px 0; color: #111827;"><strong>Product:</strong> ${productName}</p>
+        <p style="margin: 0 0 8px 0; color: #111827;"><strong>Price:</strong> ${price} coins</p>
+        <p style="margin: 0; color: #111827;"><strong>Order ID:</strong> #${orderId}</p>
+      </div>
+      <a href="${downloadUrl}" style="display: inline-block; background: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-right: 12px;">Download Now</a>
+      <a href="${process.env.BASE_URL}/purchases" style="display: inline-block; background: white; border: 2px solid #2563eb; color: #2563eb; padding: 10px 22px; text-decoration: none; border-radius: 8px; font-weight: bold;">My Purchases</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `Receipt for "${productName}" - Order #${orderId}`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 16. REPLY TO YOUR THREAD
+  async sendThreadReply(to: string, replierName: string, threadTitle: string, replyPreview: string, threadSlug: string) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 16px 0;">💬 New Reply to Your Thread</h2>
+      <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+        <strong>${replierName}</strong> replied to your thread: <strong>"${threadTitle}"</strong>
+      </p>
+      <div style="background: #dbeafe; border-left: 4px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px;">
+        <p style="color: #1e40af; margin: 0; font-size: 14px; line-height: 1.6;">${replyPreview}</p>
+      </div>
+      <a href="${process.env.BASE_URL}/threads/${threadSlug}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Reply</a>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `${replierName} replied to "${threadTitle}"`,
+      html: createEmailTemplate(content)
+    });
+  },
+
+  // 17. WEEKLY DIGEST / NEWSLETTER
+  async sendWeeklyDigest(to: string, username: string, hotThreads: any[], topSellers: any[], yourStats: any) {
+    const content = `
+      <h2 style="color: #111827; margin: 0 0 8px 0;">This Week on YoForex</h2>
+      <p style="color: #6b7280; font-size: 14px; margin: 0 0 24px 0;">Hi ${username}, here's what happened this week</p>
+      
+      <!-- Your Stats -->
+      <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 0 0 24px 0;">
+        <h3 style="color: #111827; margin: 0 0 12px 0; font-size: 16px;">📊 Your Activity</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <div style="text-align: center;">
+            <p style="margin: 0; font-size: 24px; font-weight: bold; color: #2563eb;">${yourStats.posts}</p>
+            <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Posts</p>
+          </div>
+          <div style="text-align: center;">
+            <p style="margin: 0; font-size: 24px; font-weight: bold; color: #10b981;">${yourStats.likes}</p>
+            <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Likes</p>
+          </div>
+          <div style="text-align: center;">
+            <p style="margin: 0; font-size: 24px; font-weight: bold; color: #f59e0b;">${yourStats.coins}</p>
+            <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Coins Earned</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Hot Threads -->
+      <h3 style="color: #111827; margin: 0 0 12px 0; font-size: 16px;">🔥 Trending This Week</h3>
+      ${hotThreads.map(thread => `
+        <div style="border-bottom: 1px solid #e5e7eb; padding: 12px 0;">
+          <a href="${process.env.BASE_URL}/threads/${thread.slug}" style="color: #2563eb; text-decoration: none; font-weight: 600; font-size: 14px;">${thread.title}</a>
+          <p style="color: #6b7280; font-size: 12px; margin: 4px 0 0 0;">${thread.replies} replies · ${thread.views} views</p>
+        </div>
+      `).join('')}
+      
+      <!-- Top Sellers -->
+      <h3 style="color: #111827; margin: 24px 0 12px 0; font-size: 16px;">💎 Top Products</h3>
+      ${topSellers.map(product => `
+        <div style="border-bottom: 1px solid #e5e7eb; padding: 12px 0;">
+          <a href="${process.env.BASE_URL}/content/${product.slug}" style="color: #2563eb; text-decoration: none; font-weight: 600; font-size: 14px;">${product.title}</a>
+          <p style="color: #6b7280; font-size: 12px; margin: 4px 0 0 0;">⭐ ${product.rating}/5 · ${product.sales} sales · ${product.price} coins</p>
+        </div>
+      `).join('')}
+      
+      <div style="text-align: center; margin-top: 32px;">
+        <a href="${process.env.BASE_URL}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Visit YoForex</a>
+      </div>
+    `;
+    
+    await transporter.sendMail({
+      from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+      to,
+      subject: `This week on YoForex - ${hotThreads.length} hot discussions`,
+      html: createEmailTemplate(content)
+    });
+  }
+};
+```
+
+==============================================
+PART 2: EVENT TRIGGERS (ADD TO EXISTING CODE)
+==============================================
+
+Integrate email triggers at these points:
+
+1. User Registration (POST /api/auth/register):
+```
+await emailService.sendEmailVerification(user.email, verificationToken);
+```
+
+2. Comment Created (POST /api/comments):
+```
+await emailService.sendCommentNotification(
+  threadAuthor.email,
+  commenter.username,
+  thread.title,
+  comment.body.substring(0, 150),
+  thread.slug
+);
+```
+
+3. Like Created (POST /api/likes):
+```
+await emailService.sendLikeNotification(
+  content.author.email,
+  liker.username,
+  content.type,
+  content.title,
+  content.url
+);
+```
+
+4. Follow Created (POST /api/follows):
+```
+await emailService.sendFollowNotification(
+  followedUser.email,
+  follower.username,
+  follower.username,
+  follower.avatarUrl
+);
+```
+
+5. Withdrawal Requested (POST /api/withdrawals):
+```
+await emailService.sendWithdrawalRequestReceived(
+  user.email,
+  withdrawal.amount,
+  withdrawal.method,
+  withdrawal.id
+);
+```
+
+6. Withdrawal Approved (PATCH /api/withdrawals/:id/approve):
+```
+await emailService.sendWithdrawalSent(
+  user.email,
+  withdrawal.amount,
+  withdrawal.method,
+  withdrawal.transactionId
+);
+```
+
+7. Coins Added (POST /api/coins/add):
+```
+await emailService.sendCoinsReceived(
+  user.email,
+  amount,
+  source,
+  newBalance
+);
+```
+
+8. Product Sold (POST /api/purchases):
+```
+await emailService.sendProductSold(
+  seller.email,
+  product.title,
+  buyer.username,
+  product.price,
+  earnings
+);
+```
+
+9. Product Published (POST /api/content):
+```
+await emailService.sendProductPublished(
+  author.email,
+  content.title,
+  content.slug,
+  content.category
+);
+```
+
+10. Password Reset (POST /api/auth/forgot-password):
+```
+await emailService.sendPasswordReset(
+  user.email,
+  resetToken,
+  '1 hour'
+);
+```
+
+11. Username Changed (PATCH /api/users/:id/username):
+```
+await emailService.sendUsernameChanged(
+  user.email,
+  oldUsername,
+  newUsername
+);
+```
+
+12. Message Received (POST /api/messages):
+```
+await emailService.sendNewMessage(
+  recipient.email,
+  sender.username,
+  sender.username,
+  message.body
+);
+```
+
+13. Level Up (background job when XP threshold reached):
+```
+await emailService.sendLevelUp(
+  user.email,
+  newLevel,
+  levelName,
+  badgeName,
+  rewards
+);
+```
+
+14. Leaderboard Rank (daily cron job):
+```
+await emailService.sendLeaderboardRank(
+  user.email,
+  category,
+  newRank,
+  previousRank,
+  prize
+);
+```
+
+15. Thread Reply (POST /api/replies):
+```
+await emailService.sendThreadReply(
+  threadAuthor.email,
+  replier.username,
+  thread.title,
+  reply.body.substring(0, 150),
+  thread.slug
+);
+```
+
+16. Purchase Complete (POST /api/purchases):
+```
+await emailService.sendPurchaseReceipt(
+  buyer.email,
+  product.title,
+  product.price,
+  order.id,
+  downloadUrl
+);
+```
+
+17. Weekly Digest (cron job every Monday 10 AM):
+```
+cron.schedule('0 10 * * 1', async () => {
+  const subscribers = await db.select('*').from('users').where('newsletter_subscribed', true);
+  
+  for (const user of subscribers) {
+    const hotThreads = await getHotThreads(7);
+    const topSellers = await getTopSellers(7);
+    const userStats = await getUserWeeklyStats(user.id);
+    
+    await emailService.sendWeeklyDigest(
+      user.email,
+      user.username,
+      hotThreads,
+      topSellers,
+      userStats
+    );
+  }
+});
+```
+
+==============================================
+PART 3: USER EMAIL PREFERENCES
+==============================================
+
+Create table: email_preferences
+```
+CREATE TABLE email_preferences (
+  user_id INTEGER PRIMARY KEY,
+  email_verification BOOLEAN DEFAULT TRUE,
+  email_comments BOOLEAN DEFAULT TRUE,
+  email_likes BOOLEAN DEFAULT TRUE,
+  email_follows BOOLEAN DEFAULT TRUE,
+  email_withdrawals BOOLEAN DEFAULT TRUE,
+  email_sales BOOLEAN DEFAULT TRUE,
+  email_published BOOLEAN DEFAULT TRUE,
+  email_password_reset BOOLEAN DEFAULT TRUE,
+  email_username_change BOOLEAN DEFAULT TRUE,
+  email_messages BOOLEAN DEFAULT TRUE,
+  email_level_up BOOLEAN DEFAULT TRUE,
+  email_leaderboard BOOLEAN DEFAULT TRUE,
+  email_replies BOOLEAN DEFAULT TRUE,
+  email_purchases BOOLEAN DEFAULT TRUE,
+  email_newsletter BOOLEAN DEFAULT TRUE,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+Check preferences before sending:
+```
+const prefs = await db.select('*').from('email_preferences').where('user_id', userId).first();
+if (prefs.email_comments) {
+  await emailService.sendCommentNotification(...);
+}
+```
+
+==============================================
+PART 4: TESTING
+==============================================
+
+Create test endpoint: POST /api/test-emails
+
+```
+app.post('/api/test-emails', async (req, res) => {
+  const { type, email } = req.body;
+  
+  switch(type) {
+    case 'comment':
+      await emailService.sendCommentNotification(email, 'TestUser', 'Test Thread', 'This is a test comment', 'test-slug');
+      break;
+    case 'like':
+      await emailService.sendLikeNotification(email, 'TestUser', 'thread', 'Test Thread', '/threads/test');
+      break;
+    case 'follow':
+      await emailService.sendFollowNotification(email, 'TestUser', 'testuser');
+      break;
+    // ... add all other types
+  }
+  
+  res.json({ success: true, message: `${type} email sent to ${email}` });
+});
+```
+
+==============================================
+IMPLEMENTATION CHECKLIST:
+==============================================
+
+✅ Install nodemailer
+✅ Add Brevo credentials to Replit Secrets
+✅ Create emailService.ts with all 17 email functions
+✅ Add email triggers to all API endpoints
+✅ Create email_preferences table
+✅ Add preference checks before sending
+✅ Create cron job for weekly newsletter
+✅ Create test endpoint
+✅ Test each email type
+✅ Verify deliverability (check spam folder)
+✅ Add unsubscribe link to all emails
+
+==============================================
+EXPECTED RESULT:
+==============================================
+
+After implementation:
+- All 17 email types automatically trigger on events
+- Users receive instant notifications
+- Beautiful, branded email templates
+- User preferences respected
+- Weekly digest sent every Monday
+- All emails land in inbox (not spam)
+- Unsubscribe links work
+- Test endpoint for debugging
+
+Implement everything above and confirm all email types are working.
+```
+
+***
+
+This prompt covers **ALL 17 email scenarios** you mentioned plus automated weekly digest and full user preference management. Just paste this entire prompt into Replit Agent chat and it will implement the complete email system using your Brevo credentials!
+
+Sources
+[1] SMTP Connection via API vs. Direct SMTP Settings - SureMail https://suremails.com/smtp-connection-via-api-vs-direct-smtp-settings-which-one-should-you-choose/
+[2] [Comparison Sheet] 7 best SMTP email services in 2025 https://postmarkapp.com/blog/the-best-smtp-email-services-comparison-sheet
+[3] Brevo vs SMTP.com Comparison (2025) https://forwardemail.net/en/blog/brevo-vs-smtp-com-email-service-comparison
+[4] 6 Best Transactional Email Services Compared https://www.brevo.com/blog/best-transactional-email-services/
+[5] SMTP vs Email API Compared: Find Out Which To Use [2025] https://mailtrap.io/blog/smtp-vs-email-api/
+[6] SMTP.com vs Brevo Comparison (2025) https://forwardemail.net/en/blog/smtp-com-vs-brevo-email-service-comparison
+[7] Reliable SMTP Servers Compared: Yournotify vs. Brevo vs. ... https://dev.to/charlesmudy/reliable-smtp-servers-compared-yournotify-vs-brevo-vs-sendgrid-2025-review-2k9n
+[8] SMTP.com vs Brevo (formerly Sendinblue) https://www.suprsend.com/email-comparison/smtp-com-vs-brevo-formerly-sendinblue-which-email-provider-is-better-in-2024
+[9] Compare Brevo Marketing Platform vs. SMTP https://www.g2.com/compare/brevo-marketing-platform-vs-smtp-com
+[10] Top SMTP Clients: Compliance Comparison https://www.walturn.com/insights/top-smtp-clients-compliance-comparison

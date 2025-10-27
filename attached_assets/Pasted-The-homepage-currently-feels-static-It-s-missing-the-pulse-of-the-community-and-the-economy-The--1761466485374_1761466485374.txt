@@ -1,0 +1,73 @@
+The homepage currently feels static. It's missing the "pulse" of the community and the economy. The features from image_218ea1.png and image_218ebd.png solve this directly.
+
+We will implement three new modules.
+
+Initiative 1: The "What's Hot" Module (Content Discovery Engine)
+This module answers the user's question: "What is the most valuable content on this site right now?"
+
+Title: "What's Hot"
+
+Location: Master Sidebar (Right Column).
+
+Logic: This is a content leaderboard. It ranks posts (EAs, Indicators, Articles) based on a "hotness score" calculated from activity in the last 7 days (e.g., (views * 0.5) + (likes * 2) + (new comments * 3) + (new sales * 5)).
+
+UI (per image_218ebd.png):
+
+Numbered rank (1, 2, 3, 4...).
+
+Content Title (linked).
+
+Author, Star Rating, Views, Downloads/Sales.
+
+Content Type Tag: A clear "EA," "INDICATOR," or "ARTICLE" tag.
+
+Gold Coin Price: Must display the price (e.g., "🔥 750"). This is a critical Call to Action.
+
+Hotness Score (e.g., "📈 98").
+
+Initiative 2: The "Top Sellers" Module (Economic Engine)
+This is our most important module for driving the Gold Coin economy. It creates superstars, builds trust in paid content, and directly incentivizes creators to upload high-quality, paid EAs.
+
+Title: "Top Sellers"
+
+Location: Master Sidebar (Right Column), next to or below "What's Hot."
+
+Logic: This is an all-time sales leaderboard.
+
+Query: SELECT post_id, COUNT(*) as sales_count FROM coin_transactions WHERE type = 'spend_content' GROUP BY post_id ORDER BY sales_count DESC LIMIT 5.
+
+UI (per image_218ebd.png):
+
+Numbered rank (1, 2, 3, 4, 5).
+
+Content Title (linked).
+
+Author, Star Rating.
+
+Gold Coin Price: (e.g., "🔥 500").
+
+Total Sales Count: This is the key metric (e.g., "📈 1234 sales"). This provides the social proof.
+
+Initiative 3: The "This Week's Highlights" Module (Community Engine)
+This module makes the forum homepage (the main content feed) feel dynamic and alive. It shows users where the most important conversations are happening.
+
+Title: "This Week's Highlights"
+
+Location: Main Content Feed (Left Column), directly above the "Recent Discussions" feed.
+
+Logic: This is a tabbed module to filter discussion threads.
+
+UI (per image_218ea1.png):
+
+"New" Tab (Default): Lists the 5-10 most recent discussion threads (identical to "Recent Discussions," so this can replace the top of that feed).
+
+"Trending" Tab: Lists threads with the highest "hotness score" in the last 48 hours (e.g., (replies * 3) + (likes * 2)). This shows what's being debated right now.
+
+"Solved" Tab: Lists the 5-10 most recent threads that have been marked with our "Solved" status. This highlights value and helpfulness.
+
+List Item: Must show Category Tag, Thread Title, Author, basic stats (replies, views), and a clear "hotness" or reply count (e.g., "+23").
+
+CTO's Directive:
+These three modules are not "add-ons." They are the dashboard for our entire platform. "Highlights" drives discussion, "What's Hot" drives content discovery, and "Top Sellers" drives our economy.
+
+Execute this. This is how we make the site addictive and profitable.

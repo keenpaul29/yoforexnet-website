@@ -1,0 +1,265 @@
+2) Four Post Templates (Markdown – paste into your forum)
+A) Performance Report Template
+# Performance Report — {PAIR} {TIMEFRAME}
+
+**Period Tested:** {Start Date} → {End Date}  
+**Account Type:** {RAW ECN / Standard / Crypto} — Broker: {Name}  
+**Initial Deposit:** {Amount + currency} | **Net P/L:** {Amount + %}  
+**Profit Factor:** {PF} | **Max Drawdown:** {DD % / currency}  
+**Win Rate:** {Short % / Long %} | **Trades:** {Count}
+
+## Strategy Summary
+- Style: {Scalp / Intraday / Swing / Grid (non-martingale) / Breakout / Mean-reversion}
+- Key Filters: {Session, Volatility, Trend, Structure}
+- Risk Model: {Fixed lot / %Risk / Balance-scaled} | **RRR Target:** {e.g., 1:2}
+
+## Environment
+- **Platform:** {MT4/MT5} — EA/Indi Version: {vX.X}
+- **Symbol & Digits:** {XAUUSD / BTCUSD / EURUSD, 5-digit etc.}
+- **Spread (avg/max):** {pips/points} | **Commission:** {per lot}
+- **VPS:** {Provider, Region, Ping ms}
+
+## Backtest / Forward Setup
+- Model: {Tick / OHLC} | Data Quality: {99% / tick source}
+- Slippage Sim: {Yes/No, value}
+- News Filter: {On/Off} | Sessions: {e.g., London only}
+
+## Results Highlights
+- Best Day / Worst Day: {values}
+- Streaks: {max wins / max losses}
+- Risk Events: {e.g., NFP spike, widened spread}
+- Notes: {behavior during volatility, execution quirks}
+
+## Files
+- **Set File:** [link]  
+- **Backtest Pack:** [folder link] (statement, equity curve, report)  
+- **Screenshots:** (attach)
+
+B) EA Release Template
+# {EA Name} — {Version} ({Platform})
+
+**Pairs/TF:** {e.g., XAUUSD M5–H1, EURUSD M15, BTCUSD M1–M15}  
+**Strategy Logic (Plain English):** {trend/breakout/mean-reversion + filters}  
+**Account Requirements:** {RAW/ECN only, spread ≤ X, commission ≤ Y, hedging/netting}  
+**RRR Profile:** {e.g., 1:2 base, trails to 3R/5R}  
+**Concurrency Limits:** {max positions, per direction}
+
+## Inputs Overview
+- Risk: {FixedLot / Risk% / Multiplier caps}
+- Filters: {Sessions, ATR/Vol, Structure}
+- Safety: {Equity stop, daily loss cap, news block}
+- Utilities: {Magic, comment, symbol mapping}
+
+## Installation
+1. Copy EA to **Experts** and restart terminal.  
+2. Attach to {symbol/timeframe}.  
+3. Load **Set File** (link).  
+4. Enable algo trading; check journal for errors.
+
+## Backtests / Forwards
+- Data window: {years} — Model: {Tick/99%}  
+- PF/DD/Win%: {numbers}  
+- Known Limits: {e.g., fails in ultra-low vol, avoid rollover minutes}
+
+## Changelog
+- v{current}: {fixes/features}  
+- v{prev}: {notes}
+
+## Files & Links
+- **Set Files:** [link]  
+- **Backtest Pack:** [link]  
+- **Manual / FAQ:** [link]
+
+> **Risk Note:** Past results ≠ future returns. Use on demo first.
+
+C) Bug Report Template
+# Bug Report — {EA/Indicator Name} {Version}
+
+**Platform:** {MT4/MT5} | **Build:** {number}  
+**Broker/Symbol:** {Name, e.g., XAUUSD.pro}  
+**Timeframe:** {M1/M5/M15/H1/H4} | **VPS:** {Provider, ping}
+
+## Steps to Reproduce
+1. …
+2. …
+3. …
+
+## Expected Behavior
+{What should have happened}
+
+## Actual Behavior
+{What actually happened, incl. screenshots/log lines}
+
+## Attachments
+- Set file (.set)
+- Logs (Experts/Journal)
+- Screenshots / short video
+
+## Severity
+{Blocker / Major / Minor}
+
+> Tip: mask personal info; include exact times (UTC) for traceability.
+
+D) How-To / Guide Template
+# How-To: {Goal in one sentence}
+
+## Prerequisites
+- Platform: {MT4/MT5} installed
+- Account: {RAW/ECN recommended}
+- Files: {EA name}, {set file}, {data source}, etc.
+
+## Steps
+1. …
+2. …
+3. …
+
+## Verification
+- Check chart comment shows `{EA name} running`
+- Place a test trade or dry-run to confirm lot math
+- Review logs for errors/warnings
+
+## Gotchas
+- {Spread must be ≤ X}
+- {Disable during rollover or major red news}
+- {Symbol suffix/prefix mapping}
+
+## Checklist
+- [ ] Correct symbol & TF  
+- [ ] Auto-trading enabled  
+- [ ] Set file loaded  
+- [ ] Risk caps configured  
+- [ ] VPS ping acceptable (< X ms)
+
+3) Microcopy for On-Page Components (cards, buttons, tooltips)
+
+Use this as your content strings map.
+
+{
+  "buttons": {
+    "new_thread": "New Thread",
+    "post_reply": "Post Reply",
+    "preview": "Preview",
+    "publish": "Publish",
+    "save_draft": "Save Draft",
+    "upload_files": "Upload Files",
+    "attach_set": "Attach .set",
+    "attach_report": "Attach Report",
+    "mark_solved": "Mark as Solved",
+    "follow_thread": "Follow",
+    "unfollow_thread": "Unfollow",
+    "start_bounty": "Start Bounty",
+    "add_poll": "Add Poll",
+    "report": "Report",
+    "copy_template": "Use Template",
+    "load_setfile": "Load Set File",
+    "download_pack": "Download Pack"
+  },
+  "tooltips": {
+    "raw_ecn": "RAW/ECN = tight spread + commission. Ideal for scalping.",
+    "spread_guard": "Blocks entries if current spread exceeds your limit.",
+    "slippage_sim": "Backtest slippage adds realism. Start with 10–30ms.",
+    "model_quality": "99% tick data improves trust. Lower values can mislead.",
+    "news_filter": "Pauses trading during high-impact events you select.",
+    "risk_percent": "Risk % calculates lot size from stop distance.",
+    "rrr_target": "Auto-sets TP based on your SL distance (e.g., 1:2).",
+    "partial_close": "Take profit in steps to reduce equity volatility.",
+    "session_filter": "Trade only in the sessions that fit your strategy.",
+    "set_file": "A .set contains all EA inputs. Load it to avoid typos.",
+    "mark_solved": "Mark best reply as the solution to help others.",
+    "follow": "Get notified when someone replies or updates files.",
+    "bounty": "Offer points to attract expert help faster.",
+    "download_help": "Having trouble downloading? Read the quick fix guide."
+  },
+  "labels": {
+    "answered": "Solved",
+    "unsolved": "Unsolved",
+    "guide": "Guide",
+    "code": "Code",
+    "backtest": "Backtest",
+    "setfile": "Set File",
+    "changelog": "Changelog",
+    "live": "Live",
+    "forward": "Forward Test",
+    "risk_first": "Risk-First"
+  },
+  "empty_states": {
+    "no_threads": "No threads here yet — be the first to share your setup.",
+    "no_results": "Nothing matched your filters. Try fewer tags or another timeframe.",
+    "no_attachments": "No files attached yet. Upload a .set or report to help others."
+  },
+  "filters": {
+    "pair": "Pair",
+    "timeframe": "Timeframe",
+    "style": "Style",
+    "risk": "Risk",
+    "platform": "Platform",
+    "asset": "Asset",
+    "has_setfile": "Has Set File",
+    "solved_only": "Solved only",
+    "date_range": "Date range"
+  },
+  "category_cards": {
+    "strategy": "Share setups, risk models, and optimization notes.",
+    "beginner": "New to EAs? Start with safe installs and account basics.",
+    "performance": "Backtests and forward results with full metrics.",
+    "support": "Install issues, VPS latency, symbol mapping, errors.",
+    "dev": "MQL4/5 coding help, snippets, patterns, and tools.",
+    "success": "Wins with discipline and what you learned from them.",
+    "ea_library": "Curated EA uploads with versions, set files, and rules.",
+    "indicators": "Signal & utility indicators that complement your EAs.",
+    "tools": "Trade managers, analyzers, and data/optimizer utilities.",
+    "source_code": "Open source EA/indicator code for study and use.",
+    "learning": "Guides, roadmaps, and study resources.",
+    "qa": "Quick questions and fast answers from the community.",
+    "bounties": "Offer rewards for fixes, set files, or research.",
+    "rankings": "Top EAs and contributors this week.",
+    "commercial": "Vendor demos under strict proof and rules."
+  },
+  "ea_card": {
+    "title": "EA Name & Version",
+    "pairs_tf": "Pairs / Timeframes",
+    "features": "Key Features",
+    "requirements": "Account Requirements",
+    "risk": "Risk Profile",
+    "version": "Version",
+    "downloads": "Downloads",
+    "cta": "Download",
+    "notes": "Notes"
+  },
+  "performance_block": {
+    "metrics_title": "Headline Metrics",
+    "pf": "Profit Factor",
+    "dd": "Max Drawdown",
+    "wr": "Win Rate",
+    "trades": "Trades",
+    "equity": "Equity Curve",
+    "env": "Environment",
+    "vps": "VPS Ping",
+    "spread": "Avg/Max Spread"
+  },
+  "right_sidebar": {
+    "top_contributors": "Top Contributors",
+    "trending_eas": "Trending EAs",
+    "new_setfiles": "Newest Set Files",
+    "leaderboard": "Live Leaderboard",
+    "quick_links": "Quick Links"
+  },
+  "quick_links": {
+    "rules": "Forum Rules",
+    "safe_download": "Safe Download Guide",
+    "broker_guide": "Broker & Account Types",
+    "starter": "Start Here (New Members)"
+  },
+  "disclaimers": {
+    "risk": "Trading involves risk. Never risk money you cannot afford to lose.",
+    "proof": "Upload statements/equity curves. Claims without files may be removed.",
+    "neutral": "Broker-neutral community: no affiliate links in posts."
+  },
+  "notifications": {
+    "post_published": "Your thread is live. Thanks for sharing!",
+    "draft_saved": "Draft saved locally.",
+    "marked_solved": "Marked as solved. Great work!",
+    "file_uploaded": "File uploaded successfully.",
+    "file_blocked": "This file type isn’t allowed. Use .set, .zip, .png, .pdf."
+  }
+}
