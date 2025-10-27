@@ -1,0 +1,140 @@
+Got it. Here’s a clear, technical prompt you can give your devs to add ranking-oriented fields to the “Create Thread” screen (with required asterisk), plus the exact backend rules to handle everything automatically without AI.
+
+⸻
+
+Prompt for the team — “Rankable Thread Form + Rule-Based SEO”
+
+Goal: When a user posts a thread, we quietly capture extra, structured fields that make the page rank better. Only a few are required (*), the rest are optional. Backend converts these fields into clean slugs, tags, internal links, and structured data — no AI.
+
+A) Form sections & fields (mobile-first)
+
+1) Basics
+	•	Title* (min 15, max 90 chars; block ALL-CAPS and emoji spam)
+	•	Category* (pre-filled if opened from a category)
+	•	Sub-category* (required if the category has subs)
+	•	Thread Type* (radio):
+	•	Question (Q&A)
+	•	Discussion (General)
+	•	Review (EA/Indicator/Broker)
+	•	Journal (Performance/Progress)
+	•	Guide (How-to / Setup)
+
+2) Quick SEO (tiny helper row)
+	•	Primary keyword/phrase (optional; 1 short phrase, e.g. “xauusd m5 scalping rules”)
+	•	SEO excerpt (optional; 120–160 chars; if empty, backend auto-builds from first paragraph)
+
+Microcopy under this row: “Optional. We’ll handle the rest.”
+
+3) Trading meta (chips/selects)
+	•	Instrument(s) (multi-select chips; preloaded list: XAUUSD, EURUSD, GBPUSD, USDJPY, BTCUSD, ETHUSD, US30, NAS100, …)
+	•	Timeframe(s) (M1, M5, M15, M30, H1, H4, D1, W1)
+	•	Strategy tags (multi-select; e.g., scalping, swing, trend, mean-reversion, grid, hedging, breakout, news, supply-demand, order-block…)
+	•	Platform (MT4, MT5, cTrader, TradingView, Other)
+	•	Broker (autocomplete from curated list; free-text allowed)
+	•	Risk note (optional short text, e.g., “risk 1% per trade”)
+
+4) Content
+	•	Body* (min 150 words; allow images/attachments; allow code blocks)
+	•	Hashtags (optional; free text with #; max 10, e.g., #xauusd #m5 #scalping #mt5)
+	•	Attachments (optional): screenshot(s), set file (.set), results CSV/PDF
+
+5) Optional Q&A/Review details (show based on Thread Type)
+	•	Question form (if Question):
+	•	“What do you want solved?” (1–2 sentences)
+	•	“Mark as solved” toggle (for OP/mods later)
+	•	Review form (if Review):
+	•	Target (EA/Indicator/Broker name)*
+	•	Version (optional)
+	•	Rating (1–5 stars)*
+	•	Pros / Cons (short bullets)
+
+6) Visibility & linking
+	•	Language (auto-detect but show drop-down to override; default en)
+	•	Allow out-links (toggle; default on; we’ll mark as UGC)
+	•	Subscribe to replies (toggle)
+
+Required fields have an asterisk *. Everything else is optional.
+
+⸻
+
+B) Backend behavior (rule-based, no AI)
+	1.	Slug & canonical
+	•	Build slug from Title → lowercase → ASCII → hyphens; drop stop-words.
+	•	Prefix with category + sub-category if present:
+/category/<cat>/<sub>/<slug> (canonical to first page of the thread).
+	2.	Meta description
+	•	If SEO excerpt provided → use it;
+	•	else take first paragraph of Body, strip markdown/HTML, trim to 150–160 chars, avoid cutting words.
+	3.	Tags & hashtags
+	•	Store Tags (instrument/timeframe/strategy/platform/broker) as normalized keys.
+	•	Parse Hashtags by # → lowercased tokens; add to tag table if not present.
+	•	Deduplicate and cap total tags (tags + hashtags) to 12.
+	4.	Intent → structured data
+	•	Question → add DiscussionForumPosting + Question JSON-LD; expose acceptedAnswer when solved.
+	•	Review → add Review inside thread JSON-LD (with ratingValue, itemReviewed=EA/Indicator/Broker).
+	•	Journal → add BlogPosting alongside DiscussionForumPosting.
+	•	Guide → add HowTo only if steps list is detected (headed bullet lines). Else stay as Discussion.
+	5.	Internal linking (server-side)
+	•	At save time, link to:
+	•	Parent category + sub-category
+	•	3–5 related threads (same instrument/timeframe/strategy, last 90 days, sorted by replies/views)
+	•	1–2 marketplace items (match instrument/strategy if available)
+	•	Author profile
+	•	Store the link set for rendering; refresh it nightly.
+	6.	Validation & anti-spam
+	•	Title length 15–90; no ≥50% caps; strip repeated punctuation (!!!!!!→!).
+	•	Body min 150 words; block identical paste twice; throttle new users (e.g., 1 post/min).
+	•	Outbound links inside Body → rel="ugc nofollow noopener" unless domain allow-listed or author has “Trusted” badge.
+	7.	Performance signals
+	•	Compute engagementScore = views*1 + replies*3 + upvotes*4 + bookmarks*2 – reports*5.
+	•	Use this for Trending tab and for sitemap priority bump (e.g., ≥100 → priority 0.9).
+	8.	Sitemaps & notifications
+	•	On create/update: push URL to IndexNow; refresh discussion sitemaps; enqueue for internal recrawl.
+	•	If language ≠ default, add to hreflang group for that category.
+	9.	Permalinks for replies
+	•	Every reply has /thread/<slug>/c/<replyId>; render a focused view and include Comment JSON-LD.
+	10.	Review safety
+
+	•	If Thread Type=Review and target is a Broker, require 1 real metric (spread/delay/withdrawal time) before accepting rating, else block submit.
+
+⸻
+
+C) Field constraints (for clean data)
+	•	Primary keyword: 1–6 words, no commas, letters/numbers only.
+	•	Tags: each 2–24 chars, kebab-case (e.g., xauusd, m5, scalping).
+	•	Hashtags: auto-strip #, same constraints as tags.
+	•	Broker: 2–40 chars; strip “.com”.
+	•	Attachments: size ≤ 5 MB each; allow jpg/png/webp/pdf/set/csv.
+
+⸻
+
+D) UI microcopy (shows under fields)
+	•	Under Primary keyword: “Optional. Helps people find your topic. We’ll handle the rest.”
+	•	Under Tags: “Add 3–5 accurate tags. Examples: xauusd, m5, scalping, mt5, ic-markets.”
+	•	Under Hashtags: “Optional social hashtags, we’ll format them.”
+	•	Under Body: “Be specific. Share timeframe, rules, broker, results. Min 150 words.”
+	•	Under Thread Type: “Choose the style so readers (and search) understand your post.”
+
+⸻
+
+E) Storage model (simple)
+	•	threads(id, title, slug, category_id, subcategory_id, type, body, seo_excerpt, language, author_id, engagement_score, created_at, updated_at)
+	•	thread_tags(thread_id, tag) (index on tag)
+	•	replies(id, thread_id, body, author_id, helpful, created_at, updated_at)
+
+⸻
+
+F) What becomes “Required *”
+	•	Title*, Category*, Sub-category* (if exists), Thread Type*, Body*
+	•	Everything else optional; backend fills gaps.
+
+⸻
+
+G) Acceptance checks
+	•	Submitting from a category/sub-category always creates a thread in that exact place.
+	•	Latest / Trending / Answered tabs work and update the list.
+	•	New thread shows: breadcrumbs, tags/hashtags, related links, and is included in sitemaps + notifications immediately.
+
+⸻
+
+Outcome: Users only fill a few simple fields (Title, Category/Sub-category, Type, Body, a few Tags). You quietly get the structured data, internal links, sitemaps, and notifications that make every thread rank — no AI required.

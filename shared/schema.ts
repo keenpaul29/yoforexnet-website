@@ -340,16 +340,51 @@ export const forumThreads = pgTable("forum_threads", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   authorId: varchar("author_id").notNull().references(() => users.id),
   categorySlug: text("category_slug").notNull(),
+  subcategorySlug: text("subcategory_slug"), // Sub-category if applicable
   title: text("title").notNull(),
   body: text("body").notNull(),
   slug: text("slug").notNull().unique(),
   focusKeyword: text("focus_keyword"),
   metaDescription: text("meta_description"),
+  
+  // Enhanced SEO & Thread Type
+  threadType: text("thread_type").notNull().$type<"question" | "discussion" | "review" | "journal" | "guide">().default("discussion"),
+  seoExcerpt: text("seo_excerpt"), // 120-160 chars, optional
+  primaryKeyword: text("primary_keyword"), // 1-6 words, optional
+  language: text("language").notNull().default("en"),
+  
+  // Trading Metadata (stored as arrays for multi-select)
+  instruments: text("instruments").array().default(sql`'{}'::text[]`), // XAUUSD, EURUSD, etc.
+  timeframes: text("timeframes").array().default(sql`'{}'::text[]`), // M1, M5, H1, etc.
+  strategies: text("strategies").array().default(sql`'{}'::text[]`), // scalping, swing, etc.
+  platform: text("platform"), // MT4, MT5, cTrader, TradingView, Other
+  broker: text("broker"), // Free text broker name
+  riskNote: text("risk_note"), // Optional risk management note
+  hashtags: text("hashtags").array().default(sql`'{}'::text[]`), // Social hashtags
+  
+  // Review-specific fields (only for threadType=review)
+  reviewTarget: text("review_target"), // EA/Indicator/Broker name
+  reviewVersion: text("review_version"),
+  reviewRating: integer("review_rating"), // 1-5 stars
+  reviewPros: text("review_pros").array(),
+  reviewCons: text("review_cons").array(),
+  
+  // Question-specific fields (only for threadType=question)
+  questionSummary: text("question_summary"), // "What do you want solved?"
+  acceptedAnswerId: varchar("accepted_answer_id"), // Reference to accepted reply
+  
+  // Attachments
+  attachmentUrls: text("attachment_urls").array().default(sql`'{}'::text[]`),
+  
+  // Status & Moderation
   isPinned: boolean("is_pinned").notNull().default(false),
   isLocked: boolean("is_locked").notNull().default(false),
   isSolved: boolean("is_solved").notNull().default(false),
   views: integer("views").notNull().default(0),
   replyCount: integer("reply_count").notNull().default(0),
+  likeCount: integer("like_count").notNull().default(0),
+  bookmarkCount: integer("bookmark_count").notNull().default(0),
+  shareCount: integer("share_count").notNull().default(0),
   lastActivityAt: timestamp("last_activity_at").notNull().defaultNow(),
   status: text("status").notNull().$type<"pending" | "approved" | "rejected">().default("approved"),
   
@@ -361,6 +396,8 @@ export const forumThreads = pgTable("forum_threads", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
   categorySlugIdx: index("idx_forum_threads_category").on(table.categorySlug),
+  subcategorySlugIdx: index("idx_forum_threads_subcategory").on(table.subcategorySlug),
+  threadTypeIdx: index("idx_forum_threads_type").on(table.threadType),
   statusIdx: index("idx_forum_threads_status").on(table.status),
   isPinnedIdx: index("idx_forum_threads_pinned").on(table.isPinned),
   engagementScoreIdx: index("idx_forum_threads_engagement").on(table.engagementScore),

@@ -1,0 +1,94 @@
+Prompt for the team — “Natural Thread Posting” (paste this to your builders & designers)
+
+Make starting a thread feel like texting a friend. Keep it simple, kind, and human. Hide anything that looks like “SEO.” We’ll collect what we need gently, as part of a helpful flow.
+
+⸻
+
+1) The flow (3 short steps)
+
+Step A: Where does this go?
+Show big, tappable chips for the sub-categories under the current category.
+Microcopy: “Where does this fit?” → chips like XAUUSD Scalping, EURUSD Scalping, News Scalping.
+If a category has no subs, skip this step.
+
+Step B: Say it in one line
+Field: Title (single line)
+Placeholder: “What’s happening? (e.g. XAUUSD M5 scalping rules keep failing)”
+Helper: “Clear beats clever. A tiny bit more detail helps others find it.”
+If the title is too short: “This is a bit short—add 3–4 more words?”
+
+Step C: Tell the story
+Field: Body (multi-line)
+Placeholder: “What you tried, what happened, and what you want to know next.”
+Guided hints under the box (small, friendly):
+	•	“Timeframe?” chips: M1, M5, M15, H1, H4
+	•	“Instrument?” chips: XAUUSD, EURUSD, GBPUSD, BTCUSD, US30
+	•	“Platform?” chips: MT4, MT5, cTrader, TradingView
+	•	“Broker?” text with suggestions (IC Markets, Pepperstone, Exness…)
+	•	“Add screenshot” button (optional)
+Each tap inserts a tiny token/tag quietly—no jargon.
+
+Primary action: Post Thread
+Secondary: Preview
+
+⸻
+
+2) Gentle, optional “Make it easier to find” box (collapsed by default)
+
+Title: “Add a few details (optional)”
+Items (each gives a tiny nudge like “+2 coins”):
+	•	Tags: pill input with live suggestions (xauusd, m5, scalping, mt5, ic-markets). Helper: “Add 2–5 short tags.”
+	•	Hashtags (optional): “#xauusd #scalping #m5” (we’ll format them)
+	•	Quick summary (one sentence). Helper: “Write 1 sentence. We’ll do the rest.”
+	•	Results (optional): “Win rate, RR, or drawdown (if you have it).”
+	•	Files: “Attach set file / CSV / PDF (optional).”
+
+Keep the tone supportive: short, soft, never “SEO,” never bossy.
+
+⸻
+
+3) Buttons that feel obvious
+	•	New Thread on category + sub-category always opens this composer (never the publish-EA screen).
+	•	Tabs on category page must work and feel instant: Latest, Trending, Answered.
+
+⸻
+
+4) After posting (no extra steps for the user)
+
+Show a warm toast:
+“Posted! We’ll share it around and keep things tidy for you.”
+Offer: Copy link, Share, Follow thread, Edit.
+
+⸻
+
+5) Background things we do silently (user doesn’t see “SEO”)
+	•	Create a clean link from the title and place (category/sub).
+	•	Write a short description from the first lines.
+	•	Add the tokens from chips/fields as tags.
+	•	Link to 3–5 truly related threads + parent category.
+	•	Build a nice preview image for social.
+	•	Notify the right places so it’s discoverable quickly.
+	•	Give coins automatically; small bonuses for helpful details.
+	•	If the post is a question and later solved, show a tiny “Best answer” badge near the top.
+
+⸻
+
+6) Microcopy you can paste
+	•	Title helper: “Clear beats clever. A tiny bit more detail helps others find it.”
+	•	Body placeholder: “What you tried, what happened, and what you want to know next.”
+	•	Optional box title: “Add a few details (optional)”
+	•	Tags helper: “Add 2–5 short tags (e.g. xauusd, m5, scalping, mt5).”
+	•	Results helper: “Win rate, RR, or drawdown—only if you have it.”
+	•	Success toast: “Posted! We’ll share it around and keep things tidy for you.”
+
+⸻
+
+7) Guardrails that still feel friendly
+	•	If title is shouting or all caps: “Let’s tone this down a bit so more folks read it.”
+	•	If body is <150 words: “A little more context helps people reply. Two more sentences?”
+	•	If someone adds 0 tags: nudge once: “Add 2–5 short tags so similar traders find you faster.”
+
+⸻
+
+Outcome
+Users just write like humans. We quietly collect tags and details through natural chips and gentle prompts. The thread feels effortless to post—and still gets everything it needs to be discoverable everywhere.

@@ -1,0 +1,95 @@
+Prompt (paste this for the team): “Make posting a thread feel effortless and human”
+
+Objective
+When someone taps New Thread, it should feel like writing a normal message—fast, friendly, zero jargon—while we quietly collect what we need for discovery and ranking. Don’t talk about “SEO” or “metadata” to the user; just help them describe their topic naturally.
+
+⸻
+
+1) The flow (2 gentle steps)
+
+Step A — Write
+	•	Fields shown (only two required):
+	•	Title* (big, friendly, placeholder: “What’s your topic? e.g., ‘XAUUSD M5 scalping rules that worked for me’”)
+	•	Body* (simple editor, placeholder: “Tell your story. What pair? timeframe? broker? results? What do you need help with?”)
+	•	Under Body, a tiny helper row appears as they type:
+	•	Suggested tags (chips) based on words they already wrote (e.g., xauusd, m5, scalping, mt5, ic-markets). They can tap to add; no typing required.
+	•	A minimal “Add details” link (accordion) that expands optional fields (Instrument, Timeframe, Broker, Platform). Keep it one-tap close.
+
+Step B — Finish
+	•	Show a tiny card: “Help others find this”
+	•	Pre-filled Tags from suggestions (they can remove with one tap).
+	•	Optional Hashtags field (placeholder “#xauusd #m5 #scalping”).
+	•	Sub-category (only if the Category has subs). If the user came from a sub-category, pre-select it; if not, show a simple picker with 4–8 chips max.
+	•	Primary button: Post Thread. Secondary: Save Draft.
+
+After posting, show a warm success toast: “Posted! Thanks for sharing 🙌” and land them on the thread.
+
+⸻
+
+2) Copy that sounds natural
+	•	Title help text: “Short and clear works best.”
+	•	Body help text: “Share the basics: pair, timeframe, broker, your rules/results, and the one thing you want help with.”
+	•	Suggested tags label: “Looks right?”
+	•	Add details (accordion title): “Optional details”
+	•	Sub-category empty state: “Pick the closest fit. Don’t stress, you can change later.”
+
+Empty list text (no threads yet):
+“Be the first to start a conversation in this topic.”
+
+⸻
+
+3) What we do quietly (no extra work for the user)
+	•	Create a clean link from the title and category/sub-category.
+	•	Make a short description from their first sentences (no keyword stuffing).
+	•	Attach structured data for questions/reviews/discussions.
+	•	Link to related threads and the parent category.
+	•	Notify search engines the moment it’s live (and on edits).
+	•	Give the reply permalinks so helpful comments can also be discovered.
+	•	Default link safety in replies (we’ll relax for trusted members).
+	•	Auto-save drafts every few seconds to avoid losing work.
+
+⸻
+
+4) Form design rules that keep it human
+	•	Keep the screen quiet: two required fields up front; everything else is tucked under “Optional details” or chips.
+	•	Chips over typing: suggest tags from what they’ve written; never force them to think in “fields.”
+	•	Soft nudge, not homework: If Title is too short/too shouty, show a gentle hint (“Try a bit more detail so folks can help faster”).
+	•	Mobile first: large tap targets, sticky Post button, and autosave.
+	•	No jargon: avoid words like SEO, metadata, schema, permalink. Use plain language only.
+
+⸻
+
+5) Category & sub-category behavior (natural choices)
+	•	If they clicked New Thread inside a sub-category, keep that selection locked but editable.
+	•	If they clicked from a category with subs, show a simple Sub-category picker after they finish the Body (so we don’t interrupt writing).
+	•	Each sub-category card also has its own New Thread entry point.
+
+⸻
+
+6) Tabs that feel alive (Latest / Trending / Answered)
+	•	Latest: newest threads (category + its subs).
+	•	Trending: most active in recent days (views/replies/reactions).
+	•	Answered: solved or with a marked best answer.
+	•	Tab switch should feel instant and keep scroll position.
+
+⸻
+
+7) Gentle extras that users like
+	•	Preview image auto-made from title + category (nice when they share).
+	•	“Add screenshot / set file” button under the Body; if they attach, show a single line: “Thanks! This helps others.”
+	•	Subscribe to replies checkbox on by default (can opt out).
+
+⸻
+
+8) Acceptance checklist
+	•	New Thread never opens “Publish EA/Indicator.”
+	•	Only Title + Body are required; everything else is suggestions or optional.
+	•	Suggested tags appear automatically from what they typed; one tap to accept.
+	•	Sub-category selection appears only when needed and never blocks writing.
+	•	After posting, user lands on their thread with related links rendered, and it appears under Latest immediately.
+	•	Mobile UI is smooth, readable, and friendly in light/dark.
+
+⸻
+
+Outcome
+Users feel like they’re just “writing a post.” We do all the smart stuff quietly—clean links, smart tags, related links, indexing, and discoverability—without asking them to do any extra work.
