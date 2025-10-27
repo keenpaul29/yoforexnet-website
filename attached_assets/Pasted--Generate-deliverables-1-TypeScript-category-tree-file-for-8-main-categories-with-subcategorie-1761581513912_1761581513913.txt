@@ -1,0 +1,472 @@
+# Generate deliverables:
+# 1) TypeScript category tree file for 8 main categories with subcategories.
+# 2) Next.js middleware for IP-based locale detection (feature-flagged OFF).
+# 3) 60 realistic seed threads CSV and JSONL with typos/varied tone.
+# 4) llms.txt skeleton.
+# 5) Simple Node seeding script template (fetch to API).
+
+import json, random, textwrap, csv, os, datetime, re
+from pathlib import Path
+
+base = Path("/mnt/data")
+
+# 1) Category tree TS
+categories = [
+    {
+        "slug":"trading-strategies",
+        "name":"Trading Strategies & Discussion",
+        "description":"Scalping, day, swing, position, grid/marti, hedging & correlations.",
+        "subcats":[
+            ("scalping-m1-m15","Scalping Strategies (M1–M15)"),
+            ("xauusd-scalping","XAUUSD Scalping"),
+            ("eurusd-scalping","EURUSD Scalping"),
+            ("crypto-scalping","Crypto Scalping"),
+            ("news-scalping","News Scalping"),
+            ("day-trading","Day Trading (M15–H4)"),
+            ("swing-trading","Swing Trading (H4–D1)"),
+            ("position-trading","Position Trading (D1–W1)"),
+            ("grid-martingale","Grid & Martingale Systems"),
+            ("hedging","Hedging Strategies"),
+            ("multi-pair-correlation","Multi-Pair Correlation"),
+        ]
+    },
+    {
+        "slug":"ea-library",
+        "name":"Expert Advisors (EA) Library",
+        "description":"Robots by strategy, platform and performance tier.",
+        "subcats":[
+            ("scalping-eas","Scalping EAs"),
+            ("grid-trading-eas","Grid Trading EAs"),
+            ("trend-following-eas","Trend Following EAs"),
+            ("breakout-eas","Breakout EAs"),
+            ("news-trading-eas","News Trading EAs"),
+            ("mt4-eas","MT4 EAs"),
+            ("mt5-eas","MT5 EAs"),
+            ("ctrader-robots","cTrader Robots"),
+            ("free-eas-0","Free EAs (0 coins)"),
+            ("budget-eas-50-100","Budget EAs (50–100 coins)"),
+            ("premium-eas-200-500","Premium EAs (200–500 coins)"),
+        ]
+    },
+    {
+        "slug":"indicators-templates",
+        "name":"Custom Indicators & Templates",
+        "description":"Indicators & full chart templates.",
+        "subcats":[
+            ("trend-indicators","Trend Indicators"),
+            ("oscillators-momentum","Oscillators & Momentum"),
+            ("volume-indicators","Volume Indicators"),
+            ("sr-tools","Support/Resistance Tools"),
+            ("template-packs","Complete Template Packages"),
+        ]
+    },
+    {
+        "slug":"broker-reviews",
+        "name":"Broker Reviews & Directory",
+        "description":"Real user experiences: ECN, MM, spreads, leverage and warnings.",
+        "subcats":[
+            ("ecn-brokers","ECN Brokers"),
+            ("market-maker-brokers","Market Maker Brokers"),
+            ("low-spread-brokers","Low Spread Brokers"),
+            ("high-leverage-brokers","High Leverage Brokers"),
+            ("regulated-brokers","Regulated Brokers (FCA, ASIC)"),
+            ("scam-watch","Scam Watch & Warnings"),
+        ]
+    },
+    {
+        "slug":"coding-dev",
+        "name":"Coding & Development",
+        "description":"MQL4/5, Python, backtesting & freelance gigs.",
+        "subcats":[
+            ("mql4","MQL4 Programming"),
+            ("mql5","MQL5 Programming"),
+            ("python-bots","Python Trading Bots"),
+            ("strategy-backtesting","Strategy Backtesting"),
+            ("freelance-requests","Freelance Requests"),
+        ]
+    },
+    {
+        "slug":"education",
+        "name":"Education & Resources",
+        "description":"Beginner to pro: TA/FA, risk & psychology.",
+        "subcats":[
+            ("beginners-corner","Beginner's Corner"),
+            ("technical-analysis","Technical Analysis"),
+            ("fundamental-analysis","Fundamental Analysis"),
+            ("risk-management","Risk Management"),
+            ("trading-psychology","Trading Psychology"),
+        ]
+    },
+    {
+        "slug":"journals-performance",
+        "name":"Trading Journals & Performance",
+        "description":"Live journals, EA performance, backtests & forward tests.",
+        "subcats":[
+            ("live-trading-journals","Live Trading Journals"),
+            ("ea-performance-reports","EA Performance Reports"),
+            ("backtest-results","Backtest Results"),
+            ("forward-test-results","Forward Test Results"),
+        ]
+    },
+    {
+        "slug":"tools-services",
+        "name":"Tools & Services",
+        "description":"VPS, copiers, signals, calculators & utilities.",
+        "subcats":[
+            ("vps-services","VPS Services"),
+            ("trade-copiers","Trade Copiers"),
+            ("signal-services","Signal Services"),
+            ("calculators-utilities","Calculators & Utilities"),
+        ]
+    },
+]
+
+ts_lines = []
+ts_lines.append("""export type CoinReward = { thread: number; reply: number; upvote: number; accepted: number };
+export type SeoMeta = {
+  title: string;
+  metaDescription: string;
+  canonicalPath: string;
+  index: boolean;
+  sitemapPriority: number;
+  hreflangGroup?: string;
+};
+export type CategoryNode = {
+  id: string;
+  branch: "global" | "finance";
+  slug: string;
+  name: string;
+  description: string;
+  parentSlug?: string;
+  allowedContent: Array<"thread" | "article" | "ea" | "indicator">;
+  coinReward: CoinReward;
+  locales: string[];
+  children?: CategoryNode[];
+  seo: SeoMeta;
+};\n""")
+
+ts_lines.append("export function getCategoryTree(): CategoryNode[] { return [")
+cid=1
+for cat in categories:
+    cat_id=f"cat-{cid:02d}"
+    cid+=1
+    seo_title = f"{cat['name']} – YoForex Community"
+    meta = f"Resources and discussions for {cat['name'].lower()}."
+    ts_lines.append("{")
+    ts_lines.append(f'id: "{cat_id}",')
+    ts_lines.append('branch: "finance",')
+    ts_lines.append(f'slug: "{cat["slug"]}",')
+    ts_lines.append(f'name: "{cat["name"]}",')
+    ts_lines.append(f'description: "{cat["description"]}",')
+    ts_lines.append('allowedContent: ["thread","article","ea","indicator"],')
+    ts_lines.append('coinReward: { thread: 10, reply: 2, upvote: 1, accepted: 15 },')
+    ts_lines.append('locales: ["en","zh","hi","es"],')
+    ts_lines.append('seo: {')
+    ts_lines.append(f'title: "{seo_title}",')
+    ts_lines.append(f'metaDescription: "{meta}",')
+    ts_lines.append(f'canonicalPath: "/category/{cat["slug"]}",')
+    ts_lines.append('index: true, sitemapPriority: 0.9,')
+    ts_lines.append(f'hreflangGroup: "{cat["slug"]}",')
+    ts_lines.append('},')
+    ts_lines.append('children: [')
+    for sc_slug, sc_name in cat["subcats"]:
+        ts_lines.append("{")
+        ts_lines.append(f'id: "{cat_id}-{sc_slug}",')
+        ts_lines.append('branch: "finance",')
+        ts_lines.append(f'slug: "{sc_slug}",')
+        ts_lines.append(f'name: "{sc_name}",')
+        ts_lines.append(f'description: "{sc_name} discussions and resources.",')
+        ts_lines.append(f'parentSlug: "{cat["slug"]}",')
+        ts_lines.append('allowedContent: ["thread","article","ea","indicator"],')
+        ts_lines.append('coinReward: { thread: 10, reply: 2, upvote: 1, accepted: 15 },')
+        ts_lines.append('locales: ["en","zh","hi","es"],')
+        ts_lines.append('seo: {')
+        ts_lines.append(f'title: "{sc_name} – YoForex Forum",')
+        ts_lines.append(f'metaDescription: "Discuss {sc_name.lower()} with traders worldwide.",')
+        ts_lines.append(f'canonicalPath: "/category/{cat["slug"]}/{sc_slug}",')
+        ts_lines.append('index: true, sitemapPriority: 0.8,')
+        ts_lines.append(f'hreflangGroup: "{cat["slug"]}",')
+        ts_lines.append('},')
+        ts_lines.append("},")
+    ts_lines.append('],')
+    ts_lines.append("},")
+ts_lines.append("]; }")
+cat_ts = "\n".join(ts_lines)
+
+(cat_path := base/"getCategoryTree_8.ts").write_text(cat_ts, encoding="utf-8")
+
+# 2) Middleware for IP-based locale detection (feature-flagged)
+middleware = """import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+/**
+ * Geo-locale detection via edge headers.
+ * Staged OFF by default: set GEOLOCALE_ENABLED='true' to enable redirects.
+ * 
+ * Reads x-vercel-ip-country / cf-ipcountry / CloudFront-Viewer-Country to map -> locale.
+ * If user has `prefLocale` cookie, it always wins (respect manual choice).
+ */
+const COUNTRY_TO_LOCALE: Record<string, string> = {
+  CN: 'zh', HK: 'zh', TW: 'zh',
+  IN: 'hi',
+  RU: 'ru',
+  BR: 'pt',
+  ES: 'es', MX: 'es', AR: 'es', CL: 'es',
+  FR: 'fr', DE: 'de', IT: 'it',
+  US: 'en', GB: 'en', CA: 'en', AU: 'en', SG: 'en'
+};
+
+export function middleware(req: NextRequest) {
+  const enabled = process.env.GEOLOCALE_ENABLED === 'true';
+  if (!enabled) return NextResponse.next();
+
+  const url = req.nextUrl;
+  const cookiePref = req.cookies.get('prefLocale')?.value;
+  if (cookiePref) return NextResponse.next();
+
+  const country =
+    req.headers.get('x-vercel-ip-country') ||
+    req.headers.get('cf-ipcountry') ||
+    req.headers.get('cloudfront-viewer-country') || '';
+
+  const locale = COUNTRY_TO_LOCALE[country] || 'en';
+
+  // If already on localized path (e.g., /zh/...), continue.
+  const pathLocaleMatch = url.pathname.split('/')[1];
+  const supported = new Set(['en','zh','hi','ru','es','pt','fr','de','it']);
+  if (supported.has(pathLocaleMatch)) return NextResponse.next();
+
+  // Redirect to locale subpath (e.g., /zh/path). Append original path.
+  const localized = url.clone();
+  localized.pathname = `/${locale}${url.pathname}`;
+  const res = NextResponse.redirect(localized, 307);
+  // Set a short-lived cookie so we don't bounce repeatly.
+  res.cookies.set('prefLocale', locale, { path: '/', maxAge: 60 * 60 * 24 });
+  return res;
+}
+
+export const config = {
+  matcher: [
+    // apply to all content pages, skip assets and api
+    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|sitemaps).*)',
+  ],
+};
+"""
+(base/"middleware.geo.ts").write_text(middleware, encoding="utf-8")
+
+# 3) Generate 60 seed threads
+random.seed(7)
+
+authors_first = ["forex","gold","pip","quant","ea","dev","scalp","swing","grid","crypto","jo","alex","raj","maria","li","chen","omar","sara","mike","anna","ben","yuki","lee","vivek","priya","kofi","dmitri","lucas","ines","zoe","sam"]
+authors_last = ["newbie","pro","hunter","gal","guy","coder","trader","queen","king","alpha","beta","delta","ninja","x","z","_1992","2024","_mt4","mt5"]
+def handle():
+    return random.choice(authors_first)+"_"+random.choice(authors_last)+str(random.randint(0,999))
+
+types_quota = [("Beginner Question",18),("Strategy Discussion",15),("EA/Indicator Review",12),("Broker Review/Complaint",9),("Success Story/Journal",6)]
+type_pool = [t for t,count in types_quota for _ in range(count)]
+
+emotes = ["😂","😅","🤯","😭","🙏","🔥","💀","🚀","📈","🫠","🤞","🙃"]
+brokers = ["IC Markets","Pepperstone","Exness","FP Markets","Oanda","XM","FXTM","Eightcap","HFM","Tickmill"]
+pairs = ["XAUUSD","EURUSD","GBPUSD","USDJPY","BTCUSD","ETHUSD","US30","NAS100"]
+subcat_map = {
+    "Beginner Question": ("education","beginners-corner"),
+    "Strategy Discussion": ("trading-strategies","scalping-m1-m15"),
+    "EA/Indicator Review": ("ea-library","scalping-eas"),
+    "Broker Review/Complaint": ("broker-reviews","scam-watch"),
+    "Success Story/Journal": ("journals-performance","live-trading-journals"),
+}
+
+typos = [
+    ("lose","loose"),("losing","loosing"),("receive","recieve"),("doesn't","dont"),
+    ("doesnt","dosent"),("their","there"),("they're","there"),("you're","your"),
+    ("a lot","alot"),("definitely","definately"),("separate","seperate"),("because","becuase"),
+    ("works","work"),("working","workin"),("strategy","strategey"),("profit","proffit"),
+]
+
+def inject_typos(text):
+    for correct, wrong in random.sample(typos, k=random.randint(3,5)):
+        text = re.sub(rf"\b{re.escape(correct)}\b", wrong, text, flags=re.IGNORECASE)
+    return text
+
+def make_title(t):
+    if t=="Beginner Question":
+        return random.choice([
+            f"Help pls – {random.choice(pairs)} M5 scalping keeps {random.choice(['failing','bleeding','loosing'])}",
+            f"{random.choice(pairs)} entries are messy, where do u guys put SL?",
+            f"New to forex, day trade on {random.choice(pairs)} – any tips?",
+            f"Risk mgmt is hard, i blow accts 😭 suggestions?",
+            f"Does anyone else {random.choice(['hate','love'])} news scalps?"
+        ])
+    if t=="Strategy Discussion":
+        return random.choice([
+            f"{random.choice(pairs)} mean-reversion rules that actually slap (ngl)",
+            f"Grid safety tweak – {random.choice(pairs)} {random.choice(['M15','H1','H4'])}",
+            f"Trend following whilst avoiding fakeouts – notes",
+            f"Session breakout – London vs NY for {random.choice(pairs)}",
+            f"ATR-based trailing stop experiement on {random.choice(pairs)}"
+        ])
+    if t=="EA/Indicator Review":
+        return random.choice([
+            f"Review: {random.choice(['Gold Hedger','Smart Trend','Velocity Pro','Dark Venus','Quantum Strike'])} EA after 3 mnths",
+            f"Indicator test – {random.choice(['SuperSignalX','VWAP Plus','Frama Edge','OrderBlock Pro'])}",
+            f"Is this EA fire bro or nah?",
+            f"My MT5 bot is kinda mid… results inside",
+            f"Low key working good: {random.choice(['ScalpAIX','MeanRev 2.1'])}"
+        ])
+    if t=="Broker Review/Complaint":
+        return random.choice([
+            f"WARNING: {random.choice(brokers)} {random.choice(['delayed withdrawl','scammed me?','huge slippage'])}",
+            f"{random.choice(brokers)} spreads went crazy during NFP – any1 else?",
+            f"Account locked after profits – {random.choice(brokers)} story",
+            f"Is this broker ECN or MM actually? ({random.choice(brokers)})",
+            f"Chargeback process help vs {random.choice(brokers)}"
+        ])
+    if t=="Success Story/Journal":
+        return random.choice([
+            f"Finally green month!!! {random.choice(emotes)}",
+            f"Small wins add up – 5 mnths progress journal",
+            f"From -40% to +12%… my journey",
+            f"New EA + discipline = better life (kinda)",
+            f"Thank you community – turned around my trading"
+        ])
+
+def make_body(t):
+    broker = random.choice(brokers)
+    pair = random.choice(pairs)
+    tone = random.choice(emotes)
+    paragraphs = []
+
+    if t=="Beginner Question":
+        paragraphs.append(f"hey guys im new-ish to fx and been tryin to scalp {pair} on M5 but im loosing money almost everyday. using RSI + BB and it just dont work {tone}")
+        paragraphs.append(f"broker: {broker}, lot 0.01, bal around ${random.randint(200,1000)}. watched yt vids but when i go live it fails. can anyone share there entry rules + SL/TP?")
+        paragraphs.append("is there an EA that does this automatically without martingale? i can pay upto 100 coins if real and proven. thanks in advance!")
+    elif t=="Strategy Discussion":
+        paragraphs.append(f"Sharing my current rules on {pair} – {random.choice(['M15','H1','H4'])}. I avoid entries against higher TF trend and use 14 ATR for SL.")
+        paragraphs.append("Entry is pullback to 20 EMA + engulfing candle. Exit partial at 1R and trail rest by 0.5 ATR. Spread filter > 25 points = no trade.")
+        paragraphs.append("Results last 5 weeks: 43 trades, winrate ~54%, avg RR 1:1.6, drawdown 7.8%. Keen for feedback, what would you change?")
+    elif t=="EA/Indicator Review":
+        ea = random.choice(["Gold Hedger EA","Smart Trend Indicator","Velocity Pro EA","Dark Venus EA","Quantum Strike EA"])
+        paragraphs.append(f"I ran {ea} on live {broker} for {random.choice(['3 months','five weeks','2 mnths'])}. Pair: {pair}. VPS yes.")
+        paragraphs.append(f"Start ${random.randint(500,3000)} -> now ${random.randint(700,4500)}. Winrate ~{random.randint(55,75)}%, DD {random.uniform(10,25):.1f}%.")
+        paragraphs.append("Pros: no marti, works in London/NY, set-and-forget-ish. Cons: weak during red news, needs tight spreads, a bit pricey.")
+        paragraphs.append("Overall: worth it if you’ve got at least $1k and a decent VPS. happy to answer Qs.")
+    elif t=="Broker Review/Complaint":
+        paragraphs.append(f"I deposited ${random.randint(500,2500)} with {broker}. Made profit then withdrawal got 'under review'.")
+        paragraphs.append("Support keeps saying the same scripted line. Phone -> voicemail. Email reply after 5 days says 'suspicious trading'?? I only scalped.")
+        paragraphs.append("Anyone else face this? do i complain to regulator or just move on? feeling frustrated tbh.")
+    elif t=="Success Story/Journal":
+        paragraphs.append(f"after 2 YEARS of messing up im finally green this month {tone}")
+        paragraphs.append(f"acct ${random.randint(2000,7000)} -> profit ${random.randint(300,1600)} using {random.choice(['grid (safe)','swing trend','mean rev'])} approach on {pair}.")
+        paragraphs.append("biggest change was risk mgmt and stop touching the EA every hour lol. thanks everyone here for tips!")
+
+    text = "\n\n".join(paragraphs)
+    return inject_typos(text)
+
+rows = []
+for idx in range(60):
+    t = type_pool[idx]
+    title = inject_typos(make_title(t))
+    author = handle()
+    main_slug, sub_slug = subcat_map[t]
+    body = make_body(t)
+    row = {
+        "title": title,
+        "author": author,
+        "category": main_slug,
+        "subcategory": sub_slug,
+        "type": t,
+        "body": body
+    }
+    rows.append(row)
+
+# Save CSV and JSONL
+csv_path = base/"seed_threads_60.csv"
+with open(csv_path, "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+    writer.writeheader()
+    writer.writerows(rows)
+
+jsonl_path = base/"seed_threads_60.jsonl"
+with open(jsonl_path, "w", encoding="utf-8") as f:
+    for r in rows:
+        f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+# 4) llms.txt
+llms_txt = """# llms.txt — Guidance for AI crawlers (staged 2025-10-27)
+Allow: /category/
+Allow: /thread/
+Allow: /user/
+Disallow: /messages/
+Disallow: /recharge/
+Disallow: /admin/
+Contact: legal@yoforex.net
+Attribution: Required link back to https://yoforex.net
+Usage: Summarization & snippet display permitted; bulk rehosting not permitted.
+"""
+(base/"llms.txt").write_text(llms_txt, encoding="utf-8")
+
+# 5) Node seeding script template
+seed_js = """/**
+ * Seed threads into YoForex API
+ * Usage: node seed_threads.js seed_threads_60.jsonl
+ * env: API_BASE, API_TOKEN
+ */
+import fs from 'node:fs';
+import fetch from 'node-fetch';
+
+const file = process.argv[2] || 'seed_threads_60.jsonl';
+const API_BASE = process.env.API_BASE || 'https://yoforex.net';
+const TOKEN = process.env.API_TOKEN || 'REPLACE_ME';
+
+async function postThread(t) {
+  const res = await fetch(`${API_BASE}/api/threads`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${TOKEN}`
+    },
+    body: JSON.stringify({
+      title: t.title,
+      body: t.body,
+      categorySlug: t.category,
+      subcategorySlug: t.subcategory,
+      tags: [],
+      visibility: 'public'
+    })
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    console.error('Failed', res.status, txt);
+    return;
+  }
+  const data = await res.json();
+  console.log('Created', data.slug || data.id);
+}
+
+async function main() {
+  const lines = fs.readFileSync(file, 'utf8').trim().split(/\\r?\\n/);
+  for (const line of lines) {
+    const t = JSON.parse(line);
+    await postThread(t);
+    await new Promise(r => setTimeout(r, 300)); // throttle
+  }
+}
+main().catch(console.error);
+"""
+(base/"seed_threads.js").write_text(seed_js, encoding="utf-8")
+
+# Write middleware instructions text file
+readme = """Deliverables:
+- getCategoryTree_8.ts — Category tree for 8 main categories, with SEO metadata and coin rewards.
+- middleware.geo.ts — IP-based locale redirect (feature-flagged; set GEOLOCALE_ENABLED=true to enable).
+- seed_threads_60.csv / seed_threads_60.jsonl — 60 realistic seed threads with typos/varied tone.
+- seed_threads.js — Simple Node script to push seed threads to your API.
+- llms.txt — AI crawler guidance file.
+
+Notes:
+- For language-by-IP, we recommend redirecting to /{locale}/ prefix and also showing a language switcher (manual choice overrides IP via prefLocale cookie). Keep it OFF until you enable the flag.
+- To generate 150+ threads, duplicate the JSONL and expand; or re-run a generator with new random seed.
+"""
+(base/"README_DELIVERABLES.txt").write_text(readme, encoding="utf-8")
+
+[str(csv_path), str(jsonl_path), str(base/"getCategoryTree_8.ts"), str(base/"middleware.geo.ts"), str(base/"seed_threads.js"), str(base/"llms.txt"), str(base/"README_DELIVERABLES.txt")]

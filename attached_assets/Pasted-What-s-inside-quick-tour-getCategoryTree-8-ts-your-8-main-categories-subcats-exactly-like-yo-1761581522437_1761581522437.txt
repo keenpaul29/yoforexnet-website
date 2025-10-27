@@ -1,0 +1,43 @@
+What’s inside (quick tour)
+
+getCategoryTree_8.ts — your 8 main categories + subcats (exactly like your outline), with SEO metadata, coin rewards, and locales. Use it for nav, generateMetadata(), sitemaps, and the “Choose Category” dropdown.
+
+middleware.geo.ts — detects country (Vercel/Cf headers) → maps to locale and redirects to /{locale}/…. It’s OFF by default; flip on later with GEOLOCALE_ENABLED=true. If a user picks a language manually, the prefLocale cookie wins (no bouncing).
+
+seed_threads_60.(csv|jsonl) — 60 realistic forum threads spread across beginner questions, strategy chats, EA reviews, broker complaints, and success journals. Includes intentional typos/grammar quirks, mixed tones, and personal details so they index like real UGC.
+
+seed_threads.js — tiny poster that reads the JSONL and calls your /api/threads (set API_BASE + API_TOKEN). Throttled, simple to tweak.
+
+llms.txt — a clean starter policy for AI crawlers (allowed paths, disallowed private areas, attribution). Put in /public/llms.txt.
+
+How to use fast
+
+Categories: import getCategoryTree() into your Next.js app and:
+
+render the home “Forum Categories” grid,
+
+generate hreflang alternates from the locales array,
+
+build category + subcat sitemaps from these nodes.
+
+Seed content:
+
+Set API_BASE=https://yourdomain and API_TOKEN=<your-admin-token>.
+
+node seed_threads.js seed_threads_60.jsonl (or the CSV if your backend expects CSV).
+
+You can re-run with a new JSONL to reach 150+ (I kept 60 here to keep things lean—you can duplicate or ask me to generate another pack).
+
+IP→language:
+
+Leave OFF for now (you said “later”). When ready: GEOLOCALE_ENABLED=true in env.
+
+Make sure you have /{locale}/ routes or middleware will redirect to a missing path.
+
+SEO & ranking for comments:
+
+Give each reply a permalink page (/thread/[slug]/c/[replyId]) and include DiscussionForumPosting + nested Comment JSON-LD on the thread page.
+
+Keep UGC links rel="ugc nofollow" unless trusted.
+
+Ensure thread pages link to 3–5 related threads and the parent category (internal linking).

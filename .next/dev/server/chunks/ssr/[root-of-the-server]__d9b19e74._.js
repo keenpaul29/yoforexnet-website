@@ -155,25 +155,24 @@ function useAuth() {
     return context;
 }
 function AuthProvider({ children }) {
-    const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
+    // Use relative URLs for API calls (Next.js will rewrite to Express)
     const { data: user, isLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/me"
         ],
         queryFn: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getQueryFn"])({
-            on401: "returnNull",
-            baseUrl: EXPRESS_URL
+            on401: "returnNull"
         }),
         retry: false,
         refetchOnWindowFocus: true,
         staleTime: 5 * 60 * 1000
     });
     const login = ()=>{
-        window.location.href = `${EXPRESS_URL}/api/login`;
+        window.location.href = "/api/login";
     };
     const logout = async ()=>{
         try {
-            await fetch(`${EXPRESS_URL}/api/logout`, {
+            await fetch("/api/logout", {
                 method: "POST",
                 credentials: "include"
             });
@@ -195,7 +194,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/app/contexts/AuthContext.tsx",
-        lineNumber: 61,
+        lineNumber: 60,
         columnNumber: 5
     }, this);
 }
