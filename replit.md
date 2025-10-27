@@ -41,11 +41,23 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - **SEO**: Auto-generated slugs, meta descriptions, and view tracking.
 
 ### Coin Economy System
-- **Virtual Currency**: "Gold coins" used for transactions within the platform.
-- **Earning Methods**: Daily check-ins, content publishing, helping members, sharing broker reports, and platform contributions.
-- **Spending Options**: Purchasing marketplace content and planned premium features.
-- **Transaction History**: Full ledger with filtering capabilities.
-- **Recharge System**: Integration with Stripe for purchasing coins.
+- **Virtual Currency**: "Gold coins" used for transactions within the platform
+- **Exchange Rate**: 100 coins = $5.50 USD (1 coin = $0.055)
+- **Recharge Packages**: 7 tiers from Mini ($5.50/110 coins) to Enterprise ($550/13,000 coins) with up to 25% bonus
+- **Earning Methods**: 
+  - Publish EA/Indicator: 10 coins + 80% of sales revenue
+  - Publish Set File: 5 coins + 75% of sales revenue
+  - Publish Article: 10 coins + 80% of sales revenue
+  - Reply to Threads: 1 coin per reply (max 20/day)
+  - Submit Backtest: 3-5 coins per report (max 3/day)
+  - Report Violations: 1-3 coins per verified report (max 5/day)
+  - Daily Check-in: 1 coin/day with streak bonuses (10 at 7 days, 50 at 30 days)
+  - Referral Program: Lifetime 5% commission on referral earnings
+- **Commission Splits**: 80-20 split for content creators on EA/indicators/articles, 75-25 for set files
+- **Withdrawal System**: Minimum 1000 coins, 5% processing fee, supports USDT/BTC/ETH
+- **Daily Limits**: Anti-abuse limits on replies (20/day), backtests (3/day), reports (5/day)
+- **Transaction History**: Full ledger with filtering capabilities
+- **UI Integration**: All pricing displays both coins and USD equivalents throughout platform
 
 ### Marketplace System
 - **Content Types**: Supports EAs, Indicators, Articles, and Source Code.
