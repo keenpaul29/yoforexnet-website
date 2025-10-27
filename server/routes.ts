@@ -2640,43 +2640,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(results);
   });
 
-  // ===== STATS ENDPOINTS =====
-  
-  // Get site statistics
-  app.get("/api/stats", async (req, res) => {
-    // TODO: Implement getStats in storage layer with optimized queries
-    // For now, calculate from existing data
-    
-    const threads = await storage.listForumThreads({ limit: 10000 });
-    const content = await storage.getAllContent({});
-    
-    // Calculate today's activity
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const todayThreads = threads.filter(t => 
-      new Date(t.createdAt) >= today
-    ).length;
-    
-    const todayContent = content.filter(c => 
-      new Date(c.createdAt) >= today
-    ).length;
-    
-    // Total reply count from threads
-    const totalReplies = threads.reduce((sum, t) => sum + t.replyCount, 0);
-    
-    res.json({
-      totalThreads: threads.length,
-      totalPosts: totalReplies,
-      totalContent: content.length,
-      totalMembers: 1, // TODO: Get from storage
-      todayActivity: {
-        threads: todayThreads,
-        content: todayContent,
-      },
-    });
-  });
-
   // ===== LEADERBOARD ENDPOINTS =====
   
   // GET /api/leaderboards/coins - Top users by coin balance
@@ -2724,19 +2687,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const users = await storage.getAllUsers();
       const content = await storage.getAllContent();
       
-      // Calculate active today (users who created threads/replies today)
+      // Calculate today's activity
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const activeToday = threads.filter(t => new Date(t.createdAt) >= today).length;
+      
+      const todayThreads = threads.filter(t => new Date(t.createdAt) >= today).length;
+      const todayContent = content.filter(c => new Date(c.createdAt) >= today).length;
       
       // Total replies from all threads
       const totalReplies = threads.reduce((sum, t) => sum + t.replyCount, 0);
       
       res.json({
-        forumThreads: threads.length,
-        communityMembers: users.length,
-        totalReplies,
-        activeToday,
+        totalThreads: threads.length,
+        totalMembers: users.length,
+        totalPosts: totalReplies,
+        totalContent: content.length,
+        todayActivity: {
+          threads: todayThreads,
+          content: todayContent,
+        },
         lastUpdated: new Date().toISOString()
       });
     } catch (error: any) {
