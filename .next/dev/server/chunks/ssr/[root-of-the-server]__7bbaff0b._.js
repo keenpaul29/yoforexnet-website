@@ -79,6 +79,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$provide
 ;
 ;
 const metadata = {
+    metadataBase: new URL(("TURBOPACK compile-time truthy", 1) ? 'http://localhost:3000' : "TURBOPACK unreachable"),
     title: {
         default: 'YoForex - Expert Advisor Forum & EA Marketplace',
         template: '%s | YoForex'
@@ -147,17 +148,17 @@ function RootLayout({ children }) {
                 children: children
             }, void 0, false, {
                 fileName: "[project]/app/layout.tsx",
-                lineNumber: 63,
+                lineNumber: 64,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/layout.tsx",
-            lineNumber: 62,
+            lineNumber: 63,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/layout.tsx",
-        lineNumber: 61,
+        lineNumber: 62,
         columnNumber: 5
     }, this);
 }

@@ -7,6 +7,7 @@ import { AppProviders } from './components/providers/AppProviders';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://yoforex.net'),
   title: {
     default: 'YoForex - Expert Advisor Forum & EA Marketplace',
     template: '%s | YoForex',
