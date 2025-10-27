@@ -372,20 +372,23 @@ export const forumReplies = pgTable("forum_replies", {
   slugIdx: index("idx_forum_replies_slug").on(table.slug),
 }));
 
-// Forum Categories with dynamic stats
+// Forum Categories with dynamic stats and hierarchical support
 export const forumCategories = pgTable("forum_categories", {
   slug: text("slug").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
   icon: text("icon").notNull(), // Icon name from lucide-react
   color: text("color").notNull().default("bg-primary"),
+  parentSlug: text("parent_slug"), // For subcategories: references parent category slug
   threadCount: integer("thread_count").notNull().default(0),
   postCount: integer("post_count").notNull().default(0),
   sortOrder: integer("sort_order").notNull().default(0),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (table) => ({
+  parentSlugIdx: index("idx_forum_categories_parent_slug").on(table.parentSlug),
+}));
 
 // User Badges & Trust Levels
 export const userBadges = pgTable("user_badges", {

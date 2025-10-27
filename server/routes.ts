@@ -2146,6 +2146,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
     res.json(threads);
   });
+  
+  // Get category tree (main categories with their subcategories)
+  app.get("/api/categories/tree/all", async (req, res) => {
+    try {
+      const categories = await storage.listForumCategories();
+      const activeCategories = categories.filter(c => c.isActive);
+      
+      // Build hierarchical tree structure
+      const mainCategories = activeCategories.filter(c => !c.parentSlug);
+      const tree = mainCategories.map(main => ({
+        ...main,
+        children: activeCategories.filter(c => c.parentSlug === main.slug)
+      }));
+      
+      res.json(tree);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch category tree" });
+    }
+  });
+  
+  // Get subcategories for a parent category
+  app.get("/api/categories/:parentSlug/subcategories", async (req, res) => {
+    try {
+      const categories = await storage.listForumCategories();
+      const subcategories = categories.filter(c => 
+        c.parentSlug === req.params.parentSlug && c.isActive
+      );
+      res.json(subcategories);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch subcategories" });
+    }
+  });
+  
+  // Get category with its children
+  app.get("/api/categories/:slug/with-children", async (req, res) => {
+    try {
+      const category = await storage.getForumCategoryBySlug(req.params.slug);
+      if (!category) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+      
+      const categories = await storage.listForumCategories();
+      const children = categories.filter(c => c.parentSlug === req.params.slug && c.isActive);
+      
+      res.json({
+        ...category,
+        children
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch category with children" });
+    }
+  });
 
   // ===== USER BADGES ENDPOINTS =====
   
