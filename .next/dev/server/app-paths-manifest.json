@@ -1,4 +1,5 @@
 {
+  "/category/[slug]/page": "app/category/[slug]/page.js",
   "/messages/page": "app/messages/page.js",
   "/page": "app/page.js",
   "/user/[username]/page": "app/user/[username]/page.js"
