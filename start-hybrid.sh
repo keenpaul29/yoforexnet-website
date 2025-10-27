@@ -13,9 +13,9 @@ EXPRESS_PID=$!
 # Wait a moment for Express to initialize
 sleep 3
 
-# Start Next.js server in background
+# Start Next.js server in background on port 3000 explicitly
 echo "⚡ Starting Next.js server (port 3000)..."
-npx next dev &
+npx next dev -p 3000 &
 NEXTJS_PID=$!
 
 echo "✅ Both servers started:"
