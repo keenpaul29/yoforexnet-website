@@ -1,11 +1,5 @@
 {
-  "/brokers/page": "app/brokers/page.js",
-  "/categories/page": "app/categories/page.js",
-  "/category/[slug]/page": "app/category/[slug]/page.js",
-  "/discussions/page": "app/discussions/page.js",
-  "/members/page": "app/members/page.js",
+  "/messages/page": "app/messages/page.js",
   "/page": "app/page.js",
-  "/publish/page": "app/publish/page.js",
-  "/thread/[slug]/page": "app/thread/[slug]/page.js",
   "/user/[username]/page": "app/user/[username]/page.js"
 }

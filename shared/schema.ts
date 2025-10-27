@@ -297,9 +297,26 @@ export const messages = pgTable("messages", {
   recipientId: varchar("recipient_id").notNull().references(() => users.id),
   body: text("body").notNull(),
   isRead: boolean("is_read").notNull().default(false),
+  deliveredAt: timestamp("delivered_at"),
+  readAt: timestamp("read_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 }, (table) => ({
   conversationIdIdx: index("idx_messages_conversation_id").on(table.conversationId),
+  senderIdIdx: index("idx_messages_sender_id").on(table.senderId),
+  recipientIdIdx: index("idx_messages_recipient_id").on(table.recipientId),
+  createdAtIdx: index("idx_messages_created_at").on(table.createdAt),
+  isReadIdx: index("idx_messages_is_read").on(table.isRead),
+}));
+
+// Message Reactions
+export const messageReactions = pgTable("message_reactions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  messageId: varchar("message_id").notNull().references(() => messages.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  emoji: varchar("emoji", { length: 10 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => ({
+  messageUserIdx: index("message_reactions_msg_user_idx").on(table.messageId, table.userId),
 }));
 
 // Notifications system
@@ -711,6 +728,12 @@ export type Conversation = typeof conversations.$inferSelect;
 export type InsertConversation = z.infer<typeof insertConversationSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export const insertMessageReactionSchema = createInsertSchema(messageReactions).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertMessageReaction = z.infer<typeof insertMessageReactionSchema>;
+export type MessageReaction = typeof messageReactions.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;

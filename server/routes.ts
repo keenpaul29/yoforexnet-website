@@ -2501,6 +2501,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add reaction to message
+  app.post("/api/messages/:messageId/reactions", isAuthenticated, async (req, res) => {
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const { emoji } = req.body;
+      
+      if (!emoji || typeof emoji !== 'string') {
+        return res.status(400).json({ error: "Emoji required" });
+      }
+
+      await storage.addMessageReaction(req.params.messageId, authenticatedUserId, emoji);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error adding reaction:", error);
+      res.status(500).json({ error: "Failed to add reaction" });
+    }
+  });
+
+  // Remove reaction from message
+  app.delete("/api/messages/:messageId/reactions/:emoji", isAuthenticated, async (req, res) => {
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      await storage.removeMessageReaction(req.params.messageId, authenticatedUserId, req.params.emoji);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error removing reaction:", error);
+      res.status(500).json({ error: "Failed to remove reaction" });
+    }
+  });
+
+  // Get message reactions
+  app.get("/api/messages/:messageId/reactions", async (req, res) => {
+    try {
+      const reactions = await storage.getMessageReactions(req.params.messageId);
+      res.json(reactions);
+    } catch (error) {
+      console.error("Error getting reactions:", error);
+      res.status(500).json({ error: "Failed to get reactions" });
+    }
+  });
+
+  // Search messages
+  app.get("/api/messages/search", isAuthenticated, async (req, res) => {
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const { q, userId: filterUserId } = req.query;
+      
+      if (!q || typeof q !== 'string') {
+        return res.status(400).json({ error: "Search query required" });
+      }
+
+      const results = await storage.searchMessages(authenticatedUserId, q, filterUserId as string);
+      res.json(results);
+    } catch (error) {
+      console.error("Error searching messages:", error);
+      res.status(500).json({ error: "Failed to search messages" });
+    }
+  });
+
   // ===== USER PROFILES ENDPOINTS =====
   
   // Get extended user profile

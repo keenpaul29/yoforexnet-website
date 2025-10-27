@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Enable ISR with 10-second revalidation for better performance
+export const revalidate = 10;
+
 async function getUser() {
   const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
   const cookieStore = await cookies();
@@ -33,7 +36,7 @@ async function getUser() {
         Cookie: cookieHeader,
       },
       credentials: 'include',
-      cache: 'no-store',
+      next: { revalidate: 10 },
     });
 
     if (res.status === 401) {
@@ -60,7 +63,7 @@ async function getConversations(cookieHeader: string) {
         Cookie: cookieHeader,
       },
       credentials: 'include',
-      cache: 'no-store',
+      next: { revalidate: 10 },
     });
 
     if (!res.ok) {

@@ -67,6 +67,7 @@ import {
   coinJournalEntries,
   conversations,
   messages,
+  messageReactions,
   notifications,
   dashboardPreferences,
   BADGE_TYPES,
@@ -268,6 +269,17 @@ export interface IStorage {
     isRead: boolean;
   }>>;
   markMessageAsRead(messageId: string, userId: string): Promise<void>;
+  searchMessages(userId: string, query: string, filterUserId?: string): Promise<Array<{
+    id: string;
+    conversationId: string;
+    senderId: string;
+    senderUsername: string;
+    text: string;
+    timestamp: Date;
+  }>>;
+  addMessageReaction(messageId: string, userId: string, emoji: string): Promise<void>;
+  removeMessageReaction(messageId: string, userId: string, emoji: string): Promise<void>;
+  getMessageReactions(messageId: string): Promise<Array<{ emoji: string; count: number; userIds: string[] }>>;
   
   // Dashboard Preferences
   getDashboardPreferences(userId: string): Promise<DashboardPreferences | null>;
@@ -3635,14 +3647,20 @@ export class DrizzleStorage implements IStorage {
       .select()
       .from(messages)
       .where(eq(messages.conversationId, conversationId))
-      .orderBy(asc(messages.createdAt));
+      .orderBy(desc(messages.createdAt))
+      .limit(50);
 
-    return messageResults.map((msg) => ({
+    // Return in ascending order for display
+    const sortedMessages = messageResults.reverse();
+
+    return sortedMessages.map((msg) => ({
       id: msg.id,
       senderId: msg.senderId,
       text: msg.body,
       timestamp: msg.createdAt,
       isRead: msg.isRead,
+      deliveredAt: msg.deliveredAt,
+      readAt: msg.readAt,
     }));
   }
 
@@ -3664,8 +3682,111 @@ export class DrizzleStorage implements IStorage {
 
     await db
       .update(messages)
-      .set({ isRead: true })
+      .set({ isRead: true, readAt: new Date() })
       .where(eq(messages.id, messageId));
+  }
+
+  async addMessageReaction(messageId: string, userId: string, emoji: string): Promise<void> {
+    // Check if reaction already exists
+    const existing = await db
+      .select()
+      .from(messageReactions)
+      .where(
+        and(
+          eq(messageReactions.messageId, messageId),
+          eq(messageReactions.userId, userId),
+          eq(messageReactions.emoji, emoji)
+        )
+      )
+      .limit(1);
+
+    if (existing.length === 0) {
+      await db.insert(messageReactions).values({
+        messageId,
+        userId,
+        emoji,
+      });
+    }
+  }
+
+  async removeMessageReaction(messageId: string, userId: string, emoji: string): Promise<void> {
+    await db
+      .delete(messageReactions)
+      .where(
+        and(
+          eq(messageReactions.messageId, messageId),
+          eq(messageReactions.userId, userId),
+          eq(messageReactions.emoji, emoji)
+        )
+      );
+  }
+
+  async getMessageReactions(messageId: string): Promise<Array<{ emoji: string; count: number; userIds: string[] }>> {
+    const reactions = await db
+      .select()
+      .from(messageReactions)
+      .where(eq(messageReactions.messageId, messageId));
+
+    const grouped = reactions.reduce((acc, r) => {
+      if (!acc[r.emoji]) {
+        acc[r.emoji] = { emoji: r.emoji, count: 0, userIds: [] };
+      }
+      acc[r.emoji].count++;
+      acc[r.emoji].userIds.push(r.userId);
+      return acc;
+    }, {} as Record<string, { emoji: string; count: number; userIds: string[] }>);
+
+    return Object.values(grouped);
+  }
+
+  async searchMessages(userId: string, query: string, filterUserId?: string): Promise<Array<{
+    id: string;
+    conversationId: string;
+    senderId: string;
+    senderUsername: string;
+    text: string;
+    timestamp: Date;
+  }>> {
+    // Get user's conversations
+    const userConvs = await db
+      .select({ id: conversations.id })
+      .from(conversations)
+      .where(
+        or(
+          eq(conversations.participant1Id, userId),
+          eq(conversations.participant2Id, userId)
+        )
+      );
+    
+    const conversationIds = userConvs.map(c => c.id);
+    if (conversationIds.length === 0) return [];
+
+    // Build search query with ILIKE for case-insensitive search
+    let whereConditions = [
+      inArray(messages.conversationId, conversationIds),
+      sql`LOWER(${messages.body}) LIKE LOWER(${`%${query}%`})`
+    ];
+
+    if (filterUserId) {
+      whereConditions.push(eq(messages.senderId, filterUserId));
+    }
+
+    const results = await db
+      .select({
+        id: messages.id,
+        conversationId: messages.conversationId,
+        senderId: messages.senderId,
+        senderUsername: users.username,
+        text: messages.body,
+        timestamp: messages.createdAt,
+      })
+      .from(messages)
+      .innerJoin(users, eq(messages.senderId, users.id))
+      .where(and(...whereConditions))
+      .orderBy(desc(messages.createdAt))
+      .limit(100);
+
+    return results;
   }
 
   async getDashboardPreferences(userId: string): Promise<DashboardPreferences | null> {
