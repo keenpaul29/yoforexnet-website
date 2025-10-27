@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Users, MessageSquare, LucideIcon } from "lucide-react";
-import { Link } from "wouter";
+import Link from "next/link";
 
 interface CategoryCardProps {
   name: string;

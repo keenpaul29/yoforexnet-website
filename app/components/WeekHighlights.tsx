@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageCircle, TrendingUp, CheckCircle2, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
-import { useLocation } from "wouter";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import type { ForumThread } from "../../shared/schema";
 
@@ -136,7 +136,7 @@ export default function WeekHighlights({
   trendingThreads = defaultTrendingThreads, 
   solvedThreads = defaultSolvedThreads 
 }: WeekHighlightsProps) {
-  const [, navigate] = useLocation();
+  const router = useRouter();
 
   // Fetch real trending threads from API
   const { data: trendingData } = useQuery<ForumThread[]>({
@@ -227,10 +227,10 @@ export default function WeekHighlights({
     // Try to get the slug from the full thread data
     const fullThread = threadsWithSlug.get(thread.id);
     if (fullThread?.slug) {
-      navigate(`/thread/${fullThread.slug}`);
+      router.push(`/thread/${fullThread.slug}`);
     } else {
       // Fallback to ID-based navigation (will need backend support)
-      navigate(`/thread/${thread.id}`);
+      router.push(`/thread/${thread.id}`);
     }
   };
 

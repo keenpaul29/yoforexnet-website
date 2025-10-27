@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Flame, TrendingUp, Eye } from "lucide-react";
-import { Link } from "wouter";
+import Link from "next/link";
 import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
 import type { ForumThread } from "../../shared/schema";
 import { formatDistanceToNow } from "date-fns";
