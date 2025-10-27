@@ -9,18 +9,18 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import EnhancedFooter from "@/components/EnhancedFooter";
 import { useQuery } from "@tanstack/react-query";
-import type { RechargePackage } from "../../shared/coinUtils";
+import type { CoinPackage } from "../../shared/coinUtils";
 
 interface RechargeClientProps {
-  initialPackages: RechargePackage[];
+  initialPackages: CoinPackage[];
 }
 
 export default function RechargeClient({ initialPackages }: RechargeClientProps) {
-  const [selectedPackage, setSelectedPackage] = useState<RechargePackage | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "crypto">("stripe");
 
-  const { data: packages = initialPackages } = useQuery<RechargePackage[]>({
+  const { data: packages = initialPackages } = useQuery<CoinPackage[]>({
     queryKey: ["/api/recharge/packages"],
     initialData: initialPackages,
   });
@@ -31,7 +31,7 @@ export default function RechargeClient({ initialPackages }: RechargeClientProps)
       return;
     }
     
-    const amount = selectedPackage ? selectedPackage.coins : parseInt(customAmount);
+    const amount = selectedPackage ? selectedPackage.totalCoins : parseInt(customAmount);
     console.log(`Recharging ${amount} coins via ${paymentMethod}`);
     // TODO: Integrate with Stripe or crypto payment gateway
   };
@@ -59,8 +59,8 @@ export default function RechargeClient({ initialPackages }: RechargeClientProps)
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {packages.map((pkg) => {
-                    const savingsPercent = pkg.bonusPercent || 0;
-                    const isBestValue = pkg.name === "Enterprise";
+                    const savingsPercent = pkg.savingsPercent || 0;
+                    const isBestValue = pkg.bestValue || false;
                     
                     return (
                       <div

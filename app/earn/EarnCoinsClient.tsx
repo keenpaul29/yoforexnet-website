@@ -59,8 +59,8 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Help Community",
-      description: `Answer questions, provide solutions, and mark helpful replies. Earn ${EARNING_REWARDS.HELPFUL_REPLY} coin per helpful reply.`,
-      coinsRange: `${EARNING_REWARDS.HELPFUL_REPLY} coin/reply (max ${DAILY_LIMITS.MAX_REPLIES}/day)`,
+      description: `Answer questions, provide solutions, and mark helpful replies. Earn ${EARNING_REWARDS.REPLY} coin per reply.`,
+      coinsRange: `${EARNING_REWARDS.REPLY} coin/reply (max ${DAILY_LIMITS.MAX_REPLIES}/day)`,
       icon: MessageSquare,
       color: "bg-chart-4",
       action: "Browse Questions",
@@ -68,8 +68,8 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Share Backtest Reports",
-      description: `Post detailed performance reports with verified data. Earn ${EARNING_REWARDS.SUBMIT_BACKTEST} coins per submission.`,
-      coinsRange: `${EARNING_REWARDS.SUBMIT_BACKTEST} coins (max ${DAILY_LIMITS.MAX_BACKTESTS}/day)`,
+      description: `Post detailed performance reports with verified data. Earn ${EARNING_REWARDS.BACKTEST_BASIC} coins per submission.`,
+      coinsRange: `${EARNING_REWARDS.BACKTEST_BASIC} coins (max ${DAILY_LIMITS.MAX_BACKTESTS}/day)`,
       icon: TrendingUp,
       color: "bg-chart-1",
       action: "Share Report",
@@ -77,8 +77,8 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Report Violations",
-      description: `Help keep the community safe by reporting spam, scams, or malicious marketing. Earn ${EARNING_REWARDS.REPORT_VIOLATION} coin per verified report.`,
-      coinsRange: `${EARNING_REWARDS.REPORT_VIOLATION} coin/report (max ${DAILY_LIMITS.MAX_REPORTS}/day)`,
+      description: `Help keep the community safe by reporting spam, scams, or malicious marketing. Earn ${EARNING_REWARDS.SPAM_REPORT}-${EARNING_REWARDS.SCAM_REPORT} coins per verified report.`,
+      coinsRange: `${EARNING_REWARDS.SPAM_REPORT}-${EARNING_REWARDS.MALICIOUS_EA} coins (max ${DAILY_LIMITS.MAX_REPORTS}/day)`,
       icon: Flag,
       color: "bg-chart-5",
       action: "Report Issue",
