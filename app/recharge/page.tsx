@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import RechargeClient from "./RechargeClient";
+import { RECHARGE_PACKAGES } from "../../shared/coinUtils";
 
 export const metadata: Metadata = {
   title: "Recharge Coins | YoForex",
@@ -51,19 +52,6 @@ async function getUser() {
   }
 }
 
-async function getRechargePackages() {
-  const packages = [
-    { coins: 22, price: 22 },
-    { coins: 52, price: 52, bonus: 5 },
-    { coins: 200, price: 200, bonus: 20, popular: true },
-    { coins: 500, price: 500, bonus: 75 },
-    { coins: 1000, price: 1000, bonus: 200 },
-    { coins: 2000, price: 2000, bonus: 500 }
-  ];
-
-  return packages;
-}
-
 export default async function RechargePage() {
   const user = await getUser();
 
@@ -71,7 +59,5 @@ export default async function RechargePage() {
     redirect('/');
   }
 
-  const packages = await getRechargePackages();
-
-  return <RechargeClient initialPackages={packages} />;
+  return <RechargeClient initialPackages={RECHARGE_PACKAGES} />;
 }

@@ -36,6 +36,15 @@ import {
 } from "./rateLimiting";
 import { generateSlug, generateFocusKeyword, generateMetaDescription, generateImageAltTexts } from './seo';
 import { emailService } from './services/emailService';
+import { 
+  RECHARGE_PACKAGES, 
+  EARNING_REWARDS, 
+  DAILY_LIMITS,
+  calculateCommission, 
+  calculateWithdrawal,
+  coinsToUSD,
+  formatCoinPrice
+} from '../shared/coinUtils';
 
 // Helper function to get authenticated user ID from session
 function getAuthenticatedUserId(req: any): string {
@@ -516,6 +525,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(order);
   });
 
+  // Get recharge packages
+  app.get("/api/recharge/packages", async (req, res) => {
+    res.json(RECHARGE_PACKAGES);
+  });
+
   // ===== WITHDRAWAL ENDPOINTS =====
   
   // Create withdrawal request
@@ -637,6 +651,149 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       res.status(500).json({ error: "Failed to cancel withdrawal" });
+    }
+  });
+
+  // Calculate withdrawal fees
+  app.post("/api/withdrawals/calculate", async (req, res) => {
+    try {
+      const { amount } = req.body;
+      
+      if (!amount || amount < 1000) {
+        return res.status(400).json({ error: "Minimum withdrawal is 1000 coins" });
+      }
+      
+      const calculation = calculateWithdrawal(amount);
+      res.json(calculation);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== COIN EARNING ENDPOINTS =====
+
+  // Daily check-in
+  app.post("/api/coins/daily-checkin", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Check if already checked in today
+      const existingLimit = await storage.getDailyActivityLimit(userId, today);
+      if (existingLimit && existingLimit.checkinCount > 0) {
+        return res.status(400).json({ error: "Already checked in today" });
+      }
+      
+      // Get yesterday's date to check streak
+      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const yesterdayLimit = await storage.getDailyActivityLimit(userId, yesterday);
+      
+      let consecutiveDays = 1;
+      if (yesterdayLimit && yesterdayLimit.consecutiveDays > 0) {
+        consecutiveDays = yesterdayLimit.consecutiveDays + 1;
+      }
+      
+      // Award daily check-in coin
+      let coinsAwarded = EARNING_REWARDS.DAILY_CHECKIN;
+      let bonusDescription = '';
+      
+      // Check for streak bonuses
+      if (consecutiveDays === 7) {
+        coinsAwarded += EARNING_REWARDS.WEEKLY_STREAK;
+        bonusDescription = ' + 10 bonus (7-day streak!)';
+      } else if (consecutiveDays === 30) {
+        coinsAwarded += EARNING_REWARDS.MONTHLY_PERFECT;
+        bonusDescription = ' + 50 bonus (30-day perfect streak!)';
+      }
+      
+      // Update daily activity limit
+      await storage.upsertDailyActivityLimit(userId, today, {
+        checkinCount: 1,
+        consecutiveDays,
+      });
+      
+      // Award coins via ledger transaction
+      await storage.beginLedgerTransaction(
+        'earn',
+        userId,
+        [
+          {
+            userId,
+            direction: 'credit',
+            amount: coinsAwarded,
+            memo: `Daily check-in (day ${consecutiveDays})${bonusDescription}`,
+          },
+          {
+            userId: 'system',
+            direction: 'debit',
+            amount: coinsAwarded,
+            memo: 'Platform reward for daily check-in',
+          },
+        ],
+        { activityType: 'daily-checkin', consecutiveDays }
+      );
+      
+      res.json({
+        success: true,
+        coinsAwarded,
+        consecutiveDays,
+        message: `+${coinsAwarded} coins! Day ${consecutiveDays} streak${bonusDescription}`,
+      });
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== REFERRAL ENDPOINTS =====
+
+  // Get user's referral link
+  app.get("/api/referrals/link", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      const baseUrl = process.env.BASE_URL || 'https://yoforex.com';
+      const referralLink = `${baseUrl}/?ref=${user.id}`;
+      
+      res.json({
+        referralLink,
+        userId: user.id,
+        username: user.username,
+      });
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get referral stats
+  app.get("/api/referrals/stats", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      
+      // TODO: Implement referral tracking in storage
+      // For now, return placeholder data
+      res.json({
+        totalReferrals: 0,
+        activeReferrals: 0,
+        totalEarned: 0,
+        thisMonthEarned: 0,
+        referrals: [],
+      });
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
     }
   });
 
@@ -945,8 +1102,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...validated,
       });
       
-      // AWARD COINS: +50 for publishing EA/Indicator
+      // AWARD COINS: Publishing rewards based on content type
+      let publishReward = 0;
+      let rewardMemo = '';
+      
       if (validated.type === 'ea' || validated.type === 'indicator') {
+        publishReward = EARNING_REWARDS.PUBLISH_EA_INDICATOR;
+        rewardMemo = `Published ${validated.type}: ${validated.title}`;
+      } else if (validated.type === 'article') {
+        publishReward = EARNING_REWARDS.PUBLISH_ARTICLE;
+        rewardMemo = `Published article: ${validated.title}`;
+      } else if (validated.files && validated.files.some((f) => f.name.endsWith('.set'))) {
+        publishReward = EARNING_REWARDS.PUBLISH_SET_FILE;
+        rewardMemo = `Shared set file: ${validated.title}`;
+      }
+      
+      if (publishReward > 0) {
         try {
           await storage.beginLedgerTransaction(
             'earn',
@@ -955,13 +1126,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
               {
                 userId: authenticatedUserId,
                 direction: 'credit',
-                amount: 50,
-                memo: `Published ${validated.type}: ${validated.title}`,
+                amount: publishReward,
+                memo: rewardMemo,
               },
               {
                 userId: 'system',
                 direction: 'debit',
-                amount: 50,
+                amount: publishReward,
                 memo: 'Platform reward for content publishing',
               },
             ],
@@ -969,33 +1140,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           );
         } catch (error) {
           console.error('Failed to award publishing coins:', error);
-        }
-      }
-      
-      // AWARD COINS: +25 for sharing set files
-      if (validated.files && validated.files.some((f) => f.name.endsWith('.set'))) {
-        try {
-          await storage.beginLedgerTransaction(
-            'earn',
-            authenticatedUserId,
-            [
-              {
-                userId: authenticatedUserId,
-                direction: 'credit',
-                amount: 25,
-                memo: `Shared set file: ${validated.title}`,
-              },
-              {
-                userId: 'system',
-                direction: 'debit',
-                amount: 25,
-                memo: 'Platform reward for set file sharing',
-              },
-            ],
-            { contentId: content.id }
-          );
-        } catch (error) {
-          console.error('Failed to award set file coins:', error);
         }
       }
 
@@ -1121,8 +1265,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
           
           if (seller?.username && item.priceCoins > 0) {
-            // Calculate seller earnings (90% of price)
-            const earnings = Math.floor(item.priceCoins * 0.9);
+            // Calculate seller earnings using commission rate (80/20 split)
+            const contentType = item.type as keyof typeof calculateCommission;
+            const commission = calculateCommission(item.priceCoins, contentType);
             
             // Send sale notification to seller
             await emailService.sendProductSold(
@@ -1130,7 +1275,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               item.title,
               buyer?.username || 'A user',
               item.priceCoins,
-              earnings
+              commission.sellerAmount
             );
           }
         } catch (emailError) {

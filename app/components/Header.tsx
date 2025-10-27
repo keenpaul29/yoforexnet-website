@@ -27,6 +27,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { coinsToUSD } from "../../shared/coinUtils";
 
 // Category data for Release EA dropdown
 const publishCategories = [
@@ -59,6 +60,7 @@ export default function Header() {
   });
 
   const userCoins = coinsData?.totalCoins ?? 0;
+  const userCoinsUSD = coinsToUSD(userCoins);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -177,9 +179,12 @@ export default function Header() {
               </Link>
               
               <Link href="/recharge">
-                <div className="hidden md:flex items-center gap-1 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer">
-                  <Coins className="h-4 w-4 text-primary" />
-                  <span className="font-semibold text-sm" data-testid="text-header-coins">{userCoins.toLocaleString()}</span>
+                <div className="hidden md:flex flex-col gap-0 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer">
+                  <div className="flex items-center gap-1">
+                    <Coins className="h-4 w-4 text-primary" />
+                    <span className="font-semibold text-sm" data-testid="text-header-coins">{userCoins.toLocaleString()}</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">${userCoinsUSD.toFixed(2)} USD</span>
                 </div>
               </Link>
               

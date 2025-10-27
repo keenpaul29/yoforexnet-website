@@ -6,6 +6,7 @@ import { Coins, TrendingUp, Award, Plus } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { coinsToUSD } from "../../shared/coinUtils";
 
 export default function CoinBalance() {
   const { user } = useAuth();
@@ -19,6 +20,7 @@ export default function CoinBalance() {
   const balance = coinsData?.totalCoins ?? 0;
   const weeklyEarned = coinsData?.weeklyEarned ?? 0;
   const rank = coinsData?.rank ?? undefined;
+  const balanceUSD = coinsToUSD(balance);
 
   if (isLoading) {
     return (
@@ -39,7 +41,7 @@ export default function CoinBalance() {
     <Card data-testid="card-coin-balance">
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+          <Link href="/recharge" className="flex items-center gap-2 cursor-pointer hover-elevate rounded-md p-1 -ml-1">
             <div className="bg-primary/10 rounded-full p-2">
               <Coins className="h-5 w-5 text-primary" />
             </div>
@@ -49,8 +51,9 @@ export default function CoinBalance() {
                 {balance.toLocaleString()}
                 <Coins className="h-5 w-5 text-primary" />
               </div>
+              <div className="text-xs text-muted-foreground">${balanceUSD.toFixed(2)} USD</div>
             </div>
-          </div>
+          </Link>
           <Link href="/recharge">
             <Button size="sm" variant="default" data-testid="button-top-up">
               <Plus className="h-4 w-4 mr-1" />

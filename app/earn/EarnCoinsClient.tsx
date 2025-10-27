@@ -13,8 +13,10 @@ import {
   Gift,
   TrendingUp,
   Award,
-  Code
+  Code,
+  CheckCircle
 } from "lucide-react";
+import { EARNING_REWARDS, DAILY_LIMITS, calculateMonthlyPotential } from "../../shared/coinUtils";
 
 interface EarnMethod {
   title: string;
@@ -31,7 +33,7 @@ export default function EarnCoinsClient() {
     {
       title: "Publish EA/Indicator",
       description: "Upload quality EAs or indicators and set a gold coin price. Earn coins when others download your work.",
-      coinsRange: "10-100 coins per download",
+      coinsRange: `${EARNING_REWARDS.PUBLISH_EA_INDICATOR} coins reward + sales revenue`,
       icon: Upload,
       color: "bg-primary",
       action: "Upload EA",
@@ -40,7 +42,7 @@ export default function EarnCoinsClient() {
     {
       title: "Share Set Files",
       description: "Publish optimized .set configuration files for popular EAs. Help traders get started quickly.",
-      coinsRange: "5-30 coins per download",
+      coinsRange: `${EARNING_REWARDS.PUBLISH_SET_FILE} coins reward + sales revenue`,
       icon: Code,
       color: "bg-chart-2",
       action: "Share Set File",
@@ -49,7 +51,7 @@ export default function EarnCoinsClient() {
     {
       title: "Write Quality Articles",
       description: "Create tutorials, strategies, or EA reviews. Set as paid content and earn when others view.",
-      coinsRange: "20-200 coins per article",
+      coinsRange: `${EARNING_REWARDS.PUBLISH_ARTICLE} coins reward + sales revenue`,
       icon: FileText,
       color: "bg-chart-3",
       action: "Write Article",
@@ -57,8 +59,8 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Help Community",
-      description: "Answer questions, provide solutions, and mark helpful replies. Earn coins for accepted solutions.",
-      coinsRange: "5-50 coins per solution",
+      description: `Answer questions, provide solutions, and mark helpful replies. Earn ${EARNING_REWARDS.HELPFUL_REPLY} coin per helpful reply.`,
+      coinsRange: `${EARNING_REWARDS.HELPFUL_REPLY} coin/reply (max ${DAILY_LIMITS.MAX_REPLIES}/day)`,
       icon: MessageSquare,
       color: "bg-chart-4",
       action: "Browse Questions",
@@ -66,8 +68,8 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Share Backtest Reports",
-      description: "Post detailed performance reports with verified data. Premium reports earn more coins.",
-      coinsRange: "15-75 coins per report",
+      description: `Post detailed performance reports with verified data. Earn ${EARNING_REWARDS.SUBMIT_BACKTEST} coins per submission.`,
+      coinsRange: `${EARNING_REWARDS.SUBMIT_BACKTEST} coins (max ${DAILY_LIMITS.MAX_BACKTESTS}/day)`,
       icon: TrendingUp,
       color: "bg-chart-1",
       action: "Share Report",
@@ -75,8 +77,8 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Report Violations",
-      description: "Help keep the community safe by reporting spam, scams, or malicious marketing. First reporter gets rewarded.",
-      coinsRange: "1-100 coins per report",
+      description: `Help keep the community safe by reporting spam, scams, or malicious marketing. Earn ${EARNING_REWARDS.REPORT_VIOLATION} coin per verified report.`,
+      coinsRange: `${EARNING_REWARDS.REPORT_VIOLATION} coin/report (max ${DAILY_LIMITS.MAX_REPORTS}/day)`,
       icon: Flag,
       color: "bg-chart-5",
       action: "Report Issue",
@@ -84,23 +86,25 @@ export default function EarnCoinsClient() {
     },
     {
       title: "Daily Activity Bonus",
-      description: "Log in daily, participate in discussions, and maintain activity streaks to earn bonus coins.",
-      coinsRange: "1-10 coins daily",
+      description: `Check in daily to earn ${EARNING_REWARDS.DAILY_CHECKIN} coin. Maintain streaks for bonus rewards!`,
+      coinsRange: `${EARNING_REWARDS.DAILY_CHECKIN} coin/day + ${EARNING_REWARDS.WEEKLY_STREAK} at 7 days + ${EARNING_REWARDS.MONTHLY_PERFECT} at 30 days`,
       icon: Award,
       color: "bg-primary",
-      action: "View Missions",
-      actionLink: "/missions"
+      action: "Daily Check-in",
+      actionLink: "/earn-coins"
     },
     {
       title: "Referral Program",
       description: "Invite traders to join YoForex. Earn coins when your referrals are active and contribute.",
-      coinsRange: "10-50 coins per referral",
+      coinsRange: "Coming soon",
       icon: Gift,
       color: "bg-chart-2",
       action: "Get Referral Link",
       actionLink: "/referrals"
     }
   ];
+
+  const monthlyPotential = calculateMonthlyPotential();
 
   return (
     <div className="min-h-screen bg-background">

@@ -4,29 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Coins, CreditCard, Wallet, Gift, AlertCircle } from "lucide-react";
+import { Coins, CreditCard, Wallet, Gift, AlertCircle, Star, Zap } from "lucide-react";
 import { useState } from "react";
 import Header from "@/components/Header";
 import EnhancedFooter from "@/components/EnhancedFooter";
 import { useQuery } from "@tanstack/react-query";
-
-interface CoinPackage {
-  coins: number;
-  price: number;
-  bonus?: number;
-  popular?: boolean;
-}
+import type { RechargePackage } from "../../shared/coinUtils";
 
 interface RechargeClientProps {
-  initialPackages: CoinPackage[];
+  initialPackages: RechargePackage[];
 }
 
 export default function RechargeClient({ initialPackages }: RechargeClientProps) {
-  const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<RechargePackage | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "crypto">("stripe");
 
-  const { data: packages = initialPackages } = useQuery<CoinPackage[]>({
+  const { data: packages = initialPackages } = useQuery<RechargePackage[]>({
     queryKey: ["/api/recharge/packages"],
     initialData: initialPackages,
   });
@@ -64,40 +58,60 @@ export default function RechargeClient({ initialPackages }: RechargeClientProps)
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {packages.map((pkg) => (
-                    <div
-                      key={pkg.coins}
-                      onClick={() => setSelectedPackage(pkg)}
-                      className={`relative p-4 border-2 rounded-lg cursor-pointer hover-elevate ${
-                        selectedPackage?.coins === pkg.coins
-                          ? "border-primary bg-primary/5"
-                          : "border-border"
-                      }`}
-                      data-testid={`package-${pkg.coins}`}
-                    >
-                      {pkg.popular && (
-                        <Badge className="absolute -top-2 -right-2" variant="default">
-                          Popular
-                        </Badge>
-                      )}
-                      <div className="text-center">
-                        <div className="flex items-center justify-center gap-1 mb-2">
-                          <Coins className="h-5 w-5 text-primary" />
-                          <span className="text-2xl font-bold">{pkg.coins}</span>
-                        </div>
-                        {pkg.bonus && (
-                          <div className="flex items-center justify-center gap-1 mb-2">
-                            <Gift className="h-4 w-4 text-chart-3" />
-                            <span className="text-sm text-chart-3 font-medium">+{pkg.bonus} bonus</span>
-                          </div>
+                  {packages.map((pkg) => {
+                    const savingsPercent = pkg.bonusPercent || 0;
+                    const isBestValue = pkg.name === "Enterprise";
+                    
+                    return (
+                      <div
+                        key={pkg.name}
+                        onClick={() => setSelectedPackage(pkg)}
+                        className={`relative p-4 border-2 rounded-lg cursor-pointer hover-elevate ${
+                          selectedPackage?.name === pkg.name
+                            ? "border-primary bg-primary/5"
+                            : "border-border"
+                        }`}
+                        data-testid={`package-${pkg.name.toLowerCase()}`}
+                      >
+                        {pkg.popular && (
+                          <Badge className="absolute -top-2 -right-2 flex items-center gap-1" variant="default">
+                            <Star className="h-3 w-3" />
+                            Popular
+                          </Badge>
                         )}
-                        <div className="text-lg font-semibold">${pkg.price}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {pkg.bonus ? `${pkg.coins + pkg.bonus} total coins` : `${pkg.coins} coins`}
+                        {isBestValue && (
+                          <Badge className="absolute -top-2 -right-2 flex items-center gap-1 bg-chart-3 hover:bg-chart-3">
+                            <Zap className="h-3 w-3" />
+                            Best Value
+                          </Badge>
+                        )}
+                        <div className="text-center">
+                          <div className="text-xs font-medium text-muted-foreground mb-1">{pkg.name}</div>
+                          <div className="flex items-center justify-center gap-1 mb-2">
+                            <Coins className="h-5 w-5 text-primary" />
+                            <span className="text-2xl font-bold">{pkg.baseCoins}</span>
+                          </div>
+                          {pkg.bonusCoins > 0 && (
+                            <div className="flex items-center justify-center gap-1 mb-2">
+                              <Gift className="h-4 w-4 text-chart-3" />
+                              <span className="text-sm text-chart-3 font-medium">+{pkg.bonusCoins} bonus</span>
+                            </div>
+                          )}
+                          {savingsPercent > 0 && (
+                            <div className="text-xs text-chart-3 font-medium mb-1">
+                              Save {savingsPercent}%
+                            </div>
+                          )}
+                          <div className="text-lg font-semibold">${pkg.priceUSD.toFixed(2)}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {pkg.bonusCoins > 0 
+                              ? `${pkg.baseCoins} + ${pkg.bonusCoins} = ${pkg.totalCoins} coins`
+                              : `${pkg.totalCoins} coins`}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="mt-6">

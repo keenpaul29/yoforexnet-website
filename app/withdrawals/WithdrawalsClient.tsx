@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,16 +17,18 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, Coins } from "lucide-react";
+import { AlertTriangle, Coins, ArrowRight } from "lucide-react";
+import { calculateWithdrawal, coinsToUSD } from "../../shared/coinUtils";
 
 const EXCHANGE_RATES = {
   BTC: 50000,
   ETH: 3000,
+  USDT: 1,
 };
 
 const withdrawalSchema = z.object({
   amount: z.coerce.number().min(1000, "Minimum withdrawal is 1000 coins"),
-  cryptoType: z.enum(["BTC", "ETH"]),
+  cryptoType: z.enum(["BTC", "ETH", "USDT"]),
   walletAddress: z.string().min(26, "Invalid wallet address").max(100, "Invalid wallet address"),
 });
 
@@ -61,17 +63,20 @@ export default function WithdrawalsClient({ initialUserCoins }: WithdrawalsClien
 
   const watchAmount = form.watch("amount");
   const watchCryptoType = form.watch("cryptoType");
+  const [feeCalculation, setFeeCalculation] = useState<ReturnType<typeof calculateWithdrawal> | null>(null);
 
-  const calculatePreview = (amount: number, cryptoType: "BTC" | "ETH") => {
-    if (!amount || amount < 1000) return;
-    
-    const fivePercent = Math.floor(amount * 0.05);
-    const fee = Math.max(fivePercent, 100);
-    const crypto = amount / EXCHANGE_RATES[cryptoType];
-    
-    setPreviewFee(fee);
-    setPreviewCrypto(crypto);
-  };
+  useEffect(() => {
+    if (watchAmount && watchAmount >= 1000) {
+      const calc = calculateWithdrawal(watchAmount);
+      setFeeCalculation(calc);
+      
+      const crypto = calc.netAmount / EXCHANGE_RATES[watchCryptoType as keyof typeof EXCHANGE_RATES];
+      setPreviewCrypto(crypto);
+    } else {
+      setFeeCalculation(null);
+      setPreviewCrypto(0);
+    }
+  }, [watchAmount, watchCryptoType]);
 
   const withdrawalMutation = useMutation({
     mutationFn: async (data: WithdrawalFormData) => {
