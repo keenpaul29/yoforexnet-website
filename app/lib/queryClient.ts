@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { getApiBaseUrl, buildApiUrl } from "./api-config";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -12,13 +13,8 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  // Client-side: Use same origin (empty) so Next.js rewrites to Express
-  // Server-side: Use http://localhost:3001 (direct to Express API)
-  const EXPRESS_URL = typeof window !== 'undefined'
-    ? '' // Same origin, will be rewritten by Next.js
-    : (process.env.EXPRESS_URL || 'http://localhost:3001');
-  
-  const fullUrl = url.startsWith('http') ? url : `${EXPRESS_URL}${url}`;
+  // Use centralized API config (no hardcoded URLs)
+  const fullUrl = url.startsWith('http') ? url : buildApiUrl(url);
   
   const res = await fetch(fullUrl, {
     method,
@@ -54,12 +50,8 @@ export const getQueryFn: <T>(options: {
     return await res.json();
   };
 
-// Get Express API URL from environment or use default
-// Client-side: Use empty string (same origin) so Next.js rewrites to Express on port 3001
-// Server-side: Use http://localhost:3001 (direct to Express API)
-const EXPRESS_API_URL = typeof window !== 'undefined' 
-  ? '' // Empty string means same origin, will be rewritten by Next.js
-  : (process.env.EXPRESS_URL || 'http://localhost:3001');
+// Use centralized API config (no hardcoded URLs)
+const EXPRESS_API_URL = getApiBaseUrl();
 
 export const queryClient = new QueryClient({
   defaultOptions: {

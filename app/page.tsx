@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import HomeClient from './HomeClient';
+import { getInternalApiUrl } from './lib/api-config';
 
 // Homepage metadata
 export const metadata: Metadata = {
@@ -10,9 +11,9 @@ export const metadata: Metadata = {
 
 async function fetchData(url: string) {
   try {
-    // Server-side: fetch directly from Express on port 3001
-    const expressUrl = process.env.EXPRESS_URL || 'http://localhost:3001';
-    const res = await fetch(`${expressUrl}${url}`, {
+    // Server-side: use centralized API config (no hardcoded URLs)
+    const apiUrl = getInternalApiUrl();
+    const res = await fetch(`${apiUrl}${url}`, {
       cache: 'no-store',
       headers: {
         'Accept': 'application/json',

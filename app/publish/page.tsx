@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import PublishClient from "./PublishClient";
+import { getInternalApiUrl } from "../lib/api-config";
 
 export const metadata: Metadata = {
   title: "Publish Content | YoForex",
@@ -23,8 +24,9 @@ async function getCategories() {
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("connect.sid");
+    const apiUrl = getInternalApiUrl();
     
-    const response = await fetch(`${process.env.EXPRESS_URL || "http://localhost:3001"}/api/publish/categories`, {
+    const response = await fetch(`${apiUrl}/api/publish/categories`, {
       headers: sessionCookie ? { Cookie: `connect.sid=${sessionCookie.value}` } : {},
       cache: "no-store",
     });
@@ -49,7 +51,8 @@ async function checkAuth() {
       return null;
     }
 
-    const response = await fetch(`${process.env.EXPRESS_URL || "http://localhost:3001"}/api/me`, {
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/me`, {
       headers: { Cookie: `connect.sid=${sessionCookie.value}` },
       cache: "no-store",
     });

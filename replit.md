@@ -119,36 +119,84 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - **AI Crawler Policy**: Public llms.txt file defining allowed/disallowed paths and usage guidelines for AI crawlers
 - **Seed Data**: 60 realistic forum threads across all categories for testing and demonstration
 
-## 🚨 CRITICAL DEPLOYMENT ISSUE (UNRESOLVED)
-**Status**: ❌ **WILL BREAK IN PRODUCTION**
+## ✅ VPS DEPLOYMENT ARCHITECTURE (RESOLVED)
+**Status**: ✅ **PRODUCTION-READY**
 
-**Problem**: The application uses hardcoded `localhost:3001` URLs that will fail when deployed to Replit because:
-1. Replit autoscale deployments only expose ONE external port
-2. Current architecture runs TWO separate servers (Next.js:5000 + Express:3001)
-3. Hardcoded localhost URLs exist in:
-   - `next.config.js` (rewrites to localhost:3001)
-   - `app/lib/queryClient.ts` (API base URL with localhost fallback)
-   - Server-side fetches in multiple pages (page.tsx, publish/page.tsx, brokers/submit-review/page.tsx)
+**Solution Implemented**: Complete VPS deployment infrastructure with NGINX reverse proxy architecture.
 
-**Impact**: All API calls will return 502 errors in production deployment.
+### Architecture Overview
 
-**Solution Options**:
-- **Option A (Recommended)**: Migrate all Express routes to Next.js API routes (`app/api/*`)
-  - Single server on port 5000
-  - Native Next.js architecture
-  - Best for Replit deployments
-- **Option B**: Embed Express into Next.js custom server
-  - Keep Express code, run inside Next.js
-  - More complex but preserves existing API structure
+```
+Internet → NGINX (80/443) → Next.js (3000) + Express (3001)
+                  ↓                ↓              ↓
+              SSL/TLS         Frontend        API Backend
+              Rate Limit      SSR/SSG         Auth/Data
+              Compression     Static Assets   Database
+```
 
-**Required Actions Before Deployment**:
-1. Choose migration strategy (A or B)
-2. Implement unified server architecture
-3. Replace all localhost:3001 references with environment variables
-4. Update `.replit` to expose single external port
-5. Test deployment with proper `EXPRESS_URL` environment variable
+### Key Components
 
-**Why This Wasn't Fixed**: Discovered during post-implementation review. Requires architectural decision from user.
+1. **NGINX Reverse Proxy** (`nginx/yoforex.conf`):
+   - SSL termination with Let's Encrypt
+   - HTTP → HTTPS redirect
+   - Routes `/api/*` → Express (port 3001)
+   - Routes all other traffic → Next.js (port 3000)
+   - Security headers (HSTS, CSP, X-Frame-Options)
+   - Rate limiting (General: 10 req/s, API: 30 req/s, Auth: 5 req/s)
+   - Gzip/Brotli compression
+   - Static asset caching (365 days for `_next/static/*`)
+
+2. **PM2 Process Manager** (`ecosystem.config.js`):
+   - Two clustered processes: `yoforex-nextjs` (2 instances) and `yoforex-express` (2 instances)
+   - Zero-downtime deployments with `pm2 reload`
+   - Auto-restart on crashes
+   - Memory limits (Next.js: 500MB, Express: 400MB)
+   - Centralized logging to `/var/log/pm2/`
+
+3. **Environment Configuration** (`.env.production.example`):
+   - All localhost URLs replaced with environment variables
+   - `EXPRESS_URL` for server-side API calls
+   - `NEXT_PUBLIC_SITE_URL` for public URLs
+   - Database, auth, payment, and email service credentials
+
+4. **Deployment Automation** (`scripts/`):
+   - `setup-vps.sh`: One-time VPS setup (Node.js, NGINX, PM2, SSL, firewall)
+   - `deploy.sh`: Automated deployment with backup and rollback
+   - `health-check.sh`: Comprehensive health verification
+
+5. **Centralized API Configuration** (`app/lib/api-config.ts`):
+   - Runtime URL resolution using environment variables
+   - Client-side: Relative URLs (`/api/*`) proxied by NGINX
+   - Server-side: Direct to Express (`http://127.0.0.1:3001`)
+   - No hardcoded localhost URLs in application code
+
+### Production Ports
+
+- **Development (Replit)**: Next.js on port 5000 (required by Replit), Express on port 3001
+- **Production (VPS)**: Next.js on port 3000, Express on port 3001, NGINX on ports 80/443
+
+### Documentation
+
+Complete deployment guide available: **[VPS_DEPLOYMENT_GUIDE.md](./VPS_DEPLOYMENT_GUIDE.md)**
+
+Covers:
+- VPS prerequisites and setup
+- SSL certificate configuration (Let's Encrypt)
+- Environment variable setup
+- Database configuration
+- NGINX and PM2 management
+- Monitoring, troubleshooting, and scaling
+- Security best practices
+
+### Localhost URL Audit
+
+All hardcoded localhost URLs have been replaced with environment variables:
+- ✅ `next.config.js`: Uses `process.env.EXPRESS_URL` with fallback
+- ✅ `app/lib/api-config.ts`: Centralized config with environment variables
+- ✅ All pages: Use `getInternalApiUrl()` or `getApiBaseUrl()` helpers
+- ✅ Client components: Use relative URLs (`/api/*`)
+
+Remaining localhost references are **development fallbacks only** and will be overridden by production environment variables.
 
 ## External Dependencies
 - **Stripe**: For credit/debit card payments (integrated).
