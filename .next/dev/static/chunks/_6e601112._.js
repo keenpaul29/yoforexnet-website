@@ -4184,9 +4184,9 @@ const threadFormSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
     }, {
         message: "Let's tone this down a bit so more folks read it"
     }),
-    body: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["z"].string().min(10, "Body is required").refine((val)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$shared$2f$threadUtils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countWords"])(val) >= 150, {
+    body: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["z"].string().min(10, "Body is required").max(50000, "Body is too long").refine((val)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$shared$2f$threadUtils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["countWords"])(val) >= 150, {
         message: "A little more context helps people reply. Two more sentences? (150 words minimum)"
-    }).max(50000, "Body is too long"),
+    }),
     categorySlug: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["z"].string().min(1, "Please select a category"),
     subcategorySlug: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["z"].string().optional(),
     threadType: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["z"].enum([

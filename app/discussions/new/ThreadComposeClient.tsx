@@ -63,11 +63,11 @@ const threadFormSchema = z.object({
     ),
   body: z.string()
     .min(10, "Body is required")
+    .max(50000, "Body is too long")
     .refine(
       (val) => countWords(val) >= 150,
       { message: "A little more context helps people reply. Two more sentences? (150 words minimum)" }
-    )
-    .max(50000, "Body is too long"),
+    ),
   categorySlug: z.string().min(1, "Please select a category"),
   subcategorySlug: z.string().optional(),
   threadType: z.enum(["question", "discussion", "review", "journal", "guide"]).default("discussion"),
