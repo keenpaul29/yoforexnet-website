@@ -815,14 +815,78 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   updatedAt: true,
   views: true,
   replyCount: true,
+  likeCount: true,
+  bookmarkCount: true,
+  shareCount: true,
   lastActivityAt: true,
   slug: true,
   focusKeyword: true,
   metaDescription: true,
   status: true,
+  engagementScore: true,
+  lastScoreUpdate: true,
+  acceptedAnswerId: true,
 }).extend({
-  title: z.string().min(10).max(300),
-  body: z.string().min(50).max(50000),
+  // Core fields with proper validation
+  title: z.string()
+    .min(15, "Title must be at least 15 characters")
+    .max(90, "Title must not exceed 90 characters")
+    .refine(
+      (val) => {
+        const upperCount = (val.match(/[A-Z]/g) || []).length;
+        const letterCount = (val.match(/[a-zA-Z]/g) || []).length;
+        return letterCount === 0 || upperCount / letterCount < 0.5;
+      },
+      { message: "Let's tone this down a bit so more folks read it" }
+    ),
+  body: z.string()
+    .min(150, "A little more context helps people reply. Two more sentences?")
+    .max(50000, "Body is too long"),
+  categorySlug: z.string().min(1),
+  subcategorySlug: z.string().optional(),
+  
+  // Thread type and language
+  threadType: z.enum(["question", "discussion", "review", "journal", "guide"]).default("discussion"),
+  language: z.string().default("en"),
+  
+  // Optional SEO fields
+  seoExcerpt: z.string()
+    .min(120, "SEO excerpt should be at least 120 characters")
+    .max(160, "SEO excerpt should not exceed 160 characters")
+    .optional(),
+  primaryKeyword: z.string()
+    .refine(
+      (val) => !val || (val.split(/\s+/).length >= 1 && val.split(/\s+/).length <= 6),
+      { message: "Primary keyword should be 1-6 words" }
+    )
+    .optional(),
+  
+  // Trading metadata (optional multi-select)
+  instruments: z.array(z.string()).optional().default([]),
+  timeframes: z.array(z.string()).optional().default([]),
+  strategies: z.array(z.string()).optional().default([]),
+  platform: z.string().optional(),
+  broker: z.string().max(40).optional(),
+  riskNote: z.string().max(500).optional(),
+  hashtags: z.array(z.string()).max(10, "Maximum 10 hashtags").optional().default([]),
+  
+  // Review-specific fields (conditional)
+  reviewTarget: z.string().optional(),
+  reviewVersion: z.string().optional(),
+  reviewRating: z.number().int().min(1).max(5).optional(),
+  reviewPros: z.array(z.string()).optional(),
+  reviewCons: z.array(z.string()).optional(),
+  
+  // Question-specific fields (conditional)
+  questionSummary: z.string().max(200).optional(),
+  
+  // Attachments
+  attachmentUrls: z.array(z.string()).optional().default([]),
+  
+  // Status flags
+  isPinned: z.boolean().optional().default(false),
+  isLocked: z.boolean().optional().default(false),
+  isSolved: z.boolean().optional().default(false),
 });
 
 export const insertForumReplySchema = createInsertSchema(forumReplies).omit({
