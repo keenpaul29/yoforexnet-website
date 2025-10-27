@@ -26,7 +26,16 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - **Dashboard Customization UI**: Frontend-only implementation allowing users to toggle, reorder, and select layouts for widgets on their dashboard.
 
 ### Forum System
-- **Dynamic Categories**: 15 predefined categories covering various aspects of algorithmic trading.
+- **Hierarchical Category Tree**: 59 total categories (8 main + 51 subcategories) organized in a 2-level tree structure covering comprehensive trading topics:
+  - Trading Strategies (12 subcategories: Scalping by pair, Day Trading, Swing, Position, Grid/Martingale, Hedging, Multi-pair)
+  - EA Library (11 subcategories: By strategy type, platform, and price range)
+  - Indicators & Templates (5 subcategories: Trend, Oscillators, Volume, S/R, Templates)
+  - Broker Reviews (6 subcategories: ECN, Market Maker, Low Spread, High Leverage, Regulated, Scam Watch)
+  - Coding & Development (5 subcategories: MQL4, MQL5, Python, Backtesting, Freelance)
+  - Education & Resources (5 subcategories: Beginners, Technical, Fundamental, Risk, Psychology)
+  - Trading Journals (4 subcategories: Live, EA Performance, Backtest, Forward Test)
+  - Tools & Services (4 subcategories: VPS, Trade Copiers, Signals, Calculators)
+- **Category Tree Features**: Parent-child relationships, breadcrumb navigation, dynamic thread/post counts, hierarchical display component
 - **Thread Management**: Features for creating, editing, pinning, locking, and deleting threads.
 - **Interaction**: Supports nested replies with @mentions, accepted answers, and helpful votes.
 - **SEO**: Auto-generated slugs, meta descriptions, and view tracking.
@@ -93,7 +102,7 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - Over 25 tables, including `users`, `coinTransactions`, `content`, `forumThreads`, `brokers`, `userFollows`, and `privateMessages`, with extensive indexing for performance.
 
 ### API Endpoints
-- Over 60 RESTful endpoints covering authentication, coins, marketplace, forum threads/replies, categories, social features, stats, leaderboards, badges, onboarding, broker directory, and global search.
+- Over 65 RESTful endpoints covering authentication, coins, marketplace, forum threads/replies, categories (including tree endpoints: /api/categories/tree/all, /api/categories/:slug/subcategories, /api/categories/:slug/breadcrumb), social features, stats, leaderboards, badges, onboarding, broker directory, and global search.
 
 ### Security & Performance
 - **Rate Limiting**: Configured for general API, write operations, coin operations, content creation, and reviews/ratings.
@@ -104,6 +113,11 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 
 ### SEO Engine
 - Automated generation of focus keywords, meta descriptions, SEO slugs, alt texts, and Schema.org JSON-LD structured data for all content.
+
+### Additional Features
+- **IP-based Geo-locale Detection**: Middleware for automatic locale detection based on IP geolocation (feature-flagged OFF by default, enable with `GEOLOCALE_ENABLED='true'`)
+- **AI Crawler Policy**: Public llms.txt file defining allowed/disallowed paths and usage guidelines for AI crawlers
+- **Seed Data**: 60 realistic forum threads across all categories for testing and demonstration
 
 ## External Dependencies
 - **Stripe**: For credit/debit card payments (integrated).
