@@ -1,7 +1,9 @@
 # YoForex - Expert Advisor Forum & Marketplace Platform
 
 ## Overview
-YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform for algorithmic trading on MT4/MT5. It aims to be the go-to platform for traders to discuss strategies, share EAs, and find reliable brokers. The platform features real-time components, sophisticated ranking, a gold coin economy, a comprehensive forum, a broker directory, and a marketplace for trading tools. The project has a strong focus on SEO and performance, utilizing a hybrid Next.js and Express architecture for optimal reach and speed.
+YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform for algorithmic trading on MT4/MT5. It aims to be the go-to platform for traders to discuss strategies, share EAs, and find reliable brokers. The platform features real-time components, sophisticated ranking, a gold coin economy, a comprehensive forum, a broker directory, and a marketplace for trading tools. 
+
+**Current Migration Status**: Copying React SPA (client/src/*) to Next.js 16 (app/*) for SEO/SSR benefits while maintaining identical design and Express backend. See `REACT_TO_NEXTJS_COPY_PLAN.md` for detailed plan.
 
 ## User Preferences
 - Design: Modern, clean interface with gamification elements
