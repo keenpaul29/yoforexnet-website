@@ -55,14 +55,14 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href={`${process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'}/earn-coins`} className="text-muted-foreground hover:text-foreground" data-testid="link-footer-earn-coins">
+                <Link href="/earn" className="text-muted-foreground hover:text-foreground" data-testid="link-footer-earn-coins">
                   Earn Coins
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`${process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'}/feedback`} className="text-muted-foreground hover:text-foreground" data-testid="link-footer-feedback">
+                <Link href="/feedback" className="text-muted-foreground hover:text-foreground" data-testid="link-footer-feedback">
                   Feedback
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -72,14 +72,14 @@ export function Footer() {
             <h3 className="font-semibold mb-3">Support</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href={`${process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'}/support`} className="text-muted-foreground hover:text-foreground" data-testid="link-footer-support">
+                <Link href="/support" className="text-muted-foreground hover:text-foreground" data-testid="link-footer-support">
                   Contact Support
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`${process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'}/api-docs`} className="text-muted-foreground hover:text-foreground" data-testid="link-footer-api-docs">
+                <Link href="/api-docs" className="text-muted-foreground hover:text-foreground" data-testid="link-footer-api-docs">
                   API Docs
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/sitemap.xml" className="text-muted-foreground hover:text-foreground" data-testid="link-footer-sitemap">

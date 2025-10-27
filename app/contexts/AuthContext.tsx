@@ -28,23 +28,22 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-  
+  // Use relative URLs for API calls (Next.js will rewrite to Express)
   const { data: user, isLoading } = useQuery<User | null>({
     queryKey: ["/api/me"],
-    queryFn: getQueryFn({ on401: "returnNull", baseUrl: EXPRESS_URL }),
+    queryFn: getQueryFn({ on401: "returnNull" }),
     retry: false,
     refetchOnWindowFocus: true,
     staleTime: 5 * 60 * 1000,
   });
 
   const login = () => {
-    window.location.href = `${EXPRESS_URL}/api/login`;
+    window.location.href = "/api/login";
   };
 
   const logout = async () => {
     try {
-      await fetch(`${EXPRESS_URL}/api/logout`, {
+      await fetch("/api/logout", {
         method: "POST",
         credentials: "include",
       });

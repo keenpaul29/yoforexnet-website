@@ -3,7 +3,7 @@
 ## Overview
 YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform for algorithmic trading on MT4/MT5. It aims to be the go-to platform for traders to discuss strategies, share EAs, and find reliable brokers. The platform features real-time components, sophisticated ranking, a gold coin economy, a comprehensive forum, a broker directory, and a marketplace for trading tools. 
 
-**Current Migration Status**: ✅ **ALL 28 PAGES MIGRATED - 100% COMPLETE!** Complete React to Next.js migration finished with 100% feature and design parity across all pages. Next.js 16 provides SEO/SSR while Express backend handles authentication and data mutations. Hybrid architecture operational with Server Components for SSR and Client Components for interactivity.
+**Current Architecture Status**: ✅ **NEXT.JS-ONLY ARCHITECTURE - 100% OPERATIONAL!** React SPA fully removed and archived. Next.js 16 (port 5000) serves all frontend pages with SSR/SSG for SEO. Express (port 3001) runs API-only mode for authentication and data mutations. All 28 pages operational with Server Components for SSR and Client Components for interactivity.
 
 ## User Preferences
 - Design: Modern, clean interface with gamification elements
@@ -63,27 +63,31 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - **Trending**: "What's Hot" and "Week Highlights" sections based on algorithms.
 
 ### Frontend Architecture
-- **React SPA**: React 18 + TypeScript running on Vite (client/src/*), served by Express at port 5000.
-- **Next.js SSR**: Next.js 16 App Router (app/*) running at port 3000 for SEO-optimized pages.
-- **Styling**: Tailwind CSS + shadcn/ui components (shared between React & Next.js).
-- **Routing**: Wouter (React SPA) and next/link (Next.js).
-- **State Management**: TanStack Query v5 (React Query) configured to fetch from Express API.
+- **Next.js-Only**: Next.js 16 App Router (app/*) serving all pages on port 5000 (user-facing).
+- **React SPA**: Archived to `archived-react-spa/` directory, no longer active.
+- **Styling**: Tailwind CSS + shadcn/ui components.
+- **Routing**: Next.js App Router with next/link for client-side navigation.
+- **State Management**: TanStack Query v5 (React Query) with API proxy via Next.js rewrites.
 - **Forms**: React Hook Form + Zod validation.
 - **Real-time**: Custom `useRealtimeUpdates` hook for polling.
-- **Hybrid Architecture**: Next.js Server Components fetch initial data from Express API and hydrate Client Components for interactivity, maintaining 100% design parity with React SPA.
-- **Completed Pages (28/28)**: 
+- **API Communication**: 
+  - Client-side: Relative URLs (/api/*) rewritten by Next.js to Express (localhost:3001)
+  - Server-side: Direct fetch to Express (http://localhost:3001)
+- **Architecture Pattern**: Next.js Server Components fetch initial data from Express API and hydrate Client Components for interactivity.
+- **Operational Pages (28/28)**: 
   - SEO-Critical (7): Homepage (/), ThreadDetail (/thread/[slug]), ContentDetail (/content/[slug]), UserProfile (/user/[username]), CategoryDiscussion (/category/[slug]), BrokerProfile (/brokers/[slug]), Marketplace (/marketplace)
   - High-Traffic (5): Discussions (/discussions), Categories (/categories), BrokerDirectory (/brokers), Members (/members), Leaderboard (/leaderboard)
   - Authenticated (9): Dashboard (/dashboard), Settings (/settings), Recharge (/recharge), Transactions (/transactions), Publish (/publish), Messages (/messages), Notifications (/notifications), Withdrawals (/withdrawals), WithdrawalHistory (/withdrawals/history)
   - Additional (7): EarnCoins (/earn), SubmitBrokerReview (/brokers/submit-review), SubmitFeedback (/feedback), ContactSupport (/support), APIDocumentation (/api-docs), DashboardSettings (/dashboard/settings)
 
 ### Backend Architecture
-- **Server**: Express.js (for authentication and mutations).
+- **Server**: Express.js API-only mode on port 3001 (internal, for authentication and mutations).
 - **Database**: PostgreSQL (Neon-backed) with Drizzle ORM.
 - **Authentication**: Passport.js + Replit OIDC.
 - **Session Store**: PostgreSQL sessions table.
 - **Jobs**: `node-cron` scheduler.
 - **Security**: Rate limiting, input validation, XSS protection.
+- **API Proxy**: Next.js rewrites /api/* requests from client to Express on port 3001.
 
 ### Database Schema
 - Over 25 tables, including `users`, `coinTransactions`, `content`, `forumThreads`, `brokers`, `userFollows`, and `privateMessages`, with extensive indexing for performance.

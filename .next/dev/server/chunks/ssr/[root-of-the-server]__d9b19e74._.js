@@ -25,7 +25,10 @@ async function throwIfResNotOk(res) {
     }
 }
 async function apiRequest(method, url, data) {
-    const EXPRESS_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
+    // Client-side: Use same origin (empty) so Next.js rewrites to Express
+    // Server-side: Use http://localhost:3001 (direct to Express API)
+    const EXPRESS_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" // Same origin, will be rewritten by Next.js
+     : ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:3001';
     const fullUrl = url.startsWith('http') ? url : `${EXPRESS_URL}${url}`;
     const res = await fetch(fullUrl, {
         method,
@@ -50,7 +53,10 @@ const getQueryFn = ({ on401: unauthorizedBehavior, baseUrl })=>async ({ queryKey
         return await res.json();
     };
 // Get Express API URL from environment or use default
-const EXPRESS_API_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
+// Client-side: Use empty string (same origin) so Next.js rewrites to Express on port 3001
+// Server-side: Use http://localhost:3001 (direct to Express API)
+const EXPRESS_API_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" // Empty string means same origin, will be rewritten by Next.js
+ : ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:3001';
 const queryClient = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$query$2d$core$2f$build$2f$modern$2f$queryClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["QueryClient"]({
     defaultOptions: {
         queries: {
