@@ -66,20 +66,13 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+  // React SPA removed - Next.js runs separately on port 3000
+  // Express server now only serves API endpoints
+  log("Express server running API-only mode (React SPA archived)");
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
+  // Express API server runs on port 3001 (internal)
+  // Next.js frontend runs on port 5000 (user-facing, required by Replit)
+  const port = parseInt(process.env.API_PORT || '3001', 10);
   server.listen({
     port,
     host: "0.0.0.0",

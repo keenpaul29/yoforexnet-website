@@ -15,12 +15,12 @@ localPort = 3000
 externalPort = 3003
 
 [[ports]]
-localPort = 5000
-externalPort = 80
+localPort = 3001
+externalPort = 3001
 
 [[ports]]
-localPort = 35051
-externalPort = 3001
+localPort = 5000
+externalPort = 80
 
 [[ports]]
 localPort = 41287
@@ -29,6 +29,10 @@ externalPort = 3002
 [[ports]]
 localPort = 42787
 externalPort = 3000
+
+[[ports]]
+localPort = 44467
+externalPort = 4200
 
 [env]
 PORT = "5000"
@@ -51,7 +55,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run dev:hybrid"
+args = "bash start-nextjs-only.sh"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
