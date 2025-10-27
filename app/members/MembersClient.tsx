@@ -40,7 +40,7 @@ export default function MembersClient({ initialData }: MembersClientProps) {
   const { data: topByCoins, isLoading: coinsLoading } = useQuery<LeaderboardUser[]>({
     queryKey: ['/api/leaderboard', 'coins'],
     queryFn: async () => {
-      const res = await fetch('/api/leaderboard?sortBy=coins&limit=50', {
+      const res = await fetch('/api/leaderboard?type=coins&limit=50', {
         credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to fetch');
@@ -53,7 +53,7 @@ export default function MembersClient({ initialData }: MembersClientProps) {
   const { data: topByContributions, isLoading: contributionsLoading } = useQuery<LeaderboardUser[]>({
     queryKey: ['/api/leaderboard', 'contributions'],
     queryFn: async () => {
-      const res = await fetch('/api/leaderboard?sortBy=contributions&limit=50', {
+      const res = await fetch('/api/leaderboard?type=contributions&limit=50', {
         credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to fetch');
@@ -66,7 +66,7 @@ export default function MembersClient({ initialData }: MembersClientProps) {
   const { data: topByUploads, isLoading: uploadsLoading } = useQuery<LeaderboardUser[]>({
     queryKey: ['/api/leaderboard', 'uploads'],
     queryFn: async () => {
-      const res = await fetch('/api/leaderboard?sortBy=uploads&limit=50', {
+      const res = await fetch('/api/leaderboard?type=uploads&limit=50', {
         credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to fetch');

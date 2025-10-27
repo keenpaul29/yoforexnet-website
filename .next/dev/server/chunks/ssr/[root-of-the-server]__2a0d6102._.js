@@ -80,13 +80,13 @@ async function getLeaderboardData() {
         const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
         // Fetch all three leaderboard types in parallel
         const [topByCoinsRes, topByContributionsRes, topByUploadsRes] = await Promise.all([
-            fetch(`${EXPRESS_URL}/api/leaderboard?sortBy=coins&limit=50`, {
+            fetch(`${EXPRESS_URL}/api/leaderboard?type=coins&limit=50`, {
                 cache: 'no-store'
             }),
-            fetch(`${EXPRESS_URL}/api/leaderboard?sortBy=contributions&limit=50`, {
+            fetch(`${EXPRESS_URL}/api/leaderboard?type=contributions&limit=50`, {
                 cache: 'no-store'
             }),
-            fetch(`${EXPRESS_URL}/api/leaderboard?sortBy=uploads&limit=50`, {
+            fetch(`${EXPRESS_URL}/api/leaderboard?type=uploads&limit=50`, {
                 cache: 'no-store'
             })
         ]);
