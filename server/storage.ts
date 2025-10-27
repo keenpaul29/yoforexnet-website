@@ -94,7 +94,7 @@ import {
 import { randomUUID } from "crypto";
 import { applySEOAutomations, generateUniqueSlug, generateThreadSlug, generateReplySlug, generateMetaDescription, extractFocusKeyword } from "./seo-engine";
 import { db } from "./db";
-import { eq, and, or, desc, asc, sql, count, inArray, gt } from "drizzle-orm";
+import { eq, and, or, desc, asc, sql, count, inArray, gt, gte } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -1940,6 +1940,93 @@ export class MemStorage implements IStorage {
     }>;
   }> {
     throw new Error("MemStorage does not support earnings summary operations");
+  }
+
+  // REFERRALS (Stubs - MemStorage does not support referrals)
+  async getReferrals(userId: string): Promise<any[]> {
+    throw new Error("Not implemented");
+  }
+
+  async getReferralStats(userId: string): Promise<{totalReferrals: number, totalEarnings: number, monthlyEarnings: number}> {
+    throw new Error("Not implemented");
+  }
+
+  async generateReferralCode(userId: string): Promise<string> {
+    throw new Error("Not implemented");
+  }
+
+  // GOALS (Stubs - MemStorage does not support goals)
+  async getGoals(userId: string): Promise<any[]> {
+    throw new Error("Not implemented");
+  }
+
+  async createGoal(userId: string, goal: any): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  async updateGoal(goalId: number, updates: any): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  // ACHIEVEMENTS (Stubs - MemStorage does not support achievements)
+  async getUserAchievements(userId: string): Promise<any[]> {
+    throw new Error("Not implemented");
+  }
+
+  // SALES DASHBOARD (Stubs - MemStorage does not support sales dashboard)
+  async getSalesDashboard(userId: string, days: number): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  // EARNINGS BREAKDOWN (Stubs - MemStorage does not support earnings breakdown)
+  async getEarningsBreakdown(userId: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  // ACTIVITY FEED (Stubs - MemStorage does not support activity feed)
+  async getActivityFeed(userId: string, limit: number): Promise<any[]> {
+    throw new Error("Not implemented");
+  }
+
+  // CAMPAIGNS (Stubs - MemStorage does not support campaigns)
+  async getCampaigns(userId: string): Promise<any[]> {
+    throw new Error("Not implemented");
+  }
+
+  async createCampaign(userId: string, campaign: any): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  // CUSTOMERS (Stubs - MemStorage does not support customers)
+  async getCustomerList(userId: string): Promise<any[]> {
+    throw new Error("Not implemented");
+  }
+
+  // DASHBOARD SETTINGS (Stubs - MemStorage does not support dashboard settings)
+  async getDashboardSettings(userId: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  async updateDashboardSettings(userId: string, settings: any): Promise<void> {
+    throw new Error("Not implemented");
+  }
+
+  // USER SETTINGS (Stubs - MemStorage does not support user settings)
+  async getUserSettings(userId: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  async updateUserSettings(userId: string, settings: any): Promise<void> {
+    throw new Error("Not implemented");
+  }
+
+  // PROFILE (Stubs - MemStorage does not support profile)
+  async getProfileByUsername(username: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  async updateProfile(userId: string, profile: any): Promise<any> {
+    throw new Error("Not implemented");
   }
 }
 
@@ -4088,6 +4175,218 @@ export class DrizzleStorage implements IStorage {
       weeklyEarned: user.weeklyEarned || 0,
       breakdown,
     };
+  }
+
+  // REFERRALS
+  async getReferrals(userId: string): Promise<Referral[]> {
+    return await db.select().from(referrals).where(eq(referrals.referrerId, userId));
+  }
+
+  async getReferralStats(userId: string): Promise<{totalReferrals: number, totalEarnings: number, monthlyEarnings: number}> {
+    const refs = await db.select().from(referrals).where(eq(referrals.referrerId, userId));
+    const totalReferrals = refs.length;
+    const totalEarnings = refs.reduce((sum, r) => sum + r.totalEarnings, 0);
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    const monthlyEarnings = refs.filter(r => r.createdAt >= monthStart).reduce((sum, r) => sum + r.totalEarnings, 0);
+    return { totalReferrals, totalEarnings, monthlyEarnings };
+  }
+
+  async generateReferralCode(userId: string): Promise<string> {
+    const code = Math.random().toString(36).substring(2, 10).toUpperCase();
+    await db.insert(referrals).values({
+      referrerId: userId,
+      referredUserId: userId,
+      referralCode: code,
+      status: 'pending',
+    });
+    return code;
+  }
+
+  // GOALS
+  async getGoals(userId: string): Promise<Goal[]> {
+    return await db.select().from(goals).where(eq(goals.userId, userId)).orderBy(desc(goals.createdAt));
+  }
+
+  async createGoal(userId: string, goal: InsertGoal): Promise<Goal> {
+    const [newGoal] = await db.insert(goals).values({ ...goal, userId }).returning();
+    return newGoal;
+  }
+
+  async updateGoal(goalId: number, updates: Partial<InsertGoal>): Promise<Goal> {
+    const [updated] = await db.update(goals).set(updates).where(eq(goals.id, goalId)).returning();
+    return updated;
+  }
+
+  // ACHIEVEMENTS
+  async getUserAchievements(userId: string): Promise<any[]> {
+    const userAchievs = await db
+      .select({
+        id: userAchievements.id,
+        progress: userAchievements.progress,
+        unlockedAt: userAchievements.unlockedAt,
+        achievement: achievements,
+      })
+      .from(userAchievements)
+      .leftJoin(achievements, eq(userAchievements.achievementId, achievements.id))
+      .where(eq(userAchievements.userId, userId));
+    return userAchievs;
+  }
+
+  // SALES DASHBOARD
+  async getSalesDashboard(userId: string, days: number): Promise<any> {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    
+    const sales = await db
+      .select()
+      .from(contentPurchases)
+      .where(and(
+        eq(contentPurchases.sellerId, userId),
+        gte(contentPurchases.purchasedAt, startDate)
+      ));
+    
+    const totalRevenue = sales.reduce((sum, s) => sum + s.priceCoins, 0);
+    const totalSales = sales.length;
+    const avgSale = totalSales > 0 ? totalRevenue / totalSales : 0;
+    
+    return {
+      totalRevenue,
+      totalSales,
+      avgSale,
+      conversionRate: 0,
+      salesByDay: [],
+      topProducts: [],
+    };
+  }
+
+  // EARNINGS BREAKDOWN
+  async getEarningsBreakdown(userId: string): Promise<any> {
+    const transactions = await db
+      .select()
+      .from(coinTransactions)
+      .where(eq(coinTransactions.userId, userId))
+      .orderBy(desc(coinTransactions.createdAt))
+      .limit(100);
+    
+    const bySource = transactions.reduce((acc, t) => {
+      acc[t.description] = (acc[t.description] || 0) + t.amount;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    return {
+      bySource,
+      total: transactions.reduce((sum, t) => sum + t.amount, 0),
+      recent: transactions.slice(0, 10),
+    };
+  }
+
+  // ACTIVITY FEED
+  async getActivityFeed(userId: string, limit: number): Promise<any[]> {
+    const activities: any[] = [];
+    
+    const recentPurchases = await db
+      .select()
+      .from(contentPurchases)
+      .where(eq(contentPurchases.sellerId, userId))
+      .orderBy(desc(contentPurchases.purchasedAt))
+      .limit(limit);
+    
+    recentPurchases.forEach(p => activities.push({
+      type: 'purchase',
+      timestamp: p.purchasedAt,
+      data: p,
+    }));
+    
+    return activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, limit);
+  }
+
+  // CAMPAIGNS
+  async getCampaigns(userId: string): Promise<any[]> {
+    return await db.select().from(campaigns).where(eq(campaigns.userId, userId));
+  }
+
+  async createCampaign(userId: string, campaign: any): Promise<any> {
+    const [newCampaign] = await db.insert(campaigns).values({ ...campaign, userId }).returning();
+    return newCampaign;
+  }
+
+  // CUSTOMERS
+  async getCustomerList(userId: string): Promise<any[]> {
+    const purchases = await db
+      .select({
+        buyerId: contentPurchases.buyerId,
+        buyer: users,
+        totalSpent: sql<number>`SUM(${contentPurchases.priceCoins})`,
+        purchaseCount: sql<number>`COUNT(*)`,
+        lastPurchase: sql<Date>`MAX(${contentPurchases.purchasedAt})`,
+      })
+      .from(contentPurchases)
+      .leftJoin(users, eq(contentPurchases.buyerId, users.id))
+      .where(eq(contentPurchases.sellerId, userId))
+      .groupBy(contentPurchases.buyerId, users.id);
+    
+    return purchases;
+  }
+
+  // DASHBOARD SETTINGS
+  async getDashboardSettings(userId: string): Promise<any> {
+    const [settings] = await db.select().from(dashboardSettings).where(eq(dashboardSettings.userId, userId));
+    if (!settings) {
+      const [newSettings] = await db.insert(dashboardSettings).values({ userId }).returning();
+      return newSettings;
+    }
+    return settings;
+  }
+
+  async updateDashboardSettings(userId: string, settings: any): Promise<void> {
+    await db
+      .update(dashboardSettings)
+      .set({ ...settings, updatedAt: new Date() })
+      .where(eq(dashboardSettings.userId, userId));
+  }
+
+  // USER SETTINGS
+  async getUserSettings(userId: string): Promise<any> {
+    const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, userId));
+    if (!settings) {
+      const [newSettings] = await db.insert(userSettings).values({ userId }).returning();
+      return newSettings;
+    }
+    return settings;
+  }
+
+  async updateUserSettings(userId: string, settings: any): Promise<void> {
+    await db
+      .update(userSettings)
+      .set({ ...settings, updatedAt: new Date() })
+      .where(eq(userSettings.userId, userId));
+  }
+
+  // PROFILE
+  async getProfileByUsername(username: string): Promise<any> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    if (!user) return null;
+    
+    const [profile] = await db.select().from(profiles).where(eq(profiles.userId, user.id));
+    
+    return { ...user, profile };
+  }
+
+  async updateProfile(userId: string, profileData: any): Promise<any> {
+    const [existing] = await db.select().from(profiles).where(eq(profiles.userId, userId));
+    
+    if (existing) {
+      const [updated] = await db
+        .update(profiles)
+        .set({ ...profileData, updatedAt: new Date() })
+        .where(eq(profiles.userId, userId))
+        .returning();
+      return updated;
+    } else {
+      const [newProfile] = await db.insert(profiles).values({ ...profileData, userId }).returning();
+      return newProfile;
+    }
   }
 }
 

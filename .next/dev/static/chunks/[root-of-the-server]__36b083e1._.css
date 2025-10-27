@@ -2127,6 +2127,10 @@ body {
   width: 1px;
 }
 
+.w-48 {
+  width: 12rem;
+}
+
 .min-w-0 {
   min-width: 0;
 }
@@ -3330,6 +3334,10 @@ body {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-2 {
+  padding-bottom: .5rem;
 }
 
 .text-left {

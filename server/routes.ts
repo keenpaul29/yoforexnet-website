@@ -3314,6 +3314,187 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================
+  // DASHBOARD ANALYTICS APIS
+  // ============================================
+
+  app.get("/api/me/sales-dashboard", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const days = parseInt(req.query.days as string) || 30;
+      const data = await storage.getSalesDashboard(userId, days);
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching sales dashboard:", error);
+      res.status(500).json({ error: "Failed to fetch sales dashboard" });
+    }
+  });
+
+  app.get("/api/me/referrals", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const referrals = await storage.getReferrals(userId);
+      res.json(referrals);
+    } catch (error) {
+      console.error("Error fetching referrals:", error);
+      res.status(500).json({ error: "Failed to fetch referrals" });
+    }
+  });
+
+  app.get("/api/me/referral-stats", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const stats = await storage.getReferralStats(userId);
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching referral stats:", error);
+      res.status(500).json({ error: "Failed to fetch referral stats" });
+    }
+  });
+
+  app.post("/api/me/generate-referral-code", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const code = await storage.generateReferralCode(userId);
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.EXPRESS_URL || 'http://localhost:5000';
+      res.json({ code, link: `${siteUrl}/ref/${code}` });
+    } catch (error) {
+      console.error("Error generating referral code:", error);
+      res.status(500).json({ error: "Failed to generate referral code" });
+    }
+  });
+
+  app.get("/api/me/earnings-breakdown", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const breakdown = await storage.getEarningsBreakdown(userId);
+      res.json(breakdown);
+    } catch (error) {
+      console.error("Error fetching earnings breakdown:", error);
+      res.status(500).json({ error: "Failed to fetch earnings breakdown" });
+    }
+  });
+
+  app.get("/api/me/goals", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const goals = await storage.getGoals(userId);
+      res.json(goals);
+    } catch (error) {
+      console.error("Error fetching goals:", error);
+      res.status(500).json({ error: "Failed to fetch goals" });
+    }
+  });
+
+  app.post("/api/me/goals", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const goal = await storage.createGoal(userId, req.body);
+      res.json(goal);
+    } catch (error) {
+      console.error("Error creating goal:", error);
+      res.status(500).json({ error: "Failed to create goal" });
+    }
+  });
+
+  app.get("/api/me/achievements", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const achievements = await storage.getUserAchievements(userId);
+      res.json(achievements);
+    } catch (error) {
+      console.error("Error fetching achievements:", error);
+      res.status(500).json({ error: "Failed to fetch achievements" });
+    }
+  });
+
+  app.get("/api/me/campaigns", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const campaigns = await storage.getCampaigns(userId);
+      res.json(campaigns);
+    } catch (error) {
+      console.error("Error fetching campaigns:", error);
+      res.status(500).json({ error: "Failed to fetch campaigns" });
+    }
+  });
+
+  app.get("/api/me/customers", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const customers = await storage.getCustomerList(userId);
+      res.json(customers);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+      res.status(500).json({ error: "Failed to fetch customers" });
+    }
+  });
+
+  app.get("/api/me/dashboard-settings", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const settings = await storage.getDashboardSettings(userId);
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching dashboard settings:", error);
+      res.status(500).json({ error: "Failed to fetch dashboard settings" });
+    }
+  });
+
+  // ============================================
+  // USER SETTINGS APIS
+  // ============================================
+
+  app.get("/api/me/settings", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const settings = await storage.getUserSettings(userId);
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching user settings:", error);
+      res.status(500).json({ error: "Failed to fetch user settings" });
+    }
+  });
+
+  app.put("/api/me/settings", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      await storage.updateUserSettings(userId, req.body);
+      res.json({ success: true, message: "Settings updated successfully" });
+    } catch (error) {
+      console.error("Error updating user settings:", error);
+      res.status(500).json({ error: "Failed to update user settings" });
+    }
+  });
+
+  // ============================================
+  // PROFILE APIS
+  // ============================================
+
+  app.get("/api/user/:username/profile", async (req, res) => {
+    try {
+      const profile = await storage.getProfileByUsername(req.params.username);
+      if (!profile) {
+        return res.status(404).json({ error: "Profile not found" });
+      }
+      res.json(profile);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
+  app.put("/api/me/profile", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const profile = await storage.updateProfile(userId, req.body);
+      res.json(profile);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ error: "Failed to update profile" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
