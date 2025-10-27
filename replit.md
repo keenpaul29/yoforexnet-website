@@ -119,6 +119,37 @@ YoForex is a comprehensive EA (Expert Advisor) forum and marketplace platform fo
 - **AI Crawler Policy**: Public llms.txt file defining allowed/disallowed paths and usage guidelines for AI crawlers
 - **Seed Data**: 60 realistic forum threads across all categories for testing and demonstration
 
+## 🚨 CRITICAL DEPLOYMENT ISSUE (UNRESOLVED)
+**Status**: ❌ **WILL BREAK IN PRODUCTION**
+
+**Problem**: The application uses hardcoded `localhost:3001` URLs that will fail when deployed to Replit because:
+1. Replit autoscale deployments only expose ONE external port
+2. Current architecture runs TWO separate servers (Next.js:5000 + Express:3001)
+3. Hardcoded localhost URLs exist in:
+   - `next.config.js` (rewrites to localhost:3001)
+   - `app/lib/queryClient.ts` (API base URL with localhost fallback)
+   - Server-side fetches in multiple pages (page.tsx, publish/page.tsx, brokers/submit-review/page.tsx)
+
+**Impact**: All API calls will return 502 errors in production deployment.
+
+**Solution Options**:
+- **Option A (Recommended)**: Migrate all Express routes to Next.js API routes (`app/api/*`)
+  - Single server on port 5000
+  - Native Next.js architecture
+  - Best for Replit deployments
+- **Option B**: Embed Express into Next.js custom server
+  - Keep Express code, run inside Next.js
+  - More complex but preserves existing API structure
+
+**Required Actions Before Deployment**:
+1. Choose migration strategy (A or B)
+2. Implement unified server architecture
+3. Replace all localhost:3001 references with environment variables
+4. Update `.replit` to expose single external port
+5. Test deployment with proper `EXPRESS_URL` environment variable
+
+**Why This Wasn't Fixed**: Discovered during post-implementation review. Requires architectural decision from user.
+
 ## External Dependencies
 - **Stripe**: For credit/debit card payments (integrated).
 - **Replit Auth**: OIDC authentication (integrated).
