@@ -45,6 +45,16 @@ import {
   type InsertNotification,
   type DashboardPreferences,
   type InsertDashboardPreferences,
+  type Referral,
+  type InsertReferral,
+  type Goal,
+  type InsertGoal,
+  type Achievement,
+  type UserAchievement,
+  type Campaign,
+  type DashboardSettings,
+  type Profile,
+  type UserSettings,
   users,
   coinTransactions,
   rechargeOrders,
@@ -70,6 +80,14 @@ import {
   messageReactions,
   notifications,
   dashboardPreferences,
+  referrals,
+  goals,
+  achievements,
+  userAchievements,
+  campaigns,
+  dashboardSettings,
+  profiles,
+  userSettings,
   BADGE_TYPES,
   type BadgeType
 } from "@shared/schema";
@@ -308,6 +326,47 @@ export interface IStorage {
       percentage: number;
     }>;
   }>;
+  
+  // Referrals
+  getReferrals(userId: string): Promise<any[]>;
+  getReferralStats(userId: string): Promise<{totalReferrals: number, totalEarnings: number, monthlyEarnings: number}>;
+  generateReferralCode(userId: string): Promise<string>;
+  
+  // Goals
+  getGoals(userId: string): Promise<any[]>;
+  createGoal(userId: string, goal: any): Promise<any>;
+  updateGoal(goalId: number, updates: any): Promise<any>;
+  
+  // Achievements
+  getUserAchievements(userId: string): Promise<any[]>;
+  
+  // Sales Dashboard
+  getSalesDashboard(userId: string, days: number): Promise<any>;
+  
+  // Earnings
+  getEarningsBreakdown(userId: string): Promise<any>;
+  
+  // Activity Feed
+  getActivityFeed(userId: string, limit: number): Promise<any[]>;
+  
+  // Campaigns
+  getCampaigns(userId: string): Promise<any[]>;
+  createCampaign(userId: string, campaign: any): Promise<any>;
+  
+  // Customers
+  getCustomerList(userId: string): Promise<any[]>;
+  
+  // Dashboard Settings
+  getDashboardSettings(userId: string): Promise<any>;
+  updateDashboardSettings(userId: string, settings: any): Promise<void>;
+  
+  // Profile
+  getProfileByUsername(username: string): Promise<any>;
+  updateProfile(userId: string, profile: any): Promise<any>;
+  
+  // User Settings
+  getUserSettings(userId: string): Promise<any>;
+  updateUserSettings(userId: string, settings: any): Promise<void>;
 }
 
 export class MemStorage implements IStorage {

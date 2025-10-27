@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, json, check, uniqueIndex, numeric } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, json, check, uniqueIndex, numeric, serial, date } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -559,19 +559,139 @@ export const dailyActivityLimits = pgTable("daily_activity_limits", {
 
 // Referral System - Track referrals and commissions
 export const referrals = pgTable("referrals", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: serial("id").primaryKey(),
   referrerId: varchar("referrer_id").notNull().references(() => users.id),
   referredUserId: varchar("referred_user_id").notNull().references(() => users.id),
-  signupBonus: integer("signup_bonus").notNull().default(10),
-  firstPostBonus: integer("first_post_bonus").notNull().default(0),
-  firstPurchaseBonus: integer("first_purchase_bonus").notNull().default(0),
-  lifetimeCommissionEarned: integer("lifetime_commission_earned").notNull().default(0),
-  status: text("status").notNull().$type<"active" | "inactive">().default("active"),
+  referralCode: varchar("referral_code", { length: 50 }).notNull().unique(),
+  status: varchar("status", { length: 20 }).notNull().default("active"),
+  totalEarnings: integer("total_earnings").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
   referrerIdx: index("idx_referrals_referrer_id").on(table.referrerId),
   referredIdx: uniqueIndex("idx_referrals_referred_user_id").on(table.referredUserId),
+  referralCodeIdx: index("idx_referrals_code").on(table.referralCode),
+}));
+
+// Goals table
+export const goals = pgTable("goals", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  goalType: varchar("goal_type", { length: 50 }).notNull(),
+  targetValue: integer("target_value").notNull(),
+  currentValue: integer("current_value").notNull().default(0),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("active"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_goals_user_id").on(table.userId),
+}));
+
+// Achievements table
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description").notNull(),
+  icon: varchar("icon", { length: 50 }).notNull(),
+  requirement: integer("requirement").notNull(),
+  category: varchar("category", { length: 50 }).notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index("idx_achievements_slug").on(table.slug),
+}));
+
+// User Achievements table
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  achievementId: integer("achievement_id").notNull().references(() => achievements.id),
+  progress: integer("progress").notNull().default(0),
+  unlockedAt: timestamp("unlocked_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_user_achievements_user_id").on(table.userId),
+  achievementIdIdx: index("idx_user_achievements_achievement_id").on(table.achievementId),
+}));
+
+// Campaigns table
+export const campaigns = pgTable("campaigns", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  name: varchar("name", { length: 200 }).notNull(),
+  type: varchar("type", { length: 50 }).notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("active"),
+  discountPercent: integer("discount_percent"),
+  discountCode: varchar("discount_code", { length: 50 }).unique(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  uses: integer("uses").notNull().default(0),
+  revenue: integer("revenue").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_campaigns_user_id").on(table.userId),
+  discountCodeIdx: index("idx_campaigns_discount_code").on(table.discountCode),
+}));
+
+// Dashboard Settings table
+export const dashboardSettings = pgTable("dashboard_settings", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id).unique(),
+  layout: json("layout"),
+  theme: varchar("theme", { length: 20 }).default("light"),
+  autoRefresh: boolean("auto_refresh").default(true),
+  refreshInterval: integer("refresh_interval").default(30),
+  favorites: json("favorites"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: uniqueIndex("idx_dashboard_settings_user_id").on(table.userId),
+}));
+
+// Profiles table
+export const profiles = pgTable("profiles", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id).unique(),
+  coverPhoto: text("cover_photo"),
+  bio: text("bio"),
+  tradingLevel: varchar("trading_level", { length: 50 }),
+  tradingStyle: json("trading_style"),
+  tradingPlatform: json("trading_platform"),
+  tradingSince: date("trading_since"),
+  specialties: json("specialties"),
+  telegram: varchar("telegram", { length: 100 }),
+  discord: varchar("discord", { length: 100 }),
+  twitter: varchar("twitter", { length: 100 }),
+  youtube: varchar("youtube", { length: 200 }),
+  tradingview: varchar("tradingview", { length: 200 }),
+  website: varchar("website", { length: 200 }),
+  profileLayout: varchar("profile_layout", { length: 20 }).default("professional"),
+  customSlug: varchar("custom_slug", { length: 100 }).unique(),
+  isPublic: boolean("is_public").default(true),
+  isPremium: boolean("is_premium").default(false),
+  brandColors: json("brand_colors"),
+  showRevenue: boolean("show_revenue").default(true),
+  showSales: boolean("show_sales").default(true),
+  showFollowers: boolean("show_followers").default(true),
+  showActivity: boolean("show_activity").default(true),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: uniqueIndex("idx_profiles_user_id").on(table.userId),
+  customSlugIdx: index("idx_profiles_custom_slug").on(table.customSlug),
+}));
+
+// User Settings table
+export const userSettings = pgTable("user_settings", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id).unique(),
+  notificationPreferences: json("notification_preferences"),
+  privacySettings: json("privacy_settings"),
+  displaySettings: json("display_settings"),
+  communicationSettings: json("communication_settings"),
+  publishingDefaults: json("publishing_defaults"),
+  advancedSettings: json("advanced_settings"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: uniqueIndex("idx_user_settings_user_id").on(table.userId),
 }));
 
 // Upsert User schema for Replit Auth (OIDC)
@@ -1079,5 +1199,29 @@ export type DailyActivityLimit = typeof dailyActivityLimits.$inferSelect;
 export type InsertDailyActivityLimit = typeof dailyActivityLimits.$inferInsert;
 
 // Referral types
+export const insertReferralSchema = createInsertSchema(referrals).omit({ id: true, createdAt: true });
+export type InsertReferral = z.infer<typeof insertReferralSchema>;
 export type Referral = typeof referrals.$inferSelect;
-export type InsertReferral = typeof referrals.$inferInsert;
+
+// Goals types
+export const insertGoalSchema = createInsertSchema(goals).omit({ id: true, createdAt: true });
+export type InsertGoal = z.infer<typeof insertGoalSchema>;
+export type Goal = typeof goals.$inferSelect;
+
+// Achievements types
+export type Achievement = typeof achievements.$inferSelect;
+
+// User Achievements types
+export type UserAchievement = typeof userAchievements.$inferSelect;
+
+// Campaigns types
+export type Campaign = typeof campaigns.$inferSelect;
+
+// Dashboard Settings types
+export type DashboardSettings = typeof dashboardSettings.$inferSelect;
+
+// Profiles types
+export type Profile = typeof profiles.$inferSelect;
+
+// User Settings types
+export type UserSettings = typeof userSettings.$inferSelect;
