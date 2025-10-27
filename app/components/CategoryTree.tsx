@@ -52,7 +52,7 @@ export function CategoryTree({ categories }: CategoryTreeProps) {
                   {subcategories.slice(0, 5).map((subcat) => (
                     <Link
                       key={subcat.slug}
-                      href={`/category/${category.slug}/${subcat.slug}`}
+                      href={`/category/${subcat.slug}`}
                       className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover-elevate p-2 rounded"
                       data-testid={`subcategory-link-${subcat.slug}`}
                     >

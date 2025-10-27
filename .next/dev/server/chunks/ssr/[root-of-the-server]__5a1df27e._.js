@@ -1808,7 +1808,7 @@ function CategoryTree({ categories }) {
                             className: "space-y-2",
                             children: [
                                 subcategories.slice(0, 5).map((subcat)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: `/category/${category.slug}/${subcat.slug}`,
+                                        href: `/category/${subcat.slug}`,
                                         className: "flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover-elevate p-2 rounded",
                                         "data-testid": `subcategory-link-${subcat.slug}`,
                                         children: [
