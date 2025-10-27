@@ -5,8 +5,8 @@ import type { ForumCategory } from '@shared/schema';
 // Express API base URL
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
 
-// No caching - always fetch fresh data
-export const revalidate = 0;
+// Enable ISR with 60-second revalidation
+export const revalidate = 60;
 
 // SEO Metadata as specified in requirements
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default async function CategoriesPage() {
   
   try {
     const res = await fetch(`${EXPRESS_URL}/api/categories`, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
 
     if (res.ok) {

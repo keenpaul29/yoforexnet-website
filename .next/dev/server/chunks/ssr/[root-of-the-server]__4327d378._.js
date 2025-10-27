@@ -171,7 +171,9 @@ __turbopack_context__.s([
     "default",
     ()=>HomePage,
     "metadata",
-    ()=>metadata
+    ()=>metadata,
+    "revalidate",
+    ()=>revalidate
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js [app-rsc] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$HomeClient$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/HomeClient.tsx [app-rsc] (ecmascript)");
@@ -179,6 +181,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$api$2d$config$
 ;
 ;
 ;
+const revalidate = 60;
 const metadata = {
     title: 'YoForex - Expert Advisor Forum & EA Marketplace',
     description: 'Join 10,000+ forex traders. Download free EAs, share strategies, and earn coins. #1 MT4/MT5 EA community with verified backtests and live results.',
@@ -202,7 +205,9 @@ async function fetchData(url) {
         console.log(`[SSR Fetch] Fetching: ${apiUrl}${url}`);
         const res = await fetch(`${apiUrl}${url}`, {
             signal: controller.signal,
-            cache: 'no-store',
+            next: {
+                revalidate: 60
+            },
             headers: {
                 'Accept': 'application/json'
             }
@@ -232,7 +237,7 @@ async function HomePage() {
         initialThreads: threads
     }, void 0, false, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 51,
+        lineNumber: 54,
         columnNumber: 5
     }, this);
 }

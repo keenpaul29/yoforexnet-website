@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import HomeClient from './HomeClient';
 import { getInternalApiUrl } from './lib/api-config';
 
+// Enable ISR with 60-second revalidation
+export const revalidate = 60;
+
 // Homepage metadata
 export const metadata: Metadata = {
   title: 'YoForex - Expert Advisor Forum & EA Marketplace',
@@ -18,7 +21,7 @@ async function fetchData(url: string) {
     console.log(`[SSR Fetch] Fetching: ${apiUrl}${url}`);
     const res = await fetch(`${apiUrl}${url}`, {
       signal: controller.signal,
-      cache: 'no-store',
+      next: { revalidate: 60 },
       headers: {
         'Accept': 'application/json',
       },

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import MarketplaceClient from './MarketplaceClient';
 
+// Enable ISR with 60-second revalidation
+export const revalidate = 60;
+
 // Generate SEO metadata
 export const metadata: Metadata = {
   title: 'EA & Indicator Marketplace | YoForex',
@@ -23,7 +26,7 @@ async function getMarketplaceContent() {
   try {
     const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
     const res = await fetch(`${EXPRESS_URL}/api/content?status=approved`, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     
     if (!res.ok) {

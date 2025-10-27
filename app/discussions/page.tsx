@@ -3,8 +3,8 @@ import Header from '../components/Header';
 import { Footer } from '../components/Footer';
 import DiscussionsClient from './DiscussionsClient';
 
-// No caching - always fetch fresh data
-export const revalidate = 0;
+// Enable ISR with 60-second revalidation
+export const revalidate = 60;
 
 // SEO Metadata as specified in requirements
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ async function getThreads() {
   try {
     const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
     const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=newest&limit=50`, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
       credentials: 'include',
     });
 

@@ -5,11 +5,38 @@ import type { ForumCategory, ForumThread } from '@shared/schema';
 // Express API base URL
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
 
+// Enable ISR with 60-second revalidation
+export const revalidate = 60;
+export const dynamicParams = true;
+
+// Pre-generate static pages for all categories
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${EXPRESS_URL}/api/categories`, {
+      next: { revalidate: 60 },
+    });
+    
+    if (!res.ok) {
+      return [];
+    }
+    
+    const categories = await res.json();
+    return categories.map((cat: any) => ({
+      slug: cat.slug,
+    }));
+  } catch (error) {
+    console.error('Error fetching categories for static params:', error);
+    return [];
+  }
+}
+
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const res = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, { cache: 'no-store' });
+    const res = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, { 
+      next: { revalidate: 60 },
+    });
     if (!res.ok) {
       return {
         title: 'Category Not Found | YoForex',
@@ -44,32 +71,34 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CategoryDiscussionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   
-  // Fetch category with error handling that doesn't trigger Next.js 404
+  // Parallel data fetching with error handling
+  const [categoryRes, threadsRes] = await Promise.all([
+    fetch(`${EXPRESS_URL}/api/categories/${slug}`, { 
+      next: { revalidate: 60 },
+    }).catch(() => null),
+    fetch(`${EXPRESS_URL}/api/categories/${slug}/threads`, { 
+      next: { revalidate: 60 },
+    }).catch(() => null),
+  ]);
+
+  // Parse responses
   let category: ForumCategory | null = null;
-  try {
-    const categoryRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, { 
-      cache: 'no-store',
-    });
-    if (categoryRes.ok) {
+  let threads: ForumThread[] = [];
+
+  if (categoryRes && categoryRes.ok) {
+    try {
       category = await categoryRes.json();
+    } catch (error) {
+      console.error('Error parsing category:', error);
     }
-  } catch (error) {
-    // Swallow error - we'll show custom error card
-    category = null;
   }
 
-  // Fetch threads with error handling
-  let threads: ForumThread[] = [];
-  try {
-    const threadsRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}/threads`, { 
-      cache: 'no-store',
-    });
-    if (threadsRes.ok) {
+  if (threadsRes && threadsRes.ok) {
+    try {
       threads = await threadsRes.json();
+    } catch (error) {
+      console.error('Error parsing threads:', error);
     }
-  } catch (error) {
-    // Swallow error - we'll show empty state
-    threads = [];
   }
 
   // Pass all data to Client Component
@@ -81,7 +110,3 @@ export default async function CategoryDiscussionPage({ params }: { params: Promi
     />
   );
 }
-
-// Enable dynamic rendering with no caching
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;

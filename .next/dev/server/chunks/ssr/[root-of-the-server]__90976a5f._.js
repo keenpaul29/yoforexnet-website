@@ -51,10 +51,12 @@ __turbopack_context__.n(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$c
 __turbopack_context__.s([
     "default",
     ()=>CategoryDiscussionPage,
-    "dynamic",
-    ()=>dynamic,
+    "dynamicParams",
+    ()=>dynamicParams,
     "generateMetadata",
     ()=>generateMetadata,
+    "generateStaticParams",
+    ()=>generateStaticParams,
     "revalidate",
     ()=>revalidate
 ]);
@@ -64,11 +66,34 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$category$2f5b$slug$5d
 ;
 // Express API base URL
 const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
+const revalidate = 60;
+const dynamicParams = true;
+async function generateStaticParams() {
+    try {
+        const res = await fetch(`${EXPRESS_URL}/api/categories`, {
+            next: {
+                revalidate: 60
+            }
+        });
+        if (!res.ok) {
+            return [];
+        }
+        const categories = await res.json();
+        return categories.map((cat)=>({
+                slug: cat.slug
+            }));
+    } catch (error) {
+        console.error('Error fetching categories for static params:', error);
+        return [];
+    }
+}
 async function generateMetadata({ params }) {
     const { slug } = await params;
     try {
         const res = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, {
-            cache: 'no-store'
+            next: {
+                revalidate: 60
+            }
         });
         if (!res.ok) {
             return {
@@ -99,31 +124,35 @@ async function generateMetadata({ params }) {
 }
 async function CategoryDiscussionPage({ params }) {
     const { slug } = await params;
-    // Fetch category with error handling that doesn't trigger Next.js 404
+    // Parallel data fetching with error handling
+    const [categoryRes, threadsRes] = await Promise.all([
+        fetch(`${EXPRESS_URL}/api/categories/${slug}`, {
+            next: {
+                revalidate: 60
+            }
+        }).catch(()=>null),
+        fetch(`${EXPRESS_URL}/api/categories/${slug}/threads`, {
+            next: {
+                revalidate: 60
+            }
+        }).catch(()=>null)
+    ]);
+    // Parse responses
     let category = null;
-    try {
-        const categoryRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}`, {
-            cache: 'no-store'
-        });
-        if (categoryRes.ok) {
-            category = await categoryRes.json();
-        }
-    } catch (error) {
-        // Swallow error - we'll show custom error card
-        category = null;
-    }
-    // Fetch threads with error handling
     let threads = [];
-    try {
-        const threadsRes = await fetch(`${EXPRESS_URL}/api/categories/${slug}/threads`, {
-            cache: 'no-store'
-        });
-        if (threadsRes.ok) {
-            threads = await threadsRes.json();
+    if (categoryRes && categoryRes.ok) {
+        try {
+            category = await categoryRes.json();
+        } catch (error) {
+            console.error('Error parsing category:', error);
         }
-    } catch (error) {
-        // Swallow error - we'll show empty state
-        threads = [];
+    }
+    if (threadsRes && threadsRes.ok) {
+        try {
+            threads = await threadsRes.json();
+        } catch (error) {
+            console.error('Error parsing threads:', error);
+        }
     }
     // Pass all data to Client Component
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$category$2f5b$slug$5d2f$CategoryDiscussionClient$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
@@ -132,12 +161,10 @@ async function CategoryDiscussionPage({ params }) {
         initialThreads: threads
     }, void 0, false, {
         fileName: "[project]/app/category/[slug]/page.tsx",
-        lineNumber: 77,
+        lineNumber: 106,
         columnNumber: 5
     }, this);
 }
-const dynamic = 'force-dynamic';
-const revalidate = 0;
 }),
 "[project]/app/category/[slug]/page.tsx [app-rsc] (ecmascript, Next.js Server Component)", ((__turbopack_context__) => {
 

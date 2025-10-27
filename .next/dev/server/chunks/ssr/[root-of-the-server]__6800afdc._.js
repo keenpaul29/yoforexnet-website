@@ -428,7 +428,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$discussions$2f$Discus
 ;
 ;
 ;
-const revalidate = 0;
+const revalidate = 60;
 const metadata = {
     title: 'Forum Discussions | YoForex - Expert Advisor Community',
     description: 'Join the YoForex community forum. Discuss trading strategies, expert advisors, and MT4/MT5 indicators with forex traders worldwide.',
@@ -456,7 +456,9 @@ async function getThreads() {
     try {
         const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
         const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=newest&limit=50`, {
-            cache: 'no-store',
+            next: {
+                revalidate: 60
+            },
             credentials: 'include'
         });
         if (!res.ok) {

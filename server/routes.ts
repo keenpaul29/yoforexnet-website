@@ -1724,6 +1724,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // List forum threads with filters
   app.get("/api/threads", async (req, res) => {
+    // Cache for 60 seconds
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+    
     const sortBy = req.query.sortBy as string | undefined;
     const filters = {
       categorySlug: req.query.categorySlug as string | undefined,
@@ -1756,6 +1759,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // GET /api/threads/hot - Trending/hot threads (What's Hot) - MUST BE BEFORE /:id route
   app.get("/api/threads/hot", async (req, res) => {
+    // Cache for 60 seconds
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+    
     try {
       const threads = await storage.getAllForumThreads();
       
@@ -1791,6 +1797,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // GET /api/threads/highlights - This week's highlights - MUST BE BEFORE /:id route
   app.get("/api/threads/highlights", async (req, res) => {
+    // Cache for 60 seconds
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+    
     try {
       const tab = req.query.tab as string || 'new';
       const threads = await storage.getAllForumThreads();
@@ -2122,6 +2131,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // List all categories
   app.get("/api/categories", async (req, res) => {
+    // Cache for 5 minutes
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    
     const categories = await storage.listForumCategories();
     // Filter to active categories only
     const activeCategories = categories.filter(c => c.isActive);
@@ -2149,6 +2161,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Get category tree (main categories with their subcategories)
   app.get("/api/categories/tree/all", async (req, res) => {
+    // Cache for 5 minutes
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    
     try {
       const categories = await storage.listForumCategories();
       const activeCategories = categories.filter(c => c.isActive);
@@ -2682,10 +2697,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // GET /api/stats - Platform statistics for stats bar
   app.get("/api/stats", async (req, res) => {
+    // Cache for 30 seconds
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
+    
     try {
-      const threads = await storage.getAllForumThreads();
-      const users = await storage.getAllUsers();
-      const content = await storage.getAllContent();
+      // Parallel fetching for better performance
+      const [threads, users, content] = await Promise.all([
+        storage.getAllForumThreads(),
+        storage.getAllUsers(),
+        storage.getAllContent()
+      ]);
       
       // Calculate today's activity
       const today = new Date();
