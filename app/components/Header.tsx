@@ -223,7 +223,7 @@ export default function Header() {
                     Dashboard
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/dashboard/customize">
+                <Link href="/dashboard/settings">
                   <DropdownMenuItem data-testid="link-customize-dashboard">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Customize Dashboard
