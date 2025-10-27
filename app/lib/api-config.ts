@@ -13,31 +13,45 @@
 /**
  * Environment variable validation
  * Ensures required configuration is present at runtime
+ * 
+ * PRODUCTION SAFETY: Throws errors for missing critical variables
+ * DEVELOPMENT: Allows fallbacks with warnings
  */
 function validateEnv() {
-  const required = {
-    // Server-side only (Node.js env vars)
-    EXPRESS_URL: process.env.EXPRESS_URL,
-    
-    // Client-side (NEXT_PUBLIC_* accessible in browser)
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-  };
-
-  const missing: string[] = [];
+  const isProduction = process.env.NODE_ENV === 'production';
 
   if (typeof window === 'undefined') {
-    // Server-side: require EXPRESS_URL
-    if (!required.EXPRESS_URL) {
-      missing.push('EXPRESS_URL');
+    // Server-side: require EXPRESS_URL in production
+    if (!process.env.EXPRESS_URL) {
+      if (isProduction) {
+        throw new Error(
+          '🚨 CRITICAL: EXPRESS_URL environment variable is required in production.\n' +
+          'Please set it in your .env.production file.\n' +
+          'Example: EXPRESS_URL=http://127.0.0.1:3001\n' +
+          'For VPS deployment, see: VPS_DEPLOYMENT_GUIDE.md'
+        );
+      } else {
+        console.warn(
+          '⚠️  EXPRESS_URL not set, using development fallback: http://127.0.0.1:3001'
+        );
+      }
     }
   }
 
-  if (missing.length > 0) {
-    console.warn(
-      `⚠️  Missing environment variables: ${missing.join(', ')}\n` +
-      `   Using fallback URLs for development.\n` +
-      `   Set these variables for production deployment.`
-    );
+  // NEXT_PUBLIC_SITE_URL is required in production for SEO, OG tags, canonical URLs
+  if (!process.env.NEXT_PUBLIC_SITE_URL) {
+    if (isProduction) {
+      throw new Error(
+        '🚨 CRITICAL: NEXT_PUBLIC_SITE_URL environment variable is required in production.\n' +
+        'Please set it in your .env.production file.\n' +
+        'Example: NEXT_PUBLIC_SITE_URL=https://yourdomain.com\n' +
+        'This is used for SEO metadata, Open Graph tags, and canonical URLs.'
+      );
+    } else {
+      console.warn(
+        '⚠️  NEXT_PUBLIC_SITE_URL not set, using development fallback: http://localhost:3000'
+      );
+    }
   }
 }
 
@@ -49,10 +63,19 @@ validateEnv();
  * 
  * @returns API base URL accessible from the browser
  * 
+ * Client-side behavior:
+ * - Always returns empty string '' (uses relative URLs)
+ * - Next.js rewrites handle /api/* → Express server routing
+ * - No need for absolute URLs on client-side
+ * 
+ * Server-side behavior:
+ * - Returns internal API URL (e.g., http://127.0.0.1:3001)
+ * - Used for server-to-server communication
+ * 
  * Usage in client components:
  * ```typescript
  * const apiUrl = getApiBaseUrl();
- * fetch(`${apiUrl}/api/stats`);
+ * fetch(`${apiUrl}/api/stats`);  // Becomes: fetch('/api/stats')
  * ```
  */
 export function getApiBaseUrl(): string {
@@ -61,10 +84,8 @@ export function getApiBaseUrl(): string {
     return '';
   }
 
-  // Server-side: direct to Express API
-  // In production VPS: http://localhost:3001 (internal communication)
-  // In production Replit: https://yourdomain.com (external URL)
-  return process.env.EXPRESS_URL || 'http://localhost:3001';
+  // Server-side: Use getInternalApiUrl which has production safety checks
+  return getInternalApiUrl();
 }
 
 /**
@@ -84,8 +105,24 @@ export function getInternalApiUrl(): string {
     throw new Error('getInternalApiUrl() can only be called server-side');
   }
 
-  // Direct to Express API (internal communication)
-  return process.env.EXPRESS_URL || 'http://localhost:3001';
+  const isProduction = process.env.NODE_ENV === 'production';
+  const url = process.env.EXPRESS_URL;
+  
+  if (!url) {
+    if (isProduction) {
+      throw new Error(
+        'EXPRESS_URL must be set in production. ' +
+        'This is a critical configuration error that will prevent server-side API calls from working.'
+      );
+    }
+    // Development fallback only
+    const fallback = 'http://127.0.0.1:3001';
+    console.log(`[API Config] Using development fallback: ${fallback}`);
+    return fallback;
+  }
+  
+  console.log(`[API Config] Internal API URL: ${url}`);
+  return url;
 }
 
 /**
@@ -100,11 +137,21 @@ export function getInternalApiUrl(): string {
  * ```
  */
 export function getSiteUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.VERCEL_URL ||
-    'http://localhost:3000'
-  );
+  const isProduction = process.env.NODE_ENV === 'production';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL;
+  
+  if (!siteUrl) {
+    if (isProduction) {
+      throw new Error(
+        'NEXT_PUBLIC_SITE_URL must be set in production. ' +
+        'This is required for SEO, canonical URLs, and Open Graph tags.'
+      );
+    }
+    // Development fallback
+    return 'http://localhost:3000';
+  }
+  
+  return siteUrl;
 }
 
 /**
@@ -162,6 +209,9 @@ export const apiConfig = {
 
 /**
  * Type-safe environment variable access
+ * 
+ * Note: NEXT_PUBLIC_EXPRESS_URL is not included as client-side code
+ * uses relative URLs (/api/*) which are handled by Next.js rewrites.
  */
 export const env = {
   // Server-side only
@@ -171,7 +221,6 @@ export const env = {
 
   // Public (client-accessible)
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-  NEXT_PUBLIC_EXPRESS_URL: process.env.NEXT_PUBLIC_EXPRESS_URL,
 
   // Node environment
   NODE_ENV: process.env.NODE_ENV,

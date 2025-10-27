@@ -15,6 +15,9 @@
  */ /**
  * Environment variable validation
  * Ensures required configuration is present at runtime
+ * 
+ * PRODUCTION SAFETY: Throws errors for missing critical variables
+ * DEVELOPMENT: Allows fallbacks with warnings
  */ __turbopack_context__.s([
     "apiConfig",
     ()=>apiConfig,
@@ -33,18 +36,12 @@
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 function validateEnv() {
-    const required = {
-        // Server-side only (Node.js env vars)
-        EXPRESS_URL: ("TURBOPACK compile-time value", "http://localhost:5000"),
-        // Client-side (NEXT_PUBLIC_* accessible in browser)
-        NEXT_PUBLIC_SITE_URL: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_SITE_URL
-    };
-    const missing = [];
+    const isProduction = ("TURBOPACK compile-time value", "development") === 'production';
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
-    if (missing.length > 0) {
-        console.warn(`⚠️  Missing environment variables: ${missing.join(', ')}\n` + `   Using fallback URLs for development.\n` + `   Set these variables for production deployment.`);
-    }
+    // NEXT_PUBLIC_SITE_URL is required in production for SEO, OG tags, canonical URLs
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
 }
 // Run validation on module load
 validateEnv();
@@ -61,11 +58,19 @@ function getInternalApiUrl() {
     if ("TURBOPACK compile-time truthy", 1) {
         throw new Error('getInternalApiUrl() can only be called server-side');
     }
-    // Direct to Express API (internal communication)
-    return ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:3001';
+    const isProduction = ("TURBOPACK compile-time value", "development") === 'production';
+    const url = ("TURBOPACK compile-time value", "http://127.0.0.1:3001");
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    console.log(`[API Config] Internal API URL: ${url}`);
+    return url;
 }
 function getSiteUrl() {
-    return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_SITE_URL || __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.VERCEL_URL || 'http://localhost:3000';
+    const isProduction = ("TURBOPACK compile-time value", "development") === 'production';
+    const siteUrl = ("TURBOPACK compile-time value", "http://localhost:3000") || __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.VERCEL_URL;
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    return siteUrl;
 }
 function buildApiUrl(path) {
     const base = getApiBaseUrl();
@@ -96,12 +101,11 @@ const apiConfig = {
 };
 const env = {
     // Server-side only
-    EXPRESS_URL: ("TURBOPACK compile-time value", "http://localhost:5000"),
+    EXPRESS_URL: ("TURBOPACK compile-time value", "http://127.0.0.1:3001"),
     DATABASE_URL: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.DATABASE_URL,
     SESSION_SECRET: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.SESSION_SECRET,
     // Public (client-accessible)
-    NEXT_PUBLIC_SITE_URL: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_SITE_URL,
-    NEXT_PUBLIC_EXPRESS_URL: ("TURBOPACK compile-time value", "http://localhost:5000"),
+    NEXT_PUBLIC_SITE_URL: ("TURBOPACK compile-time value", "http://localhost:3000"),
     // Node environment
     NODE_ENV: ("TURBOPACK compile-time value", "development")
 };

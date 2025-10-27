@@ -10,24 +10,31 @@ export const metadata: Metadata = {
 };
 
 async function fetchData(url: string) {
+  const apiUrl = getInternalApiUrl();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  
   try {
-    // Server-side: use centralized API config (no hardcoded URLs)
-    const apiUrl = getInternalApiUrl();
+    console.log(`[SSR Fetch] Fetching: ${apiUrl}${url}`);
     const res = await fetch(`${apiUrl}${url}`, {
+      signal: controller.signal,
       cache: 'no-store',
       headers: {
         'Accept': 'application/json',
       },
     });
     
+    clearTimeout(timeout);
+    
     if (!res.ok) {
-      console.error(`Failed to fetch ${url}:`, res.status, res.statusText);
+      console.error(`[SSR Fetch] Failed ${url}: ${res.status}`);
       return null;
     }
     
     return await res.json();
   } catch (error) {
-    console.error(`Error fetching ${url}:`, error);
+    clearTimeout(timeout);
+    console.error(`[SSR Fetch] Error ${url}:`, error);
     return null;
   }
 }

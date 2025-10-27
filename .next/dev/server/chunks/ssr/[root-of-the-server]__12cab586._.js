@@ -21,6 +21,9 @@ module.exports = mod;
  */ /**
  * Environment variable validation
  * Ensures required configuration is present at runtime
+ * 
+ * PRODUCTION SAFETY: Throws errors for missing critical variables
+ * DEVELOPMENT: Allows fallbacks with warnings
  */ __turbopack_context__.s([
     "apiConfig",
     ()=>apiConfig,
@@ -38,22 +41,15 @@ module.exports = mod;
     ()=>getSiteUrl
 ]);
 function validateEnv() {
-    const required = {
-        // Server-side only (Node.js env vars)
-        EXPRESS_URL: ("TURBOPACK compile-time value", "http://localhost:5000"),
-        // Client-side (NEXT_PUBLIC_* accessible in browser)
-        NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL
-    };
-    const missing = [];
+    const isProduction = ("TURBOPACK compile-time value", "development") === 'production';
     if ("TURBOPACK compile-time truthy", 1) {
-        // Server-side: require EXPRESS_URL
-        if (!required.EXPRESS_URL) {
-            missing.push('EXPRESS_URL');
-        }
+        // Server-side: require EXPRESS_URL in production
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
     }
-    if (missing.length > 0) {
-        console.warn(`⚠️  Missing environment variables: ${missing.join(', ')}\n` + `   Using fallback URLs for development.\n` + `   Set these variables for production deployment.`);
-    }
+    // NEXT_PUBLIC_SITE_URL is required in production for SEO, OG tags, canonical URLs
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
 }
 // Run validation on module load
 validateEnv();
@@ -61,20 +57,26 @@ function getApiBaseUrl() {
     // Client-side: use relative URLs (NGINX/Next.js rewrites handle routing)
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
-    // Server-side: direct to Express API
-    // In production VPS: http://localhost:3001 (internal communication)
-    // In production Replit: https://yourdomain.com (external URL)
-    return ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:3001';
+    // Server-side: Use getInternalApiUrl which has production safety checks
+    return getInternalApiUrl();
 }
 function getInternalApiUrl() {
     // Server-side only
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
-    // Direct to Express API (internal communication)
-    return ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:3001';
+    const isProduction = ("TURBOPACK compile-time value", "development") === 'production';
+    const url = ("TURBOPACK compile-time value", "http://127.0.0.1:3001");
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    console.log(`[API Config] Internal API URL: ${url}`);
+    return url;
 }
 function getSiteUrl() {
-    return process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const isProduction = ("TURBOPACK compile-time value", "development") === 'production';
+    const siteUrl = ("TURBOPACK compile-time value", "http://localhost:3000") || process.env.VERCEL_URL;
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    return siteUrl;
 }
 function buildApiUrl(path) {
     const base = getApiBaseUrl();
@@ -104,12 +106,11 @@ const apiConfig = {
 };
 const env = {
     // Server-side only
-    EXPRESS_URL: ("TURBOPACK compile-time value", "http://localhost:5000"),
+    EXPRESS_URL: ("TURBOPACK compile-time value", "http://127.0.0.1:3001"),
     DATABASE_URL: process.env.DATABASE_URL,
     SESSION_SECRET: process.env.SESSION_SECRET,
     // Public (client-accessible)
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-    NEXT_PUBLIC_EXPRESS_URL: ("TURBOPACK compile-time value", "http://localhost:5000"),
+    NEXT_PUBLIC_SITE_URL: ("TURBOPACK compile-time value", "http://localhost:3000"),
     // Node environment
     NODE_ENV: ("TURBOPACK compile-time value", "development")
 };

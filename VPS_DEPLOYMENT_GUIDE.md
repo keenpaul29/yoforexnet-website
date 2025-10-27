@@ -248,7 +248,6 @@ API_PORT=3001
 
 # Public URLs
 NEXT_PUBLIC_SITE_URL=https://yoforex.com
-NEXT_PUBLIC_EXPRESS_URL=https://yoforex.com
 EXPRESS_URL=http://127.0.0.1:3001
 ALLOWED_ORIGINS=yoforex.com,www.yoforex.com
 
@@ -278,6 +277,191 @@ BREVO_SENDER_NAME=YoForex
 ```bash
 chmod 600 .env.production
 ```
+
+### ⚠️ CRITICAL: Required Environment Variables
+
+**DEPLOYMENT WILL FAIL WITHOUT THESE VARIABLES**
+
+The following environment variables are **MANDATORY** in production. The application has been configured to fail fast with clear error messages if these are missing, preventing silent failures.
+
+#### Critical Variables (Application will NOT start without these)
+
+1. **EXPRESS_URL** (CRITICAL - Server-side API communication)
+   - **Purpose**: Internal URL for Next.js → Express API communication
+   - **Required**: YES - Application throws error on startup if missing in production
+   - **VPS Value**: `http://127.0.0.1:3001` (internal localhost)
+   - **Example**: `EXPRESS_URL=http://127.0.0.1:3001`
+   - **Error if missing**: `🚨 CRITICAL: EXPRESS_URL environment variable is required in production`
+
+2. **NEXT_PUBLIC_SITE_URL** (CRITICAL - SEO and metadata)
+   - **Purpose**: Public-facing domain for SEO, canonical URLs, Open Graph tags
+   - **Required**: YES - Application throws error on startup if missing in production
+   - **Value**: Your domain (e.g., `https://yoforex.com`)
+   - **Example**: `NEXT_PUBLIC_SITE_URL=https://yoforex.com`
+   - **Error if missing**: `🚨 CRITICAL: NEXT_PUBLIC_SITE_URL is required in production`
+
+3. **DATABASE_URL** (CRITICAL - Data persistence)
+   - **Purpose**: PostgreSQL connection string
+   - **Required**: YES - Application cannot function without database
+   - **Format**: `postgresql://user:password@host:port/database?sslmode=require`
+   - **Example**: `DATABASE_URL=postgresql://user:pass@db.example.com:5432/yoforex?sslmode=require`
+
+4. **SESSION_SECRET** (CRITICAL - Security)
+   - **Purpose**: Session encryption and authentication security
+   - **Required**: YES - Sessions will not work without this
+   - **Generate**: `openssl rand -base64 32`
+   - **Example**: `SESSION_SECRET=your-super-secret-random-string-here`
+
+#### Important Variables (Application may start but features will be broken)
+
+- **REPLIT_CLIENT_ID** & **REPLIT_CLIENT_SECRET**: Required for user authentication
+- **STRIPE_SECRET_KEY** & **STRIPE_PUBLIC_KEY**: Required for payment processing
+- **BREVO_API_KEY**: Required for email notifications
+
+### Development vs Production Behavior
+
+The application has different behavior in development versus production to balance developer convenience with production safety:
+
+#### Development Mode (`NODE_ENV=development`)
+
+- **Fallback Behavior**: Uses `http://127.0.0.1:3001` if `EXPRESS_URL` not set
+- **Console Warnings**: Displays warnings like "⚠️ EXPRESS_URL not set, using development fallback"
+- **Flexible Configuration**: Missing variables trigger warnings but allow the app to continue
+- **Purpose**: Enables quick local development without requiring full environment setup
+- **When to use**: Local development, testing, debugging
+
+**Example development behavior**:
+```
+⚠️  EXPRESS_URL not set, using development fallback: http://127.0.0.1:3001
+⚠️  NEXT_PUBLIC_SITE_URL not set, using development fallback: http://localhost:3000
+```
+
+#### Production Mode (`NODE_ENV=production`)
+
+- **No Fallbacks**: Application will **NOT** start without required environment variables
+- **Fail Fast**: Throws clear, actionable errors immediately on startup
+- **No Silent Failures**: Missing variables cause immediate crash with helpful error messages
+- **Purpose**: Prevents deployment issues, configuration mistakes, and runtime failures on VPS
+- **When to use**: VPS deployment, production servers, staging environments
+
+**Example production behavior**:
+```
+🚨 CRITICAL: EXPRESS_URL environment variable is required in production.
+Please set it in your .env.production file.
+Example: EXPRESS_URL=http://127.0.0.1:3001
+For VPS deployment, see: VPS_DEPLOYMENT_GUIDE.md
+```
+
+#### Why This Design?
+
+This two-mode approach provides:
+- **Developer Productivity**: Developers can run the app locally without complex setup
+- **Production Safety**: Deployments fail fast with clear errors instead of running with wrong configuration
+- **Debugging Clarity**: Console warnings in dev help identify missing configuration
+- **Deployment Confidence**: Production refuses to start unless fully configured
+
+#### Fallback Consistency
+
+All fallback URLs use `127.0.0.1` instead of `localhost` for consistency:
+- **next.config.js**: `http://127.0.0.1:3001` (development fallback)
+- **api-config.ts**: `http://127.0.0.1:3001` (development fallback)
+- **Reason**: `127.0.0.1` is more explicit and avoids potential IPv6 issues with `localhost`
+
+### Troubleshooting Missing Environment Variables
+
+#### Error: "EXPRESS_URL environment variable is required in production"
+
+**Cause**: EXPRESS_URL is not set in `.env.production`
+
+**Solution**:
+```bash
+cd /var/www/yoforex
+nano .env.production
+
+# Add this line:
+EXPRESS_URL=http://127.0.0.1:3001
+
+# Save and restart
+pm2 restart all
+```
+
+#### Error: "NEXT_PUBLIC_SITE_URL is required in production"
+
+**Cause**: NEXT_PUBLIC_SITE_URL is not set in `.env.production`
+
+**Solution**:
+```bash
+cd /var/www/yoforex
+nano .env.production
+
+# Add this line (replace with your actual domain):
+NEXT_PUBLIC_SITE_URL=https://yoforex.com
+
+# Save and restart
+pm2 restart all
+```
+
+#### Application starts but shows "Cannot connect to API" errors
+
+**Cause**: EXPRESS_URL is set incorrectly or Express server is not running
+
+**Solution**:
+```bash
+# Check if Express is running
+pm2 list
+
+# If Express is not running
+pm2 start ecosystem.config.js --only yoforex-express
+
+# Verify EXPRESS_URL is correct
+cat .env.production | grep EXPRESS_URL
+
+# For VPS, it should be:
+# EXPRESS_URL=http://127.0.0.1:3001
+
+# Restart both services
+pm2 restart all
+```
+
+#### Next.js build fails during deployment
+
+**Cause**: Missing NEXT_PUBLIC_SITE_URL during build process
+
+**Solution**:
+```bash
+# Ensure .env.production exists and is readable
+ls -la .env.production
+chmod 600 .env.production
+
+# Verify NEXT_PUBLIC_SITE_URL is set
+cat .env.production | grep NEXT_PUBLIC_SITE_URL
+
+# If missing, add it:
+echo "NEXT_PUBLIC_SITE_URL=https://yoforex.com" >> .env.production
+
+# Rebuild
+npm run build:next
+```
+
+### Quick Validation Checklist
+
+Before deploying, verify your `.env.production` file:
+
+```bash
+# Run this command to check critical variables
+cd /var/www/yoforex
+
+# Check all critical variables are present
+grep -E "(EXPRESS_URL|NEXT_PUBLIC_SITE_URL|DATABASE_URL|SESSION_SECRET)" .env.production
+
+# Expected output (with your actual values):
+# EXPRESS_URL=http://127.0.0.1:3001
+# NEXT_PUBLIC_SITE_URL=https://yoforex.com
+# DATABASE_URL=postgresql://...
+# SESSION_SECRET=...
+```
+
+If any of these lines are missing or empty, **deployment will fail**.
 
 ---
 

@@ -21,28 +21,40 @@ export const metadata: Metadata = {
 };
 
 async function getCategories() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("connect.sid");
     const apiUrl = getInternalApiUrl();
     
+    console.log(`[SSR Fetch] Fetching: ${apiUrl}/api/publish/categories`);
     const response = await fetch(`${apiUrl}/api/publish/categories`, {
+      signal: controller.signal,
       headers: sessionCookie ? { Cookie: `connect.sid=${sessionCookie.value}` } : {},
       cache: "no-store",
     });
 
+    clearTimeout(timeout);
+
     if (!response.ok) {
+      console.error(`[SSR Fetch] Failed /api/publish/categories: ${response.status}`);
       return [];
     }
 
     return response.json();
   } catch (error) {
-    console.error("Failed to fetch categories:", error);
+    clearTimeout(timeout);
+    console.error("[SSR Fetch] Error fetching categories:", error);
     return [];
   }
 }
 
 async function checkAuth() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("connect.sid");
@@ -52,17 +64,24 @@ async function checkAuth() {
     }
 
     const apiUrl = getInternalApiUrl();
+    console.log(`[SSR Fetch] Fetching: ${apiUrl}/api/me`);
     const response = await fetch(`${apiUrl}/api/me`, {
+      signal: controller.signal,
       headers: { Cookie: `connect.sid=${sessionCookie.value}` },
       cache: "no-store",
     });
 
+    clearTimeout(timeout);
+
     if (!response.ok) {
+      console.error(`[SSR Fetch] Failed /api/me: ${response.status}`);
       return null;
     }
 
     return response.json();
   } catch (error) {
+    clearTimeout(timeout);
+    console.error("[SSR Fetch] Error checking auth:", error);
     return null;
   }
 }
