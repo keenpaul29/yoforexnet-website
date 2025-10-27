@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
 import './globals.css';
-import { QueryProvider } from './components/providers/QueryProvider';
+import { AppProviders } from './components/providers/AppProviders';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -60,9 +60,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <QueryProvider>
+        <AppProviders>
           {children}
-        </QueryProvider>
+        </AppProviders>
       </body>
     </html>
   );

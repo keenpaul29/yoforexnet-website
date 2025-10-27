@@ -669,7 +669,6 @@ __turbopack_context__.s([
     ()=>queryClient
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$query$2d$core$2f$build$2f$modern$2f$queryClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@tanstack/query-core/build/modern/queryClient.js [app-ssr] (ecmascript)");
-"use client";
 ;
 async function throwIfResNotOk(res) {
     if (!res.ok) {
@@ -678,9 +677,7 @@ async function throwIfResNotOk(res) {
     }
 }
 async function apiRequest(method, url, data) {
-    const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
-    const fullUrl = url.startsWith('http') ? url : `${EXPRESS_URL}${url}`;
-    const res = await fetch(fullUrl, {
+    const res = await fetch(url, {
         method,
         headers: data ? {
             "Content-Type": "application/json"
@@ -692,10 +689,8 @@ async function apiRequest(method, url, data) {
     return res;
 }
 const getQueryFn = ({ on401: unauthorizedBehavior, baseUrl })=>async ({ queryKey })=>{
-        const EXPRESS_URL = baseUrl || ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
-        const queryPath = queryKey.join("/");
-        const fullUrl = queryPath.startsWith('http') ? queryPath : `${EXPRESS_URL}${queryPath}`;
-        const res = await fetch(fullUrl, {
+        const url = baseUrl ? `${baseUrl}${queryKey.join("/")}` : queryKey.join("/");
+        const res = await fetch(url, {
             credentials: "include"
         });
         if (unauthorizedBehavior === "returnNull" && res.status === 401) {

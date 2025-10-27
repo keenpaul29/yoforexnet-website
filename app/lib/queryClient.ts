@@ -1,5 +1,3 @@
-"use client";
-
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 async function throwIfResNotOk(res: Response) {
@@ -14,7 +12,10 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+  const EXPRESS_URL = typeof window !== 'undefined'
+    ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
+    : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+  
   const fullUrl = url.startsWith('http') ? url : `${EXPRESS_URL}${url}`;
   
   const res = await fetch(fullUrl, {
@@ -35,11 +36,11 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior, baseUrl }) =>
   async ({ queryKey }) => {
-    const EXPRESS_URL = baseUrl || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-    const queryPath = queryKey.join("/") as string;
-    const fullUrl = queryPath.startsWith('http') ? queryPath : `${EXPRESS_URL}${queryPath}`;
+    const url = baseUrl 
+      ? `${baseUrl}${queryKey.join("/")}`
+      : queryKey.join("/");
     
-    const res = await fetch(fullUrl, {
+    const res = await fetch(url as string, {
       credentials: "include",
     });
 
@@ -51,10 +52,15 @@ export const getQueryFn: <T>(options: {
     return await res.json();
   };
 
+// Get Express API URL from environment or use default
+const EXPRESS_API_URL = typeof window !== 'undefined' 
+  ? (process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000')
+  : (process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000');
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
+      queryFn: getQueryFn({ on401: "throw", baseUrl: EXPRESS_API_URL }),
       refetchInterval: false,
       refetchOnWindowFocus: false,
       staleTime: Infinity,

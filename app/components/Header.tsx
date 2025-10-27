@@ -23,7 +23,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -49,7 +50,7 @@ const publishCategories = [
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [location, setLocation] = useLocation();
+  const pathname = usePathname();
   const { user, isLoading: isAuthLoading, isAuthenticated, login, logout } = useAuth();
   
   const { data: coinsData } = useQuery<{ totalCoins: number; weeklyEarned: number; rank: number | null }>({
@@ -75,20 +76,20 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-1">
             <Link href="/categories">
               <Button 
-                variant={location === "/categories" ? "default" : "ghost"} 
+                variant={pathname === "/categories" ? "default" : "ghost"} 
                 size="sm" 
                 data-testid="button-categories"
-                aria-current={location === "/categories" ? "page" : undefined}
+                aria-current={pathname === "/categories" ? "page" : undefined}
               >
                 Categories
               </Button>
             </Link>
             <Link href="/discussions">
               <Button 
-                variant={location === "/discussions" ? "default" : "ghost"} 
+                variant={pathname === "/discussions" ? "default" : "ghost"} 
                 size="sm" 
                 data-testid="button-discussions"
-                aria-current={location === "/discussions" ? "page" : undefined}
+                aria-current={pathname === "/discussions" ? "page" : undefined}
               >
                 Discussions
               </Button>
@@ -106,12 +107,8 @@ export default function Header() {
                       {publishCategories.map((cat) => (
                         <li key={cat.slug}>
                           <NavigationMenuLink asChild>
-                            <a
+                            <Link
                               href={`/publish?category=${cat.slug}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setLocation(`/publish?category=${cat.slug}`);
-                              }}
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                               data-testid={`link-publish-${cat.slug}`}
                             >
@@ -122,7 +119,7 @@ export default function Header() {
                               <p className="line-clamp-1 text-xs leading-snug text-muted-foreground">
                                 {cat.hint}
                               </p>
-                            </a>
+                            </Link>
                           </NavigationMenuLink>
                         </li>
                       ))}
@@ -134,20 +131,20 @@ export default function Header() {
             
             <Link href="/brokers">
               <Button 
-                variant={location === "/brokers" ? "default" : "ghost"} 
+                variant={pathname === "/brokers" ? "default" : "ghost"} 
                 size="sm" 
                 data-testid="button-broker-reviews"
-                aria-current={location === "/brokers" ? "page" : undefined}
+                aria-current={pathname === "/brokers" ? "page" : undefined}
               >
                 Broker Reviews
               </Button>
             </Link>
             <Link href="/members">
               <Button 
-                variant={location === "/members" ? "default" : "ghost"} 
+                variant={pathname === "/members" ? "default" : "ghost"} 
                 size="sm" 
                 data-testid="button-members"
-                aria-current={location === "/members" ? "page" : undefined}
+                aria-current={pathname === "/members" ? "page" : undefined}
               >
                 Members
               </Button>

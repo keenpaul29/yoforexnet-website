@@ -2,7 +2,7 @@
 
 import { Activity, Wifi, Code } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
+import Link from "next/link";
 
 interface StatsResponse {
   forumThreads: number;
