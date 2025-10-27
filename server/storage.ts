@@ -2577,24 +2577,16 @@ export class DrizzleStorage implements IStorage {
     const user = await this.getUser(insertThread.authorId);
     if (!user) throw new Error("User not found");
     
-    const focusKeyword = extractFocusKeyword(insertThread.title);
-    const metaDescription = generateMetaDescription(insertThread.body);
-    const baseSlug = generateThreadSlug(insertThread.title);
-    
-    const existingThreads = await db.select({ slug: forumThreads.slug }).from(forumThreads);
-    const existingSlugs = new Set(existingThreads.map(t => t.slug));
-    const slug = generateUniqueSlug(baseSlug, existingSlugs);
-    
+    // Note: Slug, focusKeyword, metaDescription are now passed from routes.ts
+    // This method just stores whatever is provided
     const [thread] = await db.insert(forumThreads).values({
-      authorId: insertThread.authorId,
-      categorySlug: insertThread.categorySlug,
-      title: insertThread.title,
-      body: insertThread.body,
-      slug,
-      focusKeyword,
-      metaDescription,
+      ...insertThread,
+      // Ensure defaults for optional fields
       isPinned: insertThread.isPinned || false,
       isLocked: insertThread.isLocked || false,
+      isSolved: insertThread.isSolved || false,
+      engagementScore: insertThread.engagementScore || 0,
+      status: "approved" as const,
     }).returning();
     
     await this.updateCategoryStats(insertThread.categorySlug);
@@ -2605,7 +2597,7 @@ export class DrizzleStorage implements IStorage {
       entityType: "thread",
       entityId: thread.id,
       title: insertThread.title,
-      description: metaDescription,
+      description: thread.metaDescription || insertThread.body.substring(0, 200),
     });
     
     return thread;

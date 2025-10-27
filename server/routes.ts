@@ -2,6 +2,9 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from "url";
 import { 
   insertCoinTransactionSchema, 
   insertRechargeOrderSchema,
@@ -34,7 +37,7 @@ import {
   contentCreationLimiter,
   reviewReplyLimiter,
 } from "./rateLimiting";
-import { generateSlug, generateFocusKeyword, generateMetaDescription, generateImageAltTexts } from './seo';
+import { generateSlug, generateFocusKeyword, generateMetaDescription as generateMetaDescriptionOld, generateImageAltTexts } from './seo';
 import { emailService } from './services/emailService';
 import { 
   RECHARGE_PACKAGES, 
@@ -45,6 +48,12 @@ import {
   coinsToUSD,
   formatCoinPrice
 } from '../shared/coinUtils';
+import {
+  generateFullSlug,
+  generateMetaDescription,
+  deduplicateTags,
+  countWords,
+} from '../shared/threadUtils';
 
 // Helper function to get authenticated user ID from session
 function getAuthenticatedUserId(req: any): string {
@@ -55,9 +64,62 @@ function getAuthenticatedUserId(req: any): string {
   return claims.sub;
 }
 
+// Configure multer for file uploads
+const uploadStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const allowedTypes = ['.jpg', '.jpeg', '.png', '.webp', '.pdf', '.set', '.csv'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  
+  if (allowedTypes.includes(ext)) {
+    cb(null, true);
+  } else {
+    cb(new Error(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`));
+  }
+};
+
+const upload = multer({
+  storage: uploadStorage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB max file size
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth (OIDC) - must be called before any routes
   await setupAuth(app);
+
+  // FILE UPLOAD ENDPOINT
+  app.post("/api/upload", isAuthenticated, upload.array('files', 10), async (req, res) => {
+    try {
+      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+        return res.status(400).json({ error: "No files uploaded" });
+      }
+
+      // Generate URLs for uploaded files
+      const fileUrls = req.files.map((file: Express.Multer.File) => {
+        return `/uploads/${file.filename}`;
+      });
+
+      res.json({ 
+        urls: fileUrls,
+        message: "Thanks! This helps others.",
+        count: fileUrls.length
+      });
+    } catch (error: any) {
+      console.error('File upload error:', error);
+      res.status(500).json({ error: error.message || "Failed to upload files" });
+    }
+  });
 
   // Get current authenticated user
   app.get("/api/me", async (req, res) => {
@@ -1819,19 +1881,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Sanitize inputs - allow HTML in body only
       const sanitized = sanitizeRequestBody(req.body, ['body']);
       
-      // Validate schema
+      // Validate schema (includes title 15-90 chars, body 150+ words, caps detection)
       const validated = insertForumThreadSchema.parse(sanitized);
+      
       // Override authorId with authenticated user ID
       validated.authorId = authenticatedUserId;
       
-      // AUTO-GENERATE SEO METADATA
-      const slug = await generateSlug(validated.title, 'thread');
-      const focusKeyword = generateFocusKeyword(validated.title);
-      const metaDescription = generateMetaDescription(validated.body);
+      // Validate word count (min 150 words)
+      const wordCount = countWords(validated.body);
+      if (wordCount < 150) {
+        return res.status(400).json({ 
+          error: "A little more context helps people reply. Two more sentences?" 
+        });
+      }
       
+      // Generate full slug with category path
+      const slug = generateFullSlug(
+        validated.categorySlug,
+        validated.subcategorySlug,
+        validated.title
+      );
+      
+      // Generate meta description
+      const metaDescription = generateMetaDescription(
+        validated.body,
+        validated.seoExcerpt
+      );
+      
+      // Generate focus keyword from title
+      const focusKeyword = generateFocusKeyword(validated.title);
+      
+      // Deduplicate tags (max 12 total)
+      const deduplicated = deduplicateTags(
+        validated.instruments || [],
+        validated.timeframes || [],
+        validated.strategies || [],
+        validated.hashtags || [],
+        12
+      );
+      
+      // Calculate coin reward
+      // Base: +10 for thread creation
+      // Bonus: +2 if optional details provided
+      let coinReward = 10;
+      const hasOptionalDetails = !!(
+        validated.seoExcerpt ||
+        validated.primaryKeyword ||
+        validated.reviewRating ||
+        validated.questionSummary
+      );
+      if (hasOptionalDetails) {
+        coinReward += 2;
+      }
+      
+      // Create thread with deduplicated tags and generated metadata
       const thread = await storage.createForumThread({
         ...validated,
+        slug,
+        focusKeyword,
+        metaDescription,
+        instruments: deduplicated.instruments,
+        timeframes: deduplicated.timeframes,
+        strategies: deduplicated.strategies,
+        hashtags: deduplicated.hashtags,
+        engagementScore: 0, // Initial score
       });
+      
+      // Award coins for thread creation
+      try {
+        await storage.recordCoinLedgerTransaction(
+          'thread_creation',
+          [
+            {
+              userId: authenticatedUserId,
+              direction: 'credit',
+              amount: coinReward,
+              memo: hasOptionalDetails 
+                ? `Thread created with bonus details: ${thread.title}`
+                : `Thread created: ${thread.title}`,
+            },
+          ],
+          { threadId: thread.id, baseReward: 10, bonusReward: hasOptionalDetails ? 2 : 0 }
+        );
+      } catch (error) {
+        console.error('Failed to award coins for thread creation:', error);
+      }
       
       // Create activity feed entry
       await storage.createActivity({
@@ -1853,7 +1987,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Onboarding step failed:', error);
       }
       
-      res.json(thread);
+      res.json({
+        thread,
+        coinsEarned: coinReward,
+        message: "Posted! We'll share it around and keep things tidy for you.",
+      });
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "User not found") {
@@ -1862,7 +2000,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (error.message === "No authenticated user") {
           return res.status(401).json({ error: "Not authenticated" });
         }
+        // Handle Zod validation errors with friendly messages
+        if (error.name === "ZodError") {
+          return res.status(400).json({ error: error.message });
+        }
       }
+      console.error('Thread creation error:', error);
       res.status(400).json({ error: "Invalid thread data" });
     }
   });

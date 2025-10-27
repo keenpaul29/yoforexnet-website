@@ -3411,6 +3411,10 @@ body {
   opacity: .7;
 }
 
+.opacity-80 {
+  opacity: .8;
+}
+
 .opacity-90 {
   opacity: .9;
 }
@@ -4004,11 +4008,6 @@ input[type="search"]::-webkit-search-cancel-button {
 .hover\:text-accent-foreground:hover {
   --tw-text-opacity: 1;
   color: hsl(var(--accent-foreground) / var(--tw-text-opacity, 1));
-}
-
-.hover\:text-destructive:hover {
-  --tw-text-opacity: 1;
-  color: hsl(var(--destructive) / var(--tw-text-opacity, 1));
 }
 
 .hover\:text-foreground:hover {
