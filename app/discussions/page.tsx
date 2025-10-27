@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { Footer } from '../components/Footer';
 import DiscussionsClient from './DiscussionsClient';
 
 // No caching - always fetch fresh data
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 async function getThreads() {
   try {
     const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-    const res = await fetch(`${EXPRESS_URL}/api/forum/threads?sort=latest&limit=50`, {
+    const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=newest&limit=50`, {
       cache: 'no-store',
       credentials: 'include',
     });

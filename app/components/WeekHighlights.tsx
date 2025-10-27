@@ -142,7 +142,10 @@ export default function WeekHighlights({
   const { data: trendingData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'trending', limit: 3 }],
     queryFn: async () => {
-      const res = await fetch('/api/threads?sortBy=trending&limit=3');
+      const EXPRESS_URL = typeof window !== 'undefined'
+        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
+        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=trending&limit=3`);
       if (!res.ok) throw new Error('Failed to fetch trending threads');
       return res.json();
     },
@@ -153,7 +156,10 @@ export default function WeekHighlights({
   const { data: newData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'newest', limit: 3 }],
     queryFn: async () => {
-      const res = await fetch('/api/threads?sortBy=newest&limit=3');
+      const EXPRESS_URL = typeof window !== 'undefined'
+        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
+        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=newest&limit=3`);
       if (!res.ok) throw new Error('Failed to fetch newest threads');
       return res.json();
     },
@@ -164,7 +170,10 @@ export default function WeekHighlights({
   const { data: solvedData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'answered', limit: 3 }],
     queryFn: async () => {
-      const res = await fetch('/api/threads?sortBy=answered&limit=3');
+      const EXPRESS_URL = typeof window !== 'undefined'
+        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
+        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=answered&limit=3`);
       if (!res.ok) throw new Error('Failed to fetch answered threads');
       return res.json();
     },

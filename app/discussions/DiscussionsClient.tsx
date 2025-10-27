@@ -53,10 +53,14 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
 
   // Use React Query with initialData and queryFn for refetching
   const { data: threads, isLoading } = useQuery<Thread[]>({
-    queryKey: ['/api/forum/threads'],
+    queryKey: ['/api/threads'],
     initialData: initialThreads,
     queryFn: async () => {
-      const res = await fetch('/api/forum/threads?sort=latest&limit=50', {
+      const EXPRESS_URL = typeof window !== 'undefined'
+        ? (window as any).__EXPRESS_URL__ || process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
+        : process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+      
+      const res = await fetch(`${EXPRESS_URL}/api/threads?sortBy=newest&limit=50`, {
         credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to fetch threads');
