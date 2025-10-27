@@ -694,6 +694,377 @@ export const userSettings = pgTable("user_settings", {
   userIdIdx: uniqueIndex("idx_user_settings_user_id").on(table.userId),
 }));
 
+// ============================================================================
+// ADMIN DASHBOARD TABLES (20 tables for ultimate admin experience)
+// ============================================================================
+
+// 1. Admin Actions - Log all admin operations
+export const adminActions = pgTable("admin_actions", {
+  id: serial("id").primaryKey(),
+  adminId: varchar("admin_id").notNull().references(() => users.id),
+  actionType: varchar("action_type").notNull(),
+  targetType: varchar("target_type").notNull(),
+  targetId: varchar("target_id"),
+  details: jsonb("details"),
+  ipAddress: varchar("ip_address"),
+  userAgent: varchar("user_agent"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  adminIdIdx: index("idx_admin_actions_admin_id").on(table.adminId),
+  actionTypeIdx: index("idx_admin_actions_action_type").on(table.actionType),
+  targetTypeIdx: index("idx_admin_actions_target_type").on(table.targetType),
+  createdAtIdx: index("idx_admin_actions_created_at").on(table.createdAt),
+}));
+
+// 2. Moderation Queue - Content pending review
+export const moderationQueue = pgTable("moderation_queue", {
+  id: serial("id").primaryKey(),
+  contentType: varchar("content_type").notNull(),
+  contentId: varchar("content_id").notNull(),
+  authorId: varchar("author_id").notNull().references(() => users.id),
+  status: varchar("status").notNull().default("pending"),
+  priorityScore: integer("priority_score").notNull().default(0),
+  spamScore: numeric("spam_score", { precision: 3, scale: 2 }),
+  sentimentScore: numeric("sentiment_score", { precision: 3, scale: 2 }),
+  flaggedReasons: text("flagged_reasons").array().default(sql`'{}'::text[]`),
+  reviewedBy: varchar("reviewed_by").references(() => users.id),
+  reviewedAt: timestamp("reviewed_at"),
+  reviewNotes: text("review_notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  statusIdx: index("idx_moderation_queue_status").on(table.status),
+  priorityScoreIdx: index("idx_moderation_queue_priority_score").on(table.priorityScore),
+  createdAtIdx: index("idx_moderation_queue_created_at").on(table.createdAt),
+}));
+
+// 3. Reported Content - User-reported violations
+export const reportedContent = pgTable("reported_content", {
+  id: serial("id").primaryKey(),
+  reporterId: varchar("reporter_id").notNull().references(() => users.id),
+  contentType: varchar("content_type").notNull(),
+  contentId: varchar("content_id").notNull(),
+  reportReason: varchar("report_reason").notNull(),
+  description: text("description").notNull(),
+  status: varchar("status").notNull().default("pending"),
+  assignedTo: varchar("assigned_to").references(() => users.id),
+  resolution: text("resolution"),
+  actionTaken: varchar("action_taken"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  resolvedAt: timestamp("resolved_at"),
+}, (table) => ({
+  statusIdx: index("idx_reported_content_status").on(table.status),
+  contentTypeIdx: index("idx_reported_content_content_type").on(table.contentType),
+  reporterIdIdx: index("idx_reported_content_reporter_id").on(table.reporterId),
+  createdAtIdx: index("idx_reported_content_created_at").on(table.createdAt),
+}));
+
+// 4. System Settings - Platform configuration
+export const systemSettings = pgTable("system_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key").notNull().unique(),
+  settingValue: jsonb("setting_value").notNull(),
+  category: varchar("category").notNull(),
+  description: text("description"),
+  updatedBy: varchar("updated_by").references(() => users.id),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  settingKeyIdx: index("idx_system_settings_setting_key").on(table.settingKey),
+  categoryIdx: index("idx_system_settings_category").on(table.category),
+}));
+
+// 5. Support Tickets - Customer support system
+export const supportTickets = pgTable("support_tickets", {
+  id: serial("id").primaryKey(),
+  ticketNumber: varchar("ticket_number").notNull().unique(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  subject: varchar("subject").notNull(),
+  description: text("description").notNull(),
+  status: varchar("status").notNull().default("open"),
+  priority: varchar("priority").notNull().default("medium"),
+  category: varchar("category").notNull(),
+  assignedTo: varchar("assigned_to").references(() => users.id),
+  replies: jsonb("replies").array().default(sql`'{}'::jsonb[]`),
+  tags: text("tags").array().default(sql`'{}'::text[]`),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  resolvedAt: timestamp("resolved_at"),
+}, (table) => ({
+  statusIdx: index("idx_support_tickets_status").on(table.status),
+  priorityIdx: index("idx_support_tickets_priority").on(table.priority),
+  userIdIdx: index("idx_support_tickets_user_id").on(table.userId),
+  assignedToIdx: index("idx_support_tickets_assigned_to").on(table.assignedTo),
+  createdAtIdx: index("idx_support_tickets_created_at").on(table.createdAt),
+}));
+
+// 6. Announcements - Platform-wide announcements
+export const announcements = pgTable("announcements", {
+  id: serial("id").primaryKey(),
+  title: varchar("title").notNull(),
+  content: text("content").notNull(),
+  type: varchar("type").notNull().default("info"),
+  targetAudience: varchar("target_audience").notNull().default("all"),
+  segmentId: integer("segment_id"),
+  displayType: varchar("display_type").notNull().default("banner"),
+  isActive: boolean("is_active").notNull().default(true),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date"),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  views: integer("views").notNull().default(0),
+  clicks: integer("clicks").notNull().default(0),
+}, (table) => ({
+  isActiveIdx: index("idx_announcements_is_active").on(table.isActive),
+  targetAudienceIdx: index("idx_announcements_target_audience").on(table.targetAudience),
+  startDateIdx: index("idx_announcements_start_date").on(table.startDate),
+  endDateIdx: index("idx_announcements_end_date").on(table.endDate),
+}));
+
+// 7. IP Bans - IP address banning
+export const ipBans = pgTable("ip_bans", {
+  id: serial("id").primaryKey(),
+  ipAddress: varchar("ip_address").notNull().unique(),
+  reason: text("reason").notNull(),
+  banType: varchar("ban_type").notNull().default("permanent"),
+  expiresAt: timestamp("expires_at"),
+  bannedBy: varchar("banned_by").notNull().references(() => users.id),
+  bannedAt: timestamp("banned_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+}, (table) => ({
+  ipAddressIdx: index("idx_ip_bans_ip_address").on(table.ipAddress),
+  isActiveIdx: index("idx_ip_bans_is_active").on(table.isActive),
+  expiresAtIdx: index("idx_ip_bans_expires_at").on(table.expiresAt),
+}));
+
+// 8. Email Templates - Email template management
+export const emailTemplates = pgTable("email_templates", {
+  id: serial("id").primaryKey(),
+  templateKey: varchar("template_key").notNull().unique(),
+  subject: varchar("subject").notNull(),
+  htmlBody: text("html_body").notNull(),
+  textBody: text("text_body").notNull(),
+  variables: text("variables").array().default(sql`'{}'::text[]`),
+  category: varchar("category").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  updatedBy: varchar("updated_by").references(() => users.id),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  templateKeyIdx: index("idx_email_templates_template_key").on(table.templateKey),
+  categoryIdx: index("idx_email_templates_category").on(table.category),
+  isActiveIdx: index("idx_email_templates_is_active").on(table.isActive),
+}));
+
+// 9. Admin Roles - Admin permission system
+export const adminRoles = pgTable("admin_roles", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id).unique(),
+  role: varchar("role").notNull(),
+  permissions: jsonb("permissions").notNull(),
+  grantedBy: varchar("granted_by").notNull().references(() => users.id),
+  grantedAt: timestamp("granted_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_admin_roles_user_id").on(table.userId),
+  roleIdx: index("idx_admin_roles_role").on(table.role),
+}));
+
+// 10. User Segments - User segmentation for targeting
+export const userSegments = pgTable("user_segments", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description").notNull(),
+  rules: jsonb("rules").notNull(),
+  userCount: integer("user_count").notNull().default(0),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  nameIdx: index("idx_user_segments_name").on(table.name),
+  createdAtIdx: index("idx_user_segments_created_at").on(table.createdAt),
+}));
+
+// 11. Automation Rules - Automation workflows
+export const automationRules = pgTable("automation_rules", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description").notNull(),
+  triggerType: varchar("trigger_type").notNull(),
+  triggerConfig: jsonb("trigger_config").notNull(),
+  actionType: varchar("action_type").notNull(),
+  actionConfig: jsonb("action_config").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  executionCount: integer("execution_count").notNull().default(0),
+  lastExecuted: timestamp("last_executed"),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  triggerTypeIdx: index("idx_automation_rules_trigger_type").on(table.triggerType),
+  isActiveIdx: index("idx_automation_rules_is_active").on(table.isActive),
+  createdAtIdx: index("idx_automation_rules_created_at").on(table.createdAt),
+}));
+
+// 12. A/B Tests - A/B testing experiments
+export const abTests = pgTable("ab_tests", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description").notNull(),
+  variants: jsonb("variants").array().default(sql`'{}'::jsonb[]`),
+  trafficAllocation: jsonb("traffic_allocation").notNull(),
+  status: varchar("status").notNull().default("draft"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  winnerVariant: varchar("winner_variant"),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  statusIdx: index("idx_ab_tests_status").on(table.status),
+  startDateIdx: index("idx_ab_tests_start_date").on(table.startDate),
+  endDateIdx: index("idx_ab_tests_end_date").on(table.endDate),
+}));
+
+// 13. Feature Flags - Feature toggle system
+export const featureFlags = pgTable("feature_flags", {
+  id: serial("id").primaryKey(),
+  flagKey: varchar("flag_key").notNull().unique(),
+  name: varchar("name").notNull(),
+  description: text("description").notNull(),
+  isEnabled: boolean("is_enabled").notNull().default(false),
+  rolloutPercentage: integer("rollout_percentage").notNull().default(0),
+  targetUsers: text("target_users").array().default(sql`'{}'::text[]`),
+  targetSegments: integer("target_segments").array().default(sql`'{}'::integer[]`),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  flagKeyIdx: index("idx_feature_flags_flag_key").on(table.flagKey),
+  isEnabledIdx: index("idx_feature_flags_is_enabled").on(table.isEnabled),
+}));
+
+// 14. API Keys - API key management
+export const apiKeys = pgTable("api_keys", {
+  id: serial("id").primaryKey(),
+  key: varchar("key").notNull().unique(),
+  name: varchar("name").notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  permissions: text("permissions").array().default(sql`'{}'::text[]`),
+  rateLimit: integer("rate_limit").notNull().default(60),
+  isActive: boolean("is_active").notNull().default(true),
+  lastUsed: timestamp("last_used"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  keyIdx: index("idx_api_keys_key").on(table.key),
+  userIdIdx: index("idx_api_keys_user_id").on(table.userId),
+  isActiveIdx: index("idx_api_keys_is_active").on(table.isActive),
+}));
+
+// 15. Webhooks - Webhook configurations
+export const webhooks = pgTable("webhooks", {
+  id: serial("id").primaryKey(),
+  url: varchar("url").notNull(),
+  events: text("events").array().default(sql`'{}'::text[]`),
+  secret: varchar("secret").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastTriggered: timestamp("last_triggered"),
+  successCount: integer("success_count").notNull().default(0),
+  failureCount: integer("failure_count").notNull().default(0),
+}, (table) => ({
+  isActiveIdx: index("idx_webhooks_is_active").on(table.isActive),
+  createdAtIdx: index("idx_webhooks_created_at").on(table.createdAt),
+}));
+
+// 16. Scheduled Jobs - Cron job management
+export const scheduledJobs = pgTable("scheduled_jobs", {
+  id: serial("id").primaryKey(),
+  jobKey: varchar("job_key").notNull().unique(),
+  name: varchar("name").notNull(),
+  description: text("description").notNull(),
+  schedule: varchar("schedule").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  lastRun: timestamp("last_run"),
+  nextRun: timestamp("next_run"),
+  lastStatus: varchar("last_status"),
+  lastError: text("last_error"),
+  executionCount: integer("execution_count").notNull().default(0),
+}, (table) => ({
+  jobKeyIdx: index("idx_scheduled_jobs_job_key").on(table.jobKey),
+  isActiveIdx: index("idx_scheduled_jobs_is_active").on(table.isActive),
+  nextRunIdx: index("idx_scheduled_jobs_next_run").on(table.nextRun),
+}));
+
+// 17. Performance Metrics - Performance tracking
+export const performanceMetrics = pgTable("performance_metrics", {
+  id: serial("id").primaryKey(),
+  metricType: varchar("metric_type").notNull(),
+  metricName: varchar("metric_name").notNull(),
+  value: numeric("value", { precision: 10, scale: 2 }).notNull(),
+  unit: varchar("unit").notNull(),
+  metadata: jsonb("metadata"),
+  recordedAt: timestamp("recorded_at").notNull().defaultNow(),
+}, (table) => ({
+  metricTypeIdx: index("idx_performance_metrics_metric_type").on(table.metricType),
+  metricNameIdx: index("idx_performance_metrics_metric_name").on(table.metricName),
+  recordedAtIdx: index("idx_performance_metrics_recorded_at").on(table.recordedAt),
+}));
+
+// 18. Security Events - Security event logging
+export const securityEvents = pgTable("security_events", {
+  id: serial("id").primaryKey(),
+  eventType: varchar("event_type").notNull(),
+  severity: varchar("severity").notNull(),
+  userId: varchar("user_id").references(() => users.id),
+  ipAddress: varchar("ip_address").notNull(),
+  details: jsonb("details").notNull(),
+  isResolved: boolean("is_resolved").notNull().default(false),
+  resolvedBy: varchar("resolved_by").references(() => users.id),
+  resolvedAt: timestamp("resolved_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  eventTypeIdx: index("idx_security_events_event_type").on(table.eventType),
+  severityIdx: index("idx_security_events_severity").on(table.severity),
+  isResolvedIdx: index("idx_security_events_is_resolved").on(table.isResolved),
+  createdAtIdx: index("idx_security_events_created_at").on(table.createdAt),
+}));
+
+// 19. Media Library - Central media storage
+export const mediaLibrary = pgTable("media_library", {
+  id: serial("id").primaryKey(),
+  filename: varchar("filename").notNull(),
+  originalFilename: varchar("original_filename").notNull(),
+  filePath: varchar("file_path").notNull(),
+  fileSize: integer("file_size").notNull(),
+  mimeType: varchar("mime_type").notNull(),
+  width: integer("width"),
+  height: integer("height"),
+  altText: varchar("alt_text"),
+  tags: text("tags").array().default(sql`'{}'::text[]`),
+  uploadedBy: varchar("uploaded_by").notNull().references(() => users.id),
+  uploadedAt: timestamp("uploaded_at").notNull().defaultNow(),
+  usageCount: integer("usage_count").notNull().default(0),
+}, (table) => ({
+  uploadedByIdx: index("idx_media_library_uploaded_by").on(table.uploadedBy),
+  mimeTypeIdx: index("idx_media_library_mime_type").on(table.mimeType),
+  uploadedAtIdx: index("idx_media_library_uploaded_at").on(table.uploadedAt),
+}));
+
+// 20. Content Revisions - Version control for content
+export const contentRevisions = pgTable("content_revisions", {
+  id: serial("id").primaryKey(),
+  contentType: varchar("content_type").notNull(),
+  contentId: varchar("content_id").notNull(),
+  revisionNumber: integer("revision_number").notNull(),
+  data: jsonb("data").notNull(),
+  changedFields: text("changed_fields").array().default(sql`'{}'::text[]`),
+  changedBy: varchar("changed_by").notNull().references(() => users.id),
+  changeReason: text("change_reason"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  contentTypeIdx: index("idx_content_revisions_content_type").on(table.contentType),
+  contentIdIdx: index("idx_content_revisions_content_id").on(table.contentId),
+  revisionNumberIdx: index("idx_content_revisions_revision_number").on(table.revisionNumber),
+  createdAtIdx: index("idx_content_revisions_created_at").on(table.createdAt),
+}));
+
 // Upsert User schema for Replit Auth (OIDC)
 export const upsertUserSchema = createInsertSchema(users).pick({
   id: true,
@@ -1225,3 +1596,107 @@ export type Profile = typeof profiles.$inferSelect;
 
 // User Settings types
 export type UserSettings = typeof userSettings.$inferSelect;
+
+// ============================================================================
+// ADMIN DASHBOARD SCHEMAS AND TYPES (20 new admin tables)
+// ============================================================================
+
+// 1. Admin Actions
+export const insertAdminActionSchema = createInsertSchema(adminActions).omit({ id: true, createdAt: true });
+export type InsertAdminAction = z.infer<typeof insertAdminActionSchema>;
+export type AdminAction = typeof adminActions.$inferSelect;
+
+// 2. Moderation Queue
+export const insertModerationQueueSchema = createInsertSchema(moderationQueue).omit({ id: true, createdAt: true });
+export type InsertModerationQueue = z.infer<typeof insertModerationQueueSchema>;
+export type ModerationQueue = typeof moderationQueue.$inferSelect;
+
+// 3. Reported Content
+export const insertReportedContentSchema = createInsertSchema(reportedContent).omit({ id: true, createdAt: true });
+export type InsertReportedContent = z.infer<typeof insertReportedContentSchema>;
+export type ReportedContent = typeof reportedContent.$inferSelect;
+
+// 4. System Settings
+export const insertSystemSettingSchema = createInsertSchema(systemSettings).omit({ id: true, updatedAt: true });
+export type InsertSystemSetting = z.infer<typeof insertSystemSettingSchema>;
+export type SystemSetting = typeof systemSettings.$inferSelect;
+
+// 5. Support Tickets
+export const insertSupportTicketSchema = createInsertSchema(supportTickets).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertSupportTicket = z.infer<typeof insertSupportTicketSchema>;
+export type SupportTicket = typeof supportTickets.$inferSelect;
+
+// 6. Announcements
+export const insertAnnouncementSchema = createInsertSchema(announcements).omit({ id: true, createdAt: true, views: true, clicks: true });
+export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;
+export type Announcement = typeof announcements.$inferSelect;
+
+// 7. IP Bans
+export const insertIpBanSchema = createInsertSchema(ipBans).omit({ id: true, bannedAt: true });
+export type InsertIpBan = z.infer<typeof insertIpBanSchema>;
+export type IpBan = typeof ipBans.$inferSelect;
+
+// 8. Email Templates
+export const insertEmailTemplateSchema = createInsertSchema(emailTemplates).omit({ id: true, updatedAt: true });
+export type InsertEmailTemplate = z.infer<typeof insertEmailTemplateSchema>;
+export type EmailTemplate = typeof emailTemplates.$inferSelect;
+
+// 9. Admin Roles
+export const insertAdminRoleSchema = createInsertSchema(adminRoles).omit({ id: true, grantedAt: true });
+export type InsertAdminRole = z.infer<typeof insertAdminRoleSchema>;
+export type AdminRole = typeof adminRoles.$inferSelect;
+
+// 10. User Segments
+export const insertUserSegmentSchema = createInsertSchema(userSegments).omit({ id: true, createdAt: true, updatedAt: true, userCount: true });
+export type InsertUserSegment = z.infer<typeof insertUserSegmentSchema>;
+export type UserSegment = typeof userSegments.$inferSelect;
+
+// 11. Automation Rules
+export const insertAutomationRuleSchema = createInsertSchema(automationRules).omit({ id: true, createdAt: true, executionCount: true, lastExecuted: true });
+export type InsertAutomationRule = z.infer<typeof insertAutomationRuleSchema>;
+export type AutomationRule = typeof automationRules.$inferSelect;
+
+// 12. A/B Tests
+export const insertAbTestSchema = createInsertSchema(abTests).omit({ id: true, createdAt: true });
+export type InsertAbTest = z.infer<typeof insertAbTestSchema>;
+export type AbTest = typeof abTests.$inferSelect;
+
+// 13. Feature Flags
+export const insertFeatureFlagSchema = createInsertSchema(featureFlags).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertFeatureFlag = z.infer<typeof insertFeatureFlagSchema>;
+export type FeatureFlag = typeof featureFlags.$inferSelect;
+
+// 14. API Keys
+export const insertApiKeySchema = createInsertSchema(apiKeys).omit({ id: true, createdAt: true, lastUsed: true });
+export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
+export type ApiKey = typeof apiKeys.$inferSelect;
+
+// 15. Webhooks
+export const insertWebhookSchema = createInsertSchema(webhooks).omit({ id: true, createdAt: true, lastTriggered: true, successCount: true, failureCount: true });
+export type InsertWebhook = z.infer<typeof insertWebhookSchema>;
+export type Webhook = typeof webhooks.$inferSelect;
+
+// 16. Scheduled Jobs
+export const insertScheduledJobSchema = createInsertSchema(scheduledJobs).omit({ id: true, lastRun: true, nextRun: true, lastStatus: true, lastError: true, executionCount: true });
+export type InsertScheduledJob = z.infer<typeof insertScheduledJobSchema>;
+export type ScheduledJob = typeof scheduledJobs.$inferSelect;
+
+// 17. Performance Metrics
+export const insertPerformanceMetricSchema = createInsertSchema(performanceMetrics).omit({ id: true, recordedAt: true });
+export type InsertPerformanceMetric = z.infer<typeof insertPerformanceMetricSchema>;
+export type PerformanceMetric = typeof performanceMetrics.$inferSelect;
+
+// 18. Security Events
+export const insertSecurityEventSchema = createInsertSchema(securityEvents).omit({ id: true, createdAt: true });
+export type InsertSecurityEvent = z.infer<typeof insertSecurityEventSchema>;
+export type SecurityEvent = typeof securityEvents.$inferSelect;
+
+// 19. Media Library
+export const insertMediaLibrarySchema = createInsertSchema(mediaLibrary).omit({ id: true, uploadedAt: true, usageCount: true });
+export type InsertMediaLibrary = z.infer<typeof insertMediaLibrarySchema>;
+export type MediaLibrary = typeof mediaLibrary.$inferSelect;
+
+// 20. Content Revisions
+export const insertContentRevisionSchema = createInsertSchema(contentRevisions).omit({ id: true, createdAt: true });
+export type InsertContentRevision = z.infer<typeof insertContentRevisionSchema>;
+export type ContentRevision = typeof contentRevisions.$inferSelect;
