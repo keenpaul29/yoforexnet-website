@@ -215,7 +215,8 @@ function ThemeProvider({ children }) {
             ;
             const stored = localStorage.getItem("theme");
             if (stored === "light" || stored === "dark") return stored;
-            return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            // Default to light mode
+            return "light";
         }
     }["ThemeProvider.useState"]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -239,11 +240,11 @@ function ThemeProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/app/contexts/ThemeContext.tsx",
-        lineNumber: 34,
+        lineNumber: 35,
         columnNumber: 5
     }, this);
 }
-_s(ThemeProvider, "587EkubEV6V1Q3jzFP8ia89BYkE=");
+_s(ThemeProvider, "7W1rVVq2dhcv2fIXunsTR5CnZno=");
 _c = ThemeProvider;
 function useTheme() {
     _s1();
