@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -90,8 +90,11 @@ export default function AddContentDialog({ trigger }: AddContentDialogProps) {
       form.reset();
       setSelectedTags([]);
       setOpen(false);
-      // Invalidate marketplace queries
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace"] });
+      // Invalidate all marketplace-related queries
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-selling"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/revenue-chart"] });
       queryClient.invalidateQueries({ queryKey: ["/api/content"] });
     },
     onError: (error: Error) => {
@@ -142,6 +145,12 @@ export default function AddContentDialog({ trigger }: AddContentDialogProps) {
   };
 
   const isFree = form.watch("isFree");
+
+  useEffect(() => {
+    if (isFree) {
+      form.setValue("priceCoins", 0);
+    }
+  }, [isFree, form]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
