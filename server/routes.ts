@@ -1481,6 +1481,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(content);
   });
   
+  // GET /api/content/top-sellers - Top selling EAs/Indicators
+  // IMPORTANT: This must come BEFORE /api/content/:id to avoid route conflict
+  app.get("/api/content/top-sellers", async (req, res) => {
+    try {
+      const content = await storage.getAllContent({ status: 'approved' });
+      
+      // Sort by sales score
+      const topSellers = content
+        .sort((a, b) => (b.salesScore || 0) - (a.salesScore || 0))
+        .slice(0, 10);
+      
+      const sellersWithStats = await Promise.all(topSellers.map(async (item) => {
+        const author = await storage.getUserById(item.authorId);
+        const salesStats = await storage.getContentSalesStats(item.id);
+        
+        return {
+          id: item.id,
+          slug: item.slug,
+          title: item.title,
+          type: item.type,
+          priceCoins: item.priceCoins,
+          isFree: item.isFree,
+          postLogoUrl: item.postLogoUrl,
+          salesScore: item.salesScore || 0,
+          totalSales: salesStats.totalSales,
+          avgRating: salesStats.avgRating,
+          reviewCount: salesStats.reviewCount,
+          downloads: item.downloads,
+          author: {
+            id: author?.id,
+            username: author?.username,
+            profileImageUrl: author?.profileImageUrl
+          }
+        };
+      }));
+      
+      res.json({
+        topSellers: sellersWithStats,
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Get content by ID
   app.get("/api/content/:id", async (req, res) => {
     const content = await storage.getContent(req.params.id);
@@ -4052,50 +4097,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json({
         leaderboard,
-        lastUpdated: new Date().toISOString()
-      });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  // GET /api/content/top-sellers - Top selling EAs/Indicators
-  app.get("/api/content/top-sellers", async (req, res) => {
-    try {
-      const content = await storage.getAllContent({ status: 'approved' });
-      
-      // Sort by sales score
-      const topSellers = content
-        .sort((a, b) => (b.salesScore || 0) - (a.salesScore || 0))
-        .slice(0, 10);
-      
-      const sellersWithStats = await Promise.all(topSellers.map(async (item) => {
-        const author = await storage.getUserById(item.authorId);
-        const salesStats = await storage.getContentSalesStats(item.id);
-        
-        return {
-          id: item.id,
-          slug: item.slug,
-          title: item.title,
-          type: item.type,
-          priceCoins: item.priceCoins,
-          isFree: item.isFree,
-          postLogoUrl: item.postLogoUrl,
-          salesScore: item.salesScore || 0,
-          totalSales: salesStats.totalSales,
-          avgRating: salesStats.avgRating,
-          reviewCount: salesStats.reviewCount,
-          downloads: item.downloads,
-          author: {
-            id: author?.id,
-            username: author?.username,
-            profileImageUrl: author?.profileImageUrl
-          }
-        };
-      }));
-      
-      res.json({
-        topSellers: sellersWithStats,
         lastUpdated: new Date().toISOString()
       });
     } catch (error: any) {
