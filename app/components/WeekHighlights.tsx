@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, TrendingUp, CheckCircle2, Eye } from "lucide-react";
+import { MessageCircle, TrendingUp, CheckCircle2, Eye, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -226,77 +226,139 @@ export default function WeekHighlights({
   };
 
   const renderThreadList = (threads: HighlightThread[]) => (
-    <div className="space-y-3">
-      {threads.map((thread) => (
+    <div className="space-y-0 divide-y divide-border/40">
+      {threads.map((thread, index) => (
         <div 
           key={thread.id} 
-          className="flex items-start gap-3 p-3 rounded-lg hover-elevate active-elevate-2 cursor-pointer" 
+          className="group py-4 px-3 -mx-3 rounded-lg hover:bg-muted/40 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200" 
           data-testid={`highlight-thread-${thread.id}`}
           onClick={() => handleThreadClick(thread)}
         >
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <Badge variant="outline" className="text-xs" data-testid={`badge-category-${thread.id}`}>
-                {thread.category}
-              </Badge>
-              {thread.isAnswered && (
-                <div className="flex items-center gap-1 text-xs text-primary" data-testid={`badge-solved-${thread.id}`}>
-                  <CheckCircle2 className="h-3 w-3" />
-                  <span>Solved</span>
+          <div className="flex items-start gap-4">
+            <div className="flex-1 min-w-0 space-y-2">
+              {/* Category badge */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge 
+                  variant="outline" 
+                  className="text-xs font-medium bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary transition-colors"
+                  data-testid={`badge-category-${thread.id}`}
+                >
+                  {thread.category}
+                </Badge>
+                {thread.isAnswered && (
+                  <div className="flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400" data-testid={`badge-solved-${thread.id}`}>
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    <span>Solved</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Thread title */}
+              <h4 
+                className="text-[15px] font-semibold leading-snug line-clamp-1 group-hover:text-primary transition-colors" 
+                data-testid={`text-title-${thread.id}`}
+              >
+                {thread.title}
+              </h4>
+
+              {/* Metadata - smaller ID shown subtly */}
+              <div className="text-[11px] text-muted-foreground/80 font-mono truncate">
+                {thread.id}
+              </div>
+
+              {/* Stats row */}
+              <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+                <div className="flex items-center gap-1.5">
+                  <MessageCircle className="h-3.5 w-3.5 text-blue-500/70" />
+                  <span className="font-medium" data-testid={`text-replies-${thread.id}`}>
+                    {thread.replies}
+                  </span>
                 </div>
-              )}
-            </div>
-            <h4 className="text-sm font-medium line-clamp-1 mb-1" data-testid={`text-title-${thread.id}`}>
-              {thread.title}
-            </h4>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span data-testid={`text-author-${thread.id}`}>{thread.author}</span>
-              <span>•</span>
-              <div className="flex items-center gap-1">
-                <MessageCircle className="h-3 w-3" />
-                <span data-testid={`text-replies-${thread.id}`}>{thread.replies}</span>
+
+                <div className="flex items-center gap-1.5">
+                  <Eye className="h-3.5 w-3.5 text-purple-500/70" />
+                  <span className="font-medium" data-testid={`text-views-${thread.id}`}>
+                    {thread.views.toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5 text-orange-500/70" />
+                  <span>{formatDistanceToNow(thread.lastActivity, { addSuffix: true })}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                <span data-testid={`text-views-${thread.id}`}>{thread.views.toLocaleString()}</span>
-              </div>
-              <span>•</span>
-              <span>{formatDistanceToNow(thread.lastActivity, { addSuffix: true })}</span>
             </div>
+
+            {/* Solved count or coins badge */}
+            {thread.isAnswered ? (
+              <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-green-500/10 border border-green-500/20 transition-transform group-hover:scale-105">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600 dark:text-green-400 leading-none">
+                    0
+                  </div>
+                </div>
+              </div>
+            ) : thread.coins && thread.coins > 0 ? (
+              <Badge 
+                variant="secondary" 
+                className="text-xs font-semibold bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/20"
+                data-testid={`badge-coins-${thread.id}`}
+              >
+                +{thread.coins}
+              </Badge>
+            ) : null}
           </div>
-          {thread.coins && thread.coins > 0 && (
-            <Badge variant="secondary" className="text-xs" data-testid={`badge-coins-${thread.id}`}>
-              +{thread.coins}
-            </Badge>
-          )}
         </div>
       ))}
     </div>
   );
 
   return (
-    <Card data-testid="card-week-highlights">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-4">
+    <Card data-testid="card-week-highlights" className="overflow-hidden">
+      <CardContent className="p-0">
+        {/* Header */}
+        <div className="flex items-center gap-2 p-5 pb-4 border-b bg-gradient-to-br from-primary/5 to-primary/0">
           <TrendingUp className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">This Week's Highlights</h3>
+          <h3 className="font-semibold text-base">This Week's Highlights</h3>
         </div>
         
+        {/* Tabs */}
         <Tabs defaultValue="new" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="new" data-testid="tab-new">New</TabsTrigger>
-            <TabsTrigger value="trending" data-testid="tab-trending">Trending</TabsTrigger>
-            <TabsTrigger value="solved" data-testid="tab-solved">Solved</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-muted/30">
+            <TabsTrigger 
+              value="new" 
+              data-testid="tab-new"
+              className="rounded-none data-[state=active]:shadow-none"
+            >
+              New
+            </TabsTrigger>
+            <TabsTrigger 
+              value="trending" 
+              data-testid="tab-trending"
+              className="rounded-none data-[state=active]:shadow-none"
+            >
+              Trending
+            </TabsTrigger>
+            <TabsTrigger 
+              value="solved" 
+              data-testid="tab-solved"
+              className="rounded-none data-[state=active]:shadow-none"
+            >
+              Solved
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="new" className="mt-4">
-            {renderThreadList(displayNewThreads)}
-          </TabsContent>
-          <TabsContent value="trending" className="mt-4">
-            {renderThreadList(displayTrendingThreads)}
-          </TabsContent>
-          <TabsContent value="solved" className="mt-4">
-            {renderThreadList(displaySolvedThreads)}
-          </TabsContent>
+
+          <div className="px-5 py-1">
+            <TabsContent value="new" className="mt-0">
+              {renderThreadList(displayNewThreads)}
+            </TabsContent>
+            <TabsContent value="trending" className="mt-0">
+              {renderThreadList(displayTrendingThreads)}
+            </TabsContent>
+            <TabsContent value="solved" className="mt-0">
+              {renderThreadList(displaySolvedThreads)}
+            </TabsContent>
+          </div>
         </Tabs>
       </CardContent>
     </Card>
