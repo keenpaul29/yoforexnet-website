@@ -14,8 +14,6 @@ import WhatsHot from "@/components/WhatsHot";
 import TopSellers from "@/components/TopSellers";
 import EnhancedFooter from "@/components/EnhancedFooter";
 import { OnboardingChecklist } from "@/components/OnboardingChecklist";
-import { DailyEarnings } from "@/components/DailyEarnings";
-import { useActivityTracker } from "@/hooks/useActivityTracker";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
@@ -78,9 +76,6 @@ export default function HomeClient({
   initialCategories, 
   initialThreads 
 }: HomeClientProps) {
-  // Enable activity tracking for earning coins
-  useActivityTracker(true);
-
   // Fetch top categories with 60s auto-refresh (for homepage display)
   const { data: categoriesData, isLoading: isLoadingCategories } = useQuery({
     queryKey: ['/api/categories/tree/top?limit=6'],
@@ -136,7 +131,6 @@ export default function HomeClient({
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">
           <aside className="lg:col-span-1 space-y-3 sm:space-y-4 order-2 lg:order-1">
             <OnboardingChecklist />
-            <DailyEarnings />
             <CoinBalance />
             <TrustLevel />
           </aside>
