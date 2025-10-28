@@ -1137,10 +1137,6 @@ export const insertContentSchema = createInsertSchema(content).omit({
   downloads: true,
   likes: true,
   status: true,
-  focusKeyword: true,
-  autoMetaDescription: true,
-  autoImageAltTexts: true,
-  slug: true,
 }).extend({
   title: z.string().min(10).max(120),
   description: z.string().min(300),
@@ -1171,6 +1167,12 @@ export const insertContentSchema = createInsertSchema(content).omit({
   winPercent: z.number().optional(),
   broker: z.string().optional(),
   monthsTested: z.number().optional(),
+  
+  // Auto-generated SEO fields (optional, can be provided or generated)
+  slug: z.string().optional(),
+  focusKeyword: z.string().optional(),
+  autoMetaDescription: z.string().optional(),
+  autoImageAltTexts: z.array(z.string()).optional(),
 });
 
 export const insertContentPurchaseSchema = createInsertSchema(contentPurchases).omit({
@@ -1316,11 +1318,7 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   bookmarkCount: true,
   shareCount: true,
   lastActivityAt: true,
-  slug: true,
-  focusKeyword: true,
-  metaDescription: true,
   status: true,
-  engagementScore: true,
   lastScoreUpdate: true,
   acceptedAnswerId: true,
 }).extend({
@@ -1384,6 +1382,14 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   isPinned: z.boolean().optional().default(false),
   isLocked: z.boolean().optional().default(false),
   isSolved: z.boolean().optional().default(false),
+  
+  // Auto-generated SEO fields (optional, can be provided or generated)
+  slug: z.string().optional(),
+  focusKeyword: z.string().optional(),
+  metaDescription: z.string().optional(),
+  
+  // Ranking field (optional, defaults to 0 if not provided)
+  engagementScore: z.number().optional(),
 });
 
 export const insertForumReplySchema = createInsertSchema(forumReplies).omit({

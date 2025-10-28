@@ -188,9 +188,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(user);
   });
 
-  // TEST EMAIL ENDPOINT - Send test email
-  app.post("/api/test-email", async (req, res) => {
+  // TEST EMAIL ENDPOINT - Send test email (Admin only)
+  app.post("/api/test-email", isAuthenticated, async (req, res) => {
     try {
+      // Check if user is admin
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
       const { to, type } = req.body;
       
       if (!to) {
@@ -248,46 +253,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Get user by ID
-  app.get("/api/user/:userId", async (req, res) => {
-    const user = await storage.getUser(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+  // Get user by ID (requires authentication - own profile or admin)
+  app.get("/api/user/:userId", isAuthenticated, async (req, res) => {
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const requestedUserId = req.params.userId;
+
+      // Check if user is viewing their own profile or is an admin
+      if (authenticatedUserId !== requestedUserId && !isAdmin(req.user)) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const user = await storage.getUser(requestedUserId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json(user);
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
     }
-    res.json(user);
   });
 
-  // Get user by username
+  // Get user by username (public - but with sensitive data removed)
   app.get("/api/users/username/:username", async (req, res) => {
     try {
       const user = await storage.getUserByUsername(req.params.username);
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      res.json(user);
+      
+      // Remove sensitive data from public profile
+      const { 
+        password, 
+        email, 
+        totalCoins, 
+        weeklyEarned, 
+        ...publicProfile 
+      } = user;
+      
+      res.json(publicProfile);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   });
 
-  // Coin balance endpoint
-  app.get("/api/user/:userId/coins", async (req, res) => {
-    const user = await storage.getUser(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+  // Coin balance endpoint (requires authentication - own profile or admin)
+  app.get("/api/user/:userId/coins", isAuthenticated, async (req, res) => {
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const requestedUserId = req.params.userId;
+
+      // Check if user is viewing their own coins or is an admin
+      if (authenticatedUserId !== requestedUserId && !isAdmin(req.user)) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const user = await storage.getUser(requestedUserId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json({
+        totalCoins: user.totalCoins,
+        weeklyEarned: user.weeklyEarned,
+        rank: user.rank
+      });
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
     }
-    res.json({
-      totalCoins: user.totalCoins,
-      weeklyEarned: user.weeklyEarned,
-      rank: user.rank
-    });
   });
 
-  // Transaction history endpoint
-  app.get("/api/user/:userId/transactions", async (req, res) => {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-    const transactions = await storage.getUserTransactions(req.params.userId, limit);
-    res.json(transactions);
+  // Transaction history endpoint (requires authentication - own profile or admin)
+  app.get("/api/user/:userId/transactions", isAuthenticated, async (req, res) => {
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const requestedUserId = req.params.userId;
+
+      // Check if user is viewing their own transactions or is an admin
+      if (authenticatedUserId !== requestedUserId && !isAdmin(req.user)) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+      const transactions = await storage.getUserTransactions(requestedUserId, limit);
+      res.json(transactions);
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
+    }
   });
 
   // Badge System Endpoints
@@ -3708,7 +3768,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch('/api/admin/support/tickets/:id', isAuthenticated, adminOperationLimiter, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
     try {
-      await storage.updateSupportTicket(parseInt(req.params.id), req.body);
+      const adminUserId = getAuthenticatedUserId(req);
+      await storage.updateSupportTicket(parseInt(req.params.id), req.body, adminUserId);
       res.json({ success: true });
     } catch (error) {
       console.error('Error updating ticket:', error);
@@ -3890,7 +3951,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/admin/roles/revoke', isAuthenticated, adminOperationLimiter, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
     try {
-      await storage.revokeAdminRole(req.body.userId);
+      const adminUserId = getAuthenticatedUserId(req);
+      await storage.revokeAdminRole(req.body.userId, adminUserId);
       res.json({ success: true });
     } catch (error) {
       console.error('Error revoking role:', error);
