@@ -96,7 +96,10 @@ import {
   type InsertMediaLibrary,
   type ContentRevision,
   type InsertContentRevision,
+  type UserActivity,
+  type InsertUserActivity,
   users,
+  userActivity,
   coinTransactions,
   rechargeOrders,
   withdrawalRequests,
@@ -167,6 +170,14 @@ export interface IStorage {
   updateUserCoins(userId: string, coins: number): Promise<User | undefined>;
   updateUserProfile(userId: string, data: Partial<User>): Promise<User | undefined>;
   trackOnboardingProgress(userId: string, task: string): Promise<{ completed: boolean; coinsEarned: number }>;
+  
+  // Daily Earning system - Activity tracking
+  recordActivity(userId: string, minutes: number): Promise<{coinsEarned: number, totalMinutes: number}>;
+  getTodayActivity(userId: string): Promise<{activeMinutes: number, coinsEarned: number} | null>;
+  
+  // Daily Earning system - Journal tracking
+  checkCanPostJournal(userId: string): Promise<boolean>;
+  markJournalPosted(userId: string): Promise<void>;
   
   createCoinTransaction(transaction: InsertCoinTransaction): Promise<CoinTransaction>;
   getUserTransactions(userId: string, limit?: number): Promise<CoinTransaction[]>;
@@ -1307,6 +1318,7 @@ export class MemStorage implements IStorage {
   private userBadgesMap: Map<string, UserBadge>;
   private activityFeedMap: Map<string, ActivityFeed>;
   private userFollowsMap: Map<string, UserFollow>;
+  private userActivity: Map<string, UserActivity>;
 
   constructor() {
     this.users = new Map();
@@ -1325,6 +1337,7 @@ export class MemStorage implements IStorage {
     this.userBadgesMap = new Map();
     this.activityFeedMap = new Map();
     this.userFollowsMap = new Map();
+    this.userActivity = new Map();
     
     // Create demo user with coins
     const demoUser: User = {
@@ -1535,6 +1548,92 @@ export class MemStorage implements IStorage {
     });
 
     return { completed: true, coinsEarned: taskInfo.reward };
+  }
+
+  // Daily Earning system - Activity tracking
+  async recordActivity(userId: string, minutes: number): Promise<{coinsEarned: number, totalMinutes: number}> {
+    // Get today's date string (YYYY-MM-DD)
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Find or create today's activity record
+    const activityKey = `${userId}_${today}`;
+    let activity = Array.from(this.userActivity.values()).find(
+      a => a.userId === userId && a.date === today
+    );
+    
+    if (!activity) {
+      activity = {
+        id: randomUUID(),
+        userId,
+        date: today,
+        activeMinutes: 0,
+        coinsEarned: 0,
+        lastActivityAt: new Date(),
+        createdAt: new Date(),
+      };
+      this.userActivity.set(activity.id, activity);
+    }
+    
+    // Calculate new totals
+    const newMinutes = activity.activeMinutes + minutes;
+    const cappedMinutes = Math.min(newMinutes, 100); // Max 100 minutes per day
+    const minutesAdded = cappedMinutes - activity.activeMinutes;
+    
+    // Award coins: 0.5 coins per 5 minutes (10 coins per hour)
+    const newCoins = Math.floor(minutesAdded / 5) * 0.5;
+    
+    // Update activity record
+    activity.activeMinutes = cappedMinutes;
+    activity.coinsEarned += newCoins;
+    activity.lastActivityAt = new Date();
+    this.userActivity.set(activity.id, activity);
+    
+    // Award coins to user if any earned
+    if (newCoins > 0) {
+      await this.createCoinTransaction({
+        userId,
+        type: "earn",
+        amount: newCoins,
+        description: `Daily activity reward: ${minutesAdded} active minutes`,
+        status: "completed",
+      });
+    }
+    
+    return { coinsEarned: newCoins, totalMinutes: cappedMinutes };
+  }
+
+  async getTodayActivity(userId: string): Promise<{activeMinutes: number, coinsEarned: number} | null> {
+    const today = new Date().toISOString().split('T')[0];
+    const activity = Array.from(this.userActivity.values()).find(
+      a => a.userId === userId && a.date === today
+    );
+    
+    if (!activity) {
+      return { activeMinutes: 0, coinsEarned: 0 };
+    }
+    
+    return {
+      activeMinutes: activity.activeMinutes,
+      coinsEarned: activity.coinsEarned,
+    };
+  }
+
+  // Daily Earning system - Journal tracking
+  async checkCanPostJournal(userId: string): Promise<boolean> {
+    const user = this.users.get(userId);
+    if (!user) return false;
+    
+    const today = new Date().toISOString().split('T')[0];
+    return user.lastJournalPost !== today;
+  }
+
+  async markJournalPosted(userId: string): Promise<void> {
+    const user = this.users.get(userId);
+    if (!user) throw new Error("User not found");
+    
+    const today = new Date().toISOString().split('T')[0];
+    const updatedUser = { ...user, lastJournalPost: today };
+    this.users.set(userId, updatedUser);
   }
 
   async createCoinTransaction(insertTransaction: InsertCoinTransaction): Promise<CoinTransaction> {
@@ -3725,6 +3824,100 @@ export class DrizzleStorage implements IStorage {
     });
 
     return { completed: true, coinsEarned: taskInfo.reward };
+  }
+
+  // Daily Earning system - Activity tracking
+  async recordActivity(userId: string, minutes: number): Promise<{coinsEarned: number, totalMinutes: number}> {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    // Get or create today's activity record
+    let activity = await db.query.userActivity.findFirst({
+      where: and(
+        eq(userActivity.userId, userId),
+        eq(userActivity.date, today)
+      )
+    });
+
+    // Calculate coins to award (0.5 per 5 minutes, max 50/day)
+    const newMinutes = (activity?.activeMinutes || 0) + minutes;
+    const maxMinutes = 100; // 100 minutes = 50 coins max
+    const cappedMinutes = Math.min(newMinutes, maxMinutes);
+    const totalCoinsEarned = Math.floor(cappedMinutes / 5) * 0.5;
+    const previousCoins = activity?.coinsEarned || 0;
+    const newCoins = totalCoinsEarned - previousCoins;
+
+    if (activity) {
+      // Update existing record
+      await db.update(userActivity)
+        .set({
+          activeMinutes: cappedMinutes,
+          coinsEarned: totalCoinsEarned,
+          lastActivityAt: new Date()
+        })
+        .where(eq(userActivity.id, activity.id));
+    } else {
+      // Create new record
+      await db.insert(userActivity).values({
+        userId,
+        date: today,
+        activeMinutes: minutes,
+        coinsEarned: totalCoinsEarned,
+        lastActivityAt: new Date()
+      });
+    }
+
+    // Award coins if any new coins earned
+    if (newCoins > 0) {
+      await db.update(users)
+        .set({ totalCoins: sql`${users.totalCoins} + ${newCoins}` })
+        .where(eq(users.id, userId));
+
+      await db.insert(coinTransactions).values({
+        userId,
+        type: 'earn',
+        amount: newCoins,
+        description: `Active engagement reward (${minutes} minutes)`,
+        status: 'completed'
+      });
+    }
+
+    return {
+      coinsEarned: newCoins,
+      totalMinutes: cappedMinutes
+    };
+  }
+
+  async getTodayActivity(userId: string): Promise<{activeMinutes: number, coinsEarned: number} | null> {
+    const today = new Date().toISOString().split('T')[0];
+    
+    const activity = await db.query.userActivity.findFirst({
+      where: and(
+        eq(userActivity.userId, userId),
+        eq(userActivity.date, today)
+      )
+    });
+
+    return activity ? {
+      activeMinutes: activity.activeMinutes,
+      coinsEarned: activity.coinsEarned
+    } : null;
+  }
+
+  async checkCanPostJournal(userId: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    if (!user) return false;
+    
+    const today = new Date().toISOString().split('T')[0];
+    const lastPost = user.lastJournalPost;
+    
+    return !lastPost || lastPost !== today;
+  }
+
+  async markJournalPosted(userId: string): Promise<void> {
+    const today = new Date().toISOString().split('T')[0];
+    await db.update(users)
+      .set({ lastJournalPost: today })
+      .where(eq(users.id, userId));
   }
 
   async createCoinTransaction(insertTransaction: InsertCoinTransaction): Promise<CoinTransaction> {

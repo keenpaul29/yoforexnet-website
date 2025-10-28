@@ -4967,6 +4967,111 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ===== Daily Earning System =====
+  
+  // Track user activity (5-minute intervals)
+  app.post('/api/activity/track', isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const { minutes } = req.body;
+      
+      if (!minutes || minutes !== 5) {
+        return res.status(400).json({ message: 'Invalid minutes value. Must be 5.' });
+      }
+      
+      const result = await storage.recordActivity(userId, minutes);
+      const dailyLimit = result.totalMinutes >= 100;
+      
+      res.json({
+        success: true,
+        coinsEarned: result.coinsEarned,
+        totalMinutes: result.totalMinutes,
+        dailyLimit
+      });
+    } catch (error) {
+      console.error('Error tracking activity:', error);
+      res.status(500).json({ message: 'Failed to track activity' });
+    }
+  });
+  
+  // Get today's activity stats
+  app.get('/api/activity/today', isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const activity = await storage.getTodayActivity(userId);
+      
+      const activeMinutes = activity?.activeMinutes || 0;
+      const coinsEarned = activity?.coinsEarned || 0;
+      const canEarnMore = activeMinutes < 100;
+      
+      // Minutes until next reward (next 5-minute interval)
+      const minutesUntilNextReward = canEarnMore 
+        ? 5 - (activeMinutes % 5)
+        : 0;
+      
+      res.json({
+        activeMinutes,
+        coinsEarned,
+        canEarnMore,
+        minutesUntilNextReward
+      });
+    } catch (error) {
+      console.error('Error fetching activity:', error);
+      res.status(500).json({ message: 'Failed to fetch activity' });
+    }
+  });
+  
+  // Check if user can post journal today
+  app.post('/api/journal/check', isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const canPost = await storage.checkCanPostJournal(userId);
+      
+      let nextAvailable = null;
+      if (!canPost) {
+        // Next available is tomorrow at midnight
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        nextAvailable = tomorrow.toISOString();
+      }
+      
+      res.json({ canPost, nextAvailable });
+    } catch (error) {
+      console.error('Error checking journal status:', error);
+      res.status(500).json({ message: 'Failed to check journal status' });
+    }
+  });
+  
+  // Get suggested users to follow
+  app.get('/api/users/suggested', isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const limit = parseInt(req.query.limit as string) || 3;
+      
+      // Get all users
+      const allUsers = await storage.getAllUsers();
+      
+      // Get users already following
+      const following = await storage.getUserFollowing(userId);
+      const followingIds = new Set(following.map((f: any) => f.id));
+      
+      // Filter out current user and already followed users
+      const available = allUsers.filter(u => 
+        u.id !== userId && !followingIds.has(u.id)
+      );
+      
+      // Shuffle and take random users
+      const shuffled = available.sort(() => Math.random() - 0.5);
+      const suggested = shuffled.slice(0, limit);
+      
+      res.json(suggested);
+    } catch (error) {
+      console.error('Error fetching suggested users:', error);
+      res.status(500).json({ message: 'Failed to fetch suggested users' });
+    }
+  });
+
   // Admin Media Library
   app.get('/api/admin/studio/media', isAuthenticated, adminOperationLimiter, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });

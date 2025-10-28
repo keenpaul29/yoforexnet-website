@@ -67,6 +67,9 @@ export const users = pgTable("users", {
   reputationScore: integer("reputation_score").notNull().default(0),
   lastReputationUpdate: timestamp("last_reputation_update"),
   
+  // Daily Earning system
+  lastJournalPost: date("last_journal_post"),
+  
   // Timestamps
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -75,6 +78,18 @@ export const users = pgTable("users", {
   emailIdx: index("idx_users_email").on(table.email),
   reputationIdx: index("idx_users_reputation").on(table.reputationScore),
   coinsCheck: check("chk_user_coins_nonnegative", sql`${table.totalCoins} >= 0`),
+}));
+
+export const userActivity = pgTable("user_activity", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  date: date("date").notNull(),
+  activeMinutes: integer("active_minutes").notNull().default(0),
+  coinsEarned: integer("coins_earned").notNull().default(0),
+  lastActivityAt: timestamp("last_activity_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  userDateIdx: uniqueIndex("idx_user_activity_user_date").on(table.userId, table.date),
 }));
 
 export const coinTransactions = pgTable("coin_transactions", {
@@ -1718,3 +1733,8 @@ export type MediaLibrary = typeof mediaLibrary.$inferSelect;
 export const insertContentRevisionSchema = createInsertSchema(contentRevisions).omit({ id: true, createdAt: true });
 export type InsertContentRevision = z.infer<typeof insertContentRevisionSchema>;
 export type ContentRevision = typeof contentRevisions.$inferSelect;
+
+// User Activity types (Daily Earning system)
+export const insertUserActivitySchema = createInsertSchema(userActivity).omit({ id: true, createdAt: true });
+export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
+export type UserActivity = typeof userActivity.$inferSelect;
