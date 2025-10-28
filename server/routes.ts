@@ -25,7 +25,8 @@ import {
   BADGE_METADATA,
   type BadgeType,
   coinTransactions,
-  profiles
+  profiles,
+  forumReplies
 } from "../shared/schema.js";
 import { db } from "./db.js";
 import { eq, and, gt, asc } from "drizzle-orm";
@@ -3474,6 +3475,206 @@ export async function registerRoutes(app: Express): Promise<Server> {
           threads: todayThreads,
           content: todayContent,
         },
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== COMMUNITY STATS ENDPOINTS =====
+
+  // GET /api/community/stats - Enhanced platform statistics
+  app.get("/api/community/stats", async (req, res) => {
+    // Cache for 30 seconds
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
+    
+    try {
+      const [threads, users, content, transactions] = await Promise.all([
+        storage.getAllForumThreads(),
+        storage.getAllUsers(),
+        storage.getAllContent(),
+        db.select().from(coinTransactions)
+      ]);
+
+      const now = new Date();
+      const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      // Calculate statistics
+      const newMembers24h = users.filter(u => new Date(u.createdAt!) >= last24h).length;
+      const newMembers7d = users.filter(u => new Date(u.createdAt!) >= last7d).length;
+      
+      const activeThreads24h = threads.filter(t => 
+        new Date(t.lastActivityAt) >= last24h
+      ).length;
+      
+      const newThreads7d = threads.filter(t => 
+        new Date(t.createdAt) >= last7d
+      ).length;
+      
+      const totalReplies24h = threads
+        .filter(t => new Date(t.lastActivityAt) >= last24h)
+        .reduce((sum, t) => sum + t.replyCount, 0);
+      
+      const totalDownloads24h = content
+        .filter(c => new Date(c.updatedAt) >= last24h)
+        .reduce((sum, c) => sum + (c.downloads || 0), 0);
+      
+      const coinsEarned24h = transactions
+        .filter(tx => 
+          tx.type === 'earn' && 
+          tx.status === 'completed' && 
+          new Date(tx.createdAt) >= last24h
+        )
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
+      // Estimate online members (users active in last hour)
+      const lastHour = new Date(now.getTime() - 60 * 60 * 1000);
+      const membersOnline = threads.filter(t => 
+        new Date(t.lastActivityAt) >= lastHour
+      ).length + Math.floor(users.length * 0.05); // Rough estimate
+
+      res.json({
+        membersOnline,
+        newMembers24h,
+        newMembers7d,
+        activeThreads24h,
+        newThreads7d,
+        totalReplies24h,
+        totalDownloads24h,
+        coinsEarned24h,
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/community/trending-users - Trending members by activity period
+  app.get("/api/community/trending-users", async (req, res) => {
+    try {
+      const period = (req.query.period as string) || '7d';
+      const limit = parseInt(req.query.limit as string) || 10;
+      
+      // Parse period (e.g., "7d" -> 7 days)
+      const periodMatch = period.match(/^(\d+)d$/);
+      if (!periodMatch) {
+        return res.status(400).json({ error: 'Invalid period format. Use format like "7d"' });
+      }
+      
+      const days = parseInt(periodMatch[1]);
+      const periodStart = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+      
+      const [users, threads, replies, transactions] = await Promise.all([
+        storage.getAllUsers(),
+        storage.getAllForumThreads(),
+        db.select().from(forumReplies),
+        db.select().from(coinTransactions)
+      ]);
+
+      // Calculate trending metrics for each user
+      const userMetrics = await Promise.all(users.map(async (user) => {
+        const userThreads = threads.filter(t => 
+          t.authorId === user.id && 
+          new Date(t.createdAt) >= periodStart
+        );
+        
+        const userReplies = replies.filter(r => 
+          r.userId === user.id && 
+          new Date(r.createdAt) >= periodStart
+        );
+        
+        const userCoins = transactions.filter(tx => 
+          tx.userId === user.id && 
+          tx.type === 'earn' &&
+          tx.status === 'completed' &&
+          new Date(tx.createdAt) >= periodStart
+        ).reduce((sum, tx) => sum + tx.amount, 0);
+
+        const contributionsDelta = userThreads.length + userReplies.length;
+        
+        return {
+          userId: user.id,
+          username: user.username,
+          profileImageUrl: user.profileImageUrl,
+          contributionsDelta,
+          coinsDelta: userCoins,
+          threadsCreated: userThreads.length,
+          repliesPosted: userReplies.length,
+          totalActivity: contributionsDelta + (userCoins / 10) // Weight coins less
+        };
+      }));
+
+      // Sort by total activity and return top users
+      const trending = userMetrics
+        .filter(u => u.totalActivity > 0) // Only users with activity
+        .sort((a, b) => b.totalActivity - a.totalActivity)
+        .slice(0, limit)
+        .map(({ totalActivity, ...user }) => user); // Remove internal field
+
+      res.json(trending);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/categories/:slug/stats - Per-category statistics
+  app.get("/api/categories/:slug/stats", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      
+      const [category, threads] = await Promise.all([
+        storage.getForumCategoryBySlug(slug),
+        storage.listForumThreads({ categorySlug: slug, limit: 1000 })
+      ]);
+
+      if (!category) {
+        return res.status(404).json({ error: 'Category not found' });
+      }
+
+      const now = new Date();
+      const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      // Get unique active users in last 7 days
+      const activeUserIds = new Set(
+        threads
+          .filter(t => new Date(t.lastActivityAt) >= last7d)
+          .map(t => t.authorId)
+      );
+
+      const newThreads7d = threads.filter(t => 
+        new Date(t.createdAt) >= last7d
+      ).length;
+
+      // Get top contributors for this category
+      const contributorMap = new Map<string, number>();
+      threads.forEach(thread => {
+        const count = contributorMap.get(thread.authorId) || 0;
+        contributorMap.set(thread.authorId, count + 1);
+      });
+
+      const topContributorIds = Array.from(contributorMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      const topContributors = await Promise.all(
+        topContributorIds.map(async ([userId, threadCount]) => {
+          const user = await storage.getUserById(userId);
+          return {
+            username: user?.username || 'Unknown',
+            threadCount
+          };
+        })
+      );
+
+      res.json({
+        slug: category.slug,
+        name: category.name,
+        threadCount: threads.length,
+        activeUsers7d: activeUserIds.size,
+        newThreads7d,
+        topContributors,
         lastUpdated: new Date().toISOString()
       });
     } catch (error: any) {

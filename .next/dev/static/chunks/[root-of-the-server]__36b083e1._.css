@@ -2128,6 +2128,10 @@ body {
   width: 2rem;
 }
 
+.w-80 {
+  width: 20rem;
+}
+
 .w-9 {
   width: 2.25rem;
 }
@@ -2884,6 +2888,10 @@ body {
 
 .border-green-500\/20 {
   border-color: #22c55e33;
+}
+
+.border-green-500\/30 {
+  border-color: #22c55e4d;
 }
 
 .border-indigo-200 {
@@ -6159,6 +6167,10 @@ input[type="search"]::-webkit-search-cancel-button {
 @media (min-width: 1280px) {
   .xl\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .xl\:block {
+    display: block;
   }
 
   .xl\:grid-cols-4 {
