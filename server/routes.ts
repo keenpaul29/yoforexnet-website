@@ -2346,8 +2346,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           views: thread.views || 0,
           createdAt: thread.createdAt,
           authorId: thread.authorId,
-          // Normalize engagement score (typically 0-200) to common scale
-          normalizedScore: (thread.engagementScore || 0) * 5,
+          // Engagement score (0-200 range) - keep as is
+          normalizedScore: thread.engagementScore || 0,
           originalScore: thread.engagementScore || 0,
           replyCount: thread.replyCount || 0,
         }));
@@ -2366,8 +2366,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           authorId: item.authorId,
           priceCoins: item.priceCoins || 0,
           isFree: item.isFree,
-          // Normalize sales score (typically 0-500) to common scale
-          normalizedScore: (item.salesScore || 0) * 2,
+          // Sales score (0-500 range) / 2 to match thread scale (0-250)
+          normalizedScore: (item.salesScore || 0) / 2,
           originalScore: item.salesScore || 0,
           purchaseCount: item.purchaseCount || 0,
         }));
@@ -2383,8 +2383,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           views: broker.reviewCount || 0,
           createdAt: broker.createdAt,
           authorId: broker.submittedBy,
-          // Normalize rating (0-5 stars * 100 reviews = 0-500) to common scale
-          normalizedScore: (broker.overallRating || 0) * (broker.reviewCount || 0) * 2,
+          // Rating (0-500 scale, divide by 100 to get 0-5) * reviewCount (typical 0-50 = 0-250)
+          normalizedScore: ((broker.overallRating || 0) / 100) * (broker.reviewCount || 0),
           originalScore: broker.overallRating || 0,
           reviewCount: broker.reviewCount || 0,
           overallRating: broker.overallRating || 0,
