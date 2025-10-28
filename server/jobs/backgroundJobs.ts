@@ -4,58 +4,52 @@ import { calculateEngagementScore, calculateUserReputation, calculateSalesScore 
 
 export function startBackgroundJobs(storage: IStorage) {
   console.log('[JOBS] Background jobs DISABLED for performance optimization');
+  console.log('[JOBS] No background jobs running - reducing CPU/memory usage');
   
   // NOTE: All background jobs are disabled to improve performance
-  // These can be re-enabled if needed by uncommenting the cron schedules below
-  
-  /* DISABLED FOR PERFORMANCE
+  // To re-enable, uncomment the cron schedules below:
   
   // Update thread engagement scores every 60 minutes
-  cron.schedule('0 * * * *', async () => {
-    console.log('[JOBS] Updating thread engagement scores...');
-    try {
-      await updateThreadScores(storage);
-    } catch (error) {
-      console.error('[JOBS] Error updating thread scores:', error);
-    }
-  });
+  // cron.schedule('0 * * * *', async () => {
+  //   console.log('[JOBS] Updating thread engagement scores...');
+  //   try {
+  //     await updateThreadScores(storage);
+  //   } catch (error) {
+  //     console.error('[JOBS] Error updating thread scores:', error);
+  //   }
+  // });
 
   // Update user reputation scores every 5 minutes
-  cron.schedule('*/5 * * * *', async () => {
-    console.log('[JOBS] Updating user reputation scores...');
-    try {
-      await updateUserReputations(storage);
-    } catch (error) {
-      console.error('[JOBS] Error updating user reputations:', error);
-    }
-  });
+  // cron.schedule('*_/5 * * * *', async () => {
+  //   console.log('[JOBS] Updating user reputation scores...');
+  //   try {
+  //     await updateUserReputations(storage);
+  //   } catch (error) {
+  //     console.error('[JOBS] Error updating user reputations:', error);
+  //   }
+  // });
 
   // Update top seller scores every 15 minutes
-  cron.schedule('*/15 * * * *', async () => {
-    console.log('[JOBS] Updating top seller scores...');
-    try {
-      await updateTopSellerScores(storage);
-    } catch (error) {
-      console.error('[JOBS] Error updating top seller scores:', error);
-    }
-  });
+  // cron.schedule('*_/15 * * * *', async () => {
+  //   console.log('[JOBS] Updating top seller scores...');
+  //   try {
+  //     await updateTopSellerScores(storage);
+  //   } catch (error) {
+  //     console.error('[JOBS] Error updating top seller scores:', error);
+  //   }
+  // });
 
   // Initial calculation on startup
-  console.log('[JOBS] Running initial score calculations...');
-  setTimeout(async () => {
-    try {
-      await updateThreadScores(storage);
-      await updateUserReputations(storage);
-      await updateTopSellerScores(storage);
-      console.log('[JOBS] Initial score calculations complete');
-    } catch (error) {
-      console.error('[JOBS] Error in initial calculations:', error);
-    }
-  }, 5000); // Wait 5 seconds after startup
-
-  */
-  
-  console.log('[JOBS] No background jobs running - manual refresh required');
+  // setTimeout(async () => {
+  //   try {
+  //     await updateThreadScores(storage);
+  //     await updateUserReputations(storage);
+  //     await updateTopSellerScores(storage);
+  //     console.log('[JOBS] Initial score calculations complete');
+  //   } catch (error) {
+  //     console.error('[JOBS] Error in initial calculations:', error);
+  //   }
+  // }, 5000);
 }
 
 async function updateThreadScores(storage: IStorage) {
