@@ -5933,7 +5933,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 "data-testid": "text-char-count",
                                                                                 children: [
                                                                                     titleCharCount,
-                                                                                    "/90 characters"
+                                                                                    " characters (15-90 required)"
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
@@ -6004,7 +6004,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 "data-testid": "text-body-char-count",
                                                                                 children: [
                                                                                     bodyCharCount,
-                                                                                    "/500 characters"
+                                                                                    " characters (500-50,000 required)"
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
@@ -7023,6 +7023,7 @@ function ThreadComposeClient({ categories }) {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Accordion"], {
                                                         type: "single",
                                                         collapsible: true,
+                                                        defaultValue: "seo",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AccordionItem"], {
                                                             value: "seo",
                                                             children: [

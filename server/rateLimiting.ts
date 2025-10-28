@@ -10,11 +10,12 @@ import type { Request, Response } from "express";
 
 /**
  * General API rate limiter - applies to all API endpoints
- * 100 requests per 15 minutes per IP
+ * 500 requests per 15 minutes per IP
+ * Increased limit for better development experience and normal user browsing
  */
 export const generalApiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per window
+  max: 500, // 500 requests per window (increased from 100 for better UX)
   message: {
     error: "Too many requests, please try again later",
     retryAfter: "15 minutes",

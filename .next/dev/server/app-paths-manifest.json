@@ -1,3 +1,15 @@
 {
-  "/page": "app/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/categories/page": "app/categories/page.js",
+  "/category/[slug]/page": "app/category/[slug]/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/discussions/new/page": "app/discussions/new/page.js",
+  "/discussions/page": "app/discussions/page.js",
+  "/messages/page": "app/messages/page.js",
+  "/notifications/page": "app/notifications/page.js",
+  "/page": "app/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/thread/[slug]/page": "app/thread/[slug]/page.js",
+  "/transactions/page": "app/transactions/page.js",
+  "/user/[username]/page": "app/user/[username]/page.js"
 }

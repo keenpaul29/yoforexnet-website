@@ -4475,9 +4475,16 @@ function ThreadDetailClient({ initialThread, initialReplies }) {
                                                                             lineNumber: 355,
                                                                             columnNumber: 23
                                                                         }, this),
-                                                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatDistanceToNow"])(new Date(thread.createdAt), {
-                                                                            addSuffix: true
-                                                                        })
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            suppressHydrationWarning: true,
+                                                                            children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatDistanceToNow"])(new Date(thread.createdAt), {
+                                                                                addSuffix: true
+                                                                            })
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/app/thread/[slug]/ThreadDetailClient.tsx",
+                                                                            lineNumber: 356,
+                                                                            columnNumber: 23
+                                                                        }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/thread/[slug]/ThreadDetailClient.tsx",
@@ -4952,9 +4959,16 @@ function ReplyCard({ reply, allReplies, onReply, onMarkHelpful, onMarkAccepted, 
                                                         lineNumber: 563,
                                                         columnNumber: 17
                                                     }, this),
-                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatDistanceToNow"])(new Date(reply.createdAt), {
-                                                        addSuffix: true
-                                                    })
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        suppressHydrationWarning: true,
+                                                        children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatDistanceToNow"])(new Date(reply.createdAt), {
+                                                            addSuffix: true
+                                                        })
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/thread/[slug]/ThreadDetailClient.tsx",
+                                                        lineNumber: 564,
+                                                        columnNumber: 17
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/thread/[slug]/ThreadDetailClient.tsx",
