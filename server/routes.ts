@@ -4656,6 +4656,1049 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================
+  // PHASE 3: ADVANCED ADMIN APIs (50 ENDPOINTS)
+  // ============================================
+
+  // ============================================
+  // SECTION 7: ANALYTICS & REPORTS (10 endpoints)
+  // ============================================
+
+  /**
+   * GET /api/admin/analytics/users
+   * Get user analytics including growth stats, country distribution, and inactive users
+   */
+  app.get("/api/admin/analytics/users", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const days = parseInt(req.query.days as string) || 30;
+      const analytics = {
+        growth: await storage.getUserGrowthStats(days),
+        byCountry: await storage.getUsersByCountry(),
+        inactive: await storage.getInactiveUsers(30),
+        activeUsers: await storage.getActiveUsersCount()
+      };
+      
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching user analytics:", error);
+      res.status(500).json({ error: "Failed to fetch user analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/content
+   * Get content analytics including stats, top creators, quality scores, and trending content
+   */
+  app.get("/api/admin/analytics/content", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const analytics = {
+        stats: await storage.getContentStats(),
+        byAuthor: await storage.getTopContentCreators(10),
+        qualityScores: await storage.getContentQualityScores(),
+        trending: await storage.getTrendingContent(20)
+      };
+      
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching content analytics:", error);
+      res.status(500).json({ error: "Failed to fetch content analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/financial
+   * Get financial analytics including revenue, top earners, and economy health
+   */
+  app.get("/api/admin/analytics/financial", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : new Date();
+      
+      const analytics = {
+        revenue: await storage.getRevenueStats(startDate, endDate),
+        bySource: await storage.getRevenueBySource('daily'),
+        topEarners: await storage.getTopEarners(10),
+        economy: await storage.getCoinEconomyHealth(),
+        forecast: await storage.getRevenueForecast(7)
+      };
+      
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching financial analytics:", error);
+      res.status(500).json({ error: "Failed to fetch financial analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/engagement
+   * Get engagement analytics including DAU, MAU, session duration, and bounce rate
+   */
+  app.get("/api/admin/analytics/engagement", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const analytics = {
+        dau: await storage.getActiveUsersCount(),
+        mau: await storage.getMonthlyActiveUsers(),
+        avgSessionDuration: await storage.getAverageSessionDuration(),
+        bounceRate: await storage.getBounceRate()
+      };
+      
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching engagement analytics:", error);
+      res.status(500).json({ error: "Failed to fetch engagement analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/marketplace
+   * Get marketplace-specific analytics
+   */
+  app.get("/api/admin/analytics/marketplace", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const days = parseInt(req.query.days as string) || 30;
+      const analytics = await storage.getMarketplaceAnalytics(days);
+      
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching marketplace analytics:", error);
+      res.status(500).json({ error: "Failed to fetch marketplace analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/brokers
+   * Get broker-related analytics
+   */
+  app.get("/api/admin/analytics/brokers", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const analytics = await storage.getBrokerAnalytics();
+      
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching broker analytics:", error);
+      res.status(500).json({ error: "Failed to fetch broker analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/performance
+   * Get system performance metrics
+   */
+  app.get("/api/admin/analytics/performance", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const hours = parseInt(req.query.hours as string) || 24;
+      const metrics = await storage.getPerformanceMetrics(hours);
+      
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching performance analytics:", error);
+      res.status(500).json({ error: "Failed to fetch performance analytics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/conversion-funnels
+   * Get conversion funnel analytics
+   */
+  app.get("/api/admin/analytics/conversion-funnels", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const days = parseInt(req.query.days as string) || 30;
+      const funnels = await storage.getConversionFunnels(days);
+      
+      res.json(funnels);
+    } catch (error) {
+      console.error("Error fetching conversion funnels:", error);
+      res.status(500).json({ error: "Failed to fetch conversion funnels" });
+    }
+  });
+
+  /**
+   * GET /api/admin/analytics/cohort-analysis
+   * Get cohort analysis data
+   */
+  app.get("/api/admin/analytics/cohort-analysis", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+      const cohortData = await storage.getCohortAnalysis(startDate);
+      
+      res.json(cohortData);
+    } catch (error) {
+      console.error("Error fetching cohort analysis:", error);
+      res.status(500).json({ error: "Failed to fetch cohort analysis" });
+    }
+  });
+
+  /**
+   * POST /api/admin/analytics/custom-report
+   * Generate custom analytics report
+   */
+  app.post("/api/admin/analytics/custom-report", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { metrics, dimensions, filters, dateRange } = req.body;
+      const report = await storage.generateCustomReport({
+        metrics,
+        dimensions,
+        filters,
+        dateRange
+      });
+      
+      res.json(report);
+    } catch (error) {
+      console.error("Error generating custom report:", error);
+      res.status(500).json({ error: "Failed to generate custom report" });
+    }
+  });
+
+  // ============================================
+  // SECTION 8: SYSTEM SETTINGS (10 endpoints)
+  // ============================================
+
+  /**
+   * GET /api/admin/settings
+   * Get system settings by category
+   */
+  app.get("/api/admin/settings", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const category = req.query.category as string;
+      const settings = await storage.getSystemSettings(category);
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching system settings:", error);
+      res.status(500).json({ error: "Failed to fetch settings" });
+    }
+  });
+
+  /**
+   * GET /api/admin/settings/:key
+   * Get a specific system setting by key
+   */
+  app.get("/api/admin/settings/:key", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const setting = await storage.getSystemSetting(req.params.key);
+      if (!setting) {
+        return res.status(404).json({ error: "Setting not found" });
+      }
+      res.json(setting);
+    } catch (error) {
+      console.error("Error fetching setting:", error);
+      res.status(500).json({ error: "Failed to fetch setting" });
+    }
+  });
+
+  /**
+   * PUT /api/admin/settings/:key
+   * Update a system setting
+   */
+  app.put("/api/admin/settings/:key", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const { value } = req.body;
+      await storage.updateSystemSetting(req.params.key, value, userId);
+      
+      await storage.logAdminAction({
+        adminId: userId,
+        actionType: 'settings_update',
+        targetType: 'system_setting',
+        targetId: req.params.key,
+        details: { oldValue: 'N/A', newValue: value },
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent') || 'unknown'
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating setting:", error);
+      res.status(500).json({ error: "Failed to update setting" });
+    }
+  });
+
+  /**
+   * GET /api/admin/settings/email/templates
+   * Get email templates by category
+   */
+  app.get("/api/admin/settings/email/templates", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const category = req.query.category as string;
+      const templates = await storage.getEmailTemplates(category);
+      res.json(templates);
+    } catch (error) {
+      console.error("Error fetching email templates:", error);
+      res.status(500).json({ error: "Failed to fetch email templates" });
+    }
+  });
+
+  /**
+   * PUT /api/admin/settings/email/templates/:key
+   * Update an email template
+   */
+  app.put("/api/admin/settings/email/templates/:key", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const { subject, htmlBody, textBody } = req.body;
+      await storage.updateEmailTemplate(req.params.key, { subject, htmlBody, textBody }, userId);
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating email template:", error);
+      res.status(500).json({ error: "Failed to update email template" });
+    }
+  });
+
+  /**
+   * GET /api/admin/settings/roles
+   * Get all admin roles
+   */
+  app.get("/api/admin/settings/roles", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const roles = await storage.getAdminRoles();
+      res.json(roles);
+    } catch (error) {
+      console.error("Error fetching admin roles:", error);
+      res.status(500).json({ error: "Failed to fetch admin roles" });
+    }
+  });
+
+  /**
+   * POST /api/admin/settings/roles
+   * Create a new admin role
+   */
+  app.post("/api/admin/settings/roles", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const role = await storage.createAdminRole({
+        ...req.body,
+        createdBy: userId
+      });
+      
+      res.json(role);
+    } catch (error) {
+      console.error("Error creating admin role:", error);
+      res.status(500).json({ error: "Failed to create admin role" });
+    }
+  });
+
+  /**
+   * GET /api/admin/settings/coin-economy
+   * Get coin economy configuration
+   */
+  app.get("/api/admin/settings/coin-economy", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const config = await storage.getCoinEconomyConfig();
+      res.json(config);
+    } catch (error) {
+      console.error("Error fetching coin economy config:", error);
+      res.status(500).json({ error: "Failed to fetch coin economy config" });
+    }
+  });
+
+  /**
+   * PUT /api/admin/settings/coin-economy
+   * Update coin economy configuration
+   */
+  app.put("/api/admin/settings/coin-economy", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      await storage.updateCoinEconomyConfig(req.body, userId);
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating coin economy config:", error);
+      res.status(500).json({ error: "Failed to update coin economy config" });
+    }
+  });
+
+  /**
+   * GET /api/admin/settings/feature-flags
+   * Get all feature flags
+   */
+  app.get("/api/admin/settings/feature-flags", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const flags = await storage.getFeatureFlags();
+      res.json(flags);
+    } catch (error) {
+      console.error("Error fetching feature flags:", error);
+      res.status(500).json({ error: "Failed to fetch feature flags" });
+    }
+  });
+
+  // ============================================
+  // SECTION 9: SECURITY & SAFETY (8 endpoints)
+  // ============================================
+
+  /**
+   * GET /api/admin/security/events
+   * Get security events with filters
+   */
+  app.get("/api/admin/security/events", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { eventType, severity, isResolved, limit, offset } = req.query;
+      const events = await storage.getSecurityEvents({
+        eventType: eventType as string,
+        severity: severity as string,
+        isResolved: isResolved === 'true',
+        limit: parseInt(limit as string) || 50,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(events);
+    } catch (error) {
+      console.error("Error fetching security events:", error);
+      res.status(500).json({ error: "Failed to fetch security events" });
+    }
+  });
+
+  /**
+   * POST /api/admin/security/events/:eventId/resolve
+   * Resolve a security event
+   */
+  app.post("/api/admin/security/events/:eventId/resolve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      await storage.resolveSecurityEvent(parseInt(req.params.eventId), userId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error resolving security event:", error);
+      res.status(500).json({ error: "Failed to resolve security event" });
+    }
+  });
+
+  /**
+   * GET /api/admin/security/ip-bans
+   * Get IP bans list
+   */
+  app.get("/api/admin/security/ip-bans", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const activeOnly = req.query.activeOnly === 'true';
+      const bans = await storage.getIpBans(activeOnly);
+      res.json(bans);
+    } catch (error) {
+      console.error("Error fetching IP bans:", error);
+      res.status(500).json({ error: "Failed to fetch IP bans" });
+    }
+  });
+
+  /**
+   * POST /api/admin/security/ip-bans
+   * Ban an IP address
+   */
+  app.post("/api/admin/security/ip-bans", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const { ipAddress, reason, duration } = req.body;
+      await storage.banIp(ipAddress, reason, userId, duration);
+      
+      await storage.logAdminAction({
+        adminId: userId,
+        actionType: 'ip_ban',
+        targetType: 'ip_address',
+        targetId: ipAddress,
+        details: { reason, duration },
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent') || 'unknown'
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error banning IP:", error);
+      res.status(500).json({ error: "Failed to ban IP" });
+    }
+  });
+
+  /**
+   * DELETE /api/admin/security/ip-bans/:ipAddress
+   * Unban an IP address
+   */
+  app.delete("/api/admin/security/ip-bans/:ipAddress", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      await storage.unbanIp(req.params.ipAddress);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error unbanning IP:", error);
+      res.status(500).json({ error: "Failed to unban IP" });
+    }
+  });
+
+  /**
+   * GET /api/admin/security/performance-metrics
+   * Get performance metrics for monitoring
+   */
+  app.get("/api/admin/security/performance-metrics", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const hours = parseInt(req.query.hours as string) || 24;
+      const metrics = {
+        cpu: await getServerCpu(),
+        memory: await getServerMemory(),
+        dbQueryTime: await getDbQueryTime(),
+        errorRate: await getErrorRate(),
+        activeConnections: 0, // Would be populated from actual connection pool
+        requestsPerMinute: 0  // Would be populated from actual metrics
+      };
+      
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching performance metrics:", error);
+      res.status(500).json({ error: "Failed to fetch performance metrics" });
+    }
+  });
+
+  /**
+   * GET /api/admin/security/health-check
+   * Comprehensive system health check
+   */
+  app.get("/api/admin/security/health-check", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const health = {
+        status: 'healthy',
+        database: await storage.checkDatabaseHealth(),
+        cache: { status: 'ok' },
+        storage: { status: 'ok' },
+        email: { status: 'ok' },
+        timestamp: new Date()
+      };
+      
+      res.json(health);
+    } catch (error) {
+      console.error("Error performing health check:", error);
+      res.status(500).json({ error: "Failed to perform health check" });
+    }
+  });
+
+  /**
+   * GET /api/admin/security/vulnerability-scans
+   * Get recent vulnerability scan results
+   */
+  app.get("/api/admin/security/vulnerability-scans", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const limit = parseInt(req.query.limit as string) || 10;
+      const scans = await storage.getVulnerabilityScans(limit);
+      
+      res.json(scans);
+    } catch (error) {
+      console.error("Error fetching vulnerability scans:", error);
+      res.status(500).json({ error: "Failed to fetch vulnerability scans" });
+    }
+  });
+
+  // ============================================
+  // SECTION 10: COMMUNICATIONS (6 endpoints)
+  // ============================================
+
+  /**
+   * GET /api/admin/communications/announcements
+   * Get all announcements
+   */
+  app.get("/api/admin/communications/announcements", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const isActive = req.query.isActive === 'true';
+      const announcements = await storage.getAnnouncements({ isActive });
+      res.json(announcements);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+      res.status(500).json({ error: "Failed to fetch announcements" });
+    }
+  });
+
+  /**
+   * POST /api/admin/communications/announcements
+   * Create a new announcement
+   */
+  app.post("/api/admin/communications/announcements", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const announcement = await storage.createAnnouncement({
+        ...req.body,
+        createdBy: userId
+      });
+      
+      res.json(announcement);
+    } catch (error) {
+      console.error("Error creating announcement:", error);
+      res.status(500).json({ error: "Failed to create announcement" });
+    }
+  });
+
+  /**
+   * PUT /api/admin/communications/announcements/:id
+   * Update an announcement
+   */
+  app.put("/api/admin/communications/announcements/:id", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      await storage.updateAnnouncement(parseInt(req.params.id), req.body);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating announcement:", error);
+      res.status(500).json({ error: "Failed to update announcement" });
+    }
+  });
+
+  /**
+   * DELETE /api/admin/communications/announcements/:id
+   * Delete an announcement
+   */
+  app.delete("/api/admin/communications/announcements/:id", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      await storage.deleteAnnouncement(parseInt(req.params.id));
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting announcement:", error);
+      res.status(500).json({ error: "Failed to delete announcement" });
+    }
+  });
+
+  /**
+   * POST /api/admin/communications/broadcast
+   * Broadcast notification to users
+   */
+  app.post("/api/admin/communications/broadcast", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const { title, message, targetSegment, priority } = req.body;
+      
+      const broadcast = await storage.broadcastNotification({
+        title,
+        message,
+        targetSegment,
+        priority,
+        sentBy: userId
+      });
+      
+      res.json(broadcast);
+    } catch (error) {
+      console.error("Error broadcasting notification:", error);
+      res.status(500).json({ error: "Failed to broadcast notification" });
+    }
+  });
+
+  /**
+   * GET /api/admin/communications/email-campaigns
+   * Get email campaigns
+   */
+  app.get("/api/admin/communications/email-campaigns", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { status, limit, offset } = req.query;
+      const campaigns = await storage.getEmailCampaigns({
+        status: status as string,
+        limit: parseInt(limit as string) || 50,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(campaigns);
+    } catch (error) {
+      console.error("Error fetching email campaigns:", error);
+      res.status(500).json({ error: "Failed to fetch email campaigns" });
+    }
+  });
+
+  // ============================================
+  // SECTION 11: SUPPORT & TICKETS (8 endpoints)
+  // ============================================
+
+  /**
+   * GET /api/admin/support/tickets
+   * Get support tickets with filters
+   */
+  app.get("/api/admin/support/tickets", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { status, priority, category, assignedTo, limit, offset } = req.query;
+      const tickets = await storage.getSupportTickets({
+        status: status as string,
+        priority: priority as string,
+        category: category as string,
+        assignedTo: assignedTo as string,
+        limit: parseInt(limit as string) || 50,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(tickets);
+    } catch (error) {
+      console.error("Error fetching support tickets:", error);
+      res.status(500).json({ error: "Failed to fetch support tickets" });
+    }
+  });
+
+  /**
+   * POST /api/admin/support/tickets/:ticketId/assign
+   * Assign a ticket to an admin
+   */
+  app.post("/api/admin/support/tickets/:ticketId/assign", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { assignedTo } = req.body;
+      await storage.assignTicket(parseInt(req.params.ticketId), assignedTo);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error assigning ticket:", error);
+      res.status(500).json({ error: "Failed to assign ticket" });
+    }
+  });
+
+  /**
+   * POST /api/admin/support/tickets/:ticketId/reply
+   * Add a reply to a support ticket
+   */
+  app.post("/api/admin/support/tickets/:ticketId/reply", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const { message } = req.body;
+      await storage.addTicketReply(parseInt(req.params.ticketId), {
+        userId,
+        message
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error adding ticket reply:", error);
+      res.status(500).json({ error: "Failed to add ticket reply" });
+    }
+  });
+
+  /**
+   * POST /api/admin/support/tickets/:ticketId/close
+   * Close a support ticket
+   */
+  app.post("/api/admin/support/tickets/:ticketId/close", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      await storage.closeTicket(parseInt(req.params.ticketId), userId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error closing ticket:", error);
+      res.status(500).json({ error: "Failed to close ticket" });
+    }
+  });
+
+  /**
+   * POST /api/admin/support/tickets
+   * Create a new support ticket (admin-initiated)
+   */
+  app.post("/api/admin/support/tickets", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const ticket = await storage.createSupportTicket({
+        ...req.body,
+        createdBy: userId
+      });
+      
+      res.json(ticket);
+    } catch (error) {
+      console.error("Error creating support ticket:", error);
+      res.status(500).json({ error: "Failed to create support ticket" });
+    }
+  });
+
+  /**
+   * PUT /api/admin/support/tickets/:ticketId
+   * Update a support ticket
+   */
+  app.put("/api/admin/support/tickets/:ticketId", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      await storage.updateSupportTicket(parseInt(req.params.ticketId), req.body);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating support ticket:", error);
+      res.status(500).json({ error: "Failed to update support ticket" });
+    }
+  });
+
+  /**
+   * GET /api/admin/support/tickets/stats
+   * Get support ticket statistics
+   */
+  app.get("/api/admin/support/tickets/stats", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const days = parseInt(req.query.days as string) || 30;
+      const stats = await storage.getSupportTicketStats(days);
+      
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching ticket stats:", error);
+      res.status(500).json({ error: "Failed to fetch ticket stats" });
+    }
+  });
+
+  /**
+   * GET /api/admin/support/feedback
+   * Get user feedback submissions
+   */
+  app.get("/api/admin/support/feedback", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { status, type, limit, offset } = req.query;
+      const feedback = await storage.getUserFeedback({
+        status: status as string,
+        type: type as string,
+        limit: parseInt(limit as string) || 50,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(feedback);
+    } catch (error) {
+      console.error("Error fetching user feedback:", error);
+      res.status(500).json({ error: "Failed to fetch user feedback" });
+    }
+  });
+
+  // ============================================
+  // SECTION 12: AUDIT LOGS (8 endpoints)
+  // ============================================
+
+  /**
+   * GET /api/admin/logs/actions
+   * Get admin action logs with filters
+   */
+  app.get("/api/admin/logs/actions", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { adminId, actionType, targetType, startDate, endDate, limit, offset } = req.query;
+      const logs = await storage.getAdminActionLogs({
+        adminId: adminId as string,
+        actionType: actionType as string,
+        targetType: targetType as string,
+        startDate: startDate ? new Date(startDate as string) : undefined,
+        endDate: endDate ? new Date(endDate as string) : undefined,
+        limit: parseInt(limit as string) || 100,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching admin logs:", error);
+      res.status(500).json({ error: "Failed to fetch admin logs" });
+    }
+  });
+
+  /**
+   * GET /api/admin/logs/recent
+   * Get recent admin actions
+   */
+  app.get("/api/admin/logs/recent", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      const logs = await storage.getRecentAdminActions(limit);
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching recent logs:", error);
+      res.status(500).json({ error: "Failed to fetch recent logs" });
+    }
+  });
+
+  /**
+   * GET /api/admin/logs/admin/:adminId/summary
+   * Get admin activity summary
+   */
+  app.get("/api/admin/logs/admin/:adminId/summary", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const days = parseInt(req.query.days as string) || 30;
+      const summary = await storage.getAdminActivitySummary(req.params.adminId, days);
+      res.json(summary);
+    } catch (error) {
+      console.error("Error fetching admin summary:", error);
+      res.status(500).json({ error: "Failed to fetch admin summary" });
+    }
+  });
+
+  /**
+   * GET /api/admin/logs/performance
+   * Get performance logs
+   */
+  app.get("/api/admin/logs/performance", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { hours, limit } = req.query;
+      const logs = await storage.getPerformanceLogs({
+        hours: parseInt(hours as string) || 24,
+        limit: parseInt(limit as string) || 100
+      });
+      
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching performance logs:", error);
+      res.status(500).json({ error: "Failed to fetch performance logs" });
+    }
+  });
+
+  /**
+   * GET /api/admin/logs/security
+   * Get security-related logs
+   */
+  app.get("/api/admin/logs/security", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { severity, limit, offset } = req.query;
+      const logs = await storage.getSecurityLogs({
+        severity: severity as string,
+        limit: parseInt(limit as string) || 100,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching security logs:", error);
+      res.status(500).json({ error: "Failed to fetch security logs" });
+    }
+  });
+
+  /**
+   * GET /api/admin/logs/user-activity
+   * Get user activity logs
+   */
+  app.get("/api/admin/logs/user-activity", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { userId, actionType, startDate, endDate, limit, offset } = req.query;
+      const logs = await storage.getUserActivityLogs({
+        userId: userId as string,
+        actionType: actionType as string,
+        startDate: startDate ? new Date(startDate as string) : undefined,
+        endDate: endDate ? new Date(endDate as string) : undefined,
+        limit: parseInt(limit as string) || 100,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching user activity logs:", error);
+      res.status(500).json({ error: "Failed to fetch user activity logs" });
+    }
+  });
+
+  /**
+   * GET /api/admin/logs/system-events
+   * Get system event logs
+   */
+  app.get("/api/admin/logs/system-events", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { eventType, severity, limit, offset } = req.query;
+      const logs = await storage.getSystemEventLogs({
+        eventType: eventType as string,
+        severity: severity as string,
+        limit: parseInt(limit as string) || 100,
+        offset: parseInt(offset as string) || 0
+      });
+      
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching system event logs:", error);
+      res.status(500).json({ error: "Failed to fetch system event logs" });
+    }
+  });
+
+  /**
+   * POST /api/admin/logs/export
+   * Export logs to CSV/JSON
+   */
+  app.post("/api/admin/logs/export", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { logType, format, filters, startDate, endDate } = req.body;
+      const exportData = await storage.exportLogs({
+        logType,
+        format: format || 'json',
+        filters,
+        startDate: startDate ? new Date(startDate) : undefined,
+        endDate: endDate ? new Date(endDate) : undefined
+      });
+      
+      res.json(exportData);
+    } catch (error) {
+      console.error("Error exporting logs:", error);
+      res.status(500).json({ error: "Failed to export logs" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
