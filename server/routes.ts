@@ -3765,6 +3765,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin Create Marketplace Content
+  app.post('/api/admin/content', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      
+      // Sanitize inputs - allow HTML in description
+      const sanitized = sanitizeRequestBody(req.body, ['description']);
+      
+      // Validate schema
+      const validated = insertContentSchema.parse(sanitized);
+      
+      // Override authorId with authenticated admin user ID
+      validated.authorId = authenticatedUserId;
+      
+      // AUTO-GENERATE SEO METADATA
+      const slug = await generateSlug(validated.title, 'content');
+      const focusKeyword = generateFocusKeyword(validated.title);
+      const metaDescription = generateMetaDescription(validated.description);
+      const imageAltTexts = validated.images 
+        ? generateImageAltTexts(validated.title, validated.images.length)
+        : [];
+      
+      // Admin-created content is automatically approved
+      const content = await storage.createContent({
+        ...validated,
+        slug,
+        focusKeyword,
+        autoMetaDescription: metaDescription,
+        autoImageAltTexts: imageAltTexts,
+      });
+      
+      res.json(content);
+    } catch (error) {
+      console.error('Error creating admin content:', error);
+      if (error instanceof Error) {
+        if (error.message === "No authenticated user") {
+          return res.status(401).json({ error: "Not authenticated" });
+        }
+        // Return Zod validation errors
+        if (error.name === "ZodError") {
+          return res.status(400).json({ 
+            error: "Validation failed", 
+            details: (error as any).errors 
+          });
+        }
+      }
+      res.status(500).json({ message: 'Failed to create content' });
+    }
+  });
+
   // Admin Email Templates
   app.get('/api/admin/email-templates', isAuthenticated, adminOperationLimiter, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });

@@ -12,6 +12,7 @@ import { formatDistanceToNow } from "date-fns";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import AddContentDialog from "./AddContentDialog";
 
 export default function AdminMarketplace() {
   const { toast } = useToast();
@@ -60,7 +61,10 @@ export default function AdminMarketplace() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Marketplace Management</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Marketplace Management</h1>
+        <AddContentDialog />
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

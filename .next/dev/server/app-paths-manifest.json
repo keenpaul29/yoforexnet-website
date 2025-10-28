@@ -1,13 +1,6 @@
 {
-  "/brokers/page": "app/brokers/page.js",
   "/brokers/submit-review/page": "app/brokers/submit-review/page.js",
   "/categories/page": "app/categories/page.js",
-  "/category/[slug]/page": "app/category/[slug]/page.js",
   "/discussions/new/page": "app/discussions/new/page.js",
-  "/marketplace/page": "app/marketplace/page.js",
-  "/members/page": "app/members/page.js",
-  "/messages/page": "app/messages/page.js",
-  "/page": "app/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/thread/[slug]/page": "app/thread/[slug]/page.js"
+  "/page": "app/page.js"
 }
