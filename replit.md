@@ -7,6 +7,7 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - Design: Modern, clean interface with gamification elements
 - Color Scheme: Professional blues and purples with gold accents for coins
 - Layout: Card-based layout with clear hierarchy, responsive design
+- **Stats Position**: Summary statistics (Total Categories/Threads/Posts) must be at top of pages for better visibility
 - Real-time Updates: Auto-refreshing widgets (10s-60s intervals)
 - MANDATORY: ALWAYS update these files IMMEDIATELY after making ANY code changes:
     1. COMPLETE_PLATFORM_GUIDE.md

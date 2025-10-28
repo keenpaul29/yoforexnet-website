@@ -1,11 +1,9 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/categories/page": "app/categories/page.js",
+  "/brokers/[slug]/page": "app/brokers/[slug]/page.js",
+  "/brokers/page": "app/brokers/page.js",
   "/discussions/new/page": "app/discussions/new/page.js",
-  "/discussions/page": "app/discussions/page.js",
-  "/guides/[slug]/page": "app/guides/[slug]/page.js",
-  "/members/page": "app/members/page.js",
+  "/earn/page": "app/earn/page.js",
   "/page": "app/page.js",
-  "/thread/[slug]/page": "app/thread/[slug]/page.js",
-  "/user/[username]/page": "app/user/[username]/page.js"
+  "/thread/[slug]/page": "app/thread/[slug]/page.js"
 }

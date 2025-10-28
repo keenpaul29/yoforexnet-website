@@ -4707,6 +4707,10 @@ input[type="search"]::-webkit-search-cancel-button {
   border-left-width: 1px;
 }
 
+.last\:mb-0:last-child {
+  margin-bottom: 0;
+}
+
 .last\:rounded-r-md:last-child {
   border-top-right-radius: .375rem;
   border-bottom-right-radius: .375rem;

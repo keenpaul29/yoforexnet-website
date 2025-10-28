@@ -294,74 +294,56 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
             </div>
           </div>
 
-          {/* Platform Stats Row */}
-          {!statsLoading && communityStats && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-green-500/10">
-                      <Activity className="w-5 h-5 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold" data-testid="stat-members-online">
-                        {communityStats.membersOnline}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Online Now</p>
-                    </div>
+          {/* Summary Statistics at Top */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Card className="bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <BookOpen className="w-5 h-5 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-blue-500/10">
-                      <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold" data-testid="stat-new-members">
-                        +{communityStats.newMembers24h}
-                      </p>
-                      <p className="text-xs text-muted-foreground">New (24h)</p>
-                    </div>
+                  <div>
+                    <p className="text-3xl font-bold" data-testid="stat-total-categories">
+                      {categories?.length || 0}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Total Categories</p>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-orange-500/10">
-                      <MessageSquare className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold" data-testid="stat-replies-24h">
-                        {communityStats.totalReplies24h}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Replies (24h)</p>
-                    </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-blue-500/10">
+                    <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-yellow-500/10">
-                      <Coins className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold" data-testid="stat-coins-earned">
-                        {communityStats.coinsEarned24h.toLocaleString()}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Earned (24h)</p>
-                    </div>
+                  <div>
+                    <p className="text-3xl font-bold" data-testid="stat-total-threads">
+                      {totalThreads.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Total Threads</p>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-green-500/10">
+                    <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold" data-testid="stat-total-posts">
+                      {totalPosts.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Total Posts</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           {/* Search Bar */}
           <Card>
@@ -405,42 +387,6 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
                 </p>
               </Card>
             )}
-
-            {/* Summary Statistics */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Categories</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold" data-testid="stat-total-categories">
-                    {categories?.length || 0}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Threads</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold" data-testid="stat-total-threads">
-                    {totalThreads.toLocaleString()}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Posts</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold" data-testid="stat-total-posts">
-                    {totalPosts.toLocaleString()}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
           </div>
 
           {/* Trending Users Sidebar */}
@@ -460,7 +406,7 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
                   ))
                 ) : trendingUsers && trendingUsers.length > 0 ? (
                   trendingUsers.map((user, index) => (
-                    <Link key={user.userId} href={`/user/${user.username}`} data-testid={`link-trending-user-${user.userId}`}>
+                    <Link key={user.userId} href={`/user/${user.username}`} data-testid={`link-trending-user-${user.userId}`} className="block">
                       <Card className="p-3 hover:border-primary/30 hover-elevate active-elevate-2 cursor-pointer transition-all">
                         <div className="flex items-center gap-3">
                           <div className="relative flex-shrink-0">

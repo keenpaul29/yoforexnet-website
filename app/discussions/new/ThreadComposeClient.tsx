@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
-import type { ForumCategory } from "@shared/schema";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { ForumCategory, Broker } from "@shared/schema";
 import { 
   INSTRUMENTS, 
   TIMEFRAMES, 
@@ -155,6 +155,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
   const [charCount, setCharCount] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; url: string }>>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [showCustomBroker, setShowCustomBroker] = useState(false);
   
   // Pre-select category from URL param
   const categoryParam = searchParams?.get("category") || "";
@@ -163,6 +164,11 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
   const parentCategories = categories.filter(c => !c.parentSlug);
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam);
   const subcategories = categories.filter(c => c.parentSlug === selectedCategory);
+  
+  // Fetch all brokers from database using apiRequest
+  const { data: brokers, isLoading: brokersLoading } = useQuery<Broker[]>({
+    queryKey: ['/api/brokers'],
+  });
   
   // Auto-save draft
   const { saveDraft, loadDraft, clearDraft } = useThreadDraft(selectedCategory || "general");
@@ -746,19 +752,60 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Broker</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="e.g., IC Markets, Pepperstone..."
-                                    list="broker-suggestions"
-                                    data-testid="input-broker"
-                                  />
-                                </FormControl>
-                                <datalist id="broker-suggestions">
-                                  {POPULAR_BROKERS.map((broker) => (
-                                    <option key={broker} value={broker} />
-                                  ))}
-                                </datalist>
+                                {brokersLoading ? (
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Loading brokers...
+                                  </div>
+                                ) : (
+                                  <>
+                                    <Select 
+                                      onValueChange={(value) => {
+                                        if (value === "other") {
+                                          setShowCustomBroker(true);
+                                          field.onChange("");
+                                        } else {
+                                          setShowCustomBroker(false);
+                                          field.onChange(value);
+                                        }
+                                      }} 
+                                      value={showCustomBroker ? "other" : field.value}
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger data-testid="select-broker">
+                                          <SelectValue placeholder="Select broker" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {brokers && brokers.length > 0 ? (
+                                          <>
+                                            {brokers.map((broker) => (
+                                              <SelectItem key={broker.id} value={broker.name}>
+                                                {broker.name}
+                                              </SelectItem>
+                                            ))}
+                                            <SelectItem value="other">Other (add new broker)</SelectItem>
+                                          </>
+                                        ) : (
+                                          <SelectItem value="other">Other (add new broker)</SelectItem>
+                                        )}
+                                      </SelectContent>
+                                    </Select>
+                                    {showCustomBroker && (
+                                      <FormControl>
+                                        <Input
+                                          value={field.value}
+                                          onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                          }}
+                                          placeholder="Enter broker name"
+                                          data-testid="input-custom-broker"
+                                          className="mt-2"
+                                        />
+                                      </FormControl>
+                                    )}
+                                  </>
+                                )}
                               </FormItem>
                             )}
                           />
