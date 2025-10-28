@@ -113,7 +113,7 @@ export default function ContactSupportClient() {
                 <li>• Earn coins for helping others</li>
                 <li>• Detailed troubleshooting guides</li>
               </ul>
-              <a href="/category/technical-support" data-testid="link-support-forum">
+              <a href="/category/beginners-corner" data-testid="link-support-forum">
                 <Button variant="outline" className="w-full" data-testid="button-visit-forum">
                   Visit Support Forum
                 </Button>
