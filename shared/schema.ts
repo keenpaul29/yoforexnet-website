@@ -210,7 +210,9 @@ export const contentReviews = pgTable("content_reviews", {
   status: text("status").notNull().$type<"pending" | "approved" | "rejected">().default("pending"),
   rewardGiven: boolean("reward_given").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (table) => ({
+  uniqueContentUserReview: uniqueIndex("idx_content_reviews_unique_content_user").on(table.contentId, table.userId),
+}));
 
 export const contentLikes = pgTable("content_likes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -219,6 +221,7 @@ export const contentLikes = pgTable("content_likes", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 }, (table) => ({
   userIdIdx: index("idx_content_likes_user_id").on(table.userId),
+  uniqueContentUserLike: uniqueIndex("idx_content_likes_unique_content_user").on(table.contentId, table.userId),
 }));
 
 export const contentReplies = pgTable("content_replies", {
@@ -272,6 +275,7 @@ export const brokerReviews = pgTable("broker_reviews", {
   datePosted: timestamp("date_posted").notNull().defaultNow(),
 }, (table) => ({
   brokerIdIdx: index("idx_broker_reviews_broker_id").on(table.brokerId),
+  uniqueBrokerUserReview: uniqueIndex("idx_broker_reviews_unique_broker_user").on(table.brokerId, table.userId),
 }));
 
 export const userFollows = pgTable("user_follows", {
@@ -281,6 +285,7 @@ export const userFollows = pgTable("user_follows", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 }, (table) => ({
   followerIdIdx: index("idx_user_follows_follower_id").on(table.followerId),
+  uniqueFollowerFollowing: uniqueIndex("idx_user_follows_unique_follower_following").on(table.followerId, table.followingId),
 }));
 
 export const conversations = pgTable("conversations", {
