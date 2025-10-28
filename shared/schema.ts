@@ -55,11 +55,12 @@ export const users = pgTable("users", {
   onboardingCompleted: boolean("onboarding_completed").default(false),
   onboardingDismissed: boolean("onboarding_dismissed").default(false),
   onboardingProgress: json("onboarding_progress").default({
-    profileCreated: false,
-    firstReply: false,
-    firstReport: false,
-    firstUpload: false,
-    socialLinked: false,
+    profilePicture: false,  // 10 coins - Upload profile picture
+    firstReply: false,       // 5 coins - Post first reply
+    twoReviews: false,       // 6 coins - Submit 2 reviews
+    firstThread: false,      // 10 coins - Create first thread
+    firstPublish: false,     // 30 coins - Publish EA/content
+    fiftyFollowers: false,   // 200 coins - Get 50 followers
   }),
   
   // Ranking system
