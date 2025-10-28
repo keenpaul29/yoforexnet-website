@@ -133,3 +133,25 @@ export const reviewReplyLimiter = rateLimit({
     });
   },
 });
+
+/**
+ * Admin operations rate limiter
+ * 200 requests per hour per admin user
+ * More lenient than regular operations for admins who need to perform bulk actions
+ */
+export const adminOperationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 200, // 200 requests per window
+  message: {
+    error: "Too many admin operations, please slow down",
+    retryAfter: "1 hour",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req: Request, res: Response) => {
+    res.status(429).json({
+      error: "Too many admin operations. Please slow down",
+      retryAfter: "1 hour",
+    });
+  },
+});
