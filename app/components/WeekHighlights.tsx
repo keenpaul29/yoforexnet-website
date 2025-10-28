@@ -8,6 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import type { ForumThread } from "../../shared/schema";
+import { RefreshButton } from "./RefreshButton";
 
 interface HighlightThread {
   id: string;
@@ -139,7 +140,7 @@ export default function WeekHighlights({
   const router = useRouter();
 
   // Fetch real trending threads from API (no auto-refresh for performance)
-  const { data: trendingData } = useQuery<ForumThread[]>({
+  const { data: trendingData, refetch: refetchTrending } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'trending', limit: 3 }],
     queryFn: async () => {
       const res = await fetch('/api/threads?sortBy=trending&limit=3', { credentials: 'include' });
@@ -150,7 +151,7 @@ export default function WeekHighlights({
   });
 
   // Fetch newest threads (no auto-refresh for performance)
-  const { data: newData } = useQuery<ForumThread[]>({
+  const { data: newData, refetch: refetchNew } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'newest', limit: 3 }],
     queryFn: async () => {
       const res = await fetch('/api/threads?sortBy=newest&limit=3', { credentials: 'include' });
@@ -161,7 +162,7 @@ export default function WeekHighlights({
   });
 
   // Fetch solved threads (answered) (no auto-refresh for performance)
-  const { data: solvedData } = useQuery<ForumThread[]>({
+  const { data: solvedData, refetch: refetchSolved } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'answered', limit: 3 }],
     queryFn: async () => {
       const res = await fetch('/api/threads?sortBy=answered&limit=3', { credentials: 'include' });
@@ -170,6 +171,15 @@ export default function WeekHighlights({
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  // Refresh all tabs
+  const handleRefreshAll = async () => {
+    await Promise.all([
+      refetchNew(),
+      refetchTrending(),
+      refetchSolved()
+    ]);
+  };
 
   // Store full thread data for navigation
   const threadsWithSlug = new Map<string, ForumThread>();
@@ -317,9 +327,16 @@ export default function WeekHighlights({
     <Card data-testid="card-week-highlights" className="overflow-hidden">
       <CardContent className="p-0">
         {/* Header */}
-        <div className="flex items-center gap-2 p-5 pb-4 border-b bg-gradient-to-br from-primary/5 to-primary/0">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold text-base">This Week's Highlights</h3>
+        <div className="flex items-center justify-between gap-2 p-5 pb-4 border-b bg-gradient-to-br from-primary/5 to-primary/0">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            <h3 className="font-semibold text-base">This Week's Highlights</h3>
+          </div>
+          <RefreshButton 
+            onRefresh={handleRefreshAll}
+            size="icon"
+            variant="ghost"
+          />
         </div>
         
         {/* Tabs */}
