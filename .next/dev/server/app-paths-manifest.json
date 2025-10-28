@@ -3,6 +3,7 @@
   "/brokers/submit-review/page": "app/brokers/submit-review/page.js",
   "/categories/page": "app/categories/page.js",
   "/category/[slug]/page": "app/category/[slug]/page.js",
+  "/discussions/new/page": "app/discussions/new/page.js",
   "/members/page": "app/members/page.js",
   "/messages/page": "app/messages/page.js",
   "/page": "app/page.js",
