@@ -3,6 +3,11 @@
 # YoForex Next.js-Only Server Startup Script
 # Runs Express API (port 3001 internal) and Next.js frontend (port 5000 user-facing)
 
+# STEP 1: Auto-detect and fix fresh GitHub imports
+if [ -f "scripts/auto-setup.sh" ]; then
+    bash scripts/auto-setup.sh
+fi
+
 echo "🚀 Starting YoForex (Next.js-Only Architecture)..."
 
 # Start Express API server on port 3001 in background

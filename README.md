@@ -9,6 +9,24 @@
 
 ---
 
+## 🎯 **NEW: Zero-Touch GitHub Migration**
+
+**Importing from GitHub to a new Replit?** Everything works automatically! 🚀
+
+When you import this project from GitHub:
+- ✅ Database is created automatically
+- ✅ Data is imported automatically  
+- ✅ Setup completes automatically
+- ✅ **NO manual commands needed!**
+
+Just click "Import from GitHub" → Wait 30 seconds → Everything works!
+
+📖 **See:** [ZERO_TOUCH_MIGRATION.md](./ZERO_TOUCH_MIGRATION.md) for details
+
+**Before you export:** Run `npm run db:export` to include your data in the migration.
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
