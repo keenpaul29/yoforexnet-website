@@ -189,6 +189,7 @@ export interface IStorage {
   
   createReview(review: InsertContentReview): Promise<ContentReview>;
   getContentReviews(contentId: string): Promise<ContentReview[]>;
+  getUserReviewCount(userId: string): Promise<number>;
   
   likeContent(like: InsertContentLike): Promise<ContentLike | null>;
   hasLiked(userId: string, contentId: string): Promise<boolean>;
@@ -1906,6 +1907,18 @@ export class MemStorage implements IStorage {
     return Array.from(this.contentReviews.values())
       .filter((r) => r.contentId === contentId && r.status === "approved")
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  async getUserReviewCount(userId: string): Promise<number> {
+    // Count content reviews
+    const contentReviewCount = Array.from(this.contentReviews.values())
+      .filter((r) => r.userId === userId).length;
+    
+    // Count broker reviews
+    const brokerReviewCount = Array.from(this.brokerReviews.values())
+      .filter((r) => r.userId === userId).length;
+    
+    return contentReviewCount + brokerReviewCount;
   }
   
   // Content Like Methods
@@ -4044,6 +4057,22 @@ export class DrizzleStorage implements IStorage {
         eq(contentReviews.status, "approved")
       ))
       .orderBy(desc(contentReviews.createdAt));
+  }
+
+  async getUserReviewCount(userId: string): Promise<number> {
+    // Count content reviews
+    const contentReviewCount = await db
+      .select({ count: count() })
+      .from(contentReviews)
+      .where(eq(contentReviews.userId, userId));
+    
+    // Count broker reviews
+    const brokerReviewCount = await db
+      .select({ count: count() })
+      .from(brokerReviews)
+      .where(eq(brokerReviews.userId, userId));
+    
+    return (contentReviewCount[0]?.count || 0) + (brokerReviewCount[0]?.count || 0);
   }
 
   async likeContent(insertLike: InsertContentLike): Promise<ContentLike | null> {

@@ -1741,6 +1741,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Award 5 coins for review (pending moderation approval)
       // Note: Coins will be awarded when admin approves the review
       
+      // Track onboarding step for two reviews submitted
+      try {
+        const reviewCount = await storage.getUserReviewCount(authenticatedUserId);
+        if (reviewCount >= 2) {
+          await storage.markOnboardingStep(authenticatedUserId, 'twoReviews');
+        }
+      } catch (error) {
+        console.error('Onboarding step failed:', error);
+      }
+      
       res.json(review);
     } catch (error) {
       if (error instanceof Error) {
@@ -2165,9 +2175,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Mark onboarding step
+      // Track onboarding step for two reviews submitted
       try {
-        await storage.markOnboardingStep(authenticatedUserId, 'firstReport');
+        const reviewCount = await storage.getUserReviewCount(authenticatedUserId);
+        if (reviewCount >= 2) {
+          await storage.markOnboardingStep(authenticatedUserId, 'twoReviews');
+        }
       } catch (error) {
         console.error('Onboarding step failed:', error);
       }
@@ -2230,9 +2243,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Mark onboarding step
+      // Track onboarding step for two reviews submitted
       try {
-        await storage.markOnboardingStep(authenticatedUserId, 'firstReport');
+        const reviewCount = await storage.getUserReviewCount(authenticatedUserId);
+        if (reviewCount >= 2) {
+          await storage.markOnboardingStep(authenticatedUserId, 'twoReviews');
+        }
       } catch (error) {
         console.error('Onboarding step failed:', error);
       }
@@ -2442,9 +2458,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update category stats
       await storage.updateCategoryStats(validated.categorySlug);
       
-      // Mark onboarding step
+      // Mark onboarding step for first thread creation
       try {
-        await storage.markOnboardingStep(authenticatedUserId, 'firstReply');
+        await storage.markOnboardingStep(authenticatedUserId, 'firstThread');
       } catch (error) {
         console.error('Onboarding step failed:', error);
       }
@@ -3334,6 +3350,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const userFollow = await storage.createUserFollow(validated);
       
+      // Track onboarding step for fifty followers
+      try {
+        const followers = await storage.getUserFollowers(validated.followingId);
+        if (followers.length >= 50) {
+          await storage.markOnboardingStep(validated.followingId, 'fiftyFollowers');
+        }
+      } catch (error) {
+        console.error('Onboarding step failed:', error);
+      }
+      
       // Send follow notification email (fire-and-forget)
       (async () => {
         try {
@@ -3696,6 +3722,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.updateUserProfile(authenticatedUserId, {
         profileImageUrl: photoUrl,
       });
+
+      // Track onboarding step for profile picture upload
+      try {
+        await storage.markOnboardingStep(authenticatedUserId, 'profilePicture');
+      } catch (error) {
+        console.error('Onboarding step failed:', error);
+      }
 
       res.json({ 
         success: true,
