@@ -3,9 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, TrendingUp, Award } from "lucide-react";
+import { Trophy, TrendingUp } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
 
 interface LeaderboardUser {
   rank: number;
@@ -52,32 +51,39 @@ export default function Leaderboard({
   weeklyStreaks = defaultStreaks 
 }: LeaderboardProps) {
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Trophy className="h-4 w-4 text-primary" />;
-    if (rank === 2) return <Award className="h-4 w-4 text-chart-3" />;
-    if (rank === 3) return <Award className="h-4 w-4 text-chart-4" />;
+    const badges = [
+      { icon: Trophy, color: "text-amber-500" },
+      { icon: Trophy, color: "text-slate-400" },
+      { icon: Trophy, color: "text-orange-600" },
+    ];
+    
+    if (rank <= 3) {
+      const { icon: Icon, color } = badges[rank - 1];
+      return <Icon className={`h-4 w-4 ${color}`} />;
+    }
     return <span className="text-xs font-semibold text-muted-foreground">#{rank}</span>;
   };
 
   const getTrendIcon = (trend?: "up" | "down" | "same") => {
-    if (trend === "up") return <TrendingUp className="h-3 w-3 text-chart-3" />;
-    if (trend === "down") return <TrendingUp className="h-3 w-3 text-destructive rotate-180" />;
+    if (trend === "up") return <TrendingUp className="h-3 w-3 text-green-500" />;
+    if (trend === "down") return <TrendingUp className="h-3 w-3 text-red-500 rotate-180" />;
     return null;
   };
 
   const renderLeaderboardList = (users: LeaderboardUser[], metricLabel: string) => (
-    <div className="space-y-3">
+    <div className="space-y-1.5">
       {users.map((user) => (
         <div 
           key={user.rank} 
-          className="flex items-center gap-3 p-2 rounded-lg hover-elevate" 
+          className="flex items-center gap-2.5 py-2 px-2.5 rounded-lg hover-elevate" 
           data-testid={`leaderboard-user-${user.rank}`}
         >
-          <div className="w-6 flex items-center justify-center">
+          <div className="w-5 flex items-center justify-center shrink-0">
             {getRankIcon(user.rank)}
           </div>
           <Avatar className="h-8 w-8">
             <AvatarImage src={user.avatar} />
-            <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback className="text-[11px]">{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate" data-testid={`text-username-${user.rank}`}>
@@ -87,11 +93,11 @@ export default function Leaderboard({
               {user.metric} {metricLabel}
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 shrink-0">
             {getTrendIcon(user.trend)}
-            <Badge variant="outline" className="text-xs" data-testid={`badge-coins-${user.rank}`}>
+            <span className="text-sm font-semibold text-foreground" data-testid={`badge-coins-${user.rank}`}>
               {user.coins}
-            </Badge>
+            </span>
           </div>
         </div>
       ))}
@@ -99,33 +105,33 @@ export default function Leaderboard({
   );
 
   return (
-    <Card data-testid="card-leaderboard">
+    <Card className="border-0 shadow-sm" data-testid="card-leaderboard">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-primary" />
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Trophy className="h-4 w-4 text-primary" />
           Leaderboard
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="contributors" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="contributors" className="text-xs" data-testid="tab-contributors">
+          <TabsList className="grid w-full grid-cols-3 h-8 bg-muted/50">
+            <TabsTrigger value="contributors" className="text-xs data-[state=active]:bg-background" data-testid="tab-contributors">
               Helpful
             </TabsTrigger>
-            <TabsTrigger value="uploaders" className="text-xs" data-testid="tab-uploaders">
+            <TabsTrigger value="uploaders" className="text-xs data-[state=active]:bg-background" data-testid="tab-uploaders">
               Uploads
             </TabsTrigger>
-            <TabsTrigger value="streaks" className="text-xs" data-testid="tab-streaks">
+            <TabsTrigger value="streaks" className="text-xs data-[state=active]:bg-background" data-testid="tab-streaks">
               Streaks
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="contributors" className="mt-4">
+          <TabsContent value="contributors" className="mt-3">
             {renderLeaderboardList(topContributors, "solutions")}
           </TabsContent>
-          <TabsContent value="uploaders" className="mt-4">
+          <TabsContent value="uploaders" className="mt-3">
             {renderLeaderboardList(topUploaders, "uploads")}
           </TabsContent>
-          <TabsContent value="streaks" className="mt-4">
+          <TabsContent value="streaks" className="mt-3">
             {renderLeaderboardList(weeklyStreaks, "day streak")}
           </TabsContent>
         </Tabs>

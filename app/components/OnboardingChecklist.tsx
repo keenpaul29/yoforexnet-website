@@ -22,8 +22,8 @@ type OnboardingProgress = {
 
 const ONBOARDING_TASKS = [
   { key: 'profileCreated', label: 'Complete your profile', coins: 10, link: '/settings' },
-  { key: 'firstReply', label: 'Post your first reply', coins: 15, link: '/forum' },
-  { key: 'firstReport', label: 'Submit your first review', coins: 20, link: '/marketplace' },
+  { key: 'firstReply', label: 'Post your first reply', coins: 15, link: '/discussions' },
+  { key: 'firstReport', label: 'Submit your first review', coins: 20, link: '/brokers' },
   { key: 'firstUpload', label: 'Upload your first EA', coins: 50, link: '/publish' },
   { key: 'socialLinked', label: 'Link a social account', coins: 30, link: '/settings' },
 ];
@@ -34,7 +34,10 @@ export function OnboardingChecklist() {
   });
 
   const dismiss = useMutation({
-    mutationFn: () => apiRequest('/api/me/onboarding/dismiss', 'POST'),
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/me/onboarding/dismiss', {});
+      return res.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/me/onboarding'] });
     },
@@ -49,55 +52,56 @@ export function OnboardingChecklist() {
   const progressPercent = (completedCount / totalCount) * 100;
 
   return (
-    <Card className="mb-6" data-testid="card-onboarding">
-      <CardHeader className="pb-3">
+    <Card className="border-0 shadow-sm" data-testid="card-onboarding">
+      <CardHeader className="pb-3 space-y-1">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Get Started</CardTitle>
+          <CardTitle className="text-base font-semibold">Get Started</CardTitle>
           <Button
             variant="ghost"
             size="icon"
+            className="h-6 w-6 -mr-2"
             onClick={() => dismiss.mutate()}
             data-testid="button-dismiss-onboarding"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           Complete these tasks to earn coins and unlock features
         </p>
       </CardHeader>
-      <CardContent>
-        <Progress value={progressPercent} className="mb-4" data-testid="progress-onboarding" />
+      <CardContent className="space-y-3">
+        <Progress value={progressPercent} className="h-2" data-testid="progress-onboarding" />
         
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {ONBOARDING_TASKS.map(task => {
             const isComplete = data.progress[task.key as keyof typeof data.progress];
             return (
               <Link
                 key={task.key}
                 href={task.link}
-                className={`flex items-center justify-between p-3 rounded-md transition-all ${
+                className={`flex items-center justify-between py-2.5 px-3 rounded-lg transition-all ${
                   isComplete 
-                    ? 'bg-muted/50 cursor-default' 
+                    ? 'bg-muted/30' 
                     : 'hover-elevate active-elevate-2 cursor-pointer'
                 }`}
                 data-testid={`task-${task.key}`}
               >
-                <div className="flex items-center gap-3 flex-1">
+                <div className="flex items-center gap-2.5 flex-1">
                   {isComplete ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" data-testid={`icon-complete-${task.key}`} />
+                    <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" data-testid={`icon-complete-${task.key}`} />
                   ) : (
-                    <Circle className="w-5 h-5 text-muted-foreground shrink-0" data-testid={`icon-incomplete-${task.key}`} />
+                    <Circle className="w-4 h-4 text-muted-foreground shrink-0" data-testid={`icon-incomplete-${task.key}`} />
                   )}
-                  <span className={isComplete ? 'text-muted-foreground line-through' : ''}>
+                  <span className={`text-sm ${isComplete ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                     {task.label}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-sm font-medium text-yellow-600" data-testid={`coins-${task.key}`}>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-xs font-medium text-amber-600" data-testid={`coins-${task.key}`}>
                     +{task.coins} coins
                   </span>
-                  {!isComplete && <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                  {!isComplete && <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
                 </div>
               </Link>
             );

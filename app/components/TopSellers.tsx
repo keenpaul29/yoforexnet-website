@@ -3,7 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Coins, TrendingUp, Code, Activity } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Trophy, Star, Coins, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 interface TopSeller {
@@ -83,84 +84,76 @@ const topSellers: TopSeller[] = [
 ];
 
 export default function TopSellers() {
+  const getRankBadge = (index: number) => {
+    const badges = [
+      { bg: "bg-amber-500", text: "text-white" },
+      { bg: "bg-slate-400", text: "text-white" },
+      { bg: "bg-orange-600", text: "text-white" },
+      { bg: "bg-blue-500", text: "text-white" },
+      { bg: "bg-indigo-500", text: "text-white" },
+    ];
+    const badge = badges[index] || badges[4];
+    return (
+      <div className={`absolute -top-1 -left-1 w-4 h-4 rounded-full flex items-center justify-center ${badge.bg} ${badge.text} text-[10px] font-bold shadow-sm`}>
+        {index + 1}
+      </div>
+    );
+  };
+
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-0 shadow-sm">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-500" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-amber-500" />
             Top Sellers
           </CardTitle>
           <Link href="/marketplace?sort=sales" data-testid="link-see-all-sellers">
-            <Button variant="ghost" size="sm" data-testid="button-see-all-sellers">
+            <Button variant="ghost" size="sm" className="h-7 text-xs" data-testid="button-see-all-sellers">
               See All
             </Button>
           </Link>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {topSellers.map((item, index) => (
           <Link key={item.id} href={`/content/${item.slug}`} data-testid={`link-seller-${item.id}`}>
-            <div className="flex gap-3 p-3 rounded-lg hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-seller-${item.id}`}>
+            <div className="flex items-center gap-3 py-2 px-2.5 rounded-lg hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-seller-${item.id}`}>
               <div className="flex-shrink-0 relative">
-                {item.postLogoUrl ? (
-                  <div className="relative w-10 h-10 rounded-md overflow-hidden">
-                    <img 
-                      src={item.postLogoUrl} 
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className={`absolute -top-1 -left-1 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md ${
-                      index === 0 ? "bg-gradient-to-br from-yellow-500 to-yellow-600" :
-                      index === 1 ? "bg-gradient-to-br from-gray-400 to-gray-500" :
-                      index === 2 ? "bg-gradient-to-br from-orange-600 to-orange-700" :
-                      "bg-gradient-to-br from-blue-500 to-blue-600"
-                    }`}>
-                      {index + 1}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative w-10 h-10 rounded-md bg-muted flex items-center justify-center">
-                    {item.type === "ea" ? (
-                      <Code className="w-5 h-5 text-muted-foreground" />
-                    ) : (
-                      <Activity className="w-5 h-5 text-muted-foreground" />
-                    )}
-                    <div className={`absolute -top-1 -left-1 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md ${
-                      index === 0 ? "bg-gradient-to-br from-yellow-500 to-yellow-600" :
-                      index === 1 ? "bg-gradient-to-br from-gray-400 to-gray-500" :
-                      index === 2 ? "bg-gradient-to-br from-orange-600 to-orange-700" :
-                      "bg-gradient-to-br from-blue-500 to-blue-600"
-                    }`}>
-                      {index + 1}
-                    </div>
-                  </div>
-                )}
+                <Avatar className="w-10 h-10 rounded-md">
+                  <AvatarImage src={item.postLogoUrl || undefined} alt={item.title} />
+                  <AvatarFallback className="rounded-md bg-muted text-muted-foreground text-xs">
+                    {item.title.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                {getRankBadge(index)}
               </div>
 
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm line-clamp-1 mb-1" data-testid={`text-seller-title-${item.id}`}>
+                <h4 className="font-medium text-sm line-clamp-1" data-testid={`text-seller-title-${item.id}`}>
                   {item.title}
                 </h4>
                 
-                <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
-                  <span className="line-clamp-1" data-testid={`text-seller-author-${item.id}`}>{item.author}</span>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-                    <span>{item.rating}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-xs text-muted-foreground line-clamp-1" data-testid={`text-seller-author-${item.id}`}>
+                    {item.author}
+                  </span>
+                  <div className="flex items-center gap-0.5">
+                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                    <span className="text-xs text-foreground font-medium">{item.rating}</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1 text-xs font-medium text-yellow-600">
-                    <Coins className="w-3 h-3" />
-                    <span>{item.priceCoins}</span>
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    {item.sales} sales
-                  </Badge>
+              <div className="flex flex-col items-end gap-1 shrink-0">
+                <div className="flex items-center gap-1 text-xs font-semibold text-amber-600">
+                  <Coins className="w-3 h-3" />
+                  <span>{item.priceCoins}</span>
                 </div>
+                <Badge variant="secondary" className="text-[11px] h-5 px-1.5 font-normal">
+                  <TrendingUp className="w-2.5 h-2.5 mr-0.5" />
+                  {item.sales} sales
+                </Badge>
               </div>
             </div>
           </Link>
