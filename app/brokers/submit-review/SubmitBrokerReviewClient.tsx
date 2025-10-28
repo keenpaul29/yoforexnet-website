@@ -28,15 +28,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Star, Coins, AlertTriangle } from "lucide-react";
+import { Star, Coins, AlertTriangle, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import Link from "next/link";
+import slugify from "slugify";
 
 const reviewSchema = z.object({
   brokerId: z.string().min(1, "Please select a broker"),
-  rating: z.number().min(1).max(5),
+  rating: z.number().min(1, "Please select a rating").max(5),
   reviewTitle: z.string().min(10, "Title must be at least 10 characters").max(200),
   reviewBody: z.string().min(100, "Review must be at least 100 characters for coin reward").max(2000),
   isScamReport: z.boolean(),
@@ -48,9 +49,27 @@ interface SubmitBrokerReviewClientProps {
   initialBrokers: any[];
 }
 
+const ADD_NEW_BROKER_VALUE = "__add_new_broker__";
+
 export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBrokerReviewClientProps) {
   const { toast } = useToast();
   const [selectedRating, setSelectedRating] = useState(0);
+  const [isAddingNewBroker, setIsAddingNewBroker] = useState(false);
+  const [newBrokerName, setNewBrokerName] = useState("");
+  const [createdBrokerId, setCreatedBrokerId] = useState<string | null>(null);
+
+  // Fetch fresh broker list
+  const { data: brokers = initialBrokers, isLoading: isBrokersLoading } = useQuery({
+    queryKey: ["/api/brokers"],
+    queryFn: async () => {
+      const response = await fetch("/api/brokers");
+      if (!response.ok) {
+        throw new Error("Failed to fetch brokers");
+      }
+      return response.json();
+    },
+    initialData: initialBrokers,
+  });
 
   const form = useForm<ReviewFormData>({
     resolver: zodResolver(reviewSchema),
@@ -63,9 +82,42 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
     },
   });
 
+  // Mutation to create new broker
+  const createBrokerMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const slug = slugify(name, { lower: true, strict: true });
+      const response = await apiRequest("POST", "/api/brokers", {
+        name,
+        slug,
+        status: "pending",
+      });
+      return response.json();
+    },
+    onSuccess: (newBroker: any) => {
+      setCreatedBrokerId(newBroker.id);
+      form.setValue("brokerId", newBroker.id);
+      setIsAddingNewBroker(false);
+      toast({
+        title: "Broker Added",
+        description: `${newBroker.name} has been added to the list.`,
+      });
+      // Invalidate and refetch broker list
+      queryClient.invalidateQueries({ queryKey: ["/api/brokers"] });
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Failed to Add Broker",
+        description: error.message || "Could not create the new broker. Please try again.",
+      });
+    },
+  });
+
+  // Mutation to submit review
   const submitReviewMutation = useMutation({
     mutationFn: async (data: ReviewFormData) => {
-      return await apiRequest("POST", "/api/broker-reviews", data);
+      const response = await apiRequest("POST", "/api/brokers/review", data);
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -74,17 +126,50 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
       });
       form.reset();
       setSelectedRating(0);
+      setNewBrokerName("");
+      setCreatedBrokerId(null);
+      setIsAddingNewBroker(false);
     },
     onError: (error: Error) => {
       toast({
         variant: "destructive",
         title: "Submission Failed",
-        description: error.message,
+        description: error.message || "Failed to submit review. Please check your connection and try again.",
       });
     },
   });
 
+  const handleBrokerSelection = (value: string) => {
+    if (value === ADD_NEW_BROKER_VALUE) {
+      setIsAddingNewBroker(true);
+      form.setValue("brokerId", "");
+    } else {
+      setIsAddingNewBroker(false);
+      form.setValue("brokerId", value);
+    }
+  };
+
+  const handleAddNewBroker = () => {
+    if (!newBrokerName.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Broker Name",
+        description: "Please enter a valid broker name.",
+      });
+      return;
+    }
+    createBrokerMutation.mutate(newBrokerName.trim());
+  };
+
   const onSubmit = (data: ReviewFormData) => {
+    if (!data.brokerId) {
+      toast({
+        variant: "destructive",
+        title: "Missing Broker",
+        description: "Please select or add a broker before submitting.",
+      });
+      return;
+    }
     submitReviewMutation.mutate(data);
   };
 
@@ -93,7 +178,7 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
 
   return (
     <div className="min-h-screen bg-background">
-      <Header userCoins={2450} />
+      <Header />
       
       <main className="container max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
@@ -127,20 +212,65 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Select Broker</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-broker">
-                                <SelectValue placeholder="Choose a broker..." />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {initialBrokers.map((broker) => (
-                                <SelectItem key={broker.id} value={broker.id.toString()}>
-                                  {broker.name}
+                          
+                          {!isAddingNewBroker ? (
+                            <Select 
+                              onValueChange={handleBrokerSelection} 
+                              value={field.value || undefined}
+                              disabled={isBrokersLoading}
+                            >
+                              <FormControl>
+                                <SelectTrigger data-testid="select-broker">
+                                  <SelectValue placeholder={isBrokersLoading ? "Loading brokers..." : "Choose a broker..."} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {brokers.map((broker: any) => (
+                                  <SelectItem key={broker.id} value={broker.id}>
+                                    {broker.name}
+                                  </SelectItem>
+                                ))}
+                                <SelectItem value={ADD_NEW_BROKER_VALUE}>
+                                  <div className="flex items-center gap-2 font-semibold text-primary">
+                                    <Plus className="h-4 w-4" />
+                                    Add New Broker
+                                  </div>
                                 </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <div className="space-y-3">
+                              <div className="flex gap-2">
+                                <Input
+                                  placeholder="Enter broker name..."
+                                  value={newBrokerName}
+                                  onChange={(e) => setNewBrokerName(e.target.value)}
+                                  data-testid="input-new-broker-name"
+                                  disabled={createBrokerMutation.isPending}
+                                />
+                                <Button
+                                  type="button"
+                                  onClick={handleAddNewBroker}
+                                  disabled={createBrokerMutation.isPending || !newBrokerName.trim()}
+                                  data-testid="button-add-broker"
+                                >
+                                  {createBrokerMutation.isPending ? "Adding..." : "Add"}
+                                </Button>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setIsAddingNewBroker(false);
+                                  setNewBrokerName("");
+                                }}
+                                data-testid="button-cancel-add-broker"
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          )}
                           <FormMessage />
                         </FormItem>
                       )}
@@ -269,6 +399,9 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
                         onClick={() => {
                           form.reset();
                           setSelectedRating(0);
+                          setIsAddingNewBroker(false);
+                          setNewBrokerName("");
+                          setCreatedBrokerId(null);
                         }}
                         data-testid="button-reset-form"
                       >

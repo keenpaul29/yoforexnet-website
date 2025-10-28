@@ -3610,11 +3610,15 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$s
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/star.js [app-ssr] (ecmascript) <export default as Star>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/coins.js [app-ssr] (ecmascript) <export default as Coins>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2d$alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertTriangle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/triangle-alert.js [app-ssr] (ecmascript) <export default as AlertTriangle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/plus.js [app-ssr] (ecmascript) <export default as Plus>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/hooks/use-toast.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@tanstack/react-query/build/modern/useMutation.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@tanstack/react-query/build/modern/useQuery.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/queryClient.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$slugify$2f$slugify$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/slugify/slugify.js [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -3637,14 +3641,32 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 const reviewSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].object({
     brokerId: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].string().min(1, "Please select a broker"),
-    rating: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].number().min(1).max(5),
+    rating: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].number().min(1, "Please select a rating").max(5),
     reviewTitle: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].string().min(10, "Title must be at least 10 characters").max(200),
     reviewBody: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].string().min(100, "Review must be at least 100 characters for coin reward").max(2000),
     isScamReport: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["z"].boolean()
 });
+const ADD_NEW_BROKER_VALUE = "__add_new_broker__";
 function SubmitBrokerReviewClient({ initialBrokers }) {
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useToast"])();
     const [selectedRating, setSelectedRating] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
+    const [isAddingNewBroker, setIsAddingNewBroker] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [newBrokerName, setNewBrokerName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [createdBrokerId, setCreatedBrokerId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    // Fetch fresh broker list
+    const { data: brokers = initialBrokers, isLoading: isBrokersLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
+        queryKey: [
+            "/api/brokers"
+        ],
+        queryFn: async ()=>{
+            const response = await fetch("/api/brokers");
+            if (!response.ok) {
+                throw new Error("Failed to fetch brokers");
+            }
+            return response.json();
+        },
+        initialData: initialBrokers
+    });
     const form = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useForm"])({
         resolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$hookform$2f$resolvers$2f$zod$2f$dist$2f$zod$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["zodResolver"])(reviewSchema),
         defaultValues: {
@@ -3655,9 +3677,48 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
             isScamReport: false
         }
     });
+    // Mutation to create new broker
+    const createBrokerMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
+        mutationFn: async (name)=>{
+            const slug = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$slugify$2f$slugify$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"])(name, {
+                lower: true,
+                strict: true
+            });
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiRequest"])("POST", "/api/brokers", {
+                name,
+                slug,
+                status: "pending"
+            });
+            return response.json();
+        },
+        onSuccess: (newBroker)=>{
+            setCreatedBrokerId(newBroker.id);
+            form.setValue("brokerId", newBroker.id);
+            setIsAddingNewBroker(false);
+            toast({
+                title: "Broker Added",
+                description: `${newBroker.name} has been added to the list.`
+            });
+            // Invalidate and refetch broker list
+            __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["queryClient"].invalidateQueries({
+                queryKey: [
+                    "/api/brokers"
+                ]
+            });
+        },
+        onError: (error)=>{
+            toast({
+                variant: "destructive",
+                title: "Failed to Add Broker",
+                description: error.message || "Could not create the new broker. Please try again."
+            });
+        }
+    });
+    // Mutation to submit review
     const submitReviewMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: async (data)=>{
-            return await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiRequest"])("POST", "/api/broker-reviews", data);
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiRequest"])("POST", "/api/brokers/review", data);
+            return response.json();
         },
         onSuccess: ()=>{
             toast({
@@ -3666,16 +3727,47 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
             });
             form.reset();
             setSelectedRating(0);
+            setNewBrokerName("");
+            setCreatedBrokerId(null);
+            setIsAddingNewBroker(false);
         },
         onError: (error)=>{
             toast({
                 variant: "destructive",
                 title: "Submission Failed",
-                description: error.message
+                description: error.message || "Failed to submit review. Please check your connection and try again."
             });
         }
     });
+    const handleBrokerSelection = (value)=>{
+        if (value === ADD_NEW_BROKER_VALUE) {
+            setIsAddingNewBroker(true);
+            form.setValue("brokerId", "");
+        } else {
+            setIsAddingNewBroker(false);
+            form.setValue("brokerId", value);
+        }
+    };
+    const handleAddNewBroker = ()=>{
+        if (!newBrokerName.trim()) {
+            toast({
+                variant: "destructive",
+                title: "Invalid Broker Name",
+                description: "Please enter a valid broker name."
+            });
+            return;
+        }
+        createBrokerMutation.mutate(newBrokerName.trim());
+    };
     const onSubmit = (data)=>{
+        if (!data.brokerId) {
+            toast({
+                variant: "destructive",
+                title: "Missing Broker",
+                description: "Please select or add a broker before submitting."
+            });
+            return;
+        }
         submitReviewMutation.mutate(data);
     };
     const wordCount = form.watch("reviewBody")?.split(/\s+/).filter(Boolean).length || 0;
@@ -3683,11 +3775,9 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen bg-background",
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                userCoins: 2450
-            }, void 0, false, {
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                lineNumber: 96,
+                lineNumber: 181,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -3707,12 +3797,12 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                     children: "← Back to Broker Directory"
                                 }, void 0, false, {
                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                    lineNumber: 101,
+                                    lineNumber: 186,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                lineNumber: 100,
+                                lineNumber: 185,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -3720,7 +3810,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                 children: "Submit Broker Review"
                             }, void 0, false, {
                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                lineNumber: 106,
+                                lineNumber: 191,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3728,13 +3818,13 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                 children: "Share your experience and help the community make informed decisions"
                             }, void 0, false, {
                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                lineNumber: 107,
+                                lineNumber: 192,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                        lineNumber: 99,
+                        lineNumber: 184,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3750,20 +3840,20 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                     children: "Your Review"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                    lineNumber: 116,
+                                                    lineNumber: 201,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                     children: "Provide honest feedback about your experience with this broker"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                    lineNumber: 117,
+                                                    lineNumber: 202,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                            lineNumber: 115,
+                                            lineNumber: 200,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3782,67 +3872,148 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                             children: "Select Broker"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 129,
+                                                                            lineNumber: 214,
                                                                             columnNumber: 27
                                                                         }, void 0),
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
-                                                                            onValueChange: field.onChange,
-                                                                            defaultValue: field.value,
+                                                                        !isAddingNewBroker ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
+                                                                            onValueChange: handleBrokerSelection,
+                                                                            value: field.value || undefined,
+                                                                            disabled: isBrokersLoading,
                                                                             children: [
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormControl"], {
                                                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
                                                                                         "data-testid": "select-broker",
                                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
-                                                                                            placeholder: "Choose a broker..."
+                                                                                            placeholder: isBrokersLoading ? "Loading brokers..." : "Choose a broker..."
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                            lineNumber: 133,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 224,
+                                                                                            columnNumber: 35
                                                                                         }, void 0)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                        lineNumber: 132,
-                                                                                        columnNumber: 31
+                                                                                        lineNumber: 223,
+                                                                                        columnNumber: 33
                                                                                     }, void 0)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                    lineNumber: 131,
-                                                                                    columnNumber: 29
+                                                                                    lineNumber: 222,
+                                                                                    columnNumber: 31
                                                                                 }, void 0),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
-                                                                                    children: initialBrokers.map((broker)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                                            value: broker.id.toString(),
-                                                                                            children: broker.name
-                                                                                        }, broker.id, false, {
+                                                                                    children: [
+                                                                                        brokers.map((broker)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                                value: broker.id,
+                                                                                                children: broker.name
+                                                                                            }, broker.id, false, {
+                                                                                                fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                                lineNumber: 229,
+                                                                                                columnNumber: 35
+                                                                                            }, void 0)),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                            value: ADD_NEW_BROKER_VALUE,
+                                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                                className: "flex items-center gap-2 font-semibold text-primary",
+                                                                                                children: [
+                                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                                                                        className: "h-4 w-4"
+                                                                                                    }, void 0, false, {
+                                                                                                        fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                                        lineNumber: 235,
+                                                                                                        columnNumber: 37
+                                                                                                    }, void 0),
+                                                                                                    "Add New Broker"
+                                                                                                ]
+                                                                                            }, void 0, true, {
+                                                                                                fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                                lineNumber: 234,
+                                                                                                columnNumber: 35
+                                                                                            }, void 0)
+                                                                                        }, void 0, false, {
                                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                            lineNumber: 138,
+                                                                                            lineNumber: 233,
                                                                                             columnNumber: 33
-                                                                                        }, void 0))
-                                                                                }, void 0, false, {
+                                                                                        }, void 0)
+                                                                                    ]
+                                                                                }, void 0, true, {
                                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                    lineNumber: 136,
-                                                                                    columnNumber: 29
+                                                                                    lineNumber: 227,
+                                                                                    columnNumber: 31
                                                                                 }, void 0)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 130,
-                                                                            columnNumber: 27
+                                                                            lineNumber: 217,
+                                                                            columnNumber: 29
+                                                                        }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "space-y-3",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "flex gap-2",
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                                                            placeholder: "Enter broker name...",
+                                                                                            value: newBrokerName,
+                                                                                            onChange: (e)=>setNewBrokerName(e.target.value),
+                                                                                            "data-testid": "input-new-broker-name",
+                                                                                            disabled: createBrokerMutation.isPending
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                            lineNumber: 244,
+                                                                                            columnNumber: 33
+                                                                                        }, void 0),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                                                            type: "button",
+                                                                                            onClick: handleAddNewBroker,
+                                                                                            disabled: createBrokerMutation.isPending || !newBrokerName.trim(),
+                                                                                            "data-testid": "button-add-broker",
+                                                                                            children: createBrokerMutation.isPending ? "Adding..." : "Add"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                            lineNumber: 251,
+                                                                                            columnNumber: 33
+                                                                                        }, void 0)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                    lineNumber: 243,
+                                                                                    columnNumber: 31
+                                                                                }, void 0),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                                                    type: "button",
+                                                                                    variant: "ghost",
+                                                                                    size: "sm",
+                                                                                    onClick: ()=>{
+                                                                                        setIsAddingNewBroker(false);
+                                                                                        setNewBrokerName("");
+                                                                                    },
+                                                                                    "data-testid": "button-cancel-add-broker",
+                                                                                    children: "Cancel"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                                    lineNumber: 260,
+                                                                                    columnNumber: 31
+                                                                                }, void 0)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
+                                                                            lineNumber: 242,
+                                                                            columnNumber: 29
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 144,
+                                                                            lineNumber: 274,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 128,
+                                                                    lineNumber: 213,
                                                                     columnNumber: 25
                                                                 }, void 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                            lineNumber: 124,
+                                                            lineNumber: 209,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormField"], {
@@ -3854,7 +4025,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                             children: "Your Rating"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 154,
+                                                                            lineNumber: 284,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -3876,7 +4047,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                             "data-testid": `star-rating-${star}`
                                                                                         }, star, false, {
                                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                            lineNumber: 158,
+                                                                                            lineNumber: 288,
                                                                                             columnNumber: 33
                                                                                         }, void 0)),
                                                                                     selectedRating > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3887,34 +4058,34 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                        lineNumber: 173,
+                                                                                        lineNumber: 303,
                                                                                         columnNumber: 33
                                                                                     }, void 0)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                lineNumber: 156,
+                                                                                lineNumber: 286,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 155,
+                                                                            lineNumber: 285,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 177,
+                                                                            lineNumber: 307,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 153,
+                                                                    lineNumber: 283,
                                                                     columnNumber: 25
                                                                 }, void 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                            lineNumber: 149,
+                                                            lineNumber: 279,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormField"], {
@@ -3926,7 +4097,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                             children: "Review Title"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 187,
+                                                                            lineNumber: 317,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -3936,12 +4107,12 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                 "data-testid": "input-review-title"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                lineNumber: 189,
+                                                                                lineNumber: 319,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 188,
+                                                                            lineNumber: 318,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormDescription"], {
@@ -3952,23 +4123,23 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 195,
+                                                                            lineNumber: 325,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 328,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 186,
+                                                                    lineNumber: 316,
                                                                     columnNumber: 25
                                                                 }, void 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                            lineNumber: 182,
+                                                            lineNumber: 312,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormField"], {
@@ -3980,7 +4151,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                             children: "Your Review"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 208,
+                                                                            lineNumber: 338,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -3991,12 +4162,12 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                 "data-testid": "textarea-review-body"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                lineNumber: 210,
+                                                                                lineNumber: 340,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 209,
+                                                                            lineNumber: 339,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormDescription"], {
@@ -4010,7 +4181,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                    lineNumber: 218,
+                                                                                    lineNumber: 348,
                                                                                     columnNumber: 29
                                                                                 }, void 0),
                                                                                 isEligibleForReward && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -4022,36 +4193,36 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                             className: "h-3 w-3 text-primary"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                            lineNumber: 221,
+                                                                                            lineNumber: 351,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         "Eligible for +50 Coins"
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                    lineNumber: 220,
+                                                                                    lineNumber: 350,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 217,
+                                                                            lineNumber: 347,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 226,
+                                                                            lineNumber: 356,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 207,
+                                                                    lineNumber: 337,
                                                                     columnNumber: 25
                                                                 }, void 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                            lineNumber: 203,
+                                                            lineNumber: 333,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormField"], {
@@ -4067,12 +4238,12 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                 "data-testid": "checkbox-scam-report"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                lineNumber: 237,
+                                                                                lineNumber: 367,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 236,
+                                                                            lineNumber: 366,
                                                                             columnNumber: 27
                                                                         }, void 0),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4085,38 +4256,38 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                                             className: "h-4 w-4"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                            lineNumber: 245,
+                                                                                            lineNumber: 375,
                                                                                             columnNumber: 31
                                                                                         }, void 0),
                                                                                         "This is a SCAM REPORT"
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                    lineNumber: 244,
+                                                                                    lineNumber: 374,
                                                                                     columnNumber: 29
                                                                                 }, void 0),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormDescription"], {
                                                                                     children: "Check this box only if you're reporting fraudulent activity, withdrawal issues, or deceptive practices. Provide detailed evidence in your review."
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                                    lineNumber: 248,
+                                                                                    lineNumber: 378,
                                                                                     columnNumber: 29
                                                                                 }, void 0)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                            lineNumber: 243,
+                                                                            lineNumber: 373,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 235,
+                                                                    lineNumber: 365,
                                                                     columnNumber: 25
                                                                 }, void 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                            lineNumber: 231,
+                                                            lineNumber: 361,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4130,7 +4301,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                     children: submitReviewMutation.isPending ? "Submitting..." : "Submit Review"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 257,
+                                                                    lineNumber: 387,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -4140,45 +4311,48 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                     onClick: ()=>{
                                                                         form.reset();
                                                                         setSelectedRating(0);
+                                                                        setIsAddingNewBroker(false);
+                                                                        setNewBrokerName("");
+                                                                        setCreatedBrokerId(null);
                                                                     },
                                                                     "data-testid": "button-reset-form",
                                                                     children: "Reset"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                    lineNumber: 265,
+                                                                    lineNumber: 395,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                            lineNumber: 256,
+                                                            lineNumber: 386,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                    lineNumber: 123,
+                                                    lineNumber: 208,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                lineNumber: 122,
+                                                lineNumber: 207,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                            lineNumber: 121,
+                                            lineNumber: 206,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                    lineNumber: 114,
+                                    lineNumber: 199,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                lineNumber: 113,
+                                lineNumber: 198,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -4191,12 +4365,12 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                     children: "Earn Gold Coins"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                    lineNumber: 287,
+                                                    lineNumber: 420,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                lineNumber: 286,
+                                                lineNumber: 419,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4209,7 +4383,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                 className: "h-5 w-5 text-primary flex-shrink-0"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                lineNumber: 291,
+                                                                lineNumber: 424,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4219,7 +4393,7 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                         children: "+50 Gold Coins"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                        lineNumber: 293,
+                                                                        lineNumber: 426,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4227,19 +4401,19 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                                         children: "For quality reviews (200+ words)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                        lineNumber: 294,
+                                                                        lineNumber: 427,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                                lineNumber: 292,
+                                                                lineNumber: 425,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 290,
+                                                        lineNumber: 423,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4247,19 +4421,19 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                         children: "Your review will be verified by our moderators before approval. Helpful, detailed reviews earn coins faster!"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 297,
+                                                        lineNumber: 430,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                lineNumber: 289,
+                                                lineNumber: 422,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                        lineNumber: 285,
+                                        lineNumber: 418,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -4269,12 +4443,12 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                     children: "Review Tips"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                    lineNumber: 305,
+                                                    lineNumber: 438,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                lineNumber: 304,
+                                                lineNumber: 437,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4284,76 +4458,76 @@ function SubmitBrokerReviewClient({ initialBrokers }) {
                                                         children: "✓ Be specific about spreads, execution speed, and costs"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 308,
+                                                        lineNumber: 441,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "✓ Share actual numbers and dates when possible"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 309,
+                                                        lineNumber: 442,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "✓ Include both positives and negatives"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 310,
+                                                        lineNumber: 443,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "✓ Mention the account type you used"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 311,
+                                                        lineNumber: 444,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "✓ Upload screenshots if reporting issues"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                        lineNumber: 312,
+                                                        lineNumber: 445,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                                lineNumber: 307,
+                                                lineNumber: 440,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                        lineNumber: 303,
+                                        lineNumber: 436,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                                lineNumber: 284,
+                                lineNumber: 417,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                        lineNumber: 112,
+                        lineNumber: 197,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                lineNumber: 98,
+                lineNumber: 183,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$EnhancedFooter$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-                lineNumber: 319,
+                lineNumber: 452,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/brokers/submit-review/SubmitBrokerReviewClient.tsx",
-        lineNumber: 95,
+        lineNumber: 180,
         columnNumber: 5
     }, this);
 }
