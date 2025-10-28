@@ -30,6 +30,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -67,6 +73,13 @@ export default function Header() {
     queryKey: ["/api/user", user?.id, "coins"],
     enabled: !!user?.id,
   });
+
+  const { data: unreadData } = useQuery<{ count: number }>({
+    queryKey: ['/api/notifications/unread-count'],
+    enabled: !!user?.id,
+  });
+
+  const unreadCount = unreadData?.count ?? 0;
 
   const userCoins = coinsData?.totalCoins ?? 0;
   const userCoinsUSD = coinsToUSD(userCoins);
@@ -192,7 +205,7 @@ export default function Header() {
             <>
               {/* Show "New Thread" button only on category pages */}
               {showNewThread && (
-                <Link href="/new-thread">
+                <Link href="/discussions/new">
                   <Button size="sm" className="hidden sm:flex" data-testid="button-new-thread">
                     <Plus className="h-4 w-4 mr-1" />
                     New Thread
@@ -200,15 +213,31 @@ export default function Header() {
                 </Link>
               )}
               
-              <Link href="/recharge">
-                <div className="hidden md:flex flex-col gap-0 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer">
-                  <div className="flex items-center gap-1">
-                    <Coins className="h-4 w-4 text-primary" />
-                    <span className="font-semibold text-sm" data-testid="text-header-coins">{userCoins.toLocaleString()}</span>
+              <div className="hidden md:flex items-center gap-1">
+                <Link href="/recharge">
+                  <div className="flex flex-col gap-0 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer">
+                    <div className="flex items-center gap-1">
+                      <Coins className="h-4 w-4 text-primary" />
+                      <span className="font-semibold text-sm" data-testid="text-header-coins">{userCoins.toLocaleString()}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">${userCoinsUSD.toFixed(2)} USD</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">${userCoinsUSD.toFixed(2)} USD</span>
-                </div>
-              </Link>
+                </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link href="/guides/how-to-earn-coins">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" data-testid="button-coin-help">
+                          <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Learn how to earn coins & level up</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               
               <Link href="/messages">
                 <Button variant="ghost" size="icon" data-testid="button-messages">
@@ -216,12 +245,16 @@ export default function Header() {
                 </Button>
               </Link>
               
-              <Button variant="ghost" size="icon" className="hidden md:flex relative" data-testid="button-notifications">
-                <Bell className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
-                  3
-                </Badge>
-              </Button>
+              <Link href="/notifications">
+                <Button variant="ghost" size="icon" className="hidden md:flex relative" data-testid="button-notifications">
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs" data-testid="badge-unread-count">
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
             </>
           )}
           
@@ -378,9 +411,11 @@ export default function Header() {
                         <Button variant="ghost" className="w-full justify-start relative" data-testid="mobile-link-notifications">
                           <Bell className="mr-2 h-4 w-4" />
                           Notifications
-                          <Badge className="ml-auto h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
-                            3
-                          </Badge>
+                          {unreadCount > 0 && (
+                            <Badge className="ml-auto h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs" data-testid="mobile-badge-unread-count">
+                              {unreadCount}
+                            </Badge>
+                          )}
                         </Button>
                       </Link>
                       <Link href="/settings" onClick={() => setMobileMenuOpen(false)}>

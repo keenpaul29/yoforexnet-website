@@ -14,8 +14,10 @@ import {
   TrendingUp,
   Award,
   Code,
-  CheckCircle
+  CheckCircle,
+  BookOpen
 } from "lucide-react";
+import Link from "next/link";
 import { EARNING_REWARDS, DAILY_LIMITS, calculateMonthlyPotential } from "../../shared/coinUtils";
 
 interface EarnMethod {
@@ -109,36 +111,43 @@ export default function EarnCoinsClient() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container max-w-6xl mx-auto px-4 py-8" data-testid="container-earn-coins">
-        <div className="mb-8">
+      <div className="container max-w-6xl mx-auto px-4 py-6" data-testid="container-earn-coins">
+        <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">Earn Gold Coins</h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mb-4">
             Multiple ways to earn coins by contributing quality content and helping the community grow
           </p>
+          <Link href="/guides/how-to-earn-coins">
+            <Button variant="outline" className="gap-2" data-testid="button-learn-more">
+              <BookOpen className="h-4 w-4" />
+              Learn More: Complete Guide to Earning Coins & Leveling Up
+            </Button>
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {earnMethods.map((method, index) => (
             <Card key={index} className="hover-elevate" data-testid={`earn-method-${index}`}>
-              <CardHeader>
-                <div className="flex items-start gap-4">
-                  <div className={`${method.color} rounded-lg p-3 flex-shrink-0`}>
-                    <method.icon className="h-6 w-6 text-primary-foreground" />
+              <CardHeader className="pb-3">
+                <div className="flex items-start gap-3">
+                  <div className={`${method.color} rounded-lg p-2.5 flex-shrink-0`}>
+                    <method.icon className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-lg mb-1">{method.title}</CardTitle>
+                    <CardTitle className="text-base mb-1">{method.title}</CardTitle>
                     <Badge variant="outline" className="text-xs">
                       {method.coinsRange}
                     </Badge>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-3">
                   {method.description}
                 </p>
                 <Button 
                   variant="outline" 
+                  size="sm"
                   className="w-full"
                   data-testid={`button-${method.action.toLowerCase().replace(/\s+/g, '-')}`}
                 >
@@ -149,8 +158,8 @@ export default function EarnCoinsClient() {
           ))}
         </div>
 
-        <Card className="mt-8 border-primary/50 bg-primary/5">
-          <CardContent className="p-6">
+        <Card className="mt-6 border-primary/50 bg-primary/5">
+          <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <Gift className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
               <div>

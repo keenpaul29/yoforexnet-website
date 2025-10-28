@@ -132,8 +132,8 @@ function CategoryCard({ category, stats, isLoading }: {
   return (
     <Link href={`/category/${category.slug}`} data-testid={`link-category-${category.slug}`}>
       <Card className="h-full hover:border-primary/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200" data-testid={`card-category-${category.slug}`}>
-        <CardContent className="p-4">
-          <div className="space-y-3">
+        <CardContent className="p-3">
+          <div className="space-y-2">
             {/* Icon + Title Row */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -281,8 +281,8 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
       
       {/* Enhanced Header with Platform Stats */}
       <div className="border-b bg-gradient-to-br from-primary/5 to-background">
-        <div className="container max-w-7xl mx-auto px-4 py-8">
-          <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="container max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-start justify-between gap-4 mb-4">
             <div>
               <h1 className="text-3xl font-bold mb-2 flex items-center gap-3" data-testid="heading-categories">
                 <BookOpen className="w-8 h-8 text-primary" />
@@ -295,9 +295,9 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
           </div>
 
           {/* Summary Statistics at Top */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
             <Card className="bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-4">
+              <CardContent className="p-3">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-primary/10">
                     <BookOpen className="w-5 h-5 text-primary" />
@@ -347,7 +347,7 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
 
           {/* Search Bar */}
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -363,11 +363,11 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
         </div>
       </div>
 
-      <main className="container max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-6">
+      <main className="container max-w-7xl mx-auto px-4 py-6">
+        <div className="flex gap-4">
           {/* Main Categories Grid - 3 columns on desktop, 2 on tablet, 1 on mobile */}
           <div className="flex-1">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredCategories.map((category) => (
                 <CategoryCard 
                   key={category.slug} 

@@ -187,10 +187,10 @@ export default function BrokerDirectoryClient({ initialBrokers }: BrokerDirector
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container max-w-7xl mx-auto px-4 py-8">
+      <main className="container max-w-7xl mx-auto px-4 py-6">
         {/* Enhanced Header with Platform Stats */}
-        <div className="mb-8">
-          <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="mb-6">
+          <div className="flex items-start justify-between gap-4 mb-4">
             <div>
               <h1 className="text-4xl font-bold mb-2 flex items-center gap-3" data-testid="heading-broker-directory">
                 <Building2 className="w-8 h-8 text-primary" />
@@ -209,9 +209,9 @@ export default function BrokerDirectoryClient({ initialBrokers }: BrokerDirector
 
           {/* Platform Stats */}
           {!statsLoading && stats && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               <Card>
-                <CardContent className="p-4">
+                <CardContent className="p-3">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-primary/10">
                       <Building2 className="w-5 h-5 text-primary" />
@@ -297,13 +297,13 @@ export default function BrokerDirectoryClient({ initialBrokers }: BrokerDirector
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Main Content - 3 columns */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-4">
             {/* Filter Bar */}
             <Card>
-              <CardContent className="p-4">
-                <div className="space-y-4">
+              <CardContent className="p-3">
+                <div className="space-y-3">
                   {/* Search + Quick Actions */}
                   <div className="flex items-center gap-4">
                     <div className="relative flex-1">
@@ -381,11 +381,11 @@ export default function BrokerDirectoryClient({ initialBrokers }: BrokerDirector
             </Card>
 
             {/* Broker Grid - 3 columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {brokersLoading ? (
                 Array(9).fill(0).map((_, i) => (
                   <Card key={i}>
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <Skeleton className="h-48" />
                     </CardContent>
                   </Card>
@@ -405,8 +405,8 @@ export default function BrokerDirectoryClient({ initialBrokers }: BrokerDirector
                     className={`hover-elevate cursor-pointer ${selectedBrokers.includes(broker.id) ? 'ring-2 ring-primary' : ''}`}
                     data-testid={`card-broker-${broker.slug}`}
                   >
-                    <CardContent className="p-4">
-                      <div className="space-y-3">
+                    <CardContent className="p-3">
+                      <div className="space-y-2">
                         {/* Logo + Name + Badge */}
                         <div className="flex items-start gap-3">
                           <Avatar className="h-12 w-12 rounded-md">
@@ -480,10 +480,10 @@ export default function BrokerDirectoryClient({ initialBrokers }: BrokerDirector
           </div>
 
           {/* Sidebar - 1 column */}
-          <aside className="space-y-6">
+          <aside className="space-y-4">
             {/* Top Rated Widget */}
             <Card>
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
                   <Award className="h-4 w-4 text-primary" />
                   Top Rated

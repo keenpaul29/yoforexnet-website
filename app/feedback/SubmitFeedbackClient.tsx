@@ -55,10 +55,8 @@ export default function SubmitFeedbackClient() {
 
   const submitFeedback = useMutation({
     mutationFn: async (data: FeedbackForm) => {
-      // In a real app, this would send to /api/feedback
-      // For now, we'll just simulate success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return data;
+      const res = await apiRequest('POST', '/api/feedback', data);
+      return await res.json();
     },
     onSuccess: () => {
       setSubmitted(true);

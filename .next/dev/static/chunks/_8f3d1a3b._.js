@@ -702,7 +702,7 @@ function calculateEngagementScore(metrics) {
     return metrics.views * 1 + metrics.replies * 3 + metrics.likes * 4 + metrics.bookmarks * 2 + metrics.shares * 5 - (metrics.reports || 0) * 5;
 }
 function countWords(text) {
-    return text.trim().split(/\s+/).filter((word)=>word.length > 0).length;
+    return text.trim().split(/\s+/).filter(Boolean).length;
 }
 function isTitleTooShouty(title) {
     const upperCount = (title.match(/[A-Z]/g) || []).length;
@@ -1934,6 +1934,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$d
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$navigation$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ui/navigation-menu.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$sheet$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ui/sheet.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ui/separator.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/ui/tooltip.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
@@ -1943,6 +1944,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$shared$2f$coinUtils$2e$ts__$
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -2072,6 +2074,13 @@ function Header() {
         ],
         enabled: !!user?.id
     });
+    const { data: unreadData } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+        queryKey: [
+            '/api/notifications/unread-count'
+        ],
+        enabled: !!user?.id
+    });
+    const unreadCount = unreadData?.count ?? 0;
     const userCoins = coinsData?.totalCoins ?? 0;
     const userCoinsUSD = (0, __TURBOPACK__imported__module__$5b$project$5d2f$shared$2f$coinUtils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["coinsToUSD"])(userCoins);
     // Conditionally show "Release EA" dropdown only on marketplace/content/publish pages
@@ -2098,12 +2107,12 @@ function Header() {
                                             className: "h-5 w-5 text-primary-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 89,
+                                            lineNumber: 102,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 88,
+                                        lineNumber: 101,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2111,18 +2120,18 @@ function Header() {
                                         children: "YoForex"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 91,
+                                        lineNumber: 104,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/Header.tsx",
-                                lineNumber: 87,
+                                lineNumber: 100,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 86,
+                            lineNumber: 99,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -2138,12 +2147,12 @@ function Header() {
                                         children: "Categories"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 97,
+                                        lineNumber: 110,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 96,
+                                    lineNumber: 109,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2156,12 +2165,12 @@ function Header() {
                                         children: "Discussions"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 107,
+                                        lineNumber: 120,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 106,
+                                    lineNumber: 119,
                                     columnNumber: 13
                                 }, this),
                                 showReleaseEA && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$navigation$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["NavigationMenu"], {
@@ -2174,7 +2183,7 @@ function Header() {
                                                     children: "Release EA"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/Header.tsx",
-                                                    lineNumber: 122,
+                                                    lineNumber: 135,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$navigation$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["NavigationMenuContent"], {
@@ -2196,7 +2205,7 @@ function Header() {
                                                                                         className: "h-4 w-4"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                                        lineNumber: 136,
+                                                                                        lineNumber: 149,
                                                                                         columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2204,13 +2213,13 @@ function Header() {
                                                                                         children: cat.name
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                                        lineNumber: 137,
+                                                                                        lineNumber: 150,
                                                                                         columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 135,
+                                                                                lineNumber: 148,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2218,49 +2227,49 @@ function Header() {
                                                                                 children: cat.hint
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 139,
+                                                                                lineNumber: 152,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                        lineNumber: 130,
+                                                                        lineNumber: 143,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 129,
+                                                                    lineNumber: 142,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, cat.slug, false, {
                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                lineNumber: 128,
+                                                                lineNumber: 141,
                                                                 columnNumber: 27
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/Header.tsx",
-                                                        lineNumber: 126,
+                                                        lineNumber: 139,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/Header.tsx",
-                                                    lineNumber: 125,
+                                                    lineNumber: 138,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 121,
+                                            lineNumber: 134,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 120,
+                                        lineNumber: 133,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 119,
+                                    lineNumber: 132,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2273,12 +2282,12 @@ function Header() {
                                         children: "Broker Reviews"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 154,
+                                        lineNumber: 167,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 153,
+                                    lineNumber: 166,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2291,24 +2300,24 @@ function Header() {
                                         children: "Members"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 164,
+                                        lineNumber: 177,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 163,
+                                    lineNumber: 176,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 95,
+                            lineNumber: 108,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/Header.tsx",
-                    lineNumber: 85,
+                    lineNumber: 98,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2320,7 +2329,7 @@ function Header() {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/Header.tsx",
-                                lineNumber: 178,
+                                lineNumber: 191,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -2332,18 +2341,18 @@ function Header() {
                                 "data-testid": "input-search"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/Header.tsx",
-                                lineNumber: 179,
+                                lineNumber: 192,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/Header.tsx",
-                        lineNumber: 177,
+                        lineNumber: 190,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/components/Header.tsx",
-                    lineNumber: 176,
+                    lineNumber: 189,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2352,7 +2361,7 @@ function Header() {
                         isAuthenticated && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                             children: [
                                 showNewThread && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                    href: "/new-thread",
+                                    href: "/discussions/new",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                         size: "sm",
                                         className: "hidden sm:flex",
@@ -2362,72 +2371,139 @@ function Header() {
                                                 className: "h-4 w-4 mr-1"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 197,
+                                                lineNumber: 210,
                                                 columnNumber: 21
                                             }, this),
                                             "New Thread"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 196,
+                                        lineNumber: 209,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 195,
+                                    lineNumber: 208,
                                     columnNumber: 17
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                    href: "/recharge",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "hidden md:flex flex-col gap-0 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center gap-1",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "hidden md:flex items-center gap-1",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/recharge",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex flex-col gap-0 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20 hover-elevate cursor-pointer",
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__["Coins"], {
-                                                        className: "h-4 w-4 text-primary"
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center gap-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__["Coins"], {
+                                                                className: "h-4 w-4 text-primary"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/components/Header.tsx",
+                                                                lineNumber: 220,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "font-semibold text-sm",
+                                                                "data-testid": "text-header-coins",
+                                                                children: userCoins.toLocaleString()
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/components/Header.tsx",
+                                                                lineNumber: 221,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/components/Header.tsx",
-                                                        lineNumber: 206,
+                                                        lineNumber: 219,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-semibold text-sm",
-                                                        "data-testid": "text-header-coins",
-                                                        children: userCoins.toLocaleString()
-                                                    }, void 0, false, {
+                                                        className: "text-xs text-muted-foreground",
+                                                        children: [
+                                                            "$",
+                                                            userCoinsUSD.toFixed(2),
+                                                            " USD"
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/components/Header.tsx",
-                                                        lineNumber: 207,
+                                                        lineNumber: 223,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 205,
+                                                lineNumber: 218,
                                                 columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "text-xs text-muted-foreground",
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/components/Header.tsx",
+                                            lineNumber: 217,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TooltipProvider"], {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
                                                 children: [
-                                                    "$",
-                                                    userCoinsUSD.toFixed(2),
-                                                    " USD"
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TooltipTrigger"], {
+                                                        asChild: true,
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                            href: "/guides/how-to-earn-coins",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                                variant: "ghost",
+                                                                size: "icon",
+                                                                className: "h-8 w-8",
+                                                                "data-testid": "button-coin-help",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$help$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__HelpCircle$3e$__["HelpCircle"], {
+                                                                    className: "h-4 w-4 text-muted-foreground"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/components/Header.tsx",
+                                                                    lineNumber: 231,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/components/Header.tsx",
+                                                                lineNumber: 230,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/components/Header.tsx",
+                                                            lineNumber: 229,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/components/Header.tsx",
+                                                        lineNumber: 228,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TooltipContent"], {
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            children: "Learn how to earn coins & level up"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/components/Header.tsx",
+                                                            lineNumber: 236,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/components/Header.tsx",
+                                                        lineNumber: 235,
+                                                        columnNumber: 21
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 209,
+                                                lineNumber: 227,
                                                 columnNumber: 19
                                             }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 204,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/components/Header.tsx",
+                                            lineNumber: 226,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 203,
+                                    lineNumber: 216,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2440,44 +2516,52 @@ function Header() {
                                             className: "h-5 w-5"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 215,
+                                            lineNumber: 244,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 214,
+                                        lineNumber: 243,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 213,
+                                    lineNumber: 242,
                                     columnNumber: 15
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                    variant: "ghost",
-                                    size: "icon",
-                                    className: "hidden md:flex relative",
-                                    "data-testid": "button-notifications",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__["Bell"], {
-                                            className: "h-5 w-5"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 220,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
-                                            className: "absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs",
-                                            children: "3"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 221,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                    href: "/notifications",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                        variant: "ghost",
+                                        size: "icon",
+                                        className: "hidden md:flex relative",
+                                        "data-testid": "button-notifications",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__["Bell"], {
+                                                className: "h-5 w-5"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/components/Header.tsx",
+                                                lineNumber: 250,
+                                                columnNumber: 19
+                                            }, this),
+                                            unreadCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                className: "absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs",
+                                                "data-testid": "badge-unread-count",
+                                                children: unreadCount
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/components/Header.tsx",
+                                                lineNumber: 252,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/components/Header.tsx",
+                                        lineNumber: 249,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 219,
+                                    lineNumber: 248,
                                     columnNumber: 15
                                 }, this)
                             ]
@@ -2486,7 +2570,7 @@ function Header() {
                             className: "h-9 w-9 rounded-full bg-muted animate-pulse"
                         }, void 0, false, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 229,
+                            lineNumber: 262,
                             columnNumber: 13
                         }, this) : isAuthenticated && user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenu"], {
                             children: [
@@ -2505,30 +2589,30 @@ function Header() {
                                                     alt: user.username
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/Header.tsx",
-                                                    lineNumber: 235,
+                                                    lineNumber: 268,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AvatarFallback"], {
                                                     children: (user.firstName?.[0] || user.username?.[0] || 'U').toUpperCase()
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/Header.tsx",
-                                                    lineNumber: 236,
+                                                    lineNumber: 269,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 234,
+                                            lineNumber: 267,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 233,
+                                        lineNumber: 266,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 232,
+                                    lineNumber: 265,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -2540,12 +2624,12 @@ function Header() {
                                             children: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 241,
+                                            lineNumber: 274,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 246,
+                                            lineNumber: 279,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2557,19 +2641,19 @@ function Header() {
                                                         className: "mr-2 h-4 w-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/Header.tsx",
-                                                        lineNumber: 249,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Dashboard"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 248,
+                                                lineNumber: 281,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 247,
+                                            lineNumber: 280,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2581,19 +2665,19 @@ function Header() {
                                                         className: "mr-2 h-4 w-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/Header.tsx",
-                                                        lineNumber: 255,
+                                                        lineNumber: 288,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Customize Dashboard"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 254,
+                                                lineNumber: 287,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 253,
+                                            lineNumber: 286,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2605,24 +2689,24 @@ function Header() {
                                                         className: "mr-2 h-4 w-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/Header.tsx",
-                                                        lineNumber: 261,
+                                                        lineNumber: 294,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Settings"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 260,
+                                                lineNumber: 293,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 259,
+                                            lineNumber: 292,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 265,
+                                            lineNumber: 298,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -2633,26 +2717,26 @@ function Header() {
                                                     className: "mr-2 h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/Header.tsx",
-                                                    lineNumber: 267,
+                                                    lineNumber: 300,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Logout"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 266,
+                                            lineNumber: 299,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 240,
+                                    lineNumber: 273,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 231,
+                            lineNumber: 264,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                             onClick: login,
@@ -2662,19 +2746,19 @@ function Header() {
                                     className: "mr-2 h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 274,
+                                    lineNumber: 307,
                                     columnNumber: 15
                                 }, this),
                                 "Login"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 273,
+                            lineNumber: 306,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ThemeToggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ThemeToggle"], {}, void 0, false, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 279,
+                            lineNumber: 312,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$sheet$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Sheet"], {
@@ -2692,17 +2776,17 @@ function Header() {
                                             className: "h-5 w-5"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 285,
+                                            lineNumber: 318,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/Header.tsx",
-                                        lineNumber: 284,
+                                        lineNumber: 317,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 283,
+                                    lineNumber: 316,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$sheet$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SheetContent"], {
@@ -2714,12 +2798,12 @@ function Header() {
                                                 children: "Menu"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/Header.tsx",
-                                                lineNumber: 290,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 289,
+                                            lineNumber: 322,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2738,20 +2822,20 @@ function Header() {
                                                                             alt: user.username
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/components/Header.tsx",
-                                                                            lineNumber: 298,
+                                                                            lineNumber: 331,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AvatarFallback"], {
                                                                             children: (user.firstName?.[0] || user.username?.[0] || 'U').toUpperCase()
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/components/Header.tsx",
-                                                                            lineNumber: 299,
+                                                                            lineNumber: 332,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 297,
+                                                                    lineNumber: 330,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2762,7 +2846,7 @@ function Header() {
                                                                             children: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/components/Header.tsx",
-                                                                            lineNumber: 302,
+                                                                            lineNumber: 335,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2775,7 +2859,7 @@ function Header() {
                                                                                         className: "h-3 w-3 text-primary"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                                        lineNumber: 309,
+                                                                                        lineNumber: 342,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2786,7 +2870,7 @@ function Header() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                                        lineNumber: 310,
+                                                                                        lineNumber: 343,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2798,35 +2882,35 @@ function Header() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                                        lineNumber: 311,
+                                                                                        lineNumber: 344,
                                                                                         columnNumber: 29
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 308,
+                                                                                lineNumber: 341,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/components/Header.tsx",
-                                                                            lineNumber: 307,
+                                                                            lineNumber: 340,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 301,
+                                                                    lineNumber: 334,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 296,
+                                                            lineNumber: 329,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"], {}, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 316,
+                                                            lineNumber: 349,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
@@ -2844,12 +2928,12 @@ function Header() {
                                                                 children: "Categories"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                lineNumber: 323,
+                                                                lineNumber: 356,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 322,
+                                                            lineNumber: 355,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2862,12 +2946,12 @@ function Header() {
                                                                 children: "Discussions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                lineNumber: 332,
+                                                                lineNumber: 365,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 331,
+                                                            lineNumber: 364,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2880,12 +2964,12 @@ function Header() {
                                                                 children: "Broker Reviews"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                lineNumber: 341,
+                                                                lineNumber: 374,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 340,
+                                                            lineNumber: 373,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2898,25 +2982,25 @@ function Header() {
                                                                 children: "Members"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                lineNumber: 350,
+                                                                lineNumber: 383,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 349,
+                                                            lineNumber: 382,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/Header.tsx",
-                                                    lineNumber: 321,
+                                                    lineNumber: 354,
                                                     columnNumber: 17
                                                 }, this),
                                                 isAuthenticated && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"], {}, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 362,
+                                                            lineNumber: 395,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -2934,19 +3018,19 @@ function Header() {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 367,
+                                                                                lineNumber: 400,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             "Dashboard"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                        lineNumber: 366,
+                                                                        lineNumber: 399,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 365,
+                                                                    lineNumber: 398,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2961,19 +3045,19 @@ function Header() {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 373,
+                                                                                lineNumber: 406,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             "Messages"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                        lineNumber: 372,
+                                                                        lineNumber: 405,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 371,
+                                                                    lineNumber: 404,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2988,27 +3072,28 @@ function Header() {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 379,
+                                                                                lineNumber: 412,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             "Notifications",
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                                            unreadCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                                 className: "ml-auto h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs",
-                                                                                children: "3"
+                                                                                "data-testid": "mobile-badge-unread-count",
+                                                                                children: unreadCount
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 381,
-                                                                                columnNumber: 27
+                                                                                lineNumber: 415,
+                                                                                columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                        lineNumber: 378,
+                                                                        lineNumber: 411,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 377,
+                                                                    lineNumber: 410,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3023,30 +3108,30 @@ function Header() {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/components/Header.tsx",
-                                                                                lineNumber: 388,
+                                                                                lineNumber: 423,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             "Settings"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/components/Header.tsx",
-                                                                        lineNumber: 387,
+                                                                        lineNumber: 422,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 386,
+                                                                    lineNumber: 421,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 364,
+                                                            lineNumber: 397,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"], {}, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 393,
+                                                            lineNumber: 428,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3062,14 +3147,14 @@ function Header() {
                                                                     className: "mr-2 h-4 w-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 395,
+                                                                    lineNumber: 430,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "Logout"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 394,
+                                                            lineNumber: 429,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
@@ -3078,7 +3163,7 @@ function Header() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"], {}, void 0, false, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 403,
+                                                            lineNumber: 438,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3092,14 +3177,14 @@ function Header() {
                                                                     className: "mr-2 h-4 w-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/Header.tsx",
-                                                                    lineNumber: 405,
+                                                                    lineNumber: 440,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "Login"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/components/Header.tsx",
-                                                            lineNumber: 404,
+                                                            lineNumber: 439,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
@@ -3107,43 +3192,44 @@ function Header() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/Header.tsx",
-                                            lineNumber: 292,
+                                            lineNumber: 325,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/Header.tsx",
-                                    lineNumber: 288,
+                                    lineNumber: 321,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/Header.tsx",
-                            lineNumber: 282,
+                            lineNumber: 315,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/Header.tsx",
-                    lineNumber: 190,
+                    lineNumber: 203,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/Header.tsx",
-            lineNumber: 84,
+            lineNumber: 97,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/Header.tsx",
-        lineNumber: 83,
+        lineNumber: 96,
         columnNumber: 5
     }, this);
 }
-_s(Header, "kuDCZbYnUKaLVTzJP4PKtPgyFzs=", false, function() {
+_s(Header, "OGE91G1kRTaKYQzAlfadfyxJd/0=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"]
     ];
 });
@@ -5250,10 +5336,8 @@ function ThreadComposeClient({ categories }) {
     const createThreadMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "ThreadComposeClient.useMutation[createThreadMutation]": async (data)=>{
-                return await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/threads", {
-                    method: "POST",
-                    body: JSON.stringify(data)
-                });
+                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("POST", "/api/threads", data);
+                return await res.json();
             }
         }["ThreadComposeClient.useMutation[createThreadMutation]"],
         onSuccess: {
@@ -5327,7 +5411,7 @@ function ThreadComposeClient({ categories }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                lineNumber: 323,
+                                lineNumber: 321,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5343,14 +5427,14 @@ function ThreadComposeClient({ categories }) {
                                                 className: "h-3 w-3 mr-1"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 331,
+                                                lineNumber: 329,
                                                 columnNumber: 17
                                             }, this),
                                             "Copy link"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                        lineNumber: 325,
+                                        lineNumber: 323,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -5363,14 +5447,14 @@ function ThreadComposeClient({ categories }) {
                                                 className: "h-3 w-3 mr-1"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 340,
+                                                lineNumber: 338,
                                                 columnNumber: 17
                                             }, this),
                                             "Share"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                        lineNumber: 334,
+                                        lineNumber: 332,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -5383,26 +5467,26 @@ function ThreadComposeClient({ categories }) {
                                                 className: "h-3 w-3 mr-1"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 349,
+                                                lineNumber: 347,
                                                 columnNumber: 17
                                             }, this),
                                             "Follow"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                        lineNumber: 343,
+                                        lineNumber: 341,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                lineNumber: 324,
+                                lineNumber: 322,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                        lineNumber: 322,
+                        lineNumber: 320,
                         columnNumber: 11
                     }, this),
                     duration: 10000
@@ -5426,10 +5510,11 @@ function ThreadComposeClient({ categories }) {
         }["ThreadComposeClient.useMutation[createThreadMutation]"]
     });
     const onSubmit = async (data)=>{
-        if (!requireAuth()) return;
-        // Add uploaded file URLs to form data
-        data.attachmentUrls = uploadedFiles.map((f)=>f.url);
-        createThreadMutation.mutate(data);
+        requireAuth(()=>{
+            // Add uploaded file URLs to form data
+            data.attachmentUrls = uploadedFiles.map((f)=>f.url);
+            createThreadMutation.mutate(data);
+        });
     };
     const handleFileUpload = async (event)=>{
         const files = event.target.files;
@@ -5460,11 +5545,16 @@ function ThreadComposeClient({ categories }) {
             Array.from(files).forEach((file)=>{
                 formData.append('files', file);
             });
-            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/upload", {
+            const res = await fetch("/api/upload", {
                 method: "POST",
                 body: formData,
-                headers: {}
+                credentials: "include"
             });
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(text || "Upload failed");
+            }
+            const response = await res.json();
             const newFiles = response.urls.map((url, idx)=>({
                     name: files[idx].name,
                     url: url
@@ -5549,7 +5639,7 @@ function ThreadComposeClient({ categories }) {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                lineNumber: 502,
+                lineNumber: 507,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5566,7 +5656,7 @@ function ThreadComposeClient({ categories }) {
                                     children: "Start a Thread"
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                    lineNumber: 506,
+                                    lineNumber: 511,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5574,13 +5664,13 @@ function ThreadComposeClient({ categories }) {
                                     children: "Share your knowledge, ask questions, and connect with traders"
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                    lineNumber: 507,
+                                    lineNumber: 512,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                            lineNumber: 505,
+                            lineNumber: 510,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Form"], {
@@ -5598,20 +5688,20 @@ function ThreadComposeClient({ categories }) {
                                                         children: "Where does this fit?"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 516,
+                                                        lineNumber: 521,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                         children: "Choose the best subcategory for your thread"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 517,
+                                                        lineNumber: 522,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 515,
+                                                lineNumber: 520,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -5636,7 +5726,7 @@ function ThreadComposeClient({ categories }) {
                                                                                         children: sub.name
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 535,
+                                                                                        lineNumber: 540,
                                                                                         columnNumber: 33
                                                                                     }, void 0),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5644,34 +5734,34 @@ function ThreadComposeClient({ categories }) {
                                                                                         children: sub.description
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 536,
+                                                                                        lineNumber: 541,
                                                                                         columnNumber: 33
                                                                                     }, void 0)
                                                                                 ]
                                                                             }, sub.slug, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 527,
+                                                                                lineNumber: 532,
                                                                                 columnNumber: 31
                                                                             }, void 0))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 525,
+                                                                        lineNumber: 530,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 540,
+                                                                        lineNumber: 545,
                                                                         columnNumber: 27
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 524,
+                                                                lineNumber: 529,
                                                                 columnNumber: 25
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 520,
+                                                        lineNumber: 525,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5686,30 +5776,30 @@ function ThreadComposeClient({ categories }) {
                                                                     className: "ml-2 h-4 w-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                    lineNumber: 550,
+                                                                    lineNumber: 555,
                                                                     columnNumber: 30
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                            lineNumber: 545,
+                                                            lineNumber: 550,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 544,
+                                                        lineNumber: 549,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 519,
+                                                lineNumber: 524,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                        lineNumber: 514,
+                                        lineNumber: 519,
                                         columnNumber: 17
                                     }, this),
                                     currentStep === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -5721,20 +5811,20 @@ function ThreadComposeClient({ categories }) {
                                                         children: "What's on your mind?"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 561,
+                                                        lineNumber: 566,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                         children: "Tell your story or ask your question"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 562,
+                                                        lineNumber: 567,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 560,
+                                                lineNumber: 565,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -5749,7 +5839,7 @@ function ThreadComposeClient({ categories }) {
                                                                         children: "Title"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 571,
+                                                                        lineNumber: 576,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -5759,12 +5849,12 @@ function ThreadComposeClient({ categories }) {
                                                                             "data-testid": "input-title"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 573,
+                                                                            lineNumber: 578,
                                                                             columnNumber: 29
                                                                         }, void 0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 572,
+                                                                        lineNumber: 577,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5774,7 +5864,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "Short and clear works best"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 580,
+                                                                                lineNumber: 585,
                                                                                 columnNumber: 29
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5785,29 +5875,29 @@ function ThreadComposeClient({ categories }) {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 581,
+                                                                                lineNumber: 586,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 579,
+                                                                        lineNumber: 584,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 583,
+                                                                        lineNumber: 588,
                                                                         columnNumber: 27
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 570,
+                                                                lineNumber: 575,
                                                                 columnNumber: 25
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 566,
+                                                        lineNumber: 571,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -5819,7 +5909,7 @@ function ThreadComposeClient({ categories }) {
                                                                         children: "Body"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 594,
+                                                                        lineNumber: 599,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -5830,12 +5920,12 @@ function ThreadComposeClient({ categories }) {
                                                                             "data-testid": "textarea-body"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 596,
+                                                                            lineNumber: 601,
                                                                             columnNumber: 29
                                                                         }, void 0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 595,
+                                                                        lineNumber: 600,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5845,7 +5935,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "Share the basics: pair, timeframe, broker, your rules/results, and what you need"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 604,
+                                                                                lineNumber: 609,
                                                                                 columnNumber: 29
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5856,29 +5946,29 @@ function ThreadComposeClient({ categories }) {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 605,
+                                                                                lineNumber: 610,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 603,
+                                                                        lineNumber: 608,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 607,
+                                                                        lineNumber: 612,
                                                                         columnNumber: 27
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 593,
+                                                                lineNumber: 598,
                                                                 columnNumber: 25
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 589,
+                                                        lineNumber: 594,
                                                         columnNumber: 21
                                                     }, this),
                                                     suggestedTags.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5889,7 +5979,7 @@ function ThreadComposeClient({ categories }) {
                                                                 children: "Looks right?"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 615,
+                                                                lineNumber: 620,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5910,19 +6000,19 @@ function ThreadComposeClient({ categories }) {
                                                                         children: tag.toUpperCase()
                                                                     }, tag, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 629,
+                                                                        lineNumber: 634,
                                                                         columnNumber: 31
                                                                     }, this);
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 616,
+                                                                lineNumber: 621,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 614,
+                                                        lineNumber: 619,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Accordion"], {
@@ -5936,7 +6026,7 @@ function ThreadComposeClient({ categories }) {
                                                                     children: "Add details (optional)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                    lineNumber: 647,
+                                                                    lineNumber: 652,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AccordionContent"], {
@@ -5951,7 +6041,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Instruments"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 657,
+                                                                                            lineNumber: 662,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5964,23 +6054,23 @@ function ThreadComposeClient({ categories }) {
                                                                                                     children: inst.label
                                                                                                 }, inst.value, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 660,
+                                                                                                    lineNumber: 665,
                                                                                                     columnNumber: 37
                                                                                                 }, void 0))
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 658,
+                                                                                            lineNumber: 663,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 656,
+                                                                                    lineNumber: 661,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 652,
+                                                                            lineNumber: 657,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -5992,7 +6082,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Timeframes"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 681,
+                                                                                            lineNumber: 686,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6005,23 +6095,23 @@ function ThreadComposeClient({ categories }) {
                                                                                                     children: tf.label
                                                                                                 }, tf.value, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 684,
+                                                                                                    lineNumber: 689,
                                                                                                     columnNumber: 37
                                                                                                 }, void 0))
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 682,
+                                                                                            lineNumber: 687,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 680,
+                                                                                    lineNumber: 685,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 676,
+                                                                            lineNumber: 681,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6033,7 +6123,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Strategies"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 705,
+                                                                                            lineNumber: 710,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6046,23 +6136,23 @@ function ThreadComposeClient({ categories }) {
                                                                                                     children: strat.label
                                                                                                 }, strat.value, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 708,
+                                                                                                    lineNumber: 713,
                                                                                                     columnNumber: 37
                                                                                                 }, void 0))
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 706,
+                                                                                            lineNumber: 711,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 704,
+                                                                                    lineNumber: 709,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 700,
+                                                                            lineNumber: 705,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6074,7 +6164,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Platform"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 729,
+                                                                                            lineNumber: 734,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -6088,17 +6178,17 @@ function ThreadComposeClient({ categories }) {
                                                                                                             placeholder: "Select platform"
                                                                                                         }, void 0, false, {
                                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                            lineNumber: 733,
+                                                                                                            lineNumber: 738,
                                                                                                             columnNumber: 39
                                                                                                         }, void 0)
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                        lineNumber: 732,
+                                                                                                        lineNumber: 737,
                                                                                                         columnNumber: 37
                                                                                                     }, void 0)
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 731,
+                                                                                                    lineNumber: 736,
                                                                                                     columnNumber: 35
                                                                                                 }, void 0),
                                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -6107,29 +6197,29 @@ function ThreadComposeClient({ categories }) {
                                                                                                             children: plat.label
                                                                                                         }, plat.value, false, {
                                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                            lineNumber: 738,
+                                                                                                            lineNumber: 743,
                                                                                                             columnNumber: 39
                                                                                                         }, void 0))
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 736,
+                                                                                                    lineNumber: 741,
                                                                                                     columnNumber: 35
                                                                                                 }, void 0)
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 730,
+                                                                                            lineNumber: 735,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 728,
+                                                                                    lineNumber: 733,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 724,
+                                                                            lineNumber: 729,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6141,7 +6231,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Broker"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 754,
+                                                                                            lineNumber: 759,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         brokersLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6151,14 +6241,14 @@ function ThreadComposeClient({ categories }) {
                                                                                                     className: "h-4 w-4 animate-spin"
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 757,
+                                                                                                    lineNumber: 762,
                                                                                                     columnNumber: 37
                                                                                                 }, void 0),
                                                                                                 "Loading brokers..."
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 756,
+                                                                                            lineNumber: 761,
                                                                                             columnNumber: 35
                                                                                         }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                                                                             children: [
@@ -6181,17 +6271,17 @@ function ThreadComposeClient({ categories }) {
                                                                                                                     placeholder: "Select broker"
                                                                                                                 }, void 0, false, {
                                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                                    lineNumber: 776,
+                                                                                                                    lineNumber: 781,
                                                                                                                     columnNumber: 43
                                                                                                                 }, void 0)
                                                                                                             }, void 0, false, {
                                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                                lineNumber: 775,
+                                                                                                                lineNumber: 780,
                                                                                                                 columnNumber: 41
                                                                                                             }, void 0)
                                                                                                         }, void 0, false, {
                                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                            lineNumber: 774,
+                                                                                                            lineNumber: 779,
                                                                                                             columnNumber: 39
                                                                                                         }, void 0),
                                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -6202,7 +6292,7 @@ function ThreadComposeClient({ categories }) {
                                                                                                                             children: broker.name
                                                                                                                         }, broker.id, false, {
                                                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                                            lineNumber: 783,
+                                                                                                                            lineNumber: 788,
                                                                                                                             columnNumber: 47
                                                                                                                         }, void 0)),
                                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6210,7 +6300,7 @@ function ThreadComposeClient({ categories }) {
                                                                                                                         children: "Other (add new broker)"
                                                                                                                     }, void 0, false, {
                                                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                                        lineNumber: 787,
+                                                                                                                        lineNumber: 792,
                                                                                                                         columnNumber: 45
                                                                                                                     }, void 0)
                                                                                                                 ]
@@ -6219,18 +6309,18 @@ function ThreadComposeClient({ categories }) {
                                                                                                                 children: "Other (add new broker)"
                                                                                                             }, void 0, false, {
                                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                                lineNumber: 790,
+                                                                                                                lineNumber: 795,
                                                                                                                 columnNumber: 43
                                                                                                             }, void 0)
                                                                                                         }, void 0, false, {
                                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                            lineNumber: 779,
+                                                                                                            lineNumber: 784,
                                                                                                             columnNumber: 39
                                                                                                         }, void 0)
                                                                                                     ]
                                                                                                 }, void 0, true, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 762,
+                                                                                                    lineNumber: 767,
                                                                                                     columnNumber: 37
                                                                                                 }, void 0),
                                                                                                 showCustomBroker && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6244,12 +6334,12 @@ function ThreadComposeClient({ categories }) {
                                                                                                         className: "mt-2"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                        lineNumber: 796,
+                                                                                                        lineNumber: 801,
                                                                                                         columnNumber: 41
                                                                                                     }, void 0)
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                    lineNumber: 795,
+                                                                                                    lineNumber: 800,
                                                                                                     columnNumber: 39
                                                                                                 }, void 0)
                                                                                             ]
@@ -6257,12 +6347,12 @@ function ThreadComposeClient({ categories }) {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 753,
+                                                                                    lineNumber: 758,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 749,
+                                                                            lineNumber: 754,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6274,7 +6364,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Risk Note"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 819,
+                                                                                            lineNumber: 824,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6284,40 +6374,40 @@ function ThreadComposeClient({ categories }) {
                                                                                                 "data-testid": "input-risk-note"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 821,
+                                                                                                lineNumber: 826,
                                                                                                 columnNumber: 35
                                                                                             }, void 0)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 820,
+                                                                                            lineNumber: 825,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 818,
+                                                                                    lineNumber: 823,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 814,
+                                                                            lineNumber: 819,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                    lineNumber: 650,
+                                                                    lineNumber: 655,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                            lineNumber: 646,
+                                                            lineNumber: 651,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 645,
+                                                        lineNumber: 650,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6333,14 +6423,14 @@ function ThreadComposeClient({ categories }) {
                                                                         className: "mr-2 h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 842,
+                                                                        lineNumber: 847,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     " Back"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 836,
+                                                                lineNumber: 841,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -6354,31 +6444,31 @@ function ThreadComposeClient({ categories }) {
                                                                         className: "ml-2 h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 851,
+                                                                        lineNumber: 856,
                                                                         columnNumber: 30
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 845,
+                                                                lineNumber: 850,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 834,
+                                                        lineNumber: 839,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 564,
+                                                lineNumber: 569,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                        lineNumber: 559,
+                                        lineNumber: 564,
                                         columnNumber: 17
                                     }, this),
                                     currentStep === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -6390,20 +6480,20 @@ function ThreadComposeClient({ categories }) {
                                                         children: "Finish up"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 862,
+                                                        lineNumber: 867,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                         children: "Choose thread type and add final details"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 863,
+                                                        lineNumber: 868,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 861,
+                                                lineNumber: 866,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -6418,7 +6508,7 @@ function ThreadComposeClient({ categories }) {
                                                                         children: "Thread Type"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 872,
+                                                                        lineNumber: 877,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6436,7 +6526,7 @@ function ThreadComposeClient({ categories }) {
                                                                                         className: "h-6 w-6"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 885,
+                                                                                        lineNumber: 890,
                                                                                         columnNumber: 35
                                                                                     }, void 0),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6444,7 +6534,7 @@ function ThreadComposeClient({ categories }) {
                                                                                         children: type.label
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 886,
+                                                                                        lineNumber: 891,
                                                                                         columnNumber: 35
                                                                                     }, void 0),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6452,35 +6542,35 @@ function ThreadComposeClient({ categories }) {
                                                                                         children: type.description
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 887,
+                                                                                        lineNumber: 892,
                                                                                         columnNumber: 35
                                                                                     }, void 0)
                                                                                 ]
                                                                             }, type.value, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 877,
+                                                                                lineNumber: 882,
                                                                                 columnNumber: 33
                                                                             }, void 0);
                                                                         })
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 873,
+                                                                        lineNumber: 878,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 892,
+                                                                        lineNumber: 897,
                                                                         columnNumber: 27
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 871,
+                                                                lineNumber: 876,
                                                                 columnNumber: 25
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 867,
+                                                        lineNumber: 872,
                                                         columnNumber: 21
                                                     }, this),
                                                     watchedThreadType === "question" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6492,7 +6582,7 @@ function ThreadComposeClient({ categories }) {
                                                                         children: "What do you want solved?"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 904,
+                                                                        lineNumber: 909,
                                                                         columnNumber: 29
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6503,28 +6593,28 @@ function ThreadComposeClient({ categories }) {
                                                                             "data-testid": "textarea-question-summary"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 906,
+                                                                            lineNumber: 911,
                                                                             columnNumber: 31
                                                                         }, void 0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 905,
+                                                                        lineNumber: 910,
                                                                         columnNumber: 29
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 913,
+                                                                        lineNumber: 918,
                                                                         columnNumber: 29
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 903,
+                                                                lineNumber: 908,
                                                                 columnNumber: 27
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 899,
+                                                        lineNumber: 904,
                                                         columnNumber: 23
                                                     }, this),
                                                     watchedThreadType === "review" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6539,7 +6629,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "What are you reviewing? *"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 927,
+                                                                                lineNumber: 932,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6549,28 +6639,28 @@ function ThreadComposeClient({ categories }) {
                                                                                     "data-testid": "input-review-target"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 929,
+                                                                                    lineNumber: 934,
                                                                                     columnNumber: 33
                                                                                 }, void 0)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 928,
+                                                                                lineNumber: 933,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 935,
+                                                                                lineNumber: 940,
                                                                                 columnNumber: 31
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 926,
+                                                                        lineNumber: 931,
                                                                         columnNumber: 29
                                                                     }, void 0)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 922,
+                                                                lineNumber: 927,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6582,7 +6672,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "Version (optional)"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 945,
+                                                                                lineNumber: 950,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6592,23 +6682,23 @@ function ThreadComposeClient({ categories }) {
                                                                                     "data-testid": "input-review-version"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 947,
+                                                                                    lineNumber: 952,
                                                                                     columnNumber: 33
                                                                                 }, void 0)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 946,
+                                                                                lineNumber: 951,
                                                                                 columnNumber: 31
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 944,
+                                                                        lineNumber: 949,
                                                                         columnNumber: 29
                                                                     }, void 0)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 940,
+                                                                lineNumber: 945,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6620,7 +6710,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "Rating (1-5 stars) *"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 962,
+                                                                                lineNumber: 967,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6641,33 +6731,33 @@ function ThreadComposeClient({ categories }) {
                                                                                             className: `h-4 w-4 ${field.value && field.value >= rating ? "fill-current" : ""}`
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 973,
+                                                                                            lineNumber: 978,
                                                                                             columnNumber: 37
                                                                                         }, void 0)
                                                                                     }, rating, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 965,
+                                                                                        lineNumber: 970,
                                                                                         columnNumber: 35
                                                                                     }, void 0))
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 963,
+                                                                                lineNumber: 968,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 977,
+                                                                                lineNumber: 982,
                                                                                 columnNumber: 31
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 961,
+                                                                        lineNumber: 966,
                                                                         columnNumber: 29
                                                                     }, void 0)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 957,
+                                                                lineNumber: 962,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6679,7 +6769,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "Pros (optional)"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 988,
+                                                                                lineNumber: 993,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6701,7 +6791,7 @@ function ThreadComposeClient({ categories }) {
                                                                                                 }
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 991,
+                                                                                                lineNumber: 996,
                                                                                                 columnNumber: 35
                                                                                             }, void 0),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -6711,13 +6801,13 @@ function ThreadComposeClient({ categories }) {
                                                                                                 children: "Add"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1003,
+                                                                                                lineNumber: 1008,
                                                                                                 columnNumber: 35
                                                                                             }, void 0)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 990,
+                                                                                        lineNumber: 995,
                                                                                         columnNumber: 33
                                                                                     }, void 0),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6735,35 +6825,35 @@ function ThreadComposeClient({ categories }) {
                                                                                                         }
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                        lineNumber: 1011,
+                                                                                                        lineNumber: 1016,
                                                                                                         columnNumber: 39
                                                                                                     }, void 0)
                                                                                                 ]
                                                                                             }, idx, true, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1009,
+                                                                                                lineNumber: 1014,
                                                                                                 columnNumber: 37
                                                                                             }, void 0))
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1007,
+                                                                                        lineNumber: 1012,
                                                                                         columnNumber: 33
                                                                                     }, void 0)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 989,
+                                                                                lineNumber: 994,
                                                                                 columnNumber: 31
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 987,
+                                                                        lineNumber: 992,
                                                                         columnNumber: 29
                                                                     }, void 0)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 983,
+                                                                lineNumber: 988,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6775,7 +6865,7 @@ function ThreadComposeClient({ categories }) {
                                                                                 children: "Cons (optional)"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1031,
+                                                                                lineNumber: 1036,
                                                                                 columnNumber: 31
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6797,7 +6887,7 @@ function ThreadComposeClient({ categories }) {
                                                                                                 }
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1034,
+                                                                                                lineNumber: 1039,
                                                                                                 columnNumber: 35
                                                                                             }, void 0),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -6807,13 +6897,13 @@ function ThreadComposeClient({ categories }) {
                                                                                                 children: "Add"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1046,
+                                                                                                lineNumber: 1051,
                                                                                                 columnNumber: 35
                                                                                             }, void 0)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1033,
+                                                                                        lineNumber: 1038,
                                                                                         columnNumber: 33
                                                                                     }, void 0),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6831,41 +6921,41 @@ function ThreadComposeClient({ categories }) {
                                                                                                         }
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                        lineNumber: 1054,
+                                                                                                        lineNumber: 1059,
                                                                                                         columnNumber: 39
                                                                                                     }, void 0)
                                                                                                 ]
                                                                                             }, idx, true, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1052,
+                                                                                                lineNumber: 1057,
                                                                                                 columnNumber: 37
                                                                                             }, void 0))
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1050,
+                                                                                        lineNumber: 1055,
                                                                                         columnNumber: 33
                                                                                     }, void 0)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1032,
+                                                                                lineNumber: 1037,
                                                                                 columnNumber: 31
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1030,
+                                                                        lineNumber: 1035,
                                                                         columnNumber: 29
                                                                     }, void 0)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1026,
+                                                                lineNumber: 1031,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 921,
+                                                        lineNumber: 926,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Accordion"], {
@@ -6879,7 +6969,7 @@ function ThreadComposeClient({ categories }) {
                                                                     children: "Help others find this (optional)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                    lineNumber: 1073,
+                                                                    lineNumber: 1078,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$accordion$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AccordionContent"], {
@@ -6894,7 +6984,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "Primary Keyword (1-6 words)"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1082,
+                                                                                            lineNumber: 1087,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6904,30 +6994,30 @@ function ThreadComposeClient({ categories }) {
                                                                                                 "data-testid": "input-primary-keyword"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1084,
+                                                                                                lineNumber: 1089,
                                                                                                 columnNumber: 35
                                                                                             }, void 0)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1083,
+                                                                                            lineNumber: 1088,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormDescription"], {
                                                                                             children: "Short phrase that describes your topic"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1090,
+                                                                                            lineNumber: 1095,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 1081,
+                                                                                    lineNumber: 1086,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 1077,
+                                                                            lineNumber: 1082,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -6939,7 +7029,7 @@ function ThreadComposeClient({ categories }) {
                                                                                             children: "SEO Excerpt (120-160 chars)"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1100,
+                                                                                            lineNumber: 1105,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -6950,12 +7040,12 @@ function ThreadComposeClient({ categories }) {
                                                                                                 "data-testid": "textarea-seo-excerpt"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1102,
+                                                                                                lineNumber: 1107,
                                                                                                 columnNumber: 35
                                                                                             }, void 0)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1101,
+                                                                                            lineNumber: 1106,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormDescription"], {
@@ -6965,40 +7055,40 @@ function ThreadComposeClient({ categories }) {
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1109,
+                                                                                            lineNumber: 1114,
                                                                                             columnNumber: 33
                                                                                         }, void 0),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1112,
+                                                                                            lineNumber: 1117,
                                                                                             columnNumber: 33
                                                                                         }, void 0)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                    lineNumber: 1099,
+                                                                                    lineNumber: 1104,
                                                                                     columnNumber: 31
                                                                                 }, void 0)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                            lineNumber: 1095,
+                                                                            lineNumber: 1100,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                    lineNumber: 1076,
+                                                                    lineNumber: 1081,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                            lineNumber: 1072,
+                                                            lineNumber: 1077,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 1071,
+                                                        lineNumber: 1076,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormField"], {
@@ -7010,7 +7100,7 @@ function ThreadComposeClient({ categories }) {
                                                                         children: "Hashtags (max 10)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1126,
+                                                                        lineNumber: 1131,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7032,7 +7122,7 @@ function ThreadComposeClient({ categories }) {
                                                                                         }
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1129,
+                                                                                        lineNumber: 1134,
                                                                                         columnNumber: 31
                                                                                     }, void 0),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -7042,13 +7132,13 @@ function ThreadComposeClient({ categories }) {
                                                                                         children: "Add"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1141,
+                                                                                        lineNumber: 1146,
                                                                                         columnNumber: 31
                                                                                     }, void 0)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1128,
+                                                                                lineNumber: 1133,
                                                                                 columnNumber: 29
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7065,40 +7155,40 @@ function ThreadComposeClient({ categories }) {
                                                                                                 onClick: ()=>removeHashtag(tag)
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1149,
+                                                                                                lineNumber: 1154,
                                                                                                 columnNumber: 35
                                                                                             }, void 0)
                                                                                         ]
                                                                                     }, idx, true, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1147,
+                                                                                        lineNumber: 1152,
                                                                                         columnNumber: 33
                                                                                     }, void 0))
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1145,
+                                                                                lineNumber: 1150,
                                                                                 columnNumber: 29
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1127,
+                                                                        lineNumber: 1132,
                                                                         columnNumber: 27
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1157,
+                                                                        lineNumber: 1162,
                                                                         columnNumber: 27
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1125,
+                                                                lineNumber: 1130,
                                                                 columnNumber: 25
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 1121,
+                                                        lineNumber: 1126,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7108,7 +7198,7 @@ function ThreadComposeClient({ categories }) {
                                                                 children: "Attachments (optional)"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1164,
+                                                                lineNumber: 1169,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7127,20 +7217,20 @@ function ThreadComposeClient({ categories }) {
                                                                                 "data-testid": "input-file-upload"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1167,
+                                                                                lineNumber: 1172,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             isUploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
                                                                                 className: "h-4 w-4 animate-spin"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1176,
+                                                                                lineNumber: 1181,
                                                                                 columnNumber: 43
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1166,
+                                                                        lineNumber: 1171,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7148,7 +7238,7 @@ function ThreadComposeClient({ categories }) {
                                                                         children: "Screenshots, PDFs, SET files, CSV. Max 5MB each, 10 files total."
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1178,
+                                                                        lineNumber: 1183,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     uploadedFiles.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7164,7 +7254,7 @@ function ThreadComposeClient({ categories }) {
                                                                                                 className: "h-4 w-4 text-muted-foreground"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1191,
+                                                                                                lineNumber: 1196,
                                                                                                 columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -7172,20 +7262,20 @@ function ThreadComposeClient({ categories }) {
                                                                                                 children: file.name
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1192,
+                                                                                                lineNumber: 1197,
                                                                                                 columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
                                                                                                 className: "h-4 w-4 text-green-500"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                                lineNumber: 1193,
+                                                                                                lineNumber: 1198,
                                                                                                 columnNumber: 35
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1190,
+                                                                                        lineNumber: 1195,
                                                                                         columnNumber: 33
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -7198,35 +7288,35 @@ function ThreadComposeClient({ categories }) {
                                                                                             className: "h-4 w-4"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                            lineNumber: 1202,
+                                                                                            lineNumber: 1207,
                                                                                             columnNumber: 35
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                        lineNumber: 1195,
+                                                                                        lineNumber: 1200,
                                                                                         columnNumber: 33
                                                                                     }, this)
                                                                                 ]
                                                                             }, idx, true, {
                                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                                lineNumber: 1185,
+                                                                                lineNumber: 1190,
                                                                                 columnNumber: 31
                                                                             }, this))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1183,
+                                                                        lineNumber: 1188,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1165,
+                                                                lineNumber: 1170,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 1163,
+                                                        lineNumber: 1168,
                                                         columnNumber: 21
                                                     }, this),
                                                     totalTags > 12 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Alert"], {
@@ -7236,7 +7326,7 @@ function ThreadComposeClient({ categories }) {
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1214,
+                                                                lineNumber: 1219,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDescription"], {
@@ -7249,13 +7339,13 @@ function ThreadComposeClient({ categories }) {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1215,
+                                                                lineNumber: 1220,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 1213,
+                                                        lineNumber: 1218,
                                                         columnNumber: 23
                                                     }, this),
                                                     totalTags > 0 && totalTags <= 12 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7268,7 +7358,7 @@ function ThreadComposeClient({ categories }) {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 1222,
+                                                        lineNumber: 1227,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7284,14 +7374,14 @@ function ThreadComposeClient({ categories }) {
                                                                         className: "mr-2 h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                        lineNumber: 1234,
+                                                                        lineNumber: 1239,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     " Back"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1228,
+                                                                lineNumber: 1233,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -7301,57 +7391,57 @@ function ThreadComposeClient({ categories }) {
                                                                 children: createThreadMutation.isPending ? "Posting..." : "Post Thread"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                                lineNumber: 1236,
+                                                                lineNumber: 1241,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                        lineNumber: 1227,
+                                                        lineNumber: 1232,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                                lineNumber: 865,
+                                                lineNumber: 870,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                        lineNumber: 860,
+                                        lineNumber: 865,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                                lineNumber: 511,
+                                lineNumber: 516,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                            lineNumber: 510,
+                            lineNumber: 515,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                    lineNumber: 504,
+                    lineNumber: 509,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                lineNumber: 503,
+                lineNumber: 508,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$EnhancedFooter$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                lineNumber: 1251,
+                lineNumber: 1256,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AuthPrompt, {}, void 0, false, {
                 fileName: "[project]/app/discussions/new/ThreadComposeClient.tsx",
-                lineNumber: 1252,
+                lineNumber: 1257,
                 columnNumber: 7
             }, this)
         ]

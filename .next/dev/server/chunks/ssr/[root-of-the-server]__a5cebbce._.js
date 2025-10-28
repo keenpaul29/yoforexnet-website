@@ -196,7 +196,7 @@ async function generateStaticParams() {
         }));
 }
 async function generateMetadata({ params }) {
-    const { slug } = params;
+    const { slug } = await params;
     // Title map for better SEO
     const titleMap = {
         'forum-rules': 'Forum Rules - YoForex Community Guidelines',
@@ -235,7 +235,7 @@ function extractTitle(markdown) {
     return match ? match[1] : 'Guide';
 }
 async function GuidePage({ params }) {
-    const { slug } = params;
+    const { slug } = await params;
     // Check if guide exists
     if (!AVAILABLE_GUIDES.includes(slug)) {
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$components$2f$navigation$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["notFound"])();

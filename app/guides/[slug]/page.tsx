@@ -10,9 +10,9 @@ import Header from '@/components/Header';
 import EnhancedFooter from '@/components/EnhancedFooter';
 
 interface GuidePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // List of available guides
@@ -43,7 +43,7 @@ export async function generateStaticParams() {
 
 // Generate metadata for each guide page
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   
   // Title map for better SEO
   const titleMap: Record<string, string> = {
@@ -88,7 +88,7 @@ function extractTitle(markdown: string): string {
 }
 
 export default async function GuidePage({ params }: GuidePageProps) {
-  const { slug } = params;
+  const { slug } = await params;
 
   // Check if guide exists
   if (!AVAILABLE_GUIDES.includes(slug)) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Form,
   FormControl,
@@ -22,18 +23,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Star, Coins, AlertTriangle, Plus } from "lucide-react";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Star, Coins, AlertTriangle, Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import Link from "next/link";
 import slugify from "slugify";
+import { cn } from "@/lib/utils";
 
 const reviewSchema = z.object({
   brokerId: z.string().min(1, "Please select a broker"),
@@ -49,27 +57,29 @@ interface SubmitBrokerReviewClientProps {
   initialBrokers: any[];
 }
 
-const ADD_NEW_BROKER_VALUE = "__add_new_broker__";
+interface BrokerSearchResult {
+  id: string;
+  name: string;
+  slug: string;
+  websiteUrl: string | null;
+  logoUrl: string | null;
+  isVerified: boolean;
+  overallRating: number | null;
+  reviewCount: number;
+}
 
 export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBrokerReviewClientProps) {
   const { toast } = useToast();
   const [selectedRating, setSelectedRating] = useState(0);
   const [isAddingNewBroker, setIsAddingNewBroker] = useState(false);
   const [newBrokerName, setNewBrokerName] = useState("");
-  const [createdBrokerId, setCreatedBrokerId] = useState<string | null>(null);
-
-  // Fetch fresh broker list
-  const { data: brokers = initialBrokers, isLoading: isBrokersLoading } = useQuery({
-    queryKey: ["/api/brokers"],
-    queryFn: async () => {
-      const response = await fetch("/api/brokers");
-      if (!response.ok) {
-        throw new Error("Failed to fetch brokers");
-      }
-      return response.json();
-    },
-    initialData: initialBrokers,
-  });
+  const [newBrokerWebsite, setNewBrokerWebsite] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<BrokerSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedBroker, setSelectedBroker] = useState<BrokerSearchResult | null>(null);
+  const [open, setOpen] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   const form = useForm<ReviewFormData>({
     resolver: zodResolver(reviewSchema),
@@ -82,26 +92,78 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
     },
   });
 
-  // Mutation to create new broker
+  // Debounced search function
+  useEffect(() => {
+    const debounceTimer = setTimeout(async () => {
+      if (searchQuery.trim().length >= 2) {
+        setIsSearching(true);
+        try {
+          const response = await fetch(`/api/brokers/search?q=${encodeURIComponent(searchQuery)}`);
+          const data = await response.json();
+          setSearchResults(data.brokers || []);
+        } catch (error) {
+          console.error('Search error:', error);
+          setSearchResults([]);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery]);
+
+  // Mutation to create new broker with logo
   const createBrokerMutation = useMutation({
-    mutationFn: async (name: string) => {
-      const slug = slugify(name, { lower: true, strict: true });
+    mutationFn: async (data: { name: string; websiteUrl?: string }) => {
+      const slug = slugify(data.name, { lower: true, strict: true });
+      
+      // Fetch logo if website URL is provided
+      let fetchedLogoUrl = null;
+      if (data.websiteUrl) {
+        try {
+          const logoResponse = await apiRequest("POST", "/api/brokers/fetch-logo", {
+            websiteUrl: data.websiteUrl,
+            brokerName: data.name,
+          });
+          const logoData = await logoResponse.json();
+          fetchedLogoUrl = logoData.logoUrl;
+        } catch (error) {
+          console.error('Logo fetch error:', error);
+        }
+      }
+
       const response = await apiRequest("POST", "/api/brokers", {
-        name,
+        name: data.name,
         slug,
+        websiteUrl: data.websiteUrl || null,
+        logoUrl: fetchedLogoUrl,
         status: "pending",
       });
       return response.json();
     },
     onSuccess: (newBroker: any) => {
-      setCreatedBrokerId(newBroker.id);
+      setSelectedBroker({
+        id: newBroker.id,
+        name: newBroker.name,
+        slug: newBroker.slug,
+        websiteUrl: newBroker.websiteUrl,
+        logoUrl: newBroker.logoUrl,
+        isVerified: false,
+        overallRating: null,
+        reviewCount: 0,
+      });
+      setLogoUrl(newBroker.logoUrl);
       form.setValue("brokerId", newBroker.id);
       setIsAddingNewBroker(false);
+      setNewBrokerName("");
+      setNewBrokerWebsite("");
       toast({
         title: "Broker Added",
         description: `${newBroker.name} has been added to the list.`,
       });
-      // Invalidate and refetch broker list
       queryClient.invalidateQueries({ queryKey: ["/api/brokers"] });
     },
     onError: (error: Error) => {
@@ -127,7 +189,10 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
       form.reset();
       setSelectedRating(0);
       setNewBrokerName("");
-      setCreatedBrokerId(null);
+      setNewBrokerWebsite("");
+      setSelectedBroker(null);
+      setSearchQuery("");
+      setLogoUrl(null);
       setIsAddingNewBroker(false);
     },
     onError: (error: Error) => {
@@ -139,14 +204,12 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
     },
   });
 
-  const handleBrokerSelection = (value: string) => {
-    if (value === ADD_NEW_BROKER_VALUE) {
-      setIsAddingNewBroker(true);
-      form.setValue("brokerId", "");
-    } else {
-      setIsAddingNewBroker(false);
-      form.setValue("brokerId", value);
-    }
+  const handleBrokerSelect = (broker: BrokerSearchResult) => {
+    setSelectedBroker(broker);
+    setLogoUrl(broker.logoUrl);
+    form.setValue("brokerId", broker.id);
+    setOpen(false);
+    setSearchQuery(broker.name);
   };
 
   const handleAddNewBroker = () => {
@@ -158,7 +221,10 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
       });
       return;
     }
-    createBrokerMutation.mutate(newBrokerName.trim());
+    createBrokerMutation.mutate({
+      name: newBrokerName.trim(),
+      websiteUrl: newBrokerWebsite.trim() || undefined,
+    });
   };
 
   const onSubmit = (data: ReviewFormData) => {
@@ -210,37 +276,136 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
                       control={form.control}
                       name="brokerId"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="flex flex-col">
                           <FormLabel>Select Broker</FormLabel>
                           
                           {!isAddingNewBroker ? (
-                            <Select 
-                              onValueChange={handleBrokerSelection} 
-                              value={field.value || undefined}
-                              disabled={isBrokersLoading}
-                            >
-                              <FormControl>
-                                <SelectTrigger data-testid="select-broker">
-                                  <SelectValue placeholder={isBrokersLoading ? "Loading brokers..." : "Choose a broker..."} />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {brokers.map((broker: any) => (
-                                  <SelectItem key={broker.id} value={broker.id}>
-                                    {broker.name}
-                                  </SelectItem>
-                                ))}
-                                <SelectItem value={ADD_NEW_BROKER_VALUE}>
-                                  <div className="flex items-center gap-2 font-semibold text-primary">
-                                    <Plus className="h-4 w-4" />
-                                    Add New Broker
+                            <>
+                              <Popover open={open} onOpenChange={setOpen}>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button
+                                      variant="outline"
+                                      role="combobox"
+                                      aria-expanded={open}
+                                      className={cn(
+                                        "w-full justify-between",
+                                        !selectedBroker && "text-muted-foreground"
+                                      )}
+                                      data-testid="button-select-broker"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        {selectedBroker && logoUrl && (
+                                          <Avatar className="h-5 w-5">
+                                            <AvatarImage src={logoUrl} alt={selectedBroker.name} />
+                                            <AvatarFallback>{selectedBroker.name.charAt(0)}</AvatarFallback>
+                                          </Avatar>
+                                        )}
+                                        <span className="truncate">
+                                          {selectedBroker ? selectedBroker.name : "Search for a broker..."}
+                                        </span>
+                                      </div>
+                                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-[400px] p-0" align="start">
+                                  <Command shouldFilter={false}>
+                                    <CommandInput
+                                      placeholder="Type to search brokers..."
+                                      value={searchQuery}
+                                      onValueChange={setSearchQuery}
+                                      data-testid="input-broker-search"
+                                    />
+                                    <CommandList>
+                                      {isSearching ? (
+                                        <div className="flex items-center justify-center py-6">
+                                          <Loader2 className="h-4 w-4 animate-spin" />
+                                          <span className="ml-2 text-sm text-muted-foreground">Searching...</span>
+                                        </div>
+                                      ) : searchResults.length > 0 ? (
+                                        <CommandGroup heading="Brokers">
+                                          {searchResults.map((broker) => (
+                                            <CommandItem
+                                              key={broker.id}
+                                              value={broker.name}
+                                              onSelect={() => handleBrokerSelect(broker)}
+                                              data-testid={`broker-option-${broker.id}`}
+                                            >
+                                              <div className="flex items-center gap-3 w-full">
+                                                <Avatar className="h-8 w-8">
+                                                  <AvatarImage src={broker.logoUrl || undefined} alt={broker.name} />
+                                                  <AvatarFallback>{broker.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-1 min-w-0">
+                                                  <div className="flex items-center gap-2">
+                                                    <p className="font-medium truncate">{broker.name}</p>
+                                                    {broker.isVerified && (
+                                                      <Badge variant="secondary" className="text-xs">
+                                                        Verified
+                                                      </Badge>
+                                                    )}
+                                                  </div>
+                                                  {broker.reviewCount > 0 && (
+                                                    <p className="text-xs text-muted-foreground">
+                                                      {broker.reviewCount} reviews
+                                                    </p>
+                                                  )}
+                                                </div>
+                                                {selectedBroker?.id === broker.id && (
+                                                  <Check className="h-4 w-4" />
+                                                )}
+                                              </div>
+                                            </CommandItem>
+                                          ))}
+                                        </CommandGroup>
+                                      ) : searchQuery.length >= 2 ? (
+                                        <CommandEmpty>
+                                          <div className="text-center py-6">
+                                            <p className="text-sm text-muted-foreground mb-4">
+                                              No broker found with name "{searchQuery}"
+                                            </p>
+                                            <Button
+                                              type="button"
+                                              variant="outline"
+                                              size="sm"
+                                              onClick={() => {
+                                                setNewBrokerName(searchQuery);
+                                                setIsAddingNewBroker(true);
+                                                setOpen(false);
+                                              }}
+                                              data-testid="button-add-new-from-search"
+                                            >
+                                              Add "{searchQuery}" as new broker
+                                            </Button>
+                                          </div>
+                                        </CommandEmpty>
+                                      ) : (
+                                        <div className="text-center py-6 text-sm text-muted-foreground">
+                                          Type at least 2 characters to search
+                                        </div>
+                                      )}
+                                    </CommandList>
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
+                              
+                              {selectedBroker && logoUrl && (
+                                <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                                  <Avatar className="h-12 w-12">
+                                    <AvatarImage src={logoUrl} alt={selectedBroker.name} />
+                                    <AvatarFallback>{selectedBroker.name.charAt(0)}</AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <p className="font-medium">{selectedBroker.name}</p>
+                                    <p className="text-xs text-muted-foreground">Logo preview</p>
                                   </div>
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
+                                </div>
+                              )}
+                            </>
                           ) : (
                             <div className="space-y-3">
-                              <div className="flex gap-2">
+                              <div className="space-y-2">
                                 <Input
                                   placeholder="Enter broker name..."
                                   value={newBrokerName}
@@ -248,27 +413,46 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
                                   data-testid="input-new-broker-name"
                                   disabled={createBrokerMutation.isPending}
                                 />
+                                <Input
+                                  placeholder="Broker website URL (optional, for logo fetch)..."
+                                  value={newBrokerWebsite}
+                                  onChange={(e) => setNewBrokerWebsite(e.target.value)}
+                                  data-testid="input-new-broker-website"
+                                  disabled={createBrokerMutation.isPending}
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                  Providing a website URL helps us automatically fetch the broker's logo
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
                                 <Button
                                   type="button"
                                   onClick={handleAddNewBroker}
                                   disabled={createBrokerMutation.isPending || !newBrokerName.trim()}
                                   data-testid="button-add-broker"
                                 >
-                                  {createBrokerMutation.isPending ? "Adding..." : "Add"}
+                                  {createBrokerMutation.isPending ? (
+                                    <>
+                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                      Adding...
+                                    </>
+                                  ) : (
+                                    "Add Broker"
+                                  )}
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setIsAddingNewBroker(false);
+                                    setNewBrokerName("");
+                                    setNewBrokerWebsite("");
+                                  }}
+                                  data-testid="button-cancel-add-broker"
+                                >
+                                  Cancel
                                 </Button>
                               </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  setIsAddingNewBroker(false);
-                                  setNewBrokerName("");
-                                }}
-                                data-testid="button-cancel-add-broker"
-                              >
-                                Cancel
-                              </Button>
                             </div>
                           )}
                           <FormMessage />
@@ -401,7 +585,10 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
                           setSelectedRating(0);
                           setIsAddingNewBroker(false);
                           setNewBrokerName("");
-                          setCreatedBrokerId(null);
+                          setNewBrokerWebsite("");
+                          setSelectedBroker(null);
+                          setSearchQuery("");
+                          setLogoUrl(null);
                         }}
                         data-testid="button-reset-form"
                       >

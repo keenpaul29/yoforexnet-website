@@ -127,21 +127,21 @@ export default function HomeClient({
       <Header />
       <StatsBar />
       
-      <main className="container max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-          <aside className="lg:col-span-1 space-y-4 sm:space-y-6 order-2 lg:order-1">
+      <main className="container max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">
+          <aside className="lg:col-span-1 space-y-3 sm:space-y-4 order-2 lg:order-1">
             <OnboardingChecklist />
             <CoinBalance />
             <TrustLevel />
           </aside>
 
-          <div className="lg:col-span-2 space-y-6 sm:space-y-8 order-1 lg:order-2">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6 order-1 lg:order-2">
             <section>
               <WeekHighlights />
             </section>
 
             <section>
-              <div className="mb-4 sm:mb-6">
+              <div className="mb-3 sm:mb-4">
                 <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">Forum Categories</h2>
                 <p className="text-xs sm:text-sm text-muted-foreground">Choose the right category for your discussion</p>
               </div>
@@ -150,12 +150,12 @@ export default function HomeClient({
             </section>
 
             <section>
-              <div className="mb-4 sm:mb-6">
+              <div className="mb-3 sm:mb-4">
                 <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">Recent Discussions</h2>
                 <p className="text-xs sm:text-sm text-muted-foreground">Latest active threads from the community</p>
               </div>
               
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2 sm:space-y-3">
                 {recentThreads.map((thread) => (
                   <ForumThreadCard key={thread.id} {...thread} />
                 ))}
@@ -163,13 +163,13 @@ export default function HomeClient({
             </section>
           </div>
 
-          <aside className="lg:col-span-1 space-y-4 sm:space-y-6 order-3">
+          <aside className="lg:col-span-1 space-y-3 sm:space-y-4 order-3">
             <WhatsHot />
             <TopSellers />
             <Leaderboard />
             
             <Card className="sticky top-24" id="important-links">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-base">Important Links</CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 max-h-[600px] overflow-y-auto">

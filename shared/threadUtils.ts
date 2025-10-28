@@ -298,12 +298,13 @@ export function calculateEngagementScore(metrics: {
 
 /**
  * Word count utility for body validation
+ * Counts words (space-separated) not characters
  */
 export function countWords(text: string): number {
   return text
     .trim()
     .split(/\s+/)
-    .filter((word) => word.length > 0).length;
+    .filter(Boolean).length;
 }
 
 /**

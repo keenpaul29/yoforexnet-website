@@ -45,6 +45,7 @@ import {
 } from "./rateLimiting.js";
 import { generateSlug, generateFocusKeyword, generateMetaDescription as generateMetaDescriptionOld, generateImageAltTexts } from './seo.js';
 import { emailService } from './services/emailService.js';
+import { fetchBrokerLogo, getPlaceholderLogo } from './services/brokerLogoService.js';
 import { 
   RECHARGE_PACKAGES, 
   EARNING_REWARDS, 
@@ -1871,6 +1872,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     };
     const brokers = await storage.getAllBrokers(filters);
     res.json(brokers);
+  });
+
+  // NEW: Search brokers with autocomplete (with logo auto-fetch)
+  app.get("/api/brokers/search", async (req, res) => {
+    try {
+      const query = (req.query.q as string || '').trim();
+      
+      if (!query) {
+        return res.json({ brokers: [] });
+      }
+
+      // Get all brokers and filter by name
+      const allBrokers = await storage.getAllBrokers({});
+      
+      // Case-insensitive search
+      const matchingBrokers = allBrokers
+        .filter((broker: any) => 
+          broker.name.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(0, 5) // Return top 5 matches
+        .map((broker: any) => ({
+          id: broker.id,
+          name: broker.name,
+          slug: broker.slug,
+          websiteUrl: broker.websiteUrl,
+          logoUrl: broker.logoUrl || getPlaceholderLogo(broker.name),
+          isVerified: broker.isVerified,
+          overallRating: broker.overallRating,
+          reviewCount: broker.reviewCount,
+        }));
+
+      res.json({ brokers: matchingBrokers });
+    } catch (error: any) {
+      console.error('[Broker Search] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to search brokers" });
+    }
+  });
+
+  // NEW: Auto-fetch logo for a broker (when adding new broker)
+  app.post("/api/brokers/fetch-logo", async (req, res) => {
+    try {
+      const { websiteUrl, brokerName } = req.body;
+      
+      if (!websiteUrl) {
+        return res.status(400).json({ error: "Website URL is required" });
+      }
+
+      // Try to fetch the logo
+      const logoResult = await fetchBrokerLogo(websiteUrl);
+      
+      // If no logo found, use placeholder
+      const finalLogoUrl = logoResult.logoUrl || getPlaceholderLogo(brokerName || 'Broker');
+
+      res.json({
+        logoUrl: finalLogoUrl,
+        source: logoResult.source,
+      });
+    } catch (error: any) {
+      console.error('[Fetch Logo] Error:', error);
+      // Return placeholder on error
+      const brokerName = req.body.brokerName || 'Broker';
+      res.json({
+        logoUrl: getPlaceholderLogo(brokerName),
+        source: 'placeholder',
+      });
+    }
   });
 
   // NEW: Get platform-wide broker statistics

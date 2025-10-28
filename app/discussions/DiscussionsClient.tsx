@@ -334,10 +334,10 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
   }
 
   return (
-    <main className="container max-w-7xl mx-auto px-4 py-8">
+    <main className="container max-w-7xl mx-auto px-4 py-6">
       {/* Enhanced Header with Stats */}
-      <div className="mb-8">
-        <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+      <div className="mb-6">
+        <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
           <div>
             <h1 className="text-3xl font-bold mb-2 flex items-center gap-3" data-testid="heading-discussions">
               <MessagesSquare className="w-8 h-8 text-primary" />
@@ -355,9 +355,9 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
 
         {/* Platform Stats Row */}
         {!statsLoading && combinedStats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <Card className="bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-4">
+              <CardContent className="p-3">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-blue-500/10">
                     <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -428,12 +428,12 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
       </div>
 
       {/* 3-Column Layout: Main Content (60%) + Sidebar (40%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           {/* Search and Filters */}
           <Card>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-4 space-y-3">
               {/* Search Bar */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -526,7 +526,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
           </Card>
 
           {/* Thread Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {filteredThreads && filteredThreads.length > 0 ? (
               filteredThreads.map(thread => {
                 const categoryStyles = getCategoryStyles(thread.categorySlug);
@@ -545,7 +545,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                       className="h-full hover:border-primary/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200"
                       data-testid={`card-thread-${thread.slug}`}
                     >
-                      <CardContent className="p-4 space-y-3">
+                      <CardContent className="p-3 space-y-2">
                         {/* Category Badge + Status Badges */}
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <Badge 

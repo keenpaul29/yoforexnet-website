@@ -102,6 +102,123 @@ Gold coins are YoForex's currency. Earn them by helping others, sharing knowledg
 - Coding challenges: 300-1,500 coins
 - Watch announcements for upcoming events
 
+## Leveling System & XP
+
+YoForex has a progression system that rewards consistent, quality contributions. As you earn coins and help the community, you gain **Experience Points (XP)** which unlock new levels and benefits.
+
+### The Four Levels
+
+**1. Novice (0 - 499 XP)**
+- Starting level for all new members
+- Access to all basic features
+- Can post threads, reply, and download free content
+- Limited to standard daily earning caps
+
+**2. Contributor (500 - 1,999 XP)**
+- Unlocked after consistent quality contributions
+- **Benefits:**
+  - Trusted member badge on profile
+  - Slightly higher daily earning limits (+10%)
+  - Early access to new features
+  - Can nominate content for featured status
+
+**3. Verified (2,000 - 4,999 XP)**
+- Reserved for established community members
+- **Benefits:**
+  - "Verified" badge displayed on all posts
+  - +25% bonus on all coin earnings
+  - Can moderate community reports
+  - Priority support from admin team
+  - Access to exclusive Verified-only sections
+
+**4. Pro (5,000+ XP)**
+- Elite status for top contributors
+- **Benefits:**
+  - "Pro" badge with custom color
+  - +50% bonus on all coin earnings
+  - Can set custom profile themes
+  - Featured in "Top Contributors" section
+  - Reduced marketplace fees (15% instead of 20%)
+  - Direct communication with platform owners
+
+### How to Earn XP
+
+XP is different from coins - it measures your overall contribution quality and consistency:
+
+- **Post quality threads**: +5-15 XP (based on upvotes and engagement)
+- **Get accepted answer**: +20 XP
+- **Helpful replies**: +2 XP per reply with upvotes
+- **Upload approved content**: +25-50 XP (EAs/indicators earn more)
+- **Report violations (verified)**: +10 XP
+- **Daily check-in streak (7 days)**: +30 XP
+- **Content gets featured**: +100 XP
+
+**Note:** Unlike coins, XP can never be spent or withdrawn. It's a permanent measure of your reputation and contribution level.
+
+### Leveling Strategy
+
+**For beginners:**
+- Focus on quality over quantity in your first 50 posts
+- Answer questions in areas you're knowledgeable about
+- Share one well-tested EA or indicator
+- Maintain a 7-day check-in streak
+
+**To reach Contributor (500 XP):**
+- Post 20-30 quality threads with metadata
+- Get 5-10 accepted answers
+- Upload 1-2 approved marketplace items
+- Time estimate: 2-4 weeks of consistent activity
+
+**To reach Verified (2,000 XP):**
+- Build a reputation in 1-2 specialty areas
+- Upload 5+ quality EAs/indicators with real backtests
+- Get 20+ accepted answers
+- Time estimate: 2-3 months of regular contributions
+
+**To reach Pro (5,000 XP):**
+- Become a recognized expert in your niche
+- Upload 10+ premium content items
+- Help moderate and guide new members
+- Time estimate: 6-12 months of dedicated participation
+
+## Coin Exchange & Withdrawal
+
+### Exchange Rate
+**100 coins = $5.50 USD**
+- Each coin is worth approximately $0.055
+- This rate is fixed and does not fluctuate
+- Example: 1,000 coins = $55.00 USD
+
+### How to Withdraw Coins
+
+Once you've earned coins, you can convert them to real money:
+
+**Minimum withdrawal:** 1,000 coins ($55 USD)
+
+**Processing fee:** 5% of withdrawal amount
+- Example: Withdraw 1,000 coins → receive $52.25 USD (after 5% fee)
+- Example: Withdraw 5,000 coins → receive $261.25 USD (after 5% fee)
+
+**Supported withdrawal methods:**
+- Bitcoin (BTC)
+- Ethereum (ETH)
+- Tether (USDT)
+
+**Withdrawal process:**
+1. Go to Settings → Withdrawals
+2. Enter amount (minimum 1,000 coins)
+3. Select crypto type and enter wallet address
+4. Confirm withdrawal request
+5. Admin reviews within 24-48 hours
+6. Funds sent to your wallet (+ transaction hash confirmation)
+
+**Important notes:**
+- Withdrawals are processed manually for security
+- First-time withdrawals may require additional verification
+- Crypto transaction fees are separate and vary by network
+- No refunds once withdrawal is processed
+- Minimum processing time: 1-3 business days
+
 ## Daily Earning Potential
 
 **Casual user (30 min/day):**

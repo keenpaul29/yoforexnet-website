@@ -256,10 +256,8 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
 
   const createThreadMutation = useMutation({
     mutationFn: async (data: ThreadFormData) => {
-      return await apiRequest<{ thread: any; coinsEarned: number; message: string }>("/api/threads", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      const res = await apiRequest("POST", "/api/threads", data);
+      return await res.json() as { thread: any; coinsEarned: number; message: string };
     },
     onSuccess: (response) => {
       clearDraft();
@@ -370,12 +368,12 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
   });
 
   const onSubmit = async (data: ThreadFormData) => {
-    if (!requireAuth()) return;
-    
-    // Add uploaded file URLs to form data
-    data.attachmentUrls = uploadedFiles.map(f => f.url);
-    
-    createThreadMutation.mutate(data);
+    requireAuth(() => {
+      // Add uploaded file URLs to form data
+      data.attachmentUrls = uploadedFiles.map(f => f.url);
+      
+      createThreadMutation.mutate(data);
+    });
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -412,13 +410,20 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
         formData.append('files', file);
       });
 
-      const response = await apiRequest<{ urls: string[]; message: string }>("/api/upload", {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
-        headers: {}, // Let browser set Content-Type for FormData
+        credentials: "include",
       });
 
-      const newFiles = response.urls.map((url, idx) => ({
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Upload failed");
+      }
+
+      const response = await res.json() as { urls: string[]; message: string };
+
+      const newFiles = response.urls.map((url: string, idx: number) => ({
         name: files[idx].name,
         url: url,
       }));
