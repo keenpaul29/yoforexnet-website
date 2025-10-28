@@ -1579,8 +1579,8 @@ export class MemStorage implements IStorage {
     const cappedMinutes = Math.min(newMinutes, 100); // Max 100 minutes per day
     const minutesAdded = cappedMinutes - activity.activeMinutes;
     
-    // Award coins: 0.5 coins per 5 minutes (10 coins per hour)
-    const newCoins = Math.floor(minutesAdded / 5) * 0.5;
+    // Award coins: 1 coin per 5 minutes (12 coins per hour, max 20 per day)
+    const newCoins = Math.floor(minutesAdded / 5);
     
     // Update activity record
     activity.activeMinutes = cappedMinutes;
@@ -3838,11 +3838,11 @@ export class DrizzleStorage implements IStorage {
       )
     });
 
-    // Calculate coins to award (0.5 per 5 minutes, max 50/day)
+    // Calculate coins to award (1 coin per 5 minutes, max 20 coins/day)
     const newMinutes = (activity?.activeMinutes || 0) + minutes;
-    const maxMinutes = 100; // 100 minutes = 50 coins max
+    const maxMinutes = 100; // 100 minutes = 20 coins max
     const cappedMinutes = Math.min(newMinutes, maxMinutes);
-    const totalCoinsEarned = Math.floor(cappedMinutes / 5) * 0.5;
+    const totalCoinsEarned = Math.floor(cappedMinutes / 5);
     const previousCoins = activity?.coinsEarned || 0;
     const newCoins = totalCoinsEarned - previousCoins;
 

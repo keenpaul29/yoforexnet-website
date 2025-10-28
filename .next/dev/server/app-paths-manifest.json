@@ -1,8 +1,3 @@
 {
-  "/category/[slug]/page": "app/category/[slug]/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/messages/page": "app/messages/page.js",
-  "/page": "app/page.js",
-  "/recharge/page": "app/recharge/page.js",
-  "/thread/[slug]/page": "app/thread/[slug]/page.js"
+  "/page": "app/page.js"
 }

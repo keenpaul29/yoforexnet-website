@@ -9,11 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Circle, Coins, BookOpen, UserPlus } from 'lucide-react';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'wouter';
 
 export function DailyEarnings() {
   const { toast } = useToast();
-  const [, navigate] = useLocation();
 
   // Fetch today's activity
   const { data: activity } = useQuery<{
@@ -72,8 +70,11 @@ export function DailyEarnings() {
   });
 
   const handleJournalPost = () => {
-    // Navigate to forum with trading journal category
-    navigate('/forum?category=trading-journal');
+    // For now, just show coming soon message
+    toast({
+      title: 'Trading Journal',
+      description: 'Journal posting feature coming soon! Share your daily P&L and trading insights.',
+    });
   };
 
   const activeMinutes = activity?.activeMinutes || 0;
@@ -106,7 +107,7 @@ export function DailyEarnings() {
             <div className="flex items-center gap-1">
               <Coins className="w-3 h-3 text-yellow-500" />
               <span className="text-sm font-semibold" data-testid="text-coins-earned">
-                {coinsEarned}/50
+                {coinsEarned}/20
               </span>
             </div>
           </div>
