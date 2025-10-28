@@ -7,6 +7,7 @@ import { Flame, TrendingUp, Eye, Clock, ShoppingCart, Star, MessageSquare } from
 import Link from "next/link";
 import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
 import { formatDistanceToNow } from "date-fns";
+import { RefreshButton } from "./RefreshButton";
 
 type ContentType = 'thread' | 'ea' | 'indicator' | 'article' | 'source_code' | 'broker';
 
@@ -39,8 +40,8 @@ interface HotItemsData {
 }
 
 export default function WhatsHot() {
-  // Auto-refresh hot items every 30 seconds - limit to 5 items - UNIFIED CONTENT
-  const { data, isLoading } = useRealtimeUpdates<HotItemsData>('/api/hot?limit=5', { interval: 30000 });
+  // No auto-refresh for performance - limit to 5 items - UNIFIED CONTENT
+  const { data, isLoading, refetch } = useRealtimeUpdates<HotItemsData>('/api/hot?limit=5', { interval: false });
 
   // Hide component when loading or no items
   if (isLoading && !data) {
@@ -99,16 +100,23 @@ export default function WhatsHot() {
               What's Hot
             </span>
           </CardTitle>
-          <Link href="/hot" data-testid="link-see-all-hot">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-orange-500/80 hover:text-orange-600 dark:text-orange-400/70"
-              data-testid="button-see-all-hot"
-            >
-              See All
-            </Button>
-          </Link>
+          <div className="flex items-center gap-1">
+            <RefreshButton 
+              onRefresh={async () => { await refetch(); }}
+              size="icon"
+              variant="ghost"
+            />
+            <Link href="/hot" data-testid="link-see-all-hot">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-orange-500/80 hover:text-orange-600 dark:text-orange-400/70"
+                data-testid="button-see-all-hot"
+              >
+                See All
+              </Button>
+            </Link>
+          </div>
         </div>
       </CardHeader>
 
