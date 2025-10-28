@@ -76,20 +76,18 @@ export default function HomeClient({
   initialCategories, 
   initialThreads 
 }: HomeClientProps) {
-  // Fetch top categories with 60s auto-refresh (for homepage display)
+  // Fetch top categories (no auto-refresh for performance)
   const { data: categoriesData, isLoading: isLoadingCategories } = useQuery({
     queryKey: ['/api/categories/tree/top?limit=6'],
     initialData: initialCategories,
-    refetchInterval: 60000, // Auto-refresh every 60 seconds
-    staleTime: 50000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Fetch real threads with 60s auto-refresh
+  // Fetch real threads (no auto-refresh for performance)
   const { data: threadsData, isLoading: isLoadingThreads } = useQuery({
     queryKey: ['/api/threads'],
     initialData: initialThreads,
-    refetchInterval: 60000, // Auto-refresh every 60 seconds
-    staleTime: 50000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Flatten category tree for use in CategoryTree component

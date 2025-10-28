@@ -138,7 +138,7 @@ export default function WeekHighlights({
 }: WeekHighlightsProps) {
   const router = useRouter();
 
-  // Fetch real trending threads from API (uses relative URL for Next.js rewrite)
+  // Fetch real trending threads from API (no auto-refresh for performance)
   const { data: trendingData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'trending', limit: 3 }],
     queryFn: async () => {
@@ -146,10 +146,10 @@ export default function WeekHighlights({
       if (!res.ok) throw new Error('Failed to fetch trending threads');
       return res.json();
     },
-    refetchInterval: 60000, // Refresh every minute
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Fetch newest threads (uses relative URL for Next.js rewrite)
+  // Fetch newest threads (no auto-refresh for performance)
   const { data: newData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'newest', limit: 3 }],
     queryFn: async () => {
@@ -157,10 +157,10 @@ export default function WeekHighlights({
       if (!res.ok) throw new Error('Failed to fetch newest threads');
       return res.json();
     },
-    refetchInterval: 60000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Fetch solved threads (answered) (uses relative URL for Next.js rewrite)
+  // Fetch solved threads (answered) (no auto-refresh for performance)
   const { data: solvedData } = useQuery<ForumThread[]>({
     queryKey: ['/api/threads', { sortBy: 'answered', limit: 3 }],
     queryFn: async () => {
@@ -168,7 +168,7 @@ export default function WeekHighlights({
       if (!res.ok) throw new Error('Failed to fetch answered threads');
       return res.json();
     },
-    refetchInterval: 60000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Store full thread data for navigation

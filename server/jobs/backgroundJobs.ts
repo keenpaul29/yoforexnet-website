@@ -3,8 +3,13 @@ import type { IStorage } from '../storage';
 import { calculateEngagementScore, calculateUserReputation, calculateSalesScore } from '../utils/rankingAlgorithm';
 
 export function startBackgroundJobs(storage: IStorage) {
-  console.log('[JOBS] Starting background job scheduler...');
-
+  console.log('[JOBS] Background jobs DISABLED for performance optimization');
+  
+  // NOTE: All background jobs are disabled to improve performance
+  // These can be re-enabled if needed by uncommenting the cron schedules below
+  
+  /* DISABLED FOR PERFORMANCE
+  
   // Update thread engagement scores every 60 minutes
   cron.schedule('0 * * * *', async () => {
     console.log('[JOBS] Updating thread engagement scores...');
@@ -48,7 +53,9 @@ export function startBackgroundJobs(storage: IStorage) {
     }
   }, 5000); // Wait 5 seconds after startup
 
-  console.log('[JOBS] Background jobs scheduled successfully');
+  */
+  
+  console.log('[JOBS] No background jobs running - manual refresh required');
 }
 
 async function updateThreadScores(storage: IStorage) {

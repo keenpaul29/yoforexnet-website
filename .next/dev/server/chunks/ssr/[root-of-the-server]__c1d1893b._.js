@@ -4289,7 +4289,7 @@ const defaultSolvedThreads = [
 ];
 function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defaultTrendingThreads, solvedThreads = defaultSolvedThreads }) {
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
-    // Fetch real trending threads from API (uses relative URL for Next.js rewrite)
+    // Fetch real trending threads from API (no auto-refresh for performance)
     const { data: trendingData } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             '/api/threads',
@@ -4305,9 +4305,9 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
             if (!res.ok) throw new Error('Failed to fetch trending threads');
             return res.json();
         },
-        refetchInterval: 60000
+        staleTime: 5 * 60 * 1000
     });
-    // Fetch newest threads (uses relative URL for Next.js rewrite)
+    // Fetch newest threads (no auto-refresh for performance)
     const { data: newData } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             '/api/threads',
@@ -4323,9 +4323,9 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
             if (!res.ok) throw new Error('Failed to fetch newest threads');
             return res.json();
         },
-        refetchInterval: 60000
+        staleTime: 5 * 60 * 1000
     });
-    // Fetch solved threads (answered) (uses relative URL for Next.js rewrite)
+    // Fetch solved threads (answered) (no auto-refresh for performance)
     const { data: solvedData } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             '/api/threads',
@@ -4341,7 +4341,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
             if (!res.ok) throw new Error('Failed to fetch answered threads');
             return res.json();
         },
-        refetchInterval: 60000
+        staleTime: 5 * 60 * 1000
     });
     // Store full thread data for navigation
     const threadsWithSlug = new Map();
@@ -4817,7 +4817,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 ;
 function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: propNextLevelXP, achievements: propAchievements } = {}) {
     const { user } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
-    // Fetch real user stats with 60s auto-refresh
+    // Fetch real user stats (no auto-refresh for performance)
     const { data: userStats, isLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             '/api/users',
@@ -4825,8 +4825,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
             'stats'
         ],
         enabled: !!user?.id,
-        refetchInterval: 60000,
-        staleTime: 50000
+        staleTime: 5 * 60 * 1000
     });
     // Use fetched data or fall back to props
     const currentLevel = userStats?.currentLevel || propCurrentLevel || "contributor";
@@ -4894,32 +4893,32 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                         className: "h-12 w-full"
                     }, void 0, false, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 81,
+                        lineNumber: 80,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                         className: "h-8 w-full"
                     }, void 0, false, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 82,
+                        lineNumber: 81,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                         className: "h-20 w-full"
                     }, void 0, false, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 83,
+                        lineNumber: 82,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/TrustLevel.tsx",
-                lineNumber: 80,
+                lineNumber: 79,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/components/TrustLevel.tsx",
-            lineNumber: 79,
+            lineNumber: 78,
             columnNumber: 7
         }, this);
     }
@@ -4942,12 +4941,12 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                             className: "h-4 w-4 text-primary-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/TrustLevel.tsx",
-                                            lineNumber: 96,
+                                            lineNumber: 95,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 95,
+                                        lineNumber: 94,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4957,7 +4956,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: "Your Rank"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 99,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4965,19 +4964,19 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: currentLevelData.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 100,
+                                                lineNumber: 99,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 98,
+                                        lineNumber: 97,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 94,
+                                lineNumber: 93,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -4989,13 +4988,13 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 105,
+                                lineNumber: 104,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 93,
+                        lineNumber: 92,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5009,7 +5008,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                         children: "Progress to next level"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 112,
+                                        lineNumber: 111,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5021,13 +5020,13 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 113,
+                                        lineNumber: 112,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 111,
+                                lineNumber: 110,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$progress$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Progress"], {
@@ -5035,13 +5034,13 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                 className: "h-2"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 115,
+                                lineNumber: 114,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 110,
+                        lineNumber: 109,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5052,7 +5051,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                 children: "Achievements"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 119,
+                                lineNumber: 118,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5066,7 +5065,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: achievements.uploads
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 122,
+                                                lineNumber: 121,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5074,13 +5073,13 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: "Uploads"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 123,
+                                                lineNumber: 122,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 121,
+                                        lineNumber: 120,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5091,7 +5090,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: achievements.verifiedSets
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 126,
+                                                lineNumber: 125,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5099,13 +5098,13 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: "Verified"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 127,
+                                                lineNumber: 126,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 125,
+                                        lineNumber: 124,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5116,7 +5115,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: achievements.solutionsMarked
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 130,
+                                                lineNumber: 129,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5124,25 +5123,25 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                                 children: "Solutions"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                                lineNumber: 131,
+                                                lineNumber: 130,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/TrustLevel.tsx",
-                                        lineNumber: 129,
+                                        lineNumber: 128,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 120,
+                                lineNumber: 119,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 118,
+                        lineNumber: 117,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5153,7 +5152,7 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                 children: "Unlocked Features"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/TrustLevel.tsx",
-                                lineNumber: 137,
+                                lineNumber: 136,
                                 columnNumber: 13
                             }, this),
                             unlocks[currentLevel].map((unlock, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5163,42 +5162,42 @@ function TrustLevel({ currentLevel: propCurrentLevel, xp: propXp, nextLevelXP: p
                                             className: "h-1 w-1 rounded-full bg-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/TrustLevel.tsx",
-                                            lineNumber: 140,
+                                            lineNumber: 139,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: unlock
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/TrustLevel.tsx",
-                                            lineNumber: 141,
+                                            lineNumber: 140,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, index, true, {
                                     fileName: "[project]/app/components/TrustLevel.tsx",
-                                    lineNumber: 139,
+                                    lineNumber: 138,
                                     columnNumber: 15
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/TrustLevel.tsx",
-                        lineNumber: 136,
+                        lineNumber: 135,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/TrustLevel.tsx",
-                lineNumber: 92,
+                lineNumber: 91,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/components/TrustLevel.tsx",
-            lineNumber: 91,
+            lineNumber: 90,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/TrustLevel.tsx",
-        lineNumber: 90,
+        lineNumber: 89,
         columnNumber: 5
     }, this);
 }
@@ -5717,7 +5716,7 @@ function TopSellers() {
         queryKey: [
             "/api/content/top-sellers"
         ],
-        refetchInterval: 60000
+        staleTime: 5 * 60 * 1000
     });
     const topSellers = data?.topSellers?.slice(0, 5) || [];
     const getRankBadge = (index)=>{
@@ -6951,23 +6950,21 @@ const iconMap = {
     ShieldAlert: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2d$alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ShieldAlert$3e$__["ShieldAlert"]
 };
 function HomeClient({ initialStats, initialCategories, initialThreads }) {
-    // Fetch top categories with 60s auto-refresh (for homepage display)
+    // Fetch top categories (no auto-refresh for performance)
     const { data: categoriesData, isLoading: isLoadingCategories } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             '/api/categories/tree/top?limit=6'
         ],
         initialData: initialCategories,
-        refetchInterval: 60000,
-        staleTime: 50000
+        staleTime: 5 * 60 * 1000
     });
-    // Fetch real threads with 60s auto-refresh
+    // Fetch real threads (no auto-refresh for performance)
     const { data: threadsData, isLoading: isLoadingThreads } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             '/api/threads'
         ],
         initialData: initialThreads,
-        refetchInterval: 60000,
-        staleTime: 50000
+        staleTime: 5 * 60 * 1000
     });
     // Flatten category tree for use in CategoryTree component
     const categories = categoriesData || [];
@@ -7000,12 +6997,12 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/HomeClient.tsx",
-                lineNumber: 127,
+                lineNumber: 125,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$StatsBar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/HomeClient.tsx",
-                lineNumber: 128,
+                lineNumber: 126,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -7018,23 +7015,23 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$OnboardingChecklist$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["OnboardingChecklist"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 131,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$CoinBalance$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 134,
+                                    lineNumber: 132,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$TrustLevel$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 135,
+                                    lineNumber: 133,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/HomeClient.tsx",
-                            lineNumber: 132,
+                            lineNumber: 130,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7043,12 +7040,12 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$WeekHighlights$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                         fileName: "[project]/app/HomeClient.tsx",
-                                        lineNumber: 140,
+                                        lineNumber: 138,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 139,
+                                    lineNumber: 137,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -7063,7 +7060,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             children: "Forum Categories"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 146,
+                                                            lineNumber: 144,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7071,13 +7068,13 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             children: "Choose the right category for your discussion"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 147,
+                                                            lineNumber: 145,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 145,
+                                                    lineNumber: 143,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7087,13 +7084,13 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     children: "See All →"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 149,
+                                                    lineNumber: 147,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/HomeClient.tsx",
-                                            lineNumber: 144,
+                                            lineNumber: 142,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$CategoryTree$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CategoryTree"], {
@@ -7101,13 +7098,13 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                             limit: 6
                                         }, void 0, false, {
                                             fileName: "[project]/app/HomeClient.tsx",
-                                            lineNumber: 158,
+                                            lineNumber: 156,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 143,
+                                    lineNumber: 141,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -7120,7 +7117,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     children: "Recent Discussions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 163,
+                                                    lineNumber: 161,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7128,13 +7125,13 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     children: "Latest active threads from the community"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 164,
+                                                    lineNumber: 162,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/HomeClient.tsx",
-                                            lineNumber: 162,
+                                            lineNumber: 160,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7143,24 +7140,24 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                     ...thread
                                                 }, thread.id, false, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 169,
+                                                    lineNumber: 167,
                                                     columnNumber: 19
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/app/HomeClient.tsx",
-                                            lineNumber: 167,
+                                            lineNumber: 165,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 161,
+                                    lineNumber: 159,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/HomeClient.tsx",
-                            lineNumber: 138,
+                            lineNumber: 136,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -7168,17 +7165,17 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$WhatsHot$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 176,
+                                    lineNumber: 174,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$TopSellers$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 175,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Leaderboard$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 178,
+                                    lineNumber: 176,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -7192,12 +7189,12 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                 children: "Important Links"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/HomeClient.tsx",
-                                                lineNumber: 182,
+                                                lineNumber: 180,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/HomeClient.tsx",
-                                            lineNumber: 181,
+                                            lineNumber: 179,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -7212,20 +7209,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 190,
+                                                            lineNumber: 188,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Forum Rules"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 191,
+                                                            lineNumber: 189,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 185,
+                                                    lineNumber: 183,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7237,20 +7234,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 198,
+                                                            lineNumber: 196,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Safe Download Guide"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 199,
+                                                            lineNumber: 197,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 193,
+                                                    lineNumber: 191,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7262,20 +7259,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 206,
+                                                            lineNumber: 204,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Verified Brokers"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 207,
+                                                            lineNumber: 205,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 201,
+                                                    lineNumber: 199,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7287,20 +7284,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 214,
+                                                            lineNumber: 212,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "EA Coding Rules"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 215,
+                                                            lineNumber: 213,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 209,
+                                                    lineNumber: 207,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7312,20 +7309,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 222,
+                                                            lineNumber: 220,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "How to Earn Coins"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 223,
+                                                            lineNumber: 221,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 217,
+                                                    lineNumber: 215,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7337,20 +7334,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 230,
+                                                            lineNumber: 228,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Get Your Thread Seen"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 231,
+                                                            lineNumber: 229,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 225,
+                                                    lineNumber: 223,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7362,20 +7359,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 238,
+                                                            lineNumber: 236,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Rank Articles & Blogs"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 239,
+                                                            lineNumber: 237,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 233,
+                                                    lineNumber: 231,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7387,20 +7384,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 246,
+                                                            lineNumber: 244,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Rank EA Publications"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 247,
+                                                            lineNumber: 245,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 241,
+                                                    lineNumber: 239,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7412,20 +7409,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 254,
+                                                            lineNumber: 252,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "New Member Quickstart"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 255,
+                                                            lineNumber: 253,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 249,
+                                                    lineNumber: 247,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7437,20 +7434,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 262,
+                                                            lineNumber: 260,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Report a Scam"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 263,
+                                                            lineNumber: 261,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 257,
+                                                    lineNumber: 255,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7462,20 +7459,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 270,
+                                                            lineNumber: 268,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Badges & Levels"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 271,
+                                                            lineNumber: 269,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 265,
+                                                    lineNumber: 263,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7487,20 +7484,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 278,
+                                                            lineNumber: 276,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Marketplace Seller Guide"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 279,
+                                                            lineNumber: 277,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 273,
+                                                    lineNumber: 271,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7512,20 +7509,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 284,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Template: Beginner Thread"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 287,
+                                                            lineNumber: 285,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 281,
+                                                    lineNumber: 279,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7537,20 +7534,20 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 294,
+                                                            lineNumber: 292,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Template: EA Review"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 295,
+                                                            lineNumber: 293,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 289,
+                                                    lineNumber: 287,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7562,60 +7559,60 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                                                             className: "w-4 h-4 text-primary dark:text-primary flex-shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 302,
+                                                            lineNumber: 300,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: "Template: Trading Journal"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/HomeClient.tsx",
-                                                            lineNumber: 303,
+                                                            lineNumber: 301,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/HomeClient.tsx",
-                                                    lineNumber: 297,
+                                                    lineNumber: 295,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/HomeClient.tsx",
-                                            lineNumber: 184,
+                                            lineNumber: 182,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/HomeClient.tsx",
-                                    lineNumber: 180,
+                                    lineNumber: 178,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/HomeClient.tsx",
-                            lineNumber: 175,
+                            lineNumber: 173,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/HomeClient.tsx",
-                    lineNumber: 131,
+                    lineNumber: 129,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/HomeClient.tsx",
-                lineNumber: 130,
+                lineNumber: 128,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$EnhancedFooter$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/HomeClient.tsx",
-                lineNumber: 311,
+                lineNumber: 309,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/HomeClient.tsx",
-        lineNumber: 126,
+        lineNumber: 124,
         columnNumber: 5
     }, this);
 }

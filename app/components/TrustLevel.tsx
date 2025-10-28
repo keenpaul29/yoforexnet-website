@@ -38,12 +38,11 @@ export default function TrustLevel({
 }: TrustLevelProps = {}) {
   const { user } = useAuth();
 
-  // Fetch real user stats with 60s auto-refresh
+  // Fetch real user stats (no auto-refresh for performance)
   const { data: userStats, isLoading } = useQuery<UserStatsResponse>({
     queryKey: ['/api/users', user?.id, 'stats'],
     enabled: !!user?.id,
-    refetchInterval: 60000, // Auto-refresh every 60 seconds
-    staleTime: 50000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Use fetched data or fall back to props

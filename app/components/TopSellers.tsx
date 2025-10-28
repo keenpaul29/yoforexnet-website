@@ -37,7 +37,7 @@ interface TopSellersResponse {
 export default function TopSellers() {
   const { data, isLoading } = useQuery<TopSellersResponse>({
     queryKey: ["/api/content/top-sellers"],
-    refetchInterval: 60000, // Refresh every 60 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes, no auto-refresh for performance
   });
 
   const topSellers = data?.topSellers?.slice(0, 5) || [];
