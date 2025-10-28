@@ -24,6 +24,12 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 
 ### Core Systems
 - **Real-Time Auto-Refresh System**: DISABLED for performance - all `refetchInterval` settings set to `false` across all components
+  - **Manual Refresh Buttons**: User-controlled refresh buttons added to key sections:
+    - Platform Statistics (StatsBar)
+    - This Week's Highlights (all tabs: New, Trending, Solved)
+    - What's Hot section
+    - Top Sellers section
+  - RefreshButton component with loading states and spinning animation
 - **Sophisticated Ranking Algorithm**: Calculates Engagement Score, User Reputation, and Sales Score using various metrics and time decay.
 - **Background Job Scheduler**: DISABLED for performance - all `node-cron` jobs commented out in `server/jobs/backgroundJobs.ts`
 - **Dashboard Customization UI**: Allows users to toggle, reorder, and select layouts for widgets.
@@ -31,6 +37,7 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
   - Initial compile time: ~7 seconds (53% faster than before)
   - No background CPU/memory overhead from cron jobs
   - No constant network polling from auto-refresh intervals
+  - User-controlled data refresh via manual buttons
   - Lightweight enough to run on local PC
 
 ### Forum System
