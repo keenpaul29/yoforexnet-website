@@ -6639,7 +6639,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 const ONBOARDING_TASKS = [
     {
-        key: 'profileCreated',
+        key: 'profilePicture',
         label: 'Complete your profile',
         coins: 10,
         link: '/settings'
@@ -6647,26 +6647,32 @@ const ONBOARDING_TASKS = [
     {
         key: 'firstReply',
         label: 'Post your first reply',
-        coins: 15,
+        coins: 5,
         link: '/discussions'
     },
     {
-        key: 'firstReport',
-        label: 'Submit your first review',
-        coins: 20,
+        key: 'twoReviews',
+        label: 'Submit 2 reviews',
+        coins: 6,
         link: '/brokers'
     },
     {
-        key: 'firstUpload',
-        label: 'Upload your first EA',
-        coins: 50,
+        key: 'firstThread',
+        label: 'Create your own thread',
+        coins: 10,
+        link: '/discussions/new'
+    },
+    {
+        key: 'firstPublish',
+        label: 'Publish your own EA',
+        coins: 30,
         link: '/publish'
     },
     {
-        key: 'socialLinked',
-        label: 'Link a social account',
-        coins: 30,
-        link: '/settings'
+        key: 'fiftyFollowers',
+        label: 'Get 50 followers',
+        coins: 200,
+        link: '/members'
     }
 ];
 function OnboardingChecklist() {
@@ -6688,7 +6694,7 @@ function OnboardingChecklist() {
             });
         }
     });
-    if (isLoading || !data || data.dismissed || data.completed) {
+    if (isLoading || !data || data.dismissed) {
         return null;
     }
     const completedCount = Object.values(data.progress).filter(Boolean).length;
@@ -6709,10 +6715,10 @@ function OnboardingChecklist() {
                                 children: "Get Started"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                lineNumber: 58,
+                                lineNumber: 60,
                                 columnNumber: 11
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                            data.completed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                 variant: "ghost",
                                 size: "icon",
                                 className: "h-6 w-6 -mr-2",
@@ -6722,18 +6728,18 @@ function OnboardingChecklist() {
                                     className: "h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                    lineNumber: 66,
-                                    columnNumber: 13
+                                    lineNumber: 69,
+                                    columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                lineNumber: 59,
-                                columnNumber: 11
+                                lineNumber: 62,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                        lineNumber: 57,
+                        lineNumber: 59,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -6741,13 +6747,13 @@ function OnboardingChecklist() {
                         children: "Complete these tasks to earn coins and unlock features"
                     }, void 0, false, {
                         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                        lineNumber: 69,
+                        lineNumber: 73,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                lineNumber: 56,
+                lineNumber: 58,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -6759,7 +6765,7 @@ function OnboardingChecklist() {
                         "data-testid": "progress-onboarding"
                     }, void 0, false, {
                         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                        lineNumber: 74,
+                        lineNumber: 78,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6779,14 +6785,14 @@ function OnboardingChecklist() {
                                                 "data-testid": `icon-complete-${task.key}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                                lineNumber: 92,
+                                                lineNumber: 96,
                                                 columnNumber: 21
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
                                                 className: "w-4 h-4 text-muted-foreground shrink-0",
                                                 "data-testid": `icon-incomplete-${task.key}`
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                                lineNumber: 94,
+                                                lineNumber: 98,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6794,13 +6800,13 @@ function OnboardingChecklist() {
                                                 children: task.label
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                                lineNumber: 96,
+                                                lineNumber: 100,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                        lineNumber: 90,
+                                        lineNumber: 94,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6816,44 +6822,44 @@ function OnboardingChecklist() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                                lineNumber: 101,
+                                                lineNumber: 105,
                                                 columnNumber: 19
                                             }, this),
                                             !isComplete && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
                                                 className: "w-3.5 h-3.5 text-muted-foreground"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                                lineNumber: 104,
+                                                lineNumber: 108,
                                                 columnNumber: 35
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                        lineNumber: 100,
+                                        lineNumber: 104,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, task.key, true, {
                                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                                lineNumber: 80,
+                                lineNumber: 84,
                                 columnNumber: 15
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                        lineNumber: 76,
+                        lineNumber: 80,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/components/OnboardingChecklist.tsx",
-                lineNumber: 73,
+                lineNumber: 77,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/OnboardingChecklist.tsx",
-        lineNumber: 55,
+        lineNumber: 57,
         columnNumber: 5
     }, this);
 }

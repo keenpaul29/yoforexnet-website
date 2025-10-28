@@ -12,20 +12,22 @@ type OnboardingProgress = {
   completed: boolean;
   dismissed: boolean;
   progress: {
-    profileCreated: boolean;
+    profilePicture: boolean;
     firstReply: boolean;
-    firstReport: boolean;
-    firstUpload: boolean;
-    socialLinked: boolean;
+    twoReviews: boolean;
+    firstThread: boolean;
+    firstPublish: boolean;
+    fiftyFollowers: boolean;
   };
 };
 
 const ONBOARDING_TASKS = [
-  { key: 'profileCreated', label: 'Complete your profile', coins: 10, link: '/settings' },
-  { key: 'firstReply', label: 'Post your first reply', coins: 15, link: '/discussions' },
-  { key: 'firstReport', label: 'Submit your first review', coins: 20, link: '/brokers' },
-  { key: 'firstUpload', label: 'Upload your first EA', coins: 50, link: '/publish' },
-  { key: 'socialLinked', label: 'Link a social account', coins: 30, link: '/settings' },
+  { key: 'profilePicture', label: 'Complete your profile', coins: 10, link: '/settings' },
+  { key: 'firstReply', label: 'Post your first reply', coins: 5, link: '/discussions' },
+  { key: 'twoReviews', label: 'Submit 2 reviews', coins: 6, link: '/brokers' },
+  { key: 'firstThread', label: 'Create your own thread', coins: 10, link: '/discussions/new' },
+  { key: 'firstPublish', label: 'Publish your own EA', coins: 30, link: '/publish' },
+  { key: 'fiftyFollowers', label: 'Get 50 followers', coins: 200, link: '/members' },
 ];
 
 export function OnboardingChecklist() {
@@ -43,7 +45,7 @@ export function OnboardingChecklist() {
     },
   });
 
-  if (isLoading || !data || data.dismissed || data.completed) {
+  if (isLoading || !data || data.dismissed) {
     return null;
   }
 
@@ -56,15 +58,17 @@ export function OnboardingChecklist() {
       <CardHeader className="pb-3 space-y-1">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold">Get Started</CardTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 -mr-2"
-            onClick={() => dismiss.mutate()}
-            data-testid="button-dismiss-onboarding"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          {data.completed && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 -mr-2"
+              onClick={() => dismiss.mutate()}
+              data-testid="button-dismiss-onboarding"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         <p className="text-xs text-muted-foreground">
           Complete these tasks to earn coins and unlock features

@@ -297,11 +297,12 @@ export interface IStorage {
     completed: boolean;
     dismissed: boolean;
     progress: {
-      profileCreated: boolean;
+      profilePicture: boolean;
       firstReply: boolean;
-      firstReport: boolean;
-      firstUpload: boolean;
-      socialLinked: boolean;
+      twoReviews: boolean;
+      firstThread: boolean;
+      firstPublish: boolean;
+      fiftyFollowers: boolean;
     };
   } | null>;
   
@@ -2657,11 +2658,12 @@ export class MemStorage implements IStorage {
       completed: (user as any).onboardingCompleted || false,
       dismissed: (user as any).onboardingDismissed || false,
       progress: (user as any).onboardingProgress || {
-        profileCreated: false,
+        profilePicture: false,
         firstReply: false,
-        firstReport: false,
-        firstUpload: false,
-        socialLinked: false,
+        twoReviews: false,
+        firstThread: false,
+        firstPublish: false,
+        fiftyFollowers: false,
       },
     };
   }
@@ -2674,11 +2676,12 @@ export class MemStorage implements IStorage {
     if (!current || current.progress[step]) return;
 
     const coinRewards: Record<string, number> = {
-      profileCreated: 10,
-      firstReply: 15,
-      firstReport: 20,
-      firstUpload: 50,
-      socialLinked: 30,
+      profilePicture: 10,
+      firstReply: 5,
+      twoReviews: 6,
+      firstThread: 10,
+      firstPublish: 30,
+      fiftyFollowers: 200,
     };
 
     const coinsToAward = coinRewards[step] || 0;
@@ -2686,10 +2689,10 @@ export class MemStorage implements IStorage {
     // Update progress
     const newProgress = { ...current.progress, [step]: true };
     (user as any).onboardingProgress = newProgress;
-    // Mark complete when essential steps are done (socialLinked is optional/future feature)
-    const essentialSteps = ['profileCreated', 'firstReply', 'firstReport', 'firstUpload'];
-    const allEssentialComplete = essentialSteps.every(s => newProgress[s]);
-    (user as any).onboardingCompleted = allEssentialComplete;
+    // Mark complete when ALL tasks are done
+    const allSteps = ['profilePicture', 'firstReply', 'twoReviews', 'firstThread', 'firstPublish', 'fiftyFollowers'];
+    const allComplete = allSteps.every(s => newProgress[s]);
+    (user as any).onboardingCompleted = allComplete;
 
     // Award coins
     if (coinsToAward > 0) {
@@ -4996,11 +4999,12 @@ export class DrizzleStorage implements IStorage {
       completed: user.completed || false,
       dismissed: user.dismissed || false,
       progress: (user.progress as any) || {
-        profileCreated: false,
+        profilePicture: false,
         firstReply: false,
-        firstReport: false,
-        firstUpload: false,
-        socialLinked: false,
+        twoReviews: false,
+        firstThread: false,
+        firstPublish: false,
+        fiftyFollowers: false,
       },
     };
   }
@@ -5012,11 +5016,12 @@ export class DrizzleStorage implements IStorage {
 
     // Award coins based on step
     const coinRewards: Record<string, number> = {
-      profileCreated: 10,
-      firstReply: 15,
-      firstReport: 20,
-      firstUpload: 50,
-      socialLinked: 30,
+      profilePicture: 10,
+      firstReply: 5,
+      twoReviews: 6,
+      firstThread: 10,
+      firstPublish: 30,
+      fiftyFollowers: 200,
     };
 
     const coinsToAward = coinRewards[step] || 0;
@@ -5024,13 +5029,13 @@ export class DrizzleStorage implements IStorage {
     // Update progress
     const newProgress = { ...current.progress, [step]: true };
     
-    // Mark complete when essential steps are done (socialLinked is optional/future feature)
-    const allEssentialComplete = ['profileCreated', 'firstReply', 'firstReport', 'firstUpload'].every(s => newProgress[s]);
+    // Mark complete when ALL tasks are done
+    const allComplete = ['profilePicture', 'firstReply', 'twoReviews', 'firstThread', 'firstPublish', 'fiftyFollowers'].every(s => newProgress[s]);
     
     await db.update(users)
       .set({ 
         onboardingProgress: newProgress,
-        onboardingCompleted: allEssentialComplete,
+        onboardingCompleted: allComplete,
       })
       .where(eq(users.id, userId));
 

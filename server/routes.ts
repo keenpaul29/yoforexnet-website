@@ -179,12 +179,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: "User not found" });
     }
     
-    // Mark profileCreated onboarding step on first successful authentication
+    // Mark profilePicture onboarding step on first successful authentication
     try {
-      await storage.markOnboardingStep(claims.sub, 'profileCreated');
+      await storage.markOnboardingStep(claims.sub, 'profilePicture');
     } catch (error) {
       // Don't fail the request if onboarding step fails
-      console.error('Failed to mark profileCreated:', error);
+      console.error('Failed to mark profilePicture:', error);
     }
     
     res.json(user);
@@ -459,11 +459,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         completed: false,
         dismissed: false,
         progress: {
-          profileCreated: false,
+          profilePicture: false,
           firstReply: false,
-          firstReport: false,
-          firstUpload: false,
-          socialLinked: false,
+          twoReviews: false,
+          firstThread: false,
+          firstPublish: false,
+          fiftyFollowers: false,
         },
       });
     } catch (error: any) {
@@ -476,6 +477,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const userId = getAuthenticatedUserId(req);
     
     try {
+      // Check if onboarding is completed before allowing dismiss
+      const progress = await storage.getOnboardingProgress(userId);
+      if (!progress || !progress.completed) {
+        return res.status(400).json({ error: "Cannot dismiss onboarding until all tasks are completed" });
+      }
+      
       await storage.dismissOnboarding(userId);
       res.json({ success: true });
     } catch (error: any) {
@@ -1435,10 +1442,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Track onboarding progress for first upload
+      // Track onboarding progress for first publish
       if (validated.type === 'ea' || validated.type === 'indicator') {
         try {
-          await storage.trackOnboardingProgress(authenticatedUserId, 'firstUpload');
+          await storage.markOnboardingStep(authenticatedUserId, 'firstPublish');
         } catch (error) {
           console.error('Onboarding tracking failed:', error);
         }
