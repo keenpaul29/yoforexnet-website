@@ -44,16 +44,16 @@ async function fetchData(url: string) {
 
 export default async function HomePage() {
   // Parallel data fetching from Express API
-  const [stats, categoryTree, threads] = await Promise.all([
+  const [stats, topCategories, threads] = await Promise.all([
     fetchData('/api/stats'),
-    fetchData('/api/categories/tree/all'),  // Fetch category tree instead of flat list
+    fetchData('/api/categories/tree/top?limit=6'),  // Fetch top 6 categories for homepage
     fetchData('/api/threads'),
   ]);
 
   return (
     <HomeClient 
       initialStats={stats}
-      initialCategories={categoryTree}
+      initialCategories={topCategories}
       initialThreads={threads}
     />
   );

@@ -76,9 +76,9 @@ export default function HomeClient({
   initialCategories, 
   initialThreads 
 }: HomeClientProps) {
-  // Fetch real categories with 60s auto-refresh (now using tree endpoint)
+  // Fetch top categories with 60s auto-refresh (for homepage display)
   const { data: categoriesData, isLoading: isLoadingCategories } = useQuery({
-    queryKey: ['/api/categories/tree/all'],
+    queryKey: ['/api/categories/tree/top', { limit: 6 }],
     initialData: initialCategories,
     refetchInterval: 60000, // Auto-refresh every 60 seconds
     staleTime: 50000,
@@ -141,12 +141,21 @@ export default function HomeClient({
             </section>
 
             <section>
-              <div className="mb-3 sm:mb-4">
-                <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">Forum Categories</h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">Choose the right category for your discussion</p>
+              <div className="mb-3 sm:mb-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">Forum Categories</h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Choose the right category for your discussion</p>
+                </div>
+                <Link 
+                  href="/categories" 
+                  className="text-xs sm:text-sm font-medium text-primary hover:underline shrink-0"
+                  data-testid="link-see-all-categories"
+                >
+                  See All →
+                </Link>
               </div>
               
-              <CategoryTree categories={categories} />
+              <CategoryTree categories={categories} limit={6} />
             </section>
 
             <section>
