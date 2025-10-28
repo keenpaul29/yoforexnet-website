@@ -1,9 +1,4 @@
 {
-  "/brokers/[slug]/page": "app/brokers/[slug]/page.js",
-  "/brokers/page": "app/brokers/page.js",
   "/category/[slug]/page": "app/category/[slug]/page.js",
-  "/content/[slug]/page": "app/content/[slug]/page.js",
-  "/marketplace/page": "app/marketplace/page.js",
-  "/page": "app/page.js",
-  "/publish/page": "app/publish/page.js"
+  "/page": "app/page.js"
 }
