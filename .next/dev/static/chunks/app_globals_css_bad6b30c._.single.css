@@ -1833,12 +1833,16 @@ body {
   height: 1px;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .h-svh {
   height: 100svh;
 }
 
-.h-screen {
-  height: 100vh;
+.max-h-96 {
+  max-height: 24rem;
 }
 
 .max-h-\[--radix-context-menu-content-available-height\] {
@@ -1867,10 +1871,6 @@ body {
 
 .max-h-screen {
   max-height: 100vh;
-}
-
-.max-h-96 {
-  max-height: 24rem;
 }
 
 .min-h-0 {
@@ -3518,6 +3518,11 @@ body {
   color: rgb(217 119 6 / var(--tw-text-opacity, 1));
 }
 
+.text-amber-700 {
+  --tw-text-opacity: 1;
+  color: rgb(180 83 9 / var(--tw-text-opacity, 1));
+}
+
 .text-blue-300 {
   --tw-text-opacity: 1;
   color: rgb(147 197 253 / var(--tw-text-opacity, 1));
@@ -3732,11 +3737,6 @@ body {
 .text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity, 1));
-}
-
-.text-amber-700 {
-  --tw-text-opacity: 1;
-  color: rgb(180 83 9 / var(--tw-text-opacity, 1));
 }
 
 .line-through {
@@ -5555,16 +5555,16 @@ input[type="search"]::-webkit-search-cancel-button {
     display: none;
   }
 
+  .md\:w-48 {
+    width: 12rem;
+  }
+
   .md\:w-\[var\(--radix-navigation-menu-viewport-width\)\] {
     width: var(--radix-navigation-menu-viewport-width);
   }
 
   .md\:w-auto {
     width: auto;
-  }
-
-  .md\:w-48 {
-    width: 12rem;
   }
 
   .md\:min-w-80 {
@@ -5649,6 +5649,10 @@ input[type="search"]::-webkit-search-cancel-button {
     grid-column: span 2 / span 2;
   }
 
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -5660,10 +5664,6 @@ input[type="search"]::-webkit-search-cancel-button {
   .lg\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
-
-  .lg\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (min-width: 1280px) {
@@ -5671,12 +5671,12 @@ input[type="search"]::-webkit-search-cancel-button {
     grid-column: span 2 / span 2;
   }
 
-  .xl\:grid-cols-6 {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
   .xl\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .xl\:grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 

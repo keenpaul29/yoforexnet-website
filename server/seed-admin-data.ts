@@ -941,15 +941,15 @@ export async function seedAdminData() {
   }
 }
 
-// Auto-run when executed directly
-if (require.main === module) {
+// Check if this file is being run directly
+if (process.argv[1] && import.meta.url.endsWith(process.argv[1])) {
   seedAdminData()
-    .then((result) => {
-      console.log('🎉 Seeding complete!', result);
+    .then(() => {
+      console.log('✅ Seeding complete!');
       process.exit(0);
     })
     .catch((error) => {
-      console.error('💥 Seeding failed:', error);
+      console.error('❌ Seeding failed:', error);
       process.exit(1);
     });
 }
