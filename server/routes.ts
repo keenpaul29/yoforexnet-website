@@ -24,7 +24,8 @@ import {
   updateUserProfileSchema,
   BADGE_METADATA,
   type BadgeType,
-  coinTransactions
+  coinTransactions,
+  profiles
 } from "../shared/schema.js";
 import { db } from "./db.js";
 import { eq, and, gt, asc } from "drizzle-orm";
@@ -3053,10 +3054,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const authenticatedUserId = getAuthenticatedUserId(req);
       const validated = updateUserProfileSchema.parse(req.body);
       
-      // Update the profile
-      const updatedUser = await storage.updateUserProfile(authenticatedUserId, validated);
+      // Separate fields for users table vs profiles table
+      const userFields: any = {};
+      const profileFields: any = {};
+      
+      // User table fields
+      if (validated.displayName) userFields.username = validated.displayName;
+      if (validated.email) userFields.email = validated.email;
+      if (validated.location !== undefined) userFields.location = validated.location || null;
+      if (validated.youtubeUrl !== undefined) userFields.youtubeUrl = validated.youtubeUrl || null;
+      if (validated.instagramHandle !== undefined) userFields.instagramHandle = validated.instagramHandle || null;
+      if (validated.telegramHandle !== undefined) userFields.telegramHandle = validated.telegramHandle || null;
+      if (validated.myfxbookLink !== undefined) userFields.myfxbookLink = validated.myfxbookLink || null;
+      if (validated.investorId !== undefined) userFields.investorId = validated.investorId || null;
+      if (validated.investorPassword !== undefined) userFields.investorPassword = validated.investorPassword || null;
+      if (validated.emailNotifications !== undefined) userFields.emailNotifications = validated.emailNotifications;
+      
+      // Profile table fields
+      if (validated.bio !== undefined) profileFields.bio = validated.bio || null;
+      if (validated.website !== undefined) profileFields.website = validated.website || null;
+      
+      // Update user fields
+      const updatedUser = await storage.updateUserProfile(authenticatedUserId, userFields);
       if (!updatedUser) {
         return res.status(404).json({ error: "User not found" });
+      }
+      
+      // Update profile fields if any
+      if (Object.keys(profileFields).length > 0) {
+        await db.insert(profiles).values({
+          userId: authenticatedUserId,
+          ...profileFields,
+        }).onConflictDoUpdate({
+          target: [profiles.userId],
+          set: { ...profileFields, updatedAt: new Date() },
+        });
       }
 
       let totalCoinsEarned = 0;
@@ -3067,7 +3099,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         (validated.youtubeUrl && validated.youtubeUrl.length > 0) ||
         (validated.instagramHandle && validated.instagramHandle.length > 0) ||
         (validated.telegramHandle && validated.telegramHandle.length > 0) ||
-        (validated.myfxbookLink && validated.myfxbookLink.length > 0);
+        (validated.myfxbookLink && validated.myfxbookLink.length > 0) ||
+        (validated.bio && validated.bio.length > 0);
 
       if (hasProfileData) {
         const profileResult = await storage.trackOnboardingProgress(authenticatedUserId, "profileCreated");
@@ -3103,10 +3136,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })
       });
     } catch (error) {
+      console.error("Profile update error:", error);
       if (error instanceof Error && error.message === "No authenticated user") {
         return res.status(401).json({ error: "Not authenticated" });
       }
-      res.status(400).json({ error: "Invalid profile data" });
+      res.status(400).json({ error: error instanceof Error ? error.message : "Invalid profile data" });
+    }
+  });
+
+  // Upload profile photo
+  app.post("/api/user/upload-photo", isAuthenticated, upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const photoUrl = `/uploads/${req.file.filename}`;
+      
+      // Update user's profile image
+      await storage.updateUserProfile(authenticatedUserId, {
+        profileImageUrl: photoUrl,
+      });
+
+      res.json({ 
+        success: true,
+        photoUrl,
+        message: "Profile photo updated successfully"
+      });
+    } catch (error: any) {
+      console.error('Profile photo upload error:', error);
+      res.status(500).json({ error: error.message || "Failed to upload photo" });
     }
   });
 

@@ -30,6 +30,7 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  location: varchar("location", { length: 100 }),
   
   // YoForex-specific fields (preserved from original)
   totalCoins: integer("total_coins").notNull().default(0),
@@ -1254,13 +1255,18 @@ export const insertNotificationSchema = createInsertSchema(notifications).omit({
 });
 
 export const updateUserProfileSchema = z.object({
+  displayName: z.string().min(2).max(50).optional(),
+  email: z.string().email().optional(),
+  bio: z.string().max(500).optional().or(z.literal("")),
+  location: z.string().max(100).optional().or(z.literal("")),
+  website: z.string().url().optional().or(z.literal("")),
   youtubeUrl: z.string().url().optional().or(z.literal("")),
   instagramHandle: z.string().min(1).max(50).optional().or(z.literal("")),
   telegramHandle: z.string().min(1).max(50).optional().or(z.literal("")),
   myfxbookLink: z.string().url().optional().or(z.literal("")),
   investorId: z.string().optional().or(z.literal("")),
   investorPassword: z.string().optional().or(z.literal("")),
-  emailNotifications: z.boolean(),
+  emailNotifications: z.boolean().optional(),
 });
 
 // User types already defined above near upsertUserSchema
