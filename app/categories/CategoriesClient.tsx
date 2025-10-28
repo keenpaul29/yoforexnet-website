@@ -61,6 +61,19 @@ const iconMap: Record<string, any> = {
   "commercial-trials": Rocket,
 };
 
+interface CategoryStats {
+  slug: string;
+  name: string;
+  threadCount: number;
+  activeUsers7d: number;
+  newThreads7d: number;
+  topContributors: Array<{
+    username: string;
+    threadCount: number;
+  }>;
+  lastUpdated: string;
+}
+
 interface CategoriesClientProps {
   initialCategories: ForumCategory[];
 }
@@ -86,6 +99,111 @@ interface TrendingUser {
   repliesPosted: number;
 }
 
+// Custom hook to fetch ALL category stats in one batch request
+function useCategoriesStatsBatch() {
+  return useQuery<Record<string, CategoryStats>>({
+    queryKey: ['/api/categories/stats/batch'],
+    queryFn: async () => {
+      const res = await fetch('/api/categories/stats/batch', {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to fetch category stats');
+      return res.json();
+    },
+    refetchInterval: 60000, // 60s revalidation
+    staleTime: 30000,
+  });
+}
+
+// Category Card Component
+function CategoryCard({ category, stats, isLoading }: { 
+  category: ForumCategory; 
+  stats?: CategoryStats;
+  isLoading: boolean;
+}) {
+  const IconComponent = iconMap[category.slug] || MessageSquare;
+  
+  // Use stats from API if available, fallback to initial category data
+  const threadCount = stats?.threadCount ?? category.threadCount;
+  const postCount = category.postCount;
+  const hasNewThreads = stats ? stats.newThreads7d > 0 : false;
+  const activeUsers = stats?.activeUsers7d ?? 0;
+  
+  return (
+    <Link href={`/category/${category.slug}`} data-testid={`link-category-${category.slug}`}>
+      <Card className="h-full hover:border-primary/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200" data-testid={`card-category-${category.slug}`}>
+        <CardContent className="p-4">
+          <div className="space-y-3">
+            {/* Icon + Title Row */}
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10">
+                  <IconComponent className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-sm line-clamp-1" data-testid={`text-category-name-${category.slug}`}>
+                    {category.name}
+                  </h3>
+                </div>
+              </div>
+              {isLoading ? (
+                <Skeleton className="h-5 w-12" />
+              ) : hasNewThreads && (
+                <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/30">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  New
+                </Badge>
+              )}
+            </div>
+
+            {/* Description */}
+            <p className="text-xs text-muted-foreground line-clamp-2" data-testid={`text-category-description-${category.slug}`}>
+              {category.description}
+            </p>
+
+            {/* Stats Row */}
+            <div className="flex items-center gap-3 flex-wrap text-xs">
+              <div className="flex items-center gap-1">
+                <MessageSquare className="w-3 h-3 text-primary" />
+                {isLoading ? (
+                  <Skeleton className="h-4 w-8" />
+                ) : (
+                  <>
+                    <span className="font-semibold" data-testid={`badge-threads-${category.slug}`}>
+                      {threadCount}
+                    </span>
+                    <span className="text-muted-foreground">threads</span>
+                  </>
+                )}
+              </div>
+              <span className="text-border">•</span>
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <FileText className="w-3 h-3" />
+                <span data-testid={`badge-posts-${category.slug}`}>
+                  {postCount}
+                </span>
+                <span>posts</span>
+              </div>
+              {stats && activeUsers > 0 && (
+                <>
+                  <span className="text-border">•</span>
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <Users className="w-3 h-3" />
+                    <span data-testid={`badge-active-users-${category.slug}`}>
+                      {activeUsers}
+                    </span>
+                    <span>active</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
 export default function CategoriesClient({ initialCategories }: CategoriesClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -101,6 +219,9 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
     },
     refetchInterval: 30000,
   });
+
+  // Fetch ALL category stats in one batch request
+  const { data: categoriesStats, isLoading: categoriesStatsLoading } = useCategoriesStatsBatch();
 
   const { data: communityStats, isLoading: statsLoading } = useQuery<CommunityStats>({
     queryKey: ['/api/community/stats'],
@@ -265,64 +386,14 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
           {/* Main Categories Grid - 3 columns on desktop, 2 on tablet, 1 on mobile */}
           <div className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredCategories.map((category) => {
-                const IconComponent = iconMap[category.slug] || MessageSquare;
-                const hasNewThreads = communityStats && communityStats.newThreads7d > 0;
-                
-                return (
-                  <Link key={category.slug} href={`/category/${category.slug}`} data-testid={`link-category-${category.slug}`}>
-                    <Card className="h-full hover:border-primary/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200" data-testid={`card-category-${category.slug}`}>
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                          {/* Icon + Title Row */}
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10">
-                                <IconComponent className="w-5 h-5 text-primary" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-sm line-clamp-1" data-testid={`text-category-name-${category.slug}`}>
-                                  {category.name}
-                                </h3>
-                              </div>
-                            </div>
-                            {hasNewThreads && (
-                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/30">
-                                <Sparkles className="w-3 h-3 mr-1" />
-                                New
-                              </Badge>
-                            )}
-                          </div>
-
-                          {/* Description */}
-                          <p className="text-xs text-muted-foreground line-clamp-2" data-testid={`text-category-description-${category.slug}`}>
-                            {category.description}
-                          </p>
-
-                          {/* Stats Row */}
-                          <div className="flex items-center gap-3 flex-wrap text-xs">
-                            <div className="flex items-center gap-1">
-                              <MessageSquare className="w-3 h-3 text-primary" />
-                              <span className="font-semibold" data-testid={`badge-threads-${category.slug}`}>
-                                {category.threadCount}
-                              </span>
-                              <span className="text-muted-foreground">threads</span>
-                            </div>
-                            <span className="text-border">•</span>
-                            <div className="flex items-center gap-1 text-muted-foreground">
-                              <FileText className="w-3 h-3" />
-                              <span data-testid={`badge-posts-${category.slug}`}>
-                                {category.postCount}
-                              </span>
-                              <span>posts</span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                );
-              })}
+              {filteredCategories.map((category) => (
+                <CategoryCard 
+                  key={category.slug} 
+                  category={category}
+                  stats={categoriesStats?.[category.slug]}
+                  isLoading={categoriesStatsLoading}
+                />
+              ))}
             </div>
 
             {filteredCategories.length === 0 && (

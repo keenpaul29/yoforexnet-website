@@ -3619,7 +3619,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // GET /api/categories/:slug/stats - Per-category statistics
+  // GET /api/categories/stats/batch - Batch statistics for ALL categories
+  // IMPORTANT: This must come BEFORE the individual stats route to avoid slug matching
+  app.get("/api/categories/stats/batch", async (req, res) => {
+    try {
+      // Get all categories
+      const categories = await storage.listForumCategories();
+      
+      // Fetch all threads once
+      const allThreads = await storage.listForumThreads({ limit: 10000 });
+      
+      const now = new Date();
+      const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      // Build stats for each category
+      const statsMap: Record<string, any> = {};
+
+      for (const category of categories) {
+        // Filter threads for this category
+        const categoryThreads = allThreads.filter(t => t.categorySlug === category.slug);
+
+        // Get unique active users in last 7 days
+        const activeUserIds = new Set(
+          categoryThreads
+            .filter(t => new Date(t.lastActivityAt) >= last7d)
+            .map(t => t.authorId)
+        );
+
+        const newThreads7d = categoryThreads.filter(t => 
+          new Date(t.createdAt) >= last7d
+        ).length;
+
+        // Get top contributors for this category
+        const contributorMap = new Map<string, number>();
+        categoryThreads.forEach(thread => {
+          const count = contributorMap.get(thread.authorId) || 0;
+          contributorMap.set(thread.authorId, count + 1);
+        });
+
+        const topContributorIds = Array.from(contributorMap.entries())
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+
+        const topContributors = await Promise.all(
+          topContributorIds.map(async ([userId, threadCount]) => {
+            const user = await storage.getUserById(userId);
+            return {
+              username: user?.username || 'Unknown',
+              threadCount
+            };
+          })
+        );
+
+        statsMap[category.slug] = {
+          slug: category.slug,
+          name: category.name,
+          threadCount: categoryThreads.length,
+          activeUsers7d: activeUserIds.size,
+          newThreads7d,
+          topContributors,
+          lastUpdated: new Date().toISOString()
+        };
+      }
+
+      res.json(statsMap);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/categories/:slug/stats - Per-category statistics (individual)
+  // IMPORTANT: This must come AFTER the batch route to avoid slug matching issues
   app.get("/api/categories/:slug/stats", async (req, res) => {
     try {
       const { slug } = req.params;
