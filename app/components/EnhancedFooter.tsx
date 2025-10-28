@@ -1,61 +1,11 @@
 "use client";
 
-import { Activity, Users, MessageSquare, TrendingUp } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
-interface StatsResponse {
-  totalThreads: number;
-  totalMembers: number;
-  totalPosts: number;
-  activeToday: number;
-}
-
 export default function EnhancedFooter() {
-  const { data: stats } = useQuery<StatsResponse>({
-    queryKey: ['/api/stats'],
-    refetchInterval: 60000,
-    staleTime: 50000,
-  });
-
   return (
     <footer className="border-t mt-auto">
       <div className="container max-w-7xl mx-auto px-4 py-12">
-        {/* Live Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
-            <MessageSquare className="h-8 w-8 text-primary flex-shrink-0" />
-            <div>
-              <p className="text-2xl font-bold" data-testid="stat-threads">{stats?.totalThreads?.toLocaleString() ?? '0'}</p>
-              <p className="text-xs text-muted-foreground">Discussions</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
-            <Users className="h-8 w-8 text-chart-2 flex-shrink-0" />
-            <div>
-              <p className="text-2xl font-bold" data-testid="stat-members">{stats?.totalMembers?.toLocaleString() ?? '0'}</p>
-              <p className="text-xs text-muted-foreground">Members</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
-            <MessageSquare className="h-8 w-8 text-chart-3 flex-shrink-0" />
-            <div>
-              <p className="text-2xl font-bold" data-testid="stat-posts">{stats?.totalPosts?.toLocaleString() ?? '0'}</p>
-              <p className="text-xs text-muted-foreground">Total Posts</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
-            <Activity className="h-8 w-8 text-chart-4 flex-shrink-0" />
-            <div>
-              <p className="text-2xl font-bold" data-testid="stat-active">{stats?.activeToday?.toLocaleString() ?? '0'}</p>
-              <p className="text-xs text-muted-foreground">Active Today</p>
-            </div>
-          </div>
-        </div>
-
         {/* Main Footer Content - 5 Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Column 1: About YoForex */}
