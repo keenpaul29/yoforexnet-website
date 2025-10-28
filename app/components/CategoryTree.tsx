@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Folder } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { MessageSquare, FileText, Folder } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface Category {
   slug: string;
@@ -18,61 +19,61 @@ interface Category {
 
 interface CategoryTreeProps {
   categories: Category[];
+  limit?: number;
 }
 
-export function CategoryTree({ categories }: CategoryTreeProps) {
-  const mainCategories = categories.filter(c => !c.parentSlug);
+const getCategoryIcon = (color: string) => {
+  const iconClasses = `w-10 h-10 flex items-center justify-center rounded-md ${color}`;
+  return (
+    <div className={iconClasses}>
+      <Folder className="w-5 h-5 text-white" />
+    </div>
+  );
+};
+
+export function CategoryTree({ categories, limit }: CategoryTreeProps) {
+  // Use all categories if no limit is specified
+  const displayCategories = limit ? categories.slice(0, limit) : categories;
+  const mainCategories = displayCategories.filter(c => !c.parentSlug);
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5" data-testid="category-grid">
       {mainCategories.map((category) => {
-        const subcategories = categories.filter(c => c.parentSlug === category.slug);
-        
         return (
-          <Card key={category.slug} className="p-6 hover-elevate" data-testid={`category-card-${category.slug}`}>
-            <Link href={`/category/${category.slug}`} className="block mb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className={`p-2 rounded-lg ${category.color}`}>
-                  <Folder className="w-5 h-5 text-white dark:text-white" />
+          <Link 
+            key={category.slug} 
+            href={`/category/${category.slug}`}
+            data-testid={`link-category-${category.slug}`}
+          >
+            <Card className="border-0 shadow-sm hover-elevate active-elevate-2 h-full" data-testid={`card-category-${category.slug}`}>
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  {getCategoryIcon(category.color)}
+                  
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm mb-1 line-clamp-2 leading-snug" data-testid={`text-category-name-${category.slug}`}>
+                      {category.name}
+                    </h3>
+                    
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2.5 leading-relaxed">
+                      {category.description}
+                    </p>
+                    
+                    <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-1" data-testid={`stat-threads-${category.slug}`}>
+                        <MessageSquare className="w-3 h-3" />
+                        <span>{category.threadCount}</span>
+                      </div>
+                      <div className="flex items-center gap-1" data-testid={`stat-posts-${category.slug}`}>
+                        <FileText className="w-3 h-3" />
+                        <span>{category.postCount}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-lg">{category.name}</h3>
-              </div>
-              <p className="text-sm text-muted-foreground mb-3">
-                {category.description}
-              </p>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span>{category.threadCount} threads</span>
-                <span>{category.postCount} posts</span>
-              </div>
-            </Link>
-            
-            {subcategories.length > 0 && (
-              <div className="mt-4 pt-4 border-t">
-                <div className="space-y-2">
-                  {subcategories.slice(0, 5).map((subcat) => (
-                    <Link
-                      key={subcat.slug}
-                      href={`/category/${subcat.slug}`}
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover-elevate p-2 rounded"
-                      data-testid={`subcategory-link-${subcat.slug}`}
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                      <span>{subcat.name}</span>
-                      <span className="ml-auto text-xs">({subcat.threadCount})</span>
-                    </Link>
-                  ))}
-                  {subcategories.length > 5 && (
-                    <Link
-                      href={`/category/${category.slug}`}
-                      className="flex items-center gap-2 text-sm text-primary hover:underline pl-6"
-                    >
-                      +{subcategories.length - 5} more
-                    </Link>
-                  )}
-                </div>
-              </div>
-            )}
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
         );
       })}
     </div>
