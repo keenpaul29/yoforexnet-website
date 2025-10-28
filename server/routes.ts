@@ -202,12 +202,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Email address required" });
       }
 
-      console.log(`[EMAIL TEST] Sending test email to: ${to}`);
-      console.log(`[EMAIL TEST] BREVO_SMTP_HOST: ${process.env.BREVO_SMTP_HOST ? 'SET' : 'NOT SET'}`);
-      console.log(`[EMAIL TEST] BREVO_SMTP_USER: ${process.env.BREVO_SMTP_USER ? process.env.BREVO_SMTP_USER.substring(0, 10) + '...' : 'NOT SET'}`);
-      console.log(`[EMAIL TEST] BREVO_FROM_EMAIL: ${process.env.BREVO_FROM_EMAIL}`);
-      console.log(`[EMAIL TEST] BASE_URL: ${process.env.BASE_URL}`);
-
       // Send a welcome/verification email as test
       await emailService.sendEmailVerification(
         to,
@@ -215,7 +209,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "test-verification-token-123"
       );
 
-      console.log(`[EMAIL TEST] Email sent successfully to: ${to}`);
       res.json({ success: true, message: `Test email sent to ${to}` });
     } catch (error: any) {
       console.error('[EMAIL TEST] Error:', error);
