@@ -8,6 +8,8 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - Color Scheme: Professional blues and purples with gold accents for coins
 - Layout: Card-based layout with clear hierarchy, responsive design
 - **Stats Position**: Summary statistics (Total Categories/Threads/Posts) must be at top of pages for better visibility
+- **UI Style**: Compact, informative, professional, and simple (15-25% whitespace reduction)
+- **Reading Experience**: Medium-style thread pages with reading progress bar, floating action bar, improved typography
 - Real-time Updates: Auto-refreshing widgets (10s-60s intervals)
 - MANDATORY: ALWAYS update these files IMMEDIATELY after making ANY code changes:
     1. COMPLETE_PLATFORM_GUIDE.md
@@ -15,6 +17,17 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
     3. FRONTEND_ARCHITECTURE.md
     4. API_QUICK_REFERENCE.txt
     5. replit.md
+
+## Recent Updates (October 28, 2025)
+- **Next.js 15 Navigation**: Fixed async params in all dynamic routes (guides, threads, categories, brokers)
+- **Notification System**: Connected header bell to real API endpoints, displays accurate unread count
+- **Feedback Submission**: Added success toast, form reset, and confirmation screen
+- **Word Count**: Thread compose now counts words (space-separated) instead of characters
+- **Educational Guides**: Created comprehensive "How to Earn Coins" guide at `/guides/how-to-earn-coins` with leveling system, XP requirements, and coin economics
+- **Broker Logo Auto-Fetch**: Implemented broker name autocomplete with automatic logo fetching from Clearbit API → Google Favicon → UI Avatars placeholder, 300ms debounced search
+- **UI Improvements**: Reduced spacing by 15-25% across 5 major pages (Home, Discussions, Earn, Categories, Brokers) for more compact, professional appearance
+- **Medium-Style Reading**: Thread detail pages feature reading progress bar, floating action bar, improved typography, better markdown rendering, and nested reply visualization
+- **Interactive Cards**: Discussion cards have "Show more/Show less" functionality while maintaining card-wide navigation
 
 ## System Architecture
 
@@ -56,6 +69,8 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Broker Profiles**: Detailed profiles with company info, regulation, and spreads.
 - **Community Features**: Review system, scam watch reporting, and community-driven auto-rating.
 - **Filtering**: Search by regulation, platform, and spread type.
+- **Logo Auto-Fetch**: Broker logo service with multi-tier fallback system (Clearbit API → Google S2 Favicon → UI Avatars)
+- **Autocomplete**: Real-time broker name search with 300ms debouncing, logo preview in suggestions
 
 ### Stats & Leaderboards
 - **Global Statistics**: Displays total threads, members, replies, and activity.
@@ -64,11 +79,13 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 
 ### Frontend Architecture
 - **Next.js 16 App Router**: Serves all pages with Server Components for SSR and Client Components for interactivity.
-- **Styling**: Tailwind CSS + shadcn/ui.
+- **Styling**: Tailwind CSS + shadcn/ui with compact, professional spacing (15-25% reduced whitespace).
 - **State Management**: TanStack Query v5.
 - **Forms**: React Hook Form + Zod validation.
 - **Real-time**: Custom `useRealtimeUpdates` hook.
 - **API Communication**: Next.js rewrites client-side `/api/*` to Express, server-side direct fetch.
+- **Reading Experience**: Medium-inspired thread pages with progress bars, floating actions, enhanced typography.
+- **Word Count**: Whitespace tokenization (`content.trim().split(/\s+/).filter(Boolean).length`) for accurate word counting.
 
 ### Backend Architecture
 - **Server**: Express.js API-only mode.
@@ -152,3 +169,11 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Stripe**: For credit/debit card payments.
 - **Replit Auth**: OIDC authentication.
 - **PostgreSQL**: Neon-backed database.
+- **Clearbit Logo API**: Primary broker logo source (free tier).
+- **Google S2 Favicon API**: Fallback for broker logos.
+
+## Educational Content
+- **Guides System**: Markdown-based educational guides at `/guides/[slug]`
+- **Available Guides**:
+  - `/guides/how-to-earn-coins`: Comprehensive guide covering earning methods, leveling system (Novice → Contributor → Verified → Pro), XP requirements, daily limits, coin exchange rates, and withdrawal process
+- **Integration**: Guides linked from earn page, header coin balance help icon
