@@ -4245,6 +4245,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       };
 
+      // Get follower/following counts
+      const followers = await storage.getUserFollowers(user.id).catch(() => []);
+      const following = await storage.getUserFollowing(user.id).catch(() => []);
+
       // Build comprehensive profile response
       const profileData = {
         user,
@@ -4252,8 +4256,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         badges,
         content,
         stats: {
-          followers: 0, // TODO: Implement follower count
-          following: 0, // TODO: Implement following count
+          followers: followers.length,
+          following: following.length,
           posts: threads.length,
           content: content.length,
           totalRevenue,

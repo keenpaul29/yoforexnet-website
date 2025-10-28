@@ -1,11 +1,1 @@
-{
-  "version": 4,
-  "routes": {},
-  "dynamicRoutes": {},
-  "notFoundRoutes": [],
-  "preview": {
-    "previewModeId": "786e0f8d7e7b53fa6d72bfa703f894bd",
-    "previewModeSigningKey": "cf23570f318f8f97e5706b63746178d877405091c9b5cbd0aacc9c92b85169ae",
-    "previewModeEncryptionKey": "aebe24e07467d94e167c64fa510334301b815d4c601dcde2813744cf391a8a3c"
-  }
-}
+{"version":4,"routes":{"/guides/forum-rules":{},"/guides/safe-download-guide":{},"/guides/verified-brokers":{},"/guides/ea-coding-rules":{},"/guides/how-to-earn-coins":{},"/guides/how-to-get-your-thread-seen":{},"/guides/how-to-rank-articles-blogs":{},"/guides/how-to-rank-ea-publications":{},"/guides/new-member-quickstart":{},"/guides/report-a-scam":{},"/guides/badges-levels":{},"/guides/marketplace-seller-guide":{},"/guides/template-beginner-thread":{},"/guides/template-ea-review":{},"/guides/template-trading-journal":{}},"dynamicRoutes":{"/guides/[slug]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/guides/[slug]","routeRegex":"^\\/guides\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"682ca6d78aecfc35bb90523a56688d91","previewModeSigningKey":"9e91f5621c838fb0c1af0b1ec81ece2c6e9480a079e28bd61b7b2b838a909df3","previewModeEncryptionKey":"977f014f6bcac29cc8cf530921f1e6ccb463fb3911eda6874c6d04747e214f22"}}
