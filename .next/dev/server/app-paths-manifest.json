@@ -1,5 +1,6 @@
 {
   "/discussions/new/page": "app/discussions/new/page.js",
   "/page": "app/page.js",
+  "/recharge/page": "app/recharge/page.js",
   "/thread/[slug]/page": "app/thread/[slug]/page.js"
 }
