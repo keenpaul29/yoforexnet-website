@@ -2139,6 +2139,10 @@ body {
   width: 100px;
 }
 
+.w-\[120px\] {
+  width: 120px;
+}
+
 .w-\[180px\] {
   width: 180px;
 }
@@ -2173,10 +2177,6 @@ body {
 
 .w-px {
   width: 1px;
-}
-
-.w-\[120px\] {
-  width: 120px;
 }
 
 .min-w-0 {
@@ -2994,6 +2994,10 @@ body {
   background-color: hsl(var(--accent) / var(--tw-bg-opacity, 1));
 }
 
+.bg-amber-600\/20 {
+  background-color: #d9770633;
+}
+
 .bg-background {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--background) / var(--tw-bg-opacity, 1));
@@ -3038,6 +3042,10 @@ body {
 .bg-card {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--card) / var(--tw-bg-opacity, 1));
+}
+
+.bg-card\/50 {
+  background-color: hsl(var(--card) / .5);
 }
 
 .bg-chart-1 {
@@ -3091,6 +3099,10 @@ body {
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+
+.bg-gray-400\/20 {
+  background-color: #9ca3af33;
 }
 
 .bg-gray-50 {
@@ -3158,6 +3170,10 @@ body {
 
 .bg-muted\/50 {
   background-color: hsl(var(--muted) / .5);
+}
+
+.bg-muted\/60 {
+  background-color: hsl(var(--muted) / .6);
 }
 
 .bg-orange-100 {
@@ -3265,22 +3281,6 @@ body {
   background-color: #eab30826;
 }
 
-.bg-amber-600\/20 {
-  background-color: #d9770633;
-}
-
-.bg-card\/50 {
-  background-color: hsl(var(--card) / .5);
-}
-
-.bg-gray-400\/20 {
-  background-color: #9ca3af33;
-}
-
-.bg-muted\/60 {
-  background-color: hsl(var(--muted) / .6);
-}
-
 .bg-yellow-500\/20 {
   background-color: #eab30833;
 }
@@ -3321,6 +3321,12 @@ body {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-orange-500\/10 {
+  --tw-gradient-from: #f973161a var(--tw-gradient-from-position);
+  --tw-gradient-to: #f9731600 var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .from-orange-500\/5 {
   --tw-gradient-from: #f973160d var(--tw-gradient-from-position);
   --tw-gradient-to: #f9731600 var(--tw-gradient-to-position);
@@ -3354,12 +3360,6 @@ body {
 .from-yellow-500\/20 {
   --tw-gradient-from: #eab30833 var(--tw-gradient-from-position);
   --tw-gradient-to: #eab30800 var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
-.from-orange-500\/10 {
-  --tw-gradient-from: #f973161a var(--tw-gradient-from-position);
-  --tw-gradient-to: #f9731600 var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
@@ -3409,12 +3409,12 @@ body {
   --tw-gradient-to: hsl(var(--primary) / .1) var(--tw-gradient-to-position);
 }
 
-.to-yellow-600 {
-  --tw-gradient-to: #ca8a04 var(--tw-gradient-to-position);
-}
-
 .to-red-500\/10 {
   --tw-gradient-to: #ef44441a var(--tw-gradient-to-position);
+}
+
+.to-yellow-600 {
+  --tw-gradient-to: #ca8a04 var(--tw-gradient-to-position);
 }
 
 .fill-current {
@@ -5622,6 +5622,11 @@ input[type="search"]::-webkit-search-cancel-button {
   background-color: rgb(69 10 10 / var(--tw-bg-opacity, 1));
 }
 
+.dark\:text-amber-400:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(251 191 36 / var(--tw-text-opacity, 1));
+}
+
 .dark\:text-blue-200:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(191 219 254 / var(--tw-text-opacity, 1));
@@ -5724,11 +5729,6 @@ input[type="search"]::-webkit-search-cancel-button {
 .dark\:text-yellow-400:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
-}
-
-.dark\:text-amber-400:is(.dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(251 191 36 / var(--tw-text-opacity, 1));
 }
 
 .dark\:after\:border-white\/10:is(.dark *):after {
@@ -6029,6 +6029,10 @@ input[type="search"]::-webkit-search-cancel-button {
     grid-column: span 8 / span 8;
   }
 
+  .lg\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -6043,10 +6047,6 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .lg\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .lg\:grid-cols-12 {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
 
