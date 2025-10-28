@@ -54,12 +54,12 @@ export default async function HotPage() {
   const data = await getHotThreads();
   const trendingThreads = data.threads || [];
 
-  // Get rank badge style based on position
+  // Get rank badge style based on position - more subtle with transparency
   const getRankStyle = (index: number) => {
-    if (index === 0) return "bg-gradient-to-br from-yellow-500 to-orange-600 text-white shadow-lg shadow-orange-500/30";
-    if (index === 1) return "bg-gradient-to-br from-gray-400 to-gray-600 text-white shadow-md shadow-gray-500/20";
-    if (index === 2) return "bg-gradient-to-br from-amber-600 to-amber-800 text-white shadow-md shadow-amber-600/20";
-    return "bg-gradient-to-br from-muted to-muted/60 text-foreground border border-border";
+    if (index === 0) return "bg-gradient-to-br from-yellow-500/20 to-orange-600/20 text-foreground border border-orange-300/30 dark:border-orange-600/30";
+    if (index === 1) return "bg-gradient-to-br from-gray-400/15 to-gray-600/15 text-foreground border border-gray-300/30 dark:border-gray-600/30";
+    if (index === 2) return "bg-gradient-to-br from-amber-600/20 to-amber-800/20 text-foreground border border-amber-300/30 dark:border-amber-600/30";
+    return "bg-muted/40 text-foreground border border-border/50";
   };
 
   return (
@@ -77,11 +77,8 @@ export default async function HotPage() {
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="relative">
-            <Flame className="w-8 h-8 text-orange-500 animate-pulse" />
-            <div className="absolute inset-0 w-8 h-8 text-orange-400 blur-sm animate-pulse" />
-          </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+          <Flame className="w-8 h-8 text-orange-500/70" />
+          <h1 className="text-4xl font-bold text-foreground">
             What's Hot
           </h1>
         </div>
@@ -99,14 +96,14 @@ export default async function HotPage() {
         ) : (
           trendingThreads.map((thread, index) => (
             <Link key={thread.id} href={`/thread/${thread.slug}`} data-testid={`link-hot-${thread.id}`}>
-              <Card className="group hover:border-orange-300 dark:hover:border-orange-700 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200 overflow-hidden">
-                {/* Gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+              <Card className="group hover:border-orange-200/50 dark:hover:border-orange-800/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200 overflow-hidden">
+                {/* Subtle gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-red-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
                 
                 <CardContent className="p-4">
                   <div className="relative flex items-start gap-3">
-                    {/* Ranking badge with gradient */}
-                    <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-base font-bold ${getRankStyle(index)} transition-transform group-hover:scale-110`}>
+                    {/* Ranking badge - subtle design */}
+                    <div className={`flex-shrink-0 w-10 h-10 rounded-md flex items-center justify-center text-base font-semibold ${getRankStyle(index)} transition-transform group-hover:scale-105`}>
                       {index + 1}
                     </div>
 
@@ -114,7 +111,7 @@ export default async function HotPage() {
                     <div className="flex-1 min-w-0 space-y-2">
                       {/* Title */}
                       <h3 
-                        className="text-lg font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors" 
+                        className="text-lg font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-orange-500/90 dark:group-hover:text-orange-400/80 transition-colors" 
                         data-testid={`text-hot-title-${thread.id}`}
                       >
                         {thread.title}
@@ -150,11 +147,11 @@ export default async function HotPage() {
                       </div>
                     </div>
 
-                    {/* Hot Badge */}
+                    {/* Hot Badge - subtle design */}
                     <div className="flex-shrink-0 self-start">
                       <Badge 
                         variant="secondary" 
-                        className="text-xs px-2 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-md hover:shadow-lg transition-shadow"
+                        className="text-xs px-2 py-1 bg-orange-500/15 text-orange-700 dark:text-orange-400 border border-orange-300/30 dark:border-orange-600/30"
                       >
                         <TrendingUp className="w-3 h-3 mr-1" />
                         Hot

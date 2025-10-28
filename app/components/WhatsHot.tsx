@@ -29,25 +29,22 @@ export default function WhatsHot() {
     return null;
   }
 
-  // Get rank badge style based on position
+  // Get rank badge style based on position - more subtle with transparency
   const getRankStyle = (index: number) => {
-    if (index === 0) return "bg-gradient-to-br from-yellow-500 to-orange-600 text-white shadow-lg shadow-orange-500/30";
-    if (index === 1) return "bg-gradient-to-br from-gray-400 to-gray-600 text-white shadow-md shadow-gray-500/20";
-    if (index === 2) return "bg-gradient-to-br from-amber-600 to-amber-800 text-white shadow-md shadow-amber-600/20";
-    return "bg-gradient-to-br from-muted to-muted/60 text-foreground border border-border";
+    if (index === 0) return "bg-gradient-to-br from-yellow-500/20 to-orange-600/20 text-foreground border border-orange-300/30 dark:border-orange-600/30";
+    if (index === 1) return "bg-gradient-to-br from-gray-400/15 to-gray-600/15 text-foreground border border-gray-300/30 dark:border-gray-600/30";
+    if (index === 2) return "bg-gradient-to-br from-amber-600/20 to-amber-800/20 text-foreground border border-amber-300/30 dark:border-amber-600/30";
+    return "bg-muted/40 text-foreground border border-border/50";
   };
 
   return (
-    <Card className="overflow-hidden border-2" data-testid="card-whats-hot">
-      {/* Header with gradient background */}
-      <CardHeader className="pb-4 bg-gradient-to-r from-orange-500/10 via-red-500/10 to-pink-500/10 dark:from-orange-500/5 dark:via-red-500/5 dark:to-pink-500/5">
+    <Card className="overflow-hidden" data-testid="card-whats-hot">
+      {/* Header with subtle gradient background */}
+      <CardHeader className="pb-4 bg-gradient-to-r from-orange-500/5 via-red-500/5 to-pink-500/5 dark:from-orange-500/3 dark:via-red-500/3 dark:to-pink-500/3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2.5 text-xl">
-            <div className="relative">
-              <Flame className="w-6 h-6 text-orange-500 animate-pulse" />
-              <div className="absolute inset-0 w-6 h-6 text-orange-400 blur-sm animate-pulse" />
-            </div>
-            <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent font-bold">
+            <Flame className="w-5 h-5 text-orange-500/70" />
+            <span className="text-foreground font-semibold">
               What's Hot
             </span>
           </CardTitle>
@@ -55,7 +52,7 @@ export default function WhatsHot() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-950/30"
+              className="text-orange-500/80 hover:text-orange-600 dark:text-orange-400/70"
               data-testid="button-see-all-hot"
             >
               See All
@@ -68,22 +65,22 @@ export default function WhatsHot() {
         {trendingThreads.map((thread, index) => (
           <Link key={thread.id} href={`/thread/${thread.slug}`} data-testid={`link-hot-${thread.id}`}>
             <div 
-              className="group relative flex items-start gap-3 p-3 rounded-xl border border-border bg-card hover:border-orange-300 dark:hover:border-orange-700 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200"
+              className="group relative flex items-start gap-3 p-3 rounded-lg border border-border bg-card hover:border-orange-200/50 dark:hover:border-orange-800/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200"
               data-testid={`card-hot-${thread.id}`}
             >
-              {/* Gradient overlay on hover */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+              {/* Subtle gradient overlay on hover */}
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-orange-500/3 to-red-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               
-              {/* Ranking badge with gradient */}
-              <div className={`relative flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${getRankStyle(index)} transition-transform group-hover:scale-110`}>
+              {/* Ranking badge - subtle design */}
+              <div className={`relative flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center text-sm font-semibold ${getRankStyle(index)} transition-transform group-hover:scale-105`}>
                 {index + 1}
               </div>
 
               {/* Content Column */}
               <div className="relative flex-1 min-w-0 space-y-1.5">
-                {/* Title with better typography */}
+                {/* Title */}
                 <h4 
-                  className="text-sm font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors" 
+                  className="text-sm font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-orange-500/90 dark:group-hover:text-orange-400/80 transition-colors" 
                   data-testid={`text-hot-title-${thread.id}`}
                 >
                   {thread.title}
@@ -120,11 +117,11 @@ export default function WhatsHot() {
                 </div>
               </div>
 
-              {/* Hot Badge - refined design */}
+              {/* Hot Badge - subtle design */}
               <div className="relative flex-shrink-0 self-start">
                 <Badge 
                   variant="secondary" 
-                  className="text-xs px-2 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-md hover:shadow-lg transition-shadow"
+                  className="text-xs px-2 py-0.5 bg-orange-500/15 text-orange-700 dark:text-orange-400 border border-orange-300/30 dark:border-orange-600/30"
                 >
                   <TrendingUp className="w-3 h-3 mr-1" />
                   Hot
