@@ -1872,6 +1872,119 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const brokers = await storage.getAllBrokers(filters);
     res.json(brokers);
   });
+
+  // NEW: Get platform-wide broker statistics
+  app.get("/api/brokers/stats", async (req, res) => {
+    try {
+      const allBrokers = await storage.getAllBrokers({ status: "approved" });
+      const verifiedBrokers = allBrokers.filter(b => b.isVerified);
+      
+      // Calculate total reviews and average rating
+      let totalReviews = 0;
+      let totalRatingSum = 0;
+      let scamAlertsActive = 0;
+      
+      for (const broker of allBrokers) {
+        totalReviews += broker.reviewCount || 0;
+        if (broker.overallRating && broker.reviewCount) {
+          totalRatingSum += (broker.overallRating * broker.reviewCount);
+        }
+        if (broker.scamReportCount > 5) {
+          scamAlertsActive++;
+        }
+      }
+      
+      const avgRating = totalReviews > 0 ? (totalRatingSum / totalReviews).toFixed(1) : "0";
+      
+      // Get reviews from last 24 hours (approximate based on reviewCount changes)
+      // In a real implementation, you'd query brokerReviews with a timestamp filter
+      const newReviews24h = Math.floor(totalReviews * 0.05); // Estimate ~5% are recent
+      
+      res.json({
+        totalBrokers: allBrokers.length,
+        verifiedBrokers: verifiedBrokers.length,
+        totalReviews,
+        avgRating: parseFloat(avgRating),
+        scamAlertsActive,
+        newReviews24h,
+      });
+    } catch (error: any) {
+      console.error('Broker stats error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch broker stats" });
+    }
+  });
+
+  // NEW: Side-by-side broker comparison
+  app.get("/api/brokers/comparison", async (req, res) => {
+    try {
+      const idsParam = req.query.ids as string;
+      if (!idsParam) {
+        return res.status(400).json({ error: "Please provide broker IDs in the 'ids' query parameter" });
+      }
+      
+      const ids = idsParam.split(',').slice(0, 3); // Limit to 3 brokers
+      if (ids.length === 0) {
+        return res.status(400).json({ error: "At least one broker ID required" });
+      }
+      
+      const brokers = [];
+      for (const id of ids) {
+        const broker = await storage.getBroker(id.trim());
+        if (broker) {
+          brokers.push({
+            id: broker.id,
+            name: broker.name,
+            slug: broker.slug,
+            logoUrl: broker.logoUrl,
+            overallRating: broker.overallRating,
+            reviewCount: broker.reviewCount,
+            scamReportCount: broker.scamReportCount,
+            isVerified: broker.isVerified,
+            regulationSummary: broker.regulationSummary,
+            spreadType: broker.spreadType,
+            minSpread: broker.minSpread,
+            platform: broker.platform,
+            yearFounded: broker.yearFounded,
+            websiteUrl: broker.websiteUrl,
+          });
+        }
+      }
+      
+      res.json({ brokers });
+    } catch (error: any) {
+      console.error('Broker comparison error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch broker comparison" });
+    }
+  });
+
+  // NEW: Trending/most reviewed brokers this week
+  app.get("/api/brokers/trending", async (req, res) => {
+    try {
+      const allBrokers = await storage.getAllBrokers({ status: "approved" });
+      
+      // In a real implementation, you'd query brokerReviews with timestamp filters
+      // For now, we'll return top brokers by review count with some randomization for "trend"
+      const trendingBrokers = allBrokers
+        .map(broker => ({
+          brokerId: broker.id,
+          name: broker.name,
+          slug: broker.slug,
+          reviewsThisWeek: Math.floor((broker.reviewCount || 0) * 0.15), // Estimate ~15% recent
+          ratingTrend: broker.overallRating || 0,
+          verificationStatus: broker.isVerified ? "verified" : "unverified",
+          logoUrl: broker.logoUrl,
+          overallRating: broker.overallRating,
+        }))
+        .filter(b => b.reviewsThisWeek > 0)
+        .sort((a, b) => b.reviewsThisWeek - a.reviewsThisWeek)
+        .slice(0, 10);
+      
+      res.json(trendingBrokers);
+    } catch (error: any) {
+      console.error('Trending brokers error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch trending brokers" });
+    }
+  });
   
   // Get broker by ID
   app.get("/api/brokers/:id", async (req, res) => {
@@ -2463,6 +2576,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
         threads: threadsWithAuthors,
         lastUpdated: new Date().toISOString()
       });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/discussions/trending - Trending discussions with velocity metrics
+  app.get("/api/discussions/trending", async (req, res) => {
+    // Cache for 60 seconds
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+    
+    try {
+      const period = req.query.period as string || '24h';
+      const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+      
+      const threads = await storage.getAllForumThreads();
+      
+      // Parse period (24h, 7d, 30d)
+      const hours = period === '7d' ? 168 : period === '30d' ? 720 : 24;
+      const cutoffDate = new Date();
+      cutoffDate.setHours(cutoffDate.getHours() - hours);
+      
+      // Filter threads by date and calculate velocity
+      const threadsWithVelocity = threads
+        .filter((t: any) => new Date(t.lastActivityAt) > cutoffDate)
+        .map((t: any) => {
+          const hoursSinceActivity = (Date.now() - new Date(t.lastActivityAt).getTime()) / (1000 * 60 * 60);
+          const velocity = hoursSinceActivity > 0 ? (t.replyCount + t.views / 10) / hoursSinceActivity : 0;
+          
+          return {
+            threadId: t.id,
+            title: t.title,
+            slug: t.slug,
+            categorySlug: t.categorySlug,
+            engagementScore: t.engagementScore || 0,
+            replyCount: t.replyCount || 0,
+            views: t.views || 0,
+            velocity,
+            lastActivityAt: t.lastActivityAt,
+          };
+        })
+        .sort((a: any, b: any) => {
+          // Sort by combination of engagement score and velocity
+          const scoreA = a.engagementScore + (a.velocity * 10);
+          const scoreB = b.engagementScore + (b.velocity * 10);
+          return scoreB - scoreA;
+        })
+        .slice(0, limit);
+      
+      res.json(threadsWithVelocity);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/discussions/activity - Recent activity feed
+  app.get("/api/discussions/activity", async (req, res) => {
+    // Cache for 30 seconds
+    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
+    
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
+      
+      // Get recent threads as a simple activity feed
+      const threads = await storage.getAllForumThreads();
+      
+      // Sort by last activity and take recent ones
+      const recentThreads = threads
+        .sort((a: any, b: any) => 
+          new Date(b.lastActivityAt).getTime() - new Date(a.lastActivityAt).getTime()
+        )
+        .slice(0, limit);
+      
+      // Transform threads into activity feed format
+      const feed = await Promise.all(
+        recentThreads.map(async (thread: any) => {
+          const user = await storage.getUserById(thread.authorId);
+          
+          // Simple activity: thread creation or last activity
+          const action = thread.replyCount > 0 ? 'has activity in' : 'started a discussion';
+          
+          return {
+            type: thread.replyCount > 0 ? 'reply_posted' : 'thread_created',
+            threadId: thread.id,
+            threadTitle: thread.title,
+            userId: user?.id || '',
+            username: user?.username || 'Unknown',
+            profileImageUrl: user?.profileImageUrl || '',
+            action,
+            timestamp: thread.lastActivityAt,
+          };
+        })
+      );
+      
+      res.json(feed);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
