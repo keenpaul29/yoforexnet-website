@@ -4075,10 +4075,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         return {
           id: item.id,
+          slug: item.slug,
           title: item.title,
           type: item.type,
           priceCoins: item.priceCoins,
           isFree: item.isFree,
+          postLogoUrl: item.postLogoUrl,
           salesScore: item.salesScore || 0,
           totalSales: salesStats.totalSales,
           avgRating: salesStats.avgRating,

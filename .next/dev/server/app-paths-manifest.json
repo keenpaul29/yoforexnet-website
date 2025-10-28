@@ -1,5 +1,4 @@
 {
-  "/category/[slug]/page": "app/category/[slug]/page.js",
   "/content/[slug]/page": "app/content/[slug]/page.js",
   "/discussions/new/page": "app/discussions/new/page.js",
   "/page": "app/page.js",

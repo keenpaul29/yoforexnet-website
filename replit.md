@@ -28,6 +28,7 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **UI Improvements**: Reduced spacing by 15-25% across 5 major pages (Home, Discussions, Earn, Categories, Brokers) for more compact, professional appearance
 - **Medium-Style Reading**: Thread detail pages feature reading progress bar, floating action bar, improved typography, better markdown rendering, and nested reply visualization
 - **Interactive Cards**: Discussion cards have "Show more/Show less" functionality while maintaining card-wide navigation
+- **Component Redesign**: Simplified OnboardingChecklist, TopSellers, and Leaderboard with professional styling (border-0, shadow-sm), cleaner typography, tighter spacing, and improved visual hierarchy
 
 ## System Architecture
 
