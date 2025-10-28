@@ -1573,6 +1573,10 @@ body {
   grid-column: span 3 / span 3;
 }
 
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
 .m-1 {
   margin: .25rem;
 }
@@ -3808,6 +3812,11 @@ body {
   color: rgb(161 98 7 / var(--tw-text-opacity, 1));
 }
 
+.text-amber-700 {
+  --tw-text-opacity: 1;
+  color: rgb(180 83 9 / var(--tw-text-opacity, 1));
+}
+
 .line-through {
   text-decoration-line: line-through;
 }
@@ -4071,6 +4080,10 @@ body {
 
 .ease-linear {
   animation-timing-function: linear;
+}
+
+.running {
+  animation-play-state: running;
 }
 
 .paused {
@@ -5632,6 +5645,10 @@ input[type="search"]::-webkit-search-cancel-button {
     width: 12rem;
   }
 
+  .md\:min-w-80 {
+    min-width: 20rem;
+  }
+
   .md\:max-w-\[420px\] {
     max-width: 420px;
   }
@@ -5721,6 +5738,10 @@ input[type="search"]::-webkit-search-cancel-button {
   .lg\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
+
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1280px) {
@@ -5730,6 +5751,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .xl\:grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .xl\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

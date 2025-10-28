@@ -27,7 +27,15 @@ import {
   Shield,
   Mail,
   HelpCircle,
-  FileBarChart2
+  FileBarChart2,
+  Bot,
+  Trophy,
+  Search,
+  Zap,
+  Smartphone,
+  Activity,
+  Folder,
+  TestTube
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import AdminOverview from "./sections/Overview";
@@ -42,6 +50,14 @@ import Security from "./sections/Security";
 import Communications from "./sections/Communications";
 import Support from "./sections/Support";
 import Logs from "./sections/Logs";
+import AIAutomation from "./sections/AIAutomation";
+import Gamification from "./sections/Gamification";
+import SEOMarketing from "./sections/SEOMarketing";
+import Integrations from "./sections/Integrations";
+import Mobile from "./sections/Mobile";
+import Performance from "./sections/Performance";
+import ContentStudio from "./sections/ContentStudio";
+import Testing from "./sections/Testing";
 
 const sections = [
   { id: "overview", icon: BarChart3, label: "Overview", path: "/admin" },
@@ -51,6 +67,14 @@ const sections = [
   { id: "brokers", icon: Building, label: "Brokers", path: "/admin/brokers" },
   { id: "finance", icon: DollarSign, label: "Finance", path: "/admin/finance" },
   { id: "analytics", icon: TrendingUp, label: "Analytics", path: "/admin/analytics" },
+  { id: "ai-automation", icon: Bot, label: "AI & Automation", path: "/admin/ai-automation" },
+  { id: "gamification", icon: Trophy, label: "Gamification", path: "/admin/gamification" },
+  { id: "seo-marketing", icon: Search, label: "SEO & Marketing", path: "/admin/seo-marketing" },
+  { id: "integrations", icon: Zap, label: "API & Integrations", path: "/admin/integrations" },
+  { id: "mobile", icon: Smartphone, label: "Mobile & Push", path: "/admin/mobile" },
+  { id: "performance", icon: Activity, label: "Performance", path: "/admin/performance" },
+  { id: "content-studio", icon: Folder, label: "Content Studio", path: "/admin/content-studio" },
+  { id: "testing", icon: TestTube, label: "Testing", path: "/admin/testing" },
   { id: "settings", icon: SettingsIcon, label: "Settings", path: "/admin/settings" },
   { id: "security", icon: Shield, label: "Security", path: "/admin/security" },
   { id: "communications", icon: Mail, label: "Communications", path: "/admin/communications" },
@@ -107,6 +131,22 @@ export function AdminDashboardClient() {
         return <AdminFinance />;
       case "/admin/analytics":
         return <Analytics />;
+      case "/admin/ai-automation":
+        return <AIAutomation />;
+      case "/admin/gamification":
+        return <Gamification />;
+      case "/admin/seo-marketing":
+        return <SEOMarketing />;
+      case "/admin/integrations":
+        return <Integrations />;
+      case "/admin/mobile":
+        return <Mobile />;
+      case "/admin/performance":
+        return <Performance />;
+      case "/admin/content-studio":
+        return <ContentStudio />;
+      case "/admin/testing":
+        return <Testing />;
       case "/admin/settings":
         return <Settings />;
       case "/admin/security":
