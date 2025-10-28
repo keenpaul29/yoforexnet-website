@@ -30,6 +30,8 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Interactive Cards**: Discussion cards have "Show more/Show less" functionality while maintaining card-wide navigation
 - **Component Redesign**: Simplified OnboardingChecklist, TopSellers, and Leaderboard with professional styling (border-0, shadow-sm), cleaner typography, tighter spacing, and improved visual hierarchy
 - **TopSellers Real Data**: Fixed "Content Not Found" errors by replacing mock data with real API integration using `/api/content/top-sellers` endpoint with TanStack Query, loading states, 60s auto-refresh, and proper content slug routing
+- **ForumThreadCard Click Navigation**: Added Next.js Link wrapper to entire card component, enabling navigation to `/thread/${slug}` pages with hover/active states preserved; improved styling with smaller avatars (h-9), compact badges (h-4), reduced spacing (pb-2.5), smaller fonts (text-[11px]/text-xs), responsive timestamp hiding on mobile
+- **Leaderboard Click Navigation**: Added Next.js Link wrapper to each leaderboard row, enabling navigation to `/user/${username}` pages; improved styling with smaller avatars (h-7), compact tabs (h-7), reduced icons (h-3.5), tighter spacing (space-y-1, py-1.5), smaller fonts (text-[11px]/text-xs)
 
 ## System Architecture
 
