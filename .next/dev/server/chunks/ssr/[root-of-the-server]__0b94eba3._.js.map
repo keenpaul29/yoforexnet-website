@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/app/earn-coins/page.tsx"],"sourcesContent":["import { redirect } from \"next/navigation\";\n\nexport default function EarnCoinsRedirect() {\n  redirect(\"/earn\");\n}\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEe,SAAS;IACtB,IAAA,iMAAQ,EAAC;AACX","debugId":null}}]
+}
