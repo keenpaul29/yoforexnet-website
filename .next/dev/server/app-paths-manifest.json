@@ -1,9 +1,15 @@
 {
+  "/brokers/page": "app/brokers/page.js",
+  "/categories/page": "app/categories/page.js",
+  "/category/[slug]/page": "app/category/[slug]/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/discussions/page": "app/discussions/page.js",
   "/earn-coins/page": "app/earn-coins/page.js",
   "/earn/page": "app/earn/page.js",
   "/marketplace/page": "app/marketplace/page.js",
   "/page": "app/page.js",
-  "/settings/page": "app/settings/page.js"
+  "/publish/page": "app/publish/page.js",
+  "/recharge/page": "app/recharge/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/thread/[slug]/page": "app/thread/[slug]/page.js"
 }
