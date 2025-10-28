@@ -98,11 +98,14 @@ import {
   type InsertContentRevision,
   type UserActivity,
   type InsertUserActivity,
+  type Feedback,
+  type InsertFeedback,
   users,
   userActivity,
   coinTransactions,
   rechargeOrders,
   withdrawalRequests,
+  feedback,
   content,
   contentPurchases,
   contentReviews,
@@ -1299,6 +1302,26 @@ export interface IStorage {
    * Restore content revision
    */
   restoreContentRevision(revisionId: number, restoredBy: string): Promise<void>;
+  
+  /**
+   * Create feedback submission
+   */
+  createFeedback(feedback: InsertFeedback): Promise<Feedback>;
+  
+  /**
+   * Get all feedback (admin)
+   */
+  listFeedback(filters?: { status?: string; type?: string; limit?: number }): Promise<Feedback[]>;
+  
+  /**
+   * Get feedback by user
+   */
+  getUserFeedback(userId: string): Promise<Feedback[]>;
+  
+  /**
+   * Update feedback status (admin)
+   */
+  updateFeedbackStatus(id: string, status: string, adminNotes?: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -3660,6 +3683,35 @@ export class MemStorage implements IStorage {
 
   async restoreContentRevision(revisionId: number, restoredBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
+  }
+
+  async createFeedback(data: InsertFeedback): Promise<Feedback> {
+    const feedbackItem: Feedback = {
+      id: randomUUID(),
+      userId: data.userId ?? null,
+      type: data.type,
+      subject: data.subject,
+      message: data.message,
+      email: data.email ?? null,
+      status: "new",
+      priority: "medium",
+      adminNotes: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return feedbackItem;
+  }
+
+  async listFeedback(filters?: { status?: string; type?: string; limit?: number }): Promise<Feedback[]> {
+    return [];
+  }
+
+  async getUserFeedback(userId: string): Promise<Feedback[]> {
+    return [];
+  }
+
+  async updateFeedbackStatus(id: string, status: string, adminNotes?: string): Promise<void> {
+    return Promise.resolve();
   }
 }
 
@@ -9098,6 +9150,88 @@ export class DrizzleStorage implements IStorage {
       });
     } catch (error) {
       console.error("Error restoring content revision:", error);
+      throw error;
+    }
+  }
+
+  async createFeedback(data: InsertFeedback): Promise<Feedback> {
+    try {
+      const [newFeedback] = await db
+        .insert(feedback)
+        .values({
+          userId: data.userId ?? null,
+          type: data.type,
+          subject: data.subject,
+          message: data.message,
+          email: data.email ?? null,
+        })
+        .returning();
+      return newFeedback;
+    } catch (error) {
+      console.error("Error creating feedback:", error);
+      throw error;
+    }
+  }
+
+  async listFeedback(filters?: { status?: string; type?: string; limit?: number }): Promise<Feedback[]> {
+    try {
+      let query = db.select().from(feedback);
+
+      const conditions = [];
+      if (filters?.status) {
+        conditions.push(eq(feedback.status, filters.status as any));
+      }
+      if (filters?.type) {
+        conditions.push(eq(feedback.type, filters.type as any));
+      }
+
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions)) as any;
+      }
+
+      query = query.orderBy(desc(feedback.createdAt)) as any;
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit) as any;
+      }
+
+      return await query;
+    } catch (error) {
+      console.error("Error listing feedback:", error);
+      throw error;
+    }
+  }
+
+  async getUserFeedback(userId: string): Promise<Feedback[]> {
+    try {
+      return await db
+        .select()
+        .from(feedback)
+        .where(eq(feedback.userId, userId))
+        .orderBy(desc(feedback.createdAt));
+    } catch (error) {
+      console.error("Error getting user feedback:", error);
+      throw error;
+    }
+  }
+
+  async updateFeedbackStatus(id: string, status: string, adminNotes?: string): Promise<void> {
+    try {
+      const updates: any = {
+        status: status as any,
+        updatedAt: new Date(),
+      };
+      
+      if (adminNotes !== undefined) {
+        updates.adminNotes = adminNotes;
+      }
+
+      await db
+        .update(feedback)
+        .set(updates)
+        .where(eq(feedback.id, id));
+    } catch (error) {
+      console.error("Error updating feedback status:", error);
       throw error;
     }
   }

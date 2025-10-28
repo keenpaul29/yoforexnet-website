@@ -141,6 +141,24 @@ export const withdrawalRequests = pgTable("withdrawal_requests", {
   amountCheck: check("chk_withdrawal_amount_min", sql`${table.amount} >= 1000`),
 }));
 
+export const feedback = pgTable("feedback", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id),
+  type: text("type").notNull().$type<"bug" | "feature" | "improvement" | "other">(),
+  subject: text("subject").notNull(),
+  message: text("message").notNull(),
+  email: text("email"),
+  status: text("status").notNull().$type<"new" | "in_progress" | "resolved" | "closed">().default("new"),
+  priority: text("priority").$type<"low" | "medium" | "high" | "urgent">().default("medium"),
+  adminNotes: text("admin_notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_feedback_user_id").on(table.userId),
+  statusIdx: index("idx_feedback_status").on(table.status),
+  typeIdx: index("idx_feedback_type").on(table.type),
+}));
+
 export const content = pgTable("content", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   authorId: varchar("author_id").notNull().references(() => users.id),
@@ -1149,6 +1167,17 @@ export const insertWithdrawalRequestSchema = createInsertSchema(withdrawalReques
   cryptoType: z.enum(["BTC", "ETH"]),
   walletAddress: z.string().min(26, "Invalid wallet address").max(100, "Invalid wallet address"),
 });
+
+export const insertFeedbackSchema = createInsertSchema(feedback).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  status: true,
+  priority: true,
+  adminNotes: true,
+});
+export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
+export type Feedback = typeof feedback.$inferSelect;
 
 export const insertContentSchema = createInsertSchema(content).omit({
   id: true,

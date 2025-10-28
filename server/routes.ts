@@ -22,6 +22,7 @@ import {
   insertUserFollowSchema,
   insertMessageSchema,
   updateUserProfileSchema,
+  insertFeedbackSchema,
   BADGE_METADATA,
   type BadgeType,
   coinTransactions,
@@ -213,29 +214,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // FEEDBACK ENDPOINT - Submit user feedback
   app.post("/api/feedback", async (req, res) => {
     try {
-      const { type, subject, message, email } = req.body;
-      
-      if (!type || !subject || !message) {
-        return res.status(400).json({ error: "Type, subject, and message are required" });
-      }
+      // Extract userId from session (may be null for anonymous feedback)
+      const userId = req.isAuthenticated() ? (req.user as any)?.claims?.sub : null;
 
-      console.log(`[FEEDBACK] New feedback received:`);
-      console.log(`  Type: ${type}`);
-      console.log(`  Subject: ${subject}`);
-      console.log(`  Message: ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}`);
-      console.log(`  Email: ${email || 'Not provided'}`);
+      // Validate request body using insertFeedbackSchema
+      const validatedData = insertFeedbackSchema.parse({
+        userId: userId,
+        type: req.body.type,
+        subject: req.body.subject,
+        message: req.body.message,
+        email: req.body.email,
+      });
 
-      // In a production app, you would:
-      // 1. Store in database
-      // 2. Send notification email to support team
-      // 3. Create support ticket
-      
+      // Persist feedback to database
+      const createdFeedback = await storage.createFeedback(validatedData);
+
+      console.log(`[FEEDBACK] New feedback created:`);
+      console.log(`  ID: ${createdFeedback.id}`);
+      console.log(`  Type: ${createdFeedback.type}`);
+      console.log(`  Subject: ${createdFeedback.subject}`);
+      console.log(`  User ID: ${createdFeedback.userId || 'Anonymous'}`);
+
       res.json({ 
-        success: true, 
+        success: true,
+        id: createdFeedback.id,
         message: "Feedback submitted successfully. Thank you for helping us improve!" 
       });
     } catch (error: any) {
       console.error('[FEEDBACK] Error:', error);
+      
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ 
+          error: "Invalid feedback data",
+          details: error.errors 
+        });
+      }
+      
       res.status(500).json({ error: error.message });
     }
   });
