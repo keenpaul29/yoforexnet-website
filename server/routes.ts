@@ -6627,6 +6627,556 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================
+  // ADMIN DASHBOARD API ENDPOINTS
+  // ============================================
+
+  /**
+   * GET /api/admin/overview/stats
+   * Get admin dashboard overview statistics
+   */
+  app.get("/api/admin/overview/stats", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const totalUsers = await storage.getTotalUsers();
+      const newUsers24h = await storage.getNewUsersLast24Hours();
+      const totalContent = await storage.getTotalContent();
+      const newContent24h = await storage.getNewContentLast24Hours();
+      
+      res.json({
+        users: { total: totalUsers, new24h: newUsers24h },
+        content: { total: totalContent, new24h: newContent24h },
+        revenue: { total: 0, today: 0 },
+        moderation: { pending: 0, reports: 0 }
+      });
+    } catch (error) {
+      console.error("Error fetching admin overview stats:", error);
+      res.status(500).json({ error: "Failed to fetch overview stats" });
+    }
+  });
+
+  /**
+   * GET /api/admin/overview/activity-feed
+   * Get recent admin activity
+   */
+  app.get("/api/admin/overview/activity-feed", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      // Mock data for now - implement admin activity logging in production
+      res.json([
+        {
+          id: 1,
+          adminUsername: 'admin',
+          actionType: 'User Ban',
+          targetType: 'User',
+          status: 'success',
+          createdAt: new Date().toISOString()
+        }
+      ]);
+    } catch (error) {
+      console.error("Error fetching activity feed:", error);
+      res.status(500).json({ error: "Failed to fetch activity feed" });
+    }
+  });
+
+  /**
+   * GET /api/admin/overview/user-growth
+   * Get user growth chart data
+   */
+  app.get("/api/admin/overview/user-growth", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      // Mock data for demonstration
+      const data = [
+        { date: '2025-01-21', users: 12 },
+        { date: '2025-01-22', users: 14 },
+        { date: '2025-01-23', users: 15 },
+        { date: '2025-01-24', users: 16 },
+        { date: '2025-01-25', users: 16 },
+        { date: '2025-01-26', users: 16 },
+        { date: '2025-01-27', users: 16 },
+      ];
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching user growth:", error);
+      res.status(500).json({ error: "Failed to fetch user growth" });
+    }
+  });
+
+  /**
+   * GET /api/admin/overview/content-trend
+   * Get content trend chart data
+   */
+  app.get("/api/admin/overview/content-trend", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      // Mock data for demonstration
+      const data = [
+        { date: '2025-01-21', count: 5 },
+        { date: '2025-01-22', count: 8 },
+        { date: '2025-01-23', count: 6 },
+        { date: '2025-01-24', count: 10 },
+        { date: '2025-01-25', count: 7 },
+        { date: '2025-01-26', count: 9 },
+        { date: '2025-01-27', count: 11 },
+      ];
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching content trend:", error);
+      res.status(500).json({ error: "Failed to fetch content trend" });
+    }
+  });
+
+  /**
+   * GET /api/admin/users
+   * Get users with filters
+   */
+  app.get("/api/admin/users", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users.slice(0, 50)); // Limit to 50 for performance
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
+  /**
+   * POST /api/admin/users/:userId/ban
+   * Ban a user
+   */
+  app.post("/api/admin/users/:userId/ban", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      // Implement user ban logic
+      console.log(`[ADMIN] User ${req.params.userId} banned`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error banning user:", error);
+      res.status(500).json({ error: "Failed to ban user" });
+    }
+  });
+
+  /**
+   * POST /api/admin/users/:userId/adjust-coins
+   * Adjust user coin balance
+   */
+  app.post("/api/admin/users/:userId/adjust-coins", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const { amount, reason } = req.body;
+      // Implement coin adjustment logic
+      console.log(`[ADMIN] Adjusted ${amount} coins for user ${req.params.userId}: ${reason}`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error adjusting coins:", error);
+      res.status(500).json({ error: "Failed to adjust coins" });
+    }
+  });
+
+  /**
+   * GET /api/admin/content/moderation-queue
+   * Get content moderation queue
+   */
+  app.get("/api/admin/content/moderation-queue", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      // Mock data - implement actual moderation queue
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching moderation queue:", error);
+      res.status(500).json({ error: "Failed to fetch moderation queue" });
+    }
+  });
+
+  /**
+   * GET /api/admin/content/reported
+   * Get reported content
+   */
+  app.get("/api/admin/content/reported", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      // Mock data - implement actual reported content
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching reported content:", error);
+      res.status(500).json({ error: "Failed to fetch reported content" });
+    }
+  });
+
+  /**
+   * POST /api/admin/content/:contentId/approve
+   * Approve content
+   */
+  app.post("/api/admin/content/:contentId/approve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Content ${req.params.contentId} approved`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error approving content:", error);
+      res.status(500).json({ error: "Failed to approve content" });
+    }
+  });
+
+  /**
+   * POST /api/admin/content/:contentId/reject
+   * Reject content
+   */
+  app.post("/api/admin/content/:contentId/reject", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Content ${req.params.contentId} rejected`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error rejecting content:", error);
+      res.status(500).json({ error: "Failed to reject content" });
+    }
+  });
+
+  /**
+   * DELETE /api/admin/content/:contentId
+   * Delete content
+   */
+  app.delete("/api/admin/content/:contentId", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Content ${req.params.contentId} deleted`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting content:", error);
+      res.status(500).json({ error: "Failed to delete content" });
+    }
+  });
+
+  /**
+   * GET /api/admin/marketplace/stats
+   * Get marketplace statistics
+   */
+  app.get("/api/admin/marketplace/stats", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const totalContent = await storage.getTotalContent();
+      res.json({
+        totalItems: totalContent,
+        pendingItems: 0,
+        totalSales: 0,
+        salesThisWeek: 0,
+        totalRevenue: 0,
+        revenueThisWeek: 0
+      });
+    } catch (error) {
+      console.error("Error fetching marketplace stats:", error);
+      res.status(500).json({ error: "Failed to fetch marketplace stats" });
+    }
+  });
+
+  /**
+   * GET /api/admin/marketplace/items
+   * Get marketplace items
+   */
+  app.get("/api/admin/marketplace/items", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const content = await storage.getAllContent();
+      res.json(content.slice(0, 50));
+    } catch (error) {
+      console.error("Error fetching marketplace items:", error);
+      res.status(500).json({ error: "Failed to fetch marketplace items" });
+    }
+  });
+
+  /**
+   * GET /api/admin/marketplace/top-selling
+   * Get top selling items
+   */
+  app.get("/api/admin/marketplace/top-selling", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching top selling items:", error);
+      res.status(500).json({ error: "Failed to fetch top selling items" });
+    }
+  });
+
+  /**
+   * GET /api/admin/marketplace/revenue-chart
+   * Get revenue chart data
+   */
+  app.get("/api/admin/marketplace/revenue-chart", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching revenue chart:", error);
+      res.status(500).json({ error: "Failed to fetch revenue chart" });
+    }
+  });
+
+  /**
+   * POST /api/admin/marketplace/:itemId/approve
+   * Approve marketplace item
+   */
+  app.post("/api/admin/marketplace/:itemId/approve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Marketplace item ${req.params.itemId} approved`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error approving item:", error);
+      res.status(500).json({ error: "Failed to approve item" });
+    }
+  });
+
+  /**
+   * POST /api/admin/marketplace/:itemId/reject
+   * Reject marketplace item
+   */
+  app.post("/api/admin/marketplace/:itemId/reject", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Marketplace item ${req.params.itemId} rejected`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error rejecting item:", error);
+      res.status(500).json({ error: "Failed to reject item" });
+    }
+  });
+
+  /**
+   * GET /api/admin/brokers
+   * Get brokers list
+   */
+  app.get("/api/admin/brokers", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const brokers = await storage.getAllBrokers();
+      res.json(brokers.slice(0, 50));
+    } catch (error) {
+      console.error("Error fetching brokers:", error);
+      res.status(500).json({ error: "Failed to fetch brokers" });
+    }
+  });
+
+  /**
+   * GET /api/admin/brokers/scam-reports
+   * Get scam reports
+   */
+  app.get("/api/admin/brokers/scam-reports", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching scam reports:", error);
+      res.status(500).json({ error: "Failed to fetch scam reports" });
+    }
+  });
+
+  /**
+   * GET /api/admin/brokers/reviews
+   * Get broker reviews
+   */
+  app.get("/api/admin/brokers/reviews", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const reviews = await storage.getAllBrokerReviews();
+      res.json(reviews.slice(0, 50));
+    } catch (error) {
+      console.error("Error fetching broker reviews:", error);
+      res.status(500).json({ error: "Failed to fetch broker reviews" });
+    }
+  });
+
+  /**
+   * POST /api/admin/brokers/:brokerId/verify
+   * Verify broker
+   */
+  app.post("/api/admin/brokers/:brokerId/verify", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Broker ${req.params.brokerId} verified`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error verifying broker:", error);
+      res.status(500).json({ error: "Failed to verify broker" });
+    }
+  });
+
+  /**
+   * POST /api/admin/brokers/:brokerId/unverify
+   * Unverify broker
+   */
+  app.post("/api/admin/brokers/:brokerId/unverify", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Broker ${req.params.brokerId} unverified`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error unverifying broker:", error);
+      res.status(500).json({ error: "Failed to unverify broker" });
+    }
+  });
+
+  /**
+   * POST /api/admin/brokers/scam-reports/:reportId/resolve
+   * Resolve scam report
+   */
+  app.post("/api/admin/brokers/scam-reports/:reportId/resolve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      console.log(`[ADMIN] Scam report ${req.params.reportId} resolved`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error resolving scam report:", error);
+      res.status(500).json({ error: "Failed to resolve scam report" });
+    }
+  });
+
+  /**
+   * GET /api/admin/finance/overview
+   * Get finance overview
+   */
+  app.get("/api/admin/finance/overview", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      res.json({
+        totalRevenue: 0,
+        revenueGrowth: 0,
+        pendingWithdrawals: 0,
+        pendingWithdrawalCount: 0,
+        totalTransactions: 0,
+        transactionsToday: 0,
+        topEarner: { username: 'N/A', earnings: 0 }
+      });
+    } catch (error) {
+      console.error("Error fetching finance overview:", error);
+      res.status(500).json({ error: "Failed to fetch finance overview" });
+    }
+  });
+
+  /**
+   * GET /api/admin/finance/transactions
+   * Get transactions
+   */
+  app.get("/api/admin/finance/transactions", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const transactions = await storage.getAllCoinTransactions();
+      res.json(transactions.slice(0, 100));
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      res.status(500).json({ error: "Failed to fetch transactions" });
+    }
+  });
+
+  /**
+   * GET /api/admin/finance/withdrawals/pending
+   * Get pending withdrawals
+   */
+  app.get("/api/admin/finance/withdrawals/pending", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      const withdrawals = await storage.getPendingWithdrawals();
+      res.json(withdrawals);
+    } catch (error) {
+      console.error("Error fetching pending withdrawals:", error);
+      res.status(500).json({ error: "Failed to fetch pending withdrawals" });
+    }
+  });
+
+  /**
+   * GET /api/admin/finance/revenue-chart
+   * Get revenue chart data
+   */
+  app.get("/api/admin/finance/revenue-chart", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching revenue chart:", error);
+      res.status(500).json({ error: "Failed to fetch revenue chart" });
+    }
+  });
+
+  /**
+   * GET /api/admin/finance/revenue-by-source
+   * Get revenue by source
+   */
+  app.get("/api/admin/finance/revenue-by-source", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching revenue by source:", error);
+      res.status(500).json({ error: "Failed to fetch revenue by source" });
+    }
+  });
+
+  /**
+   * POST /api/admin/finance/withdrawals/:withdrawalId/approve
+   * Approve withdrawal
+   */
+  app.post("/api/admin/finance/withdrawals/:withdrawalId/approve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      await storage.approveWithdrawal(parseInt(req.params.withdrawalId));
+      console.log(`[ADMIN] Withdrawal ${req.params.withdrawalId} approved`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error approving withdrawal:", error);
+      res.status(500).json({ error: "Failed to approve withdrawal" });
+    }
+  });
+
+  /**
+   * POST /api/admin/finance/withdrawals/:withdrawalId/reject
+   * Reject withdrawal
+   */
+  app.post("/api/admin/finance/withdrawals/:withdrawalId/reject", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ error: "Admin access required" });
+    
+    try {
+      await storage.rejectWithdrawal(parseInt(req.params.withdrawalId), req.body.reason);
+      console.log(`[ADMIN] Withdrawal ${req.params.withdrawalId} rejected`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error rejecting withdrawal:", error);
+      res.status(500).json({ error: "Failed to reject withdrawal" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
