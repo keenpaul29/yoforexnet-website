@@ -2315,6 +2315,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // GET /api/hot - Unified hot content (threads + marketplace + brokers) - Mixed ranking
+  app.get("/api/hot", async (req, res) => {
+    // Cache for 60 seconds
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+    
+    try {
+      // Support limit query parameter (default 10, max 50)
+      const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+      
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
+      // Fetch all content types
+      const [threads, marketplaceContent, brokers] = await Promise.all([
+        storage.getAllForumThreads(),
+        storage.getAllContent({ status: 'published' }),
+        storage.getAllBrokers({ isVerified: true })
+      ]);
+      
+      // Prepare thread items (normalized score)
+      const threadItems = threads
+        .filter((t: any) => new Date(t.createdAt) >= sevenDaysAgo)
+        .map((thread: any) => ({
+          id: thread.id,
+          type: 'thread' as const,
+          title: thread.title,
+          slug: thread.slug,
+          categorySlug: thread.categorySlug,
+          views: thread.views || 0,
+          createdAt: thread.createdAt,
+          authorId: thread.authorId,
+          // Normalize engagement score (typically 0-200) to common scale
+          normalizedScore: (thread.engagementScore || 0) * 5,
+          originalScore: thread.engagementScore || 0,
+          replyCount: thread.replyCount || 0,
+        }));
+      
+      // Prepare marketplace items (normalized score)
+      const marketplaceItems = marketplaceContent
+        .filter((c: any) => new Date(c.createdAt) >= sevenDaysAgo)
+        .map((item: any) => ({
+          id: item.id,
+          type: item.type as 'ea' | 'indicator' | 'article' | 'source_code',
+          title: item.title,
+          slug: item.slug,
+          categorySlug: item.category,
+          views: item.downloads || 0,
+          createdAt: item.createdAt,
+          authorId: item.authorId,
+          priceCoins: item.priceCoins || 0,
+          isFree: item.isFree,
+          // Normalize sales score (typically 0-500) to common scale
+          normalizedScore: (item.salesScore || 0) * 2,
+          originalScore: item.salesScore || 0,
+          purchaseCount: item.purchaseCount || 0,
+        }));
+      
+      // Prepare broker items (normalized score)
+      const brokerItems = brokers
+        .map((broker: any) => ({
+          id: broker.id,
+          type: 'broker' as const,
+          title: broker.name,
+          slug: broker.slug,
+          categorySlug: 'brokers',
+          views: broker.reviewCount || 0,
+          createdAt: broker.createdAt,
+          authorId: broker.submittedBy,
+          // Normalize rating (0-5 stars * 100 reviews = 0-500) to common scale
+          normalizedScore: (broker.overallRating || 0) * (broker.reviewCount || 0) * 2,
+          originalScore: broker.overallRating || 0,
+          reviewCount: broker.reviewCount || 0,
+          overallRating: broker.overallRating || 0,
+        }));
+      
+      // Combine all items and sort by normalized score
+      const allHotItems = [...threadItems, ...marketplaceItems, ...brokerItems]
+        .sort((a, b) => b.normalizedScore - a.normalizedScore)
+        .slice(0, limit);
+      
+      // Enrich with author information
+      const itemsWithAuthors = await Promise.all(allHotItems.map(async (item) => {
+        const author = await storage.getUserById(item.authorId);
+        return {
+          ...item,
+          author: {
+            id: author?.id,
+            username: author?.username,
+            profileImageUrl: author?.profileImageUrl
+          }
+        };
+      }));
+      
+      res.json({
+        items: itemsWithAuthors,
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // GET /api/threads/highlights - This week's highlights - MUST BE BEFORE /:id route
   app.get("/api/threads/highlights", async (req, res) => {
     // Cache for 60 seconds

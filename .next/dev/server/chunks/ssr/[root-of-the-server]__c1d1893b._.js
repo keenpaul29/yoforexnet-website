@@ -5074,6 +5074,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/trending-up.js [app-ssr] (ecmascript) <export default as TrendingUp>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/eye.js [app-ssr] (ecmascript) <export default as Eye>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.js [app-ssr] (ecmascript) <export default as Clock>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shopping$2d$cart$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ShoppingCart$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/shopping-cart.js [app-ssr] (ecmascript) <export default as ShoppingCart>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/star.js [app-ssr] (ecmascript) <export default as Star>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/message-square.js [app-ssr] (ecmascript) <export default as MessageSquare>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useRealtimeUpdates$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/hooks/useRealtimeUpdates.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/date-fns/formatDistanceToNow.mjs [app-ssr] (ecmascript)");
@@ -5087,16 +5090,16 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$
 ;
 ;
 function WhatsHot() {
-    // Auto-refresh hot threads every 30 seconds - limit to 5 items
-    const { data, isLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useRealtimeUpdates$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRealtimeUpdates"])('/api/threads/hot?limit=5', {
+    // Auto-refresh hot items every 30 seconds - limit to 5 items - UNIFIED CONTENT
+    const { data, isLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useRealtimeUpdates$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRealtimeUpdates"])('/api/hot?limit=5', {
         interval: 30000
     });
-    // Hide component when loading or no threads
+    // Hide component when loading or no items
     if (isLoading && !data) {
         return null;
     }
-    const trendingThreads = data?.threads || [];
-    if (trendingThreads.length === 0) {
+    const hotItems = data?.items || [];
+    if (hotItems.length === 0) {
         return null;
     }
     // Get rank badge style based on position - more subtle with transparency
@@ -5105,6 +5108,59 @@ function WhatsHot() {
         if (index === 1) return "bg-gradient-to-br from-gray-400/15 to-gray-600/15 text-foreground border border-gray-300/30 dark:border-gray-600/30";
         if (index === 2) return "bg-gradient-to-br from-amber-600/20 to-amber-800/20 text-foreground border border-amber-300/30 dark:border-amber-600/30";
         return "bg-muted/40 text-foreground border border-border/50";
+    };
+    // Get content type badge and icon
+    const getContentTypeInfo = (type)=>{
+        switch(type){
+            case 'thread':
+                return {
+                    label: 'Discussion',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__["MessageSquare"],
+                    color: 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-300/30 dark:border-blue-600/30'
+                };
+            case 'ea':
+                return {
+                    label: 'EA',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shopping$2d$cart$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ShoppingCart$3e$__["ShoppingCart"],
+                    color: 'bg-green-500/15 text-green-700 dark:text-green-400 border-green-300/30 dark:border-green-600/30'
+                };
+            case 'indicator':
+                return {
+                    label: 'Indicator',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"],
+                    color: 'bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-300/30 dark:border-purple-600/30'
+                };
+            case 'article':
+                return {
+                    label: 'Article',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"],
+                    color: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border-indigo-300/30 dark:border-indigo-600/30'
+                };
+            case 'source_code':
+                return {
+                    label: 'Code',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shopping$2d$cart$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ShoppingCart$3e$__["ShoppingCart"],
+                    color: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-300/30 dark:border-cyan-600/30'
+                };
+            case 'broker':
+                return {
+                    label: 'Broker',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"],
+                    color: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-400 border-yellow-300/30 dark:border-yellow-600/30'
+                };
+            default:
+                return {
+                    label: 'Content',
+                    icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"],
+                    color: 'bg-gray-500/15 text-gray-700 dark:text-gray-400 border-gray-300/30 dark:border-gray-600/30'
+                };
+        }
+    };
+    // Get link URL based on content type
+    const getItemLink = (item)=>{
+        if (item.type === 'thread') return `/thread/${item.slug}`;
+        if (item.type === 'broker') return `/brokers/${item.slug}`;
+        return `/content/${item.slug}`;
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
         className: "overflow-hidden",
@@ -5122,7 +5178,7 @@ function WhatsHot() {
                                     className: "w-5 h-5 text-orange-500/70"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 46,
+                                    lineNumber: 97,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5130,13 +5186,13 @@ function WhatsHot() {
                                     children: "What's Hot"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 47,
+                                    lineNumber: 98,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WhatsHot.tsx",
-                            lineNumber: 45,
+                            lineNumber: 96,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -5150,84 +5206,192 @@ function WhatsHot() {
                                 children: "See All"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/WhatsHot.tsx",
-                                lineNumber: 52,
+                                lineNumber: 103,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/components/WhatsHot.tsx",
-                            lineNumber: 51,
+                            lineNumber: 102,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/WhatsHot.tsx",
-                    lineNumber: 44,
+                    lineNumber: 95,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/components/WhatsHot.tsx",
-                lineNumber: 43,
+                lineNumber: 94,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
                 className: "space-y-2 pt-4",
-                children: trendingThreads.map((thread, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                        href: `/thread/${thread.slug}`,
-                        "data-testid": `link-hot-${thread.id}`,
+                children: hotItems.map((item, index)=>{
+                    const contentTypeInfo = getContentTypeInfo(item.type);
+                    const Icon = contentTypeInfo.icon;
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                        href: getItemLink(item),
+                        "data-testid": `link-hot-${item.id}`,
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "group relative flex items-start gap-3 p-3 rounded-lg border border-border bg-card hover:border-orange-200/50 dark:hover:border-orange-800/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200",
-                            "data-testid": `card-hot-${thread.id}`,
+                            "data-testid": `card-hot-${item.id}`,
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "absolute inset-0 rounded-lg bg-gradient-to-r from-orange-500/3 to-red-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 72,
-                                    columnNumber: 15
+                                    lineNumber: 127,
+                                    columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: `relative flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center text-sm font-semibold ${getRankStyle(index)} transition-transform group-hover:scale-105`,
                                     children: index + 1
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 75,
-                                    columnNumber: 15
+                                    lineNumber: 130,
+                                    columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "relative flex-1 min-w-0 space-y-1.5",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
                                             className: "text-sm font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-orange-500/90 dark:group-hover:text-orange-400/80 transition-colors",
-                                            "data-testid": `text-hot-title-${thread.id}`,
-                                            children: thread.title
+                                            "data-testid": `text-hot-title-${item.id}`,
+                                            children: item.title
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                            lineNumber: 82,
-                                            columnNumber: 17
+                                            lineNumber: 137,
+                                            columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2 text-xs text-muted-foreground",
+                                            className: "flex items-center gap-2 text-xs text-muted-foreground flex-wrap",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: "truncate max-w-[120px]",
-                                                    "data-testid": `text-hot-author-${thread.id}`,
+                                                    "data-testid": `text-hot-author-${item.id}`,
                                                     children: [
                                                         "by ",
-                                                        thread.author?.username || "Unknown"
+                                                        item.author?.username || "Unknown"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 91,
-                                                    columnNumber: 19
+                                                    lineNumber: 146,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: "text-border",
                                                     children: "•"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 94,
-                                                    columnNumber: 19
+                                                    lineNumber: 149,
+                                                    columnNumber: 21
                                                 }, this),
+                                                item.type === 'thread' && item.replyCount !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center gap-1",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__["MessageSquare"], {
+                                                                    className: "w-3 h-3"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                    lineNumber: 155,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: [
+                                                                        item.replyCount,
+                                                                        " replies"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                    lineNumber: 156,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/components/WhatsHot.tsx",
+                                                            lineNumber: 154,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-border",
+                                                            children: "•"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/components/WhatsHot.tsx",
+                                                            lineNumber: 158,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true),
+                                                (item.type === 'ea' || item.type === 'indicator' || item.type === 'article' || item.type === 'source_code') && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                    children: !item.isFree && item.priceCoins && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex items-center gap-1",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-yellow-600 dark:text-yellow-400",
+                                                                    children: [
+                                                                        "🪙 ",
+                                                                        item.priceCoins
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                    lineNumber: 167,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                lineNumber: 166,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-border",
+                                                                children: "•"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                lineNumber: 169,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true)
+                                                }, void 0, false),
+                                                item.type === 'broker' && item.overallRating !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center gap-1",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"], {
+                                                                    className: "w-3 h-3 fill-yellow-400 text-yellow-400"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                    lineNumber: 178,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: (item.overallRating / 100).toFixed(1)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/app/components/WhatsHot.tsx",
+                                                                    lineNumber: 179,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/components/WhatsHot.tsx",
+                                                            lineNumber: 177,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-border",
+                                                            children: "•"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/components/WhatsHot.tsx",
+                                                            lineNumber: 181,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "flex items-center gap-1",
                                                     children: [
@@ -5235,28 +5399,28 @@ function WhatsHot() {
                                                             className: "w-3.5 h-3.5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 96,
-                                                            columnNumber: 21
+                                                            lineNumber: 186,
+                                                            columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            "data-testid": `text-hot-views-${thread.id}`,
-                                                            children: thread.views?.toLocaleString() || 0
+                                                            "data-testid": `text-hot-views-${item.id}`,
+                                                            children: item.views?.toLocaleString() || 0
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 97,
-                                                            columnNumber: 21
+                                                            lineNumber: 187,
+                                                            columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 95,
-                                                    columnNumber: 19
+                                                    lineNumber: 185,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                            lineNumber: 90,
-                                            columnNumber: 17
+                                            lineNumber: 145,
+                                            columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex items-center gap-2 flex-wrap",
@@ -5268,44 +5432,62 @@ function WhatsHot() {
                                                             className: "w-3 h-3"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 106,
-                                                            columnNumber: 21
+                                                            lineNumber: 196,
+                                                            columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["formatDistanceToNow"])(new Date(thread.createdAt), {
+                                                            children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["formatDistanceToNow"])(new Date(item.createdAt), {
                                                                 addSuffix: true
                                                             })
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 107,
-                                                            columnNumber: 21
+                                                            lineNumber: 197,
+                                                            columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 105,
-                                                    columnNumber: 19
+                                                    lineNumber: 195,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
+                                                    variant: "outline",
+                                                    className: `text-xs px-2 py-0 ${contentTypeInfo.color}`,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
+                                                            className: "w-3 h-3 mr-1"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/components/WhatsHot.tsx",
+                                                            lineNumber: 205,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        contentTypeInfo.label
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/app/components/WhatsHot.tsx",
+                                                    lineNumber: 201,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
                                                     variant: "outline",
                                                     className: "text-xs px-2 py-0 bg-muted/50 border-border/50 hover:bg-muted transition-colors",
-                                                    children: thread.categorySlug
+                                                    children: item.categorySlug
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 111,
-                                                    columnNumber: 19
+                                                    lineNumber: 210,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                            lineNumber: 104,
-                                            columnNumber: 17
+                                            lineNumber: 194,
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 80,
-                                    columnNumber: 15
+                                    lineNumber: 135,
+                                    columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "relative flex-shrink-0 self-start",
@@ -5317,41 +5499,42 @@ function WhatsHot() {
                                                 className: "w-3 h-3 mr-1"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/WhatsHot.tsx",
-                                                lineNumber: 126,
-                                                columnNumber: 19
+                                                lineNumber: 225,
+                                                columnNumber: 21
                                             }, this),
                                             "Hot"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/WhatsHot.tsx",
-                                        lineNumber: 122,
-                                        columnNumber: 17
+                                        lineNumber: 221,
+                                        columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 121,
-                                    columnNumber: 15
+                                    lineNumber: 220,
+                                    columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WhatsHot.tsx",
-                            lineNumber: 67,
-                            columnNumber: 13
+                            lineNumber: 122,
+                            columnNumber: 15
                         }, this)
-                    }, thread.id, false, {
+                    }, item.id, false, {
                         fileName: "[project]/app/components/WhatsHot.tsx",
-                        lineNumber: 66,
-                        columnNumber: 11
-                    }, this))
+                        lineNumber: 121,
+                        columnNumber: 13
+                    }, this);
+                })
             }, void 0, false, {
                 fileName: "[project]/app/components/WhatsHot.tsx",
-                lineNumber: 64,
+                lineNumber: 115,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/WhatsHot.tsx",
-        lineNumber: 41,
+        lineNumber: 92,
         columnNumber: 5
     }, this);
 }
