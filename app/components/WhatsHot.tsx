@@ -15,8 +15,8 @@ interface HotThreadsData {
 }
 
 export default function WhatsHot() {
-  // Auto-refresh hot threads every 30 seconds
-  const { data, isLoading } = useRealtimeUpdates<HotThreadsData>('/api/threads/hot', { interval: 30000 });
+  // Auto-refresh hot threads every 30 seconds - limit to 5 items
+  const { data, isLoading } = useRealtimeUpdates<HotThreadsData>('/api/threads/hot?limit=5', { interval: 30000 });
 
   // Hide component when loading or no threads
   if (isLoading && !data) {
@@ -51,7 +51,7 @@ export default function WhatsHot() {
               What's Hot
             </span>
           </CardTitle>
-          <Link href="/categories" data-testid="link-see-all-hot">
+          <Link href="/hot" data-testid="link-see-all-hot">
             <Button 
               variant="ghost" 
               size="sm" 

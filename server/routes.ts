@@ -2280,6 +2280,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
     
     try {
+      // Support limit query parameter (default 10, max 50)
+      const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+      
       const threads = await storage.getAllForumThreads();
       
       // Get threads from last 7 days, sorted by engagement score
@@ -2289,7 +2292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const hotThreads = threads
         .filter((t: any) => new Date(t.createdAt) >= sevenDaysAgo)
         .sort((a: any, b: any) => (b.engagementScore || 0) - (a.engagementScore || 0))
-        .slice(0, 10);
+        .slice(0, limit);
       
       const threadsWithAuthors = await Promise.all(hotThreads.map(async (thread: any) => {
         const author = await storage.getUserById(thread.authorId);
