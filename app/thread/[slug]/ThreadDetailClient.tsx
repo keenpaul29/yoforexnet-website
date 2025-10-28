@@ -14,16 +14,121 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { ThumbsUp, MessageSquare, CheckCircle2, Eye, Tag, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { 
+  ThumbsUp, 
+  MessageSquare, 
+  CheckCircle2, 
+  Eye, 
+  Tag, 
+  ArrowLeft, 
+  Bookmark, 
+  Share2,
+  Clock
+} from "lucide-react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import EnhancedFooter from "@/components/EnhancedFooter";
 import { BadgeDisplay } from "@/components/BadgeDisplay";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface ThreadDetailClientProps {
   initialThread: ForumThread | null;
   initialReplies: ForumReply[];
+}
+
+function ReadingProgressBar() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      setProgress(Math.min(scrollPercent, 100));
+    };
+
+    window.addEventListener('scroll', updateProgress);
+    return () => window.removeEventListener('scroll', updateProgress);
+  }, []);
+
+  return (
+    <div className="fixed top-0 left-0 w-full h-1 bg-muted z-50">
+      <div 
+        className="h-full bg-primary transition-all duration-150 ease-out"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+}
+
+function FloatingActionBar({ 
+  onBookmark, 
+  onShare,
+  isBookmarked 
+}: { 
+  onBookmark: () => void;
+  onShare: () => void;
+  isBookmarked?: boolean;
+}) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <TooltipProvider>
+      <div 
+        className={`fixed left-8 top-1/2 -translate-y-1/2 z-40 transition-all duration-300 ${
+          isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'
+        } hidden lg:block`}
+      >
+        <div className="flex flex-col gap-2 bg-card border rounded-lg p-2 shadow-lg">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={onBookmark}
+                className={`hover-elevate active-elevate-2 ${isBookmarked ? 'text-primary' : ''}`}
+                data-testid="button-floating-bookmark"
+              >
+                <Bookmark className={`h-5 w-5 ${isBookmarked ? 'fill-current' : ''}`} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>{isBookmarked ? 'Remove bookmark' : 'Bookmark thread'}</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={onShare}
+                className="hover-elevate active-elevate-2"
+                data-testid="button-floating-share"
+              >
+                <Share2 className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Share thread</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+    </TooltipProvider>
+  );
 }
 
 export default function ThreadDetailClient({ initialThread, initialReplies }: ThreadDetailClientProps) {
@@ -34,23 +139,21 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
   const { requireAuth, AuthPrompt } = useAuthPrompt("reply to this thread");
   const [replyBody, setReplyBody] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
-  // Fetch thread by slug with initialData for SSR hydration
   const { data: thread, isLoading: threadLoading } = useQuery<ForumThread>({
     queryKey: ["/api/threads/slug", slug],
     enabled: !!slug,
     initialData: initialThread || undefined,
   });
 
-  // Fetch replies with initialData for SSR hydration
   const { data: replies = [], isLoading: repliesLoading } = useQuery<ForumReply[]>({
     queryKey: ["/api/threads", thread?.id, "replies"],
     enabled: !!thread?.id,
-    refetchInterval: 15000, // Real-time updates every 15s
+    refetchInterval: 15000,
     initialData: initialReplies,
   });
 
-  // Create reply mutation
   const createReplyMutation = useMutation({
     mutationFn: (data: { body: string; parentId?: string }) => {
       if (!user?.id) {
@@ -81,7 +184,6 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
     },
   });
 
-  // Mark reply as helpful
   const markHelpfulMutation = useMutation({
     mutationFn: (replyId: string) =>
       apiRequest("POST", `/api/replies/${replyId}/helpful`),
@@ -93,7 +195,6 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
     },
   });
 
-  // Mark reply as accepted answer
   const markAcceptedMutation = useMutation({
     mutationFn: (replyId: string) =>
       apiRequest("POST", `/api/replies/${replyId}/accept`),
@@ -105,13 +206,40 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
     },
   });
 
+  const handleBookmark = () => {
+    requireAuth(() => {
+      setIsBookmarked(!isBookmarked);
+      toast({ title: isBookmarked ? "Bookmark removed" : "Thread bookmarked!" });
+    });
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: thread?.title,
+          url: window.location.href,
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          await navigator.clipboard.writeText(window.location.href);
+          toast({ title: "Link copied to clipboard!" });
+        }
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      toast({ title: "Link copied to clipboard!" });
+    }
+  };
+
   if (threadLoading) {
     return (
       <div>
         <Header />
-        <div className="container mx-auto p-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="animate-pulse space-y-4">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-[800px] mx-auto">
+            <div className="animate-pulse space-y-6">
+              <div className="h-4 bg-muted rounded w-1/3" />
               <div className="h-12 bg-muted rounded" />
               <div className="h-64 bg-muted rounded" />
             </div>
@@ -126,8 +254,8 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
     return (
       <div>
         <Header />
-        <div className="container mx-auto p-6">
-          <div className="max-w-4xl mx-auto">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-[800px] mx-auto">
             <Card>
               <CardContent className="p-12 text-center">
                 <h2 className="text-2xl font-bold mb-2">Thread not found</h2>
@@ -161,7 +289,7 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
     }
 
     createReplyMutation.mutate({
-      body: replyBody,
+      body: replyBody.trim(),
       ...(replyingTo && { parentId: replyingTo }),
     });
   };
@@ -169,158 +297,186 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
   return (
     <div>
       <Header />
-      <div className="container mx-auto p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/" className="hover:text-foreground">
+      <ReadingProgressBar />
+      <FloatingActionBar
+        onBookmark={handleBookmark}
+        onShare={handleShare}
+        isBookmarked={isBookmarked}
+      />
+      
+      <div className="container mx-auto px-4 py-8 lg:py-12">
+        <div className="max-w-[800px] mx-auto">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+            <Link href="/" className="hover:text-foreground transition-colors">
               Home
             </Link>
             <span>/</span>
             <Link
               href={`/category/${thread.categorySlug}`}
-              className="hover:text-foreground"
+              className="hover:text-foreground transition-colors"
             >
               {thread.categorySlug}
             </Link>
             <span>/</span>
-            <span className="text-foreground">{thread.title}</span>
+            <span className="text-foreground line-clamp-1">{thread.title}</span>
           </div>
 
-          {/* Thread Header */}
-          <Card data-testid={`card-thread-${thread.id}`}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h1 className="text-3xl font-bold mb-4" data-testid="text-thread-title">
-                    {thread.title}
-                  </h1>
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-6 w-6">
-                        <AvatarFallback>
-                          {((thread as any).authorUsername?.[0]?.toUpperCase()) || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <Link
-                        href={`/user/${(thread as any).authorUsername || 'unknown'}`}
-                        className="hover:text-foreground font-medium"
-                        data-testid="link-author"
-                      >
-                        {(thread as any).authorUsername || "Unknown"}
-                      </Link>
+          <article className="mb-12">
+            <header className="mb-8">
+              {thread.isPinned && (
+                <Badge variant="secondary" className="mb-4" data-testid="badge-pinned">
+                  📌 Pinned
+                </Badge>
+              )}
+              
+              <h1 
+                className="text-4xl lg:text-5xl font-bold mb-6 leading-tight" 
+                data-testid="text-thread-title"
+              >
+                {thread.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-4 text-sm">
+                <Link
+                  href={`/user/${(thread as any).authorUsername || 'unknown'}`}
+                  className="flex items-center gap-2 group"
+                  data-testid="link-author"
+                >
+                  <Avatar className="h-10 w-10 ring-2 ring-transparent group-hover:ring-primary transition-all">
+                    <AvatarFallback className="text-sm font-semibold">
+                      {((thread as any).authorUsername?.[0]?.toUpperCase()) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-semibold group-hover:text-primary transition-colors">
+                      {(thread as any).authorUsername || "Unknown"}
                     </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      <span data-testid="text-views">{thread.views || 0} views</span>
+                    <div className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {formatDistanceToNow(new Date(thread.createdAt!), { addSuffix: true })}
                     </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <MessageSquare className="h-4 w-4" />
-                      <span data-testid="text-replies">{thread.replyCount || 0} replies</span>
-                    </div>
-                    <span>•</span>
-                    <span data-testid="text-date">
-                      {formatDistanceToNow(new Date(thread.createdAt!), {
-                        addSuffix: true,
-                      })}
-                    </span>
+                  </div>
+                </Link>
+
+                <div className="flex items-center gap-4 text-muted-foreground ml-auto">
+                  <div className="flex items-center gap-1.5">
+                    <Eye className="h-4 w-4" />
+                    <span data-testid="text-views">{thread.views || 0}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <MessageSquare className="h-4 w-4" />
+                    <span data-testid="text-replies">{thread.replyCount || 0}</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  {thread.isPinned && (
-                    <Badge variant="secondary" data-testid="badge-pinned">
-                      📌 Pinned
-                    </Badge>
-                  )}
-                  <Badge variant="outline" data-testid={`badge-category-${thread.categorySlug}`}>
-                    <Tag className="h-3 w-3 mr-1" />
-                    {thread.categorySlug}
-                  </Badge>
-                </div>
               </div>
-            </CardHeader>
-            <Separator />
-            <CardContent className="pt-6">
-              <div
-                className="prose dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: thread.body || "" }}
-                data-testid="text-thread-body"
-              />
-            </CardContent>
-          </Card>
 
-          {/* Reply Form */}
-          <Card data-testid="card-reply-form">
-            <CardHeader>
-              <h2 className="text-xl font-bold">
-                {replyingTo ? "Post a Reply to Comment" : "Post a Reply"}
-              </h2>
-              {replyingTo && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setReplyingTo(null)}
-                  data-testid="button-cancel-reply"
-                >
-                  Cancel Reply
-                </Button>
-              )}
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                placeholder="Write your reply here..."
-                value={replyBody}
-                onChange={(e) => setReplyBody(e.target.value)}
-                rows={5}
-                className="mb-4"
-                data-testid="input-reply-body"
-              />
-              <Button
-                onClick={() => requireAuth(handleSubmitReply)}
-                disabled={createReplyMutation.isPending || !replyBody.trim()}
-                data-testid="button-submit-reply"
+              <div className="flex items-center gap-2 mt-4">
+                <Badge variant="outline" className="text-xs" data-testid={`badge-category-${thread.categorySlug}`}>
+                  <Tag className="h-3 w-3 mr-1" />
+                  {thread.categorySlug}
+                </Badge>
+              </div>
+            </header>
+
+            <Separator className="mb-8" />
+
+            <div 
+              className="prose prose-lg dark:prose-invert max-w-none
+                prose-headings:font-bold prose-headings:tracking-tight
+                prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6
+                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                prose-img:rounded-lg prose-img:shadow-md prose-img:my-8
+                prose-code:text-sm prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+                prose-pre:bg-muted/50 prose-pre:p-4 prose-pre:rounded-lg prose-pre:my-6 prose-pre:overflow-x-auto
+                prose-blockquote:border-l-primary prose-blockquote:bg-muted/30 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r
+                prose-li:marker:text-primary"
+              data-testid="text-thread-body"
+            >
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
               >
-                {createReplyMutation.isPending ? "Posting..." : "Post Reply"}
-              </Button>
-            </CardContent>
-          </Card>
+                {thread.body || ""}
+              </ReactMarkdown>
+            </div>
+          </article>
 
-          {/* Replies List */}
-          <div className="space-y-4">
+          <Separator className="my-12" />
+
+          <section className="mb-12">
+            <Card className="border-none shadow-none bg-transparent" data-testid="card-reply-form">
+              <CardHeader className="px-0">
+                <h2 className="text-2xl font-bold">
+                  {replyingTo ? "Reply to comment" : "Join the discussion"}
+                </h2>
+                {replyingTo && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setReplyingTo(null)}
+                    data-testid="button-cancel-reply"
+                    className="w-fit"
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </CardHeader>
+              <CardContent className="px-0">
+                <Textarea
+                  placeholder="Share your thoughts..."
+                  value={replyBody}
+                  onChange={(e) => setReplyBody(e.target.value)}
+                  rows={4}
+                  className="mb-4 resize-none text-base"
+                  data-testid="input-reply-body"
+                />
+                <Button
+                  onClick={() => requireAuth(handleSubmitReply)}
+                  disabled={createReplyMutation.isPending || !replyBody.trim()}
+                  data-testid="button-submit-reply"
+                  size="lg"
+                >
+                  {createReplyMutation.isPending ? "Posting..." : "Post reply"}
+                </Button>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section className="space-y-6">
             <h2 className="text-2xl font-bold">
-              {replies.length} {replies.length === 1 ? "Reply" : "Replies"}
+              {replies.length} {replies.length === 1 ? "Response" : "Responses"}
             </h2>
 
             {repliesLoading ? (
-              <div className="animate-pulse space-y-4">
+              <div className="animate-pulse space-y-6">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-32 bg-muted rounded" />
+                  <div key={i} className="h-32 bg-muted rounded-lg" />
                 ))}
               </div>
             ) : rootReplies.length === 0 ? (
-              <Card>
-                <CardContent className="p-12 text-center">
-                  <p className="text-muted-foreground">
-                    No replies yet. Be the first to respond!
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="text-center py-16">
+                <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground text-lg">
+                  No responses yet. Start the conversation!
+                </p>
+              </div>
             ) : (
-              rootReplies.map((reply) => (
-                <ReplyCard
-                  key={reply.id}
-                  reply={reply}
-                  allReplies={replies}
-                  onReply={() => requireAuth(() => setReplyingTo(reply.id))}
-                  onMarkHelpful={() => requireAuth(() => markHelpfulMutation.mutate(reply.id))}
-                  onMarkAccepted={() => requireAuth(() => markAcceptedMutation.mutate(reply.id))}
-                  isAuthor={thread.authorId === user?.id}
-                />
-              ))
+              <div className="space-y-8">
+                {rootReplies.map((reply) => (
+                  <ReplyCard
+                    key={reply.id}
+                    reply={reply}
+                    allReplies={replies}
+                    onReply={(replyId: string) => requireAuth(() => setReplyingTo(replyId))}
+                    onMarkHelpful={(replyId: string) => requireAuth(() => markHelpfulMutation.mutate(replyId))}
+                    onMarkAccepted={(replyId: string) => requireAuth(() => markAcceptedMutation.mutate(replyId))}
+                    isAuthor={thread.authorId === user?.id}
+                    currentUserId={user?.id}
+                  />
+                ))}
+              </div>
             )}
-          </div>
+          </section>
         </div>
       </div>
       <EnhancedFooter />
@@ -336,14 +492,16 @@ function ReplyCard({
   onMarkHelpful,
   onMarkAccepted,
   isAuthor,
+  currentUserId,
   depth = 0,
 }: {
   reply: ForumReply;
   allReplies: ForumReply[];
-  onReply: () => void;
-  onMarkHelpful: () => void;
-  onMarkAccepted: () => void;
+  onReply: (replyId: string) => void;
+  onMarkHelpful: (replyId: string) => void;
+  onMarkAccepted: (replyId: string) => void;
   isAuthor: boolean;
+  currentUserId?: string;
   depth?: number;
 }) {
   const children = allReplies.filter((r) => r.parentId === reply.id);
@@ -355,104 +513,159 @@ function ReplyCard({
     staleTime: 5 * 60 * 1000,
   });
 
+  const isOwnReply = reply.userId === currentUserId;
+
   return (
-    <div className={depth > 0 ? "ml-8 border-l-2 border-muted pl-4" : ""}>
-      <Card
-        className={reply.isAccepted ? "border-green-500 dark:border-green-700" : ""}
+    <div className={depth > 0 ? "relative" : ""}>
+      {depth > 0 && (
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-border -ml-6" />
+      )}
+      
+      <div 
+        className={`
+          ${depth > 0 ? "ml-12" : ""}
+          ${reply.isAccepted ? "ring-2 ring-green-500/20 rounded-lg" : ""}
+          transition-all duration-200
+        `}
         data-testid={`card-reply-${reply.id}`}
       >
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback>
+        <div className={`py-6 ${depth === 0 ? "border-b" : ""}`}>
+          <div className="flex items-start gap-4 mb-4">
+            <Link href={`/user/${(reply as any).authorUsername || 'unknown'}`}>
+              <Avatar className="h-10 w-10 hover:ring-2 hover:ring-primary transition-all">
+                <AvatarFallback className="text-sm font-semibold">
                   {((reply as any).authorUsername?.[0]?.toUpperCase()) || "U"}
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Link
-                    href={`/user/${(reply as any).authorUsername || 'unknown'}`}
-                    className="font-semibold hover:underline"
-                    data-testid={`link-reply-author-${reply.id}`}
-                  >
-                    {(reply as any).authorUsername || "Unknown"}
-                  </Link>
-                  {badges && !isError && Array.isArray(badges) && badges.length > 0 && <BadgeDisplay badges={badges} size="sm" />}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(reply.createdAt!), {
-                    addSuffix: true,
-                  })}
-                </p>
+            </Link>
+            
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <Link
+                  href={`/user/${(reply as any).authorUsername || 'unknown'}`}
+                  className="font-semibold hover:text-primary transition-colors"
+                  data-testid={`link-reply-author-${reply.id}`}
+                >
+                  {(reply as any).authorUsername || "Unknown"}
+                </Link>
+                {badges && !isError && Array.isArray(badges) && badges.length > 0 && (
+                  <BadgeDisplay badges={badges} size="sm" />
+                )}
+                {reply.isAccepted && (
+                  <Badge variant="default" className="bg-green-600 text-xs" data-testid={`badge-accepted-${reply.id}`}>
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    Accepted
+                  </Badge>
+                )}
               </div>
+              
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {formatDistanceToNow(new Date(reply.createdAt!), { addSuffix: true })}
+              </p>
             </div>
-            {reply.isAccepted && (
-              <Badge variant="default" className="bg-green-600" data-testid={`badge-accepted-${reply.id}`}>
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Accepted Answer
-              </Badge>
-            )}
           </div>
-        </CardHeader>
-        <CardContent>
-          <div
-            className="prose dark:prose-invert max-w-none mb-4"
-            dangerouslySetInnerHTML={{ __html: reply.body || "" }}
+
+          <div 
+            className="prose dark:prose-invert max-w-none mb-4 ml-14
+              prose-p:text-base prose-p:leading-relaxed
+              prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+              prose-code:text-sm prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded"
             data-testid={`text-reply-body-${reply.id}`}
-          />
-
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onMarkHelpful}
-              data-testid={`button-helpful-${reply.id}`}
-            >
-              <ThumbsUp className="h-4 w-4 mr-1" />
-              Helpful ({reply.helpful || 0})
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onReply}
-              data-testid={`button-reply-${reply.id}`}
-            >
-              <MessageSquare className="h-4 w-4 mr-1" />
-              Reply
-            </Button>
-            {isAuthor && !reply.isAccepted && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onMarkAccepted}
-                data-testid={`button-accept-${reply.id}`}
-              >
-                <CheckCircle2 className="h-4 w-4 mr-1" />
-                Mark as Answer
-              </Button>
-            )}
+          >
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+              {reply.body || ""}
+            </ReactMarkdown>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Nested children */}
-      {children.length > 0 && (
-        <div className="mt-4 space-y-4">
-          {children.map((child) => (
-            <ReplyCard
-              key={child.id}
-              reply={child}
-              allReplies={allReplies}
-              onReply={onReply}
-              onMarkHelpful={() => {}}
-              onMarkAccepted={() => {}}
-              isAuthor={isAuthor}
-              depth={depth + 1}
-            />
-          ))}
+          <div className="flex items-center gap-2 ml-14">
+            <TooltipProvider>
+              {!isOwnReply && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onMarkHelpful(reply.id)}
+                      className="hover-elevate active-elevate-2"
+                      data-testid={`button-helpful-${reply.id}`}
+                    >
+                      <ThumbsUp className="h-4 w-4 mr-1.5" />
+                      <span className="text-xs">{reply.helpful || 0}</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Mark as helpful</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+
+              {isOwnReply && (
+                <div className="flex items-center gap-1.5 text-muted-foreground text-sm px-3">
+                  <ThumbsUp className="h-4 w-4" />
+                  <span className="text-xs">{reply.helpful || 0}</span>
+                </div>
+              )}
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onReply(reply.id)}
+                    className="hover-elevate active-elevate-2"
+                    data-testid={`button-reply-${reply.id}`}
+                  >
+                    <MessageSquare className="h-4 w-4 mr-1.5" />
+                    Reply
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Reply to this comment</p>
+                </TooltipContent>
+              </Tooltip>
+
+              {isAuthor && !reply.isAccepted && !isOwnReply && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onMarkAccepted(reply.id)}
+                      className="hover-elevate active-elevate-2"
+                      data-testid={`button-accept-${reply.id}`}
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                      Accept
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Mark as accepted answer</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </TooltipProvider>
+          </div>
         </div>
-      )}
+
+        {children.length > 0 && (
+          <div className="space-y-0">
+            {children.map((child) => (
+              <ReplyCard
+                key={child.id}
+                reply={child}
+                allReplies={allReplies}
+                onReply={onReply}
+                onMarkHelpful={onMarkHelpful}
+                onMarkAccepted={onMarkAccepted}
+                isAuthor={isAuthor}
+                currentUserId={currentUserId}
+                depth={depth + 1}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
