@@ -1,3 +1,7 @@
 {
+  "/categories/page": "app/categories/page.js",
+  "/category/[slug]/page": "app/category/[slug]/page.js",
+  "/earn-coins/page": "app/earn-coins/page.js",
+  "/earn/page": "app/earn/page.js",
   "/page": "app/page.js"
 }

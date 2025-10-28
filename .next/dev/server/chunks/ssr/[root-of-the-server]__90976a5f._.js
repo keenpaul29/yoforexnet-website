@@ -64,8 +64,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$category$2f5b$slug$5d2f$CategoryDiscussionClient$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/category/[slug]/CategoryDiscussionClient.tsx [app-rsc] (ecmascript)");
 ;
 ;
-// Express API base URL
-const EXPRESS_URL = ("TURBOPACK compile-time value", "http://localhost:5000") || 'http://localhost:5000';
+// Express API base URL - use internal API URL for SSR
+const EXPRESS_URL = ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : 'http://127.0.0.1:3001';
 const revalidate = 60;
 const dynamicParams = true;
 async function generateStaticParams() {
@@ -161,7 +161,7 @@ async function CategoryDiscussionPage({ params }) {
         initialThreads: threads
     }, void 0, false, {
         fileName: "[project]/app/category/[slug]/page.tsx",
-        lineNumber: 106,
+        lineNumber: 108,
         columnNumber: 5
     }, this);
 }

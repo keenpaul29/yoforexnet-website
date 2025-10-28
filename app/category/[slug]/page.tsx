@@ -2,8 +2,10 @@ import { Metadata } from 'next';
 import CategoryDiscussionClient from './CategoryDiscussionClient';
 import type { ForumCategory, ForumThread } from '@shared/schema';
 
-// Express API base URL
-const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+// Express API base URL - use internal API URL for SSR
+const EXPRESS_URL = process.env.NODE_ENV === 'production' 
+  ? process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000'
+  : 'http://127.0.0.1:3001';
 
 // Enable ISR with 60-second revalidation
 export const revalidate = 60;
