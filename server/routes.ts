@@ -3153,6 +3153,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Get top categories based on activity (for homepage)
+  app.get("/api/categories/tree/top", async (req, res) => {
+    // Cache for 5 minutes
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    
+    try {
+      const limit = parseInt(req.query.limit as string) || 6;
+      const categories = await storage.listForumCategories();
+      const activeCategories = categories.filter((c: any) => c.isActive);
+      
+      // Filter to main categories only
+      const mainCategories = activeCategories.filter((c: any) => !c.parentSlug);
+      
+      // Calculate activity score for each category
+      // Algorithm: (threadCount * 2) + postCount
+      // Threads are weighted higher as they represent new discussions
+      const categoriesWithScore = mainCategories.map((cat: any) => ({
+        ...cat,
+        activityScore: (cat.threadCount * 2) + cat.postCount,
+        children: activeCategories.filter((c: any) => c.parentSlug === cat.slug)
+      }));
+      
+      // Sort by activity score descending and take top N
+      const topCategories = categoriesWithScore
+        .sort((a: any, b: any) => b.activityScore - a.activityScore)
+        .slice(0, limit);
+      
+      res.json(topCategories);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch top categories" });
+    }
+  });
+  
   // Get subcategories for a parent category
   app.get("/api/categories/:parentSlug/subcategories", async (req, res) => {
     try {

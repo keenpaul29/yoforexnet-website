@@ -3,5 +3,6 @@
   "/notifications/page": "app/notifications/page.js",
   "/page": "app/page.js",
   "/settings/page": "app/settings/page.js",
+  "/support/page": "app/support/page.js",
   "/thread/[slug]/page": "app/thread/[slug]/page.js"
 }
