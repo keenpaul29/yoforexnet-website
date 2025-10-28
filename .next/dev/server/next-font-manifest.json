@@ -1,8 +1,5 @@
 {
   "app": {
-    "[project]/app/brokers/page": [
-      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
-    ],
     "[project]/app/brokers/submit-review/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
@@ -10,9 +7,6 @@
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
     "[project]/app/page": [
-      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
-    ],
-    "[project]/app/settings/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ]
   },
