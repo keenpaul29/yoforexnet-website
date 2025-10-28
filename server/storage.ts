@@ -648,7 +648,7 @@ export interface IStorage {
   /**
    * Assign report to moderator
    */
-  assignReport(reportId: number, assignedTo: string): Promise<void>;
+  assignReport(reportId: number, assignedTo: string, assignedBy: string): Promise<void>;
   
   /**
    * Resolve a report
@@ -3283,7 +3283,7 @@ export class MemStorage implements IStorage {
     return { id: 1, ...report, status: 'pending' };
   }
 
-  async assignReport(reportId: number, assignedTo: string): Promise<void> {
+  async assignReport(reportId: number, assignedTo: string, assignedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
