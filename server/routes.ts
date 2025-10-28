@@ -270,7 +270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get user by username (public - but with sensitive data removed)
+  // Get user by username (public - only safe fields exposed)
   app.get("/api/users/username/:username", async (req, res) => {
     try {
       const user = await storage.getUserByUsername(req.params.username);
@@ -278,14 +278,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "User not found" });
       }
       
-      // Remove sensitive data from public profile
-      const { 
-        password, 
-        email, 
-        totalCoins, 
-        weeklyEarned, 
-        ...publicProfile 
-      } = user;
+      // Whitelist only safe public fields - NEVER expose credentials, financial data, or internal state
+      const publicProfile = {
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        location: user.location,
+        youtubeUrl: user.youtubeUrl,
+        instagramHandle: user.instagramHandle,
+        telegramHandle: user.telegramHandle,
+        myfxbookLink: user.myfxbookLink,
+        isVerifiedTrader: user.isVerifiedTrader,
+        badges: user.badges,
+        reputationScore: user.reputationScore,
+        rank: user.rank,
+        createdAt: user.createdAt,
+      };
       
       res.json(publicProfile);
     } catch (error: any) {
