@@ -123,7 +123,7 @@ export default function MembersClient({ initialData }: MembersClientProps) {
 
     const StatIcon = getStatIcon();
 
-    // Calculate "join time ago"
+    // Calculate "join time ago" - use suppressHydrationWarning where it's displayed
     const joinedAgo = user.createdAt ? formatDistanceToNow(new Date(user.createdAt), { addSuffix: true }) : 'Unknown';
 
     return (
@@ -176,7 +176,7 @@ export default function MembersClient({ initialData }: MembersClientProps) {
                   <span className="text-border">•</span>
                   <div className="flex items-center gap-1 text-muted-foreground truncate">
                     <Calendar className="w-3 h-3" />
-                    <span className="text-[11px] truncate">{joinedAgo}</span>
+                    <span suppressHydrationWarning className="text-[11px] truncate">{joinedAgo}</span>
                   </div>
                 </div>
               </div>

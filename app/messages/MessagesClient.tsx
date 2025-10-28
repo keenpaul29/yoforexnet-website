@@ -410,7 +410,7 @@ export default function MessagesClient({ initialConversations = [] }: MessagesCl
                       {conv.lastMessage.isSentByMe && "You: "}
                       {conv.lastMessage.text}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p suppressHydrationWarning className="text-xs text-muted-foreground mt-1">
                       {formatDistanceToNow(new Date(conv.lastMessage.timestamp), { addSuffix: true })}
                     </p>
                   </div>
@@ -536,6 +536,7 @@ export default function MessagesClient({ initialConversations = [] }: MessagesCl
                           <p className="text-sm">{message.text}</p>
                           <div className="flex items-center gap-1 mt-1">
                             <p
+                              suppressHydrationWarning
                               className={`text-xs ${
                                 message.senderId === currentUser?.id
                                   ? "text-primary-foreground/70"

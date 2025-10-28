@@ -28,6 +28,8 @@ interface WeekHighlightsProps {
   solvedThreads?: HighlightThread[];
 }
 
+const REFERENCE_DATE = new Date('2025-10-28T12:00:00Z');
+
 const defaultNewThreads: HighlightThread[] = [
   {
     id: "1",
@@ -37,7 +39,7 @@ const defaultNewThreads: HighlightThread[] = [
     replies: 12,
     views: 890,
     coins: 23,
-    lastActivity: new Date(Date.now() - 30 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 30 * 60 * 1000)
   },
   {
     id: "2",
@@ -47,7 +49,7 @@ const defaultNewThreads: HighlightThread[] = [
     replies: 8,
     views: 456,
     coins: 15,
-    lastActivity: new Date(Date.now() - 1 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 1 * 60 * 60 * 1000)
   },
   {
     id: "3",
@@ -57,7 +59,7 @@ const defaultNewThreads: HighlightThread[] = [
     replies: 6,
     views: 234,
     coins: 12,
-    lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 2 * 60 * 60 * 1000)
   }
 ];
 
@@ -71,7 +73,7 @@ const defaultTrendingThreads: HighlightThread[] = [
     views: 5670,
     coins: 92,
     isAnswered: true,
-    lastActivity: new Date(Date.now() - 3 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 3 * 60 * 60 * 1000)
   },
   {
     id: "5",
@@ -81,7 +83,7 @@ const defaultTrendingThreads: HighlightThread[] = [
     replies: 67,
     views: 4320,
     coins: 78,
-    lastActivity: new Date(Date.now() - 4 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 4 * 60 * 60 * 1000)
   },
   {
     id: "6",
@@ -92,7 +94,7 @@ const defaultTrendingThreads: HighlightThread[] = [
     views: 8900,
     coins: 56,
     isAnswered: true,
-    lastActivity: new Date(Date.now() - 5 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 5 * 60 * 60 * 1000)
   }
 ];
 
@@ -106,7 +108,7 @@ const defaultSolvedThreads: HighlightThread[] = [
     views: 3210,
     coins: 41,
     isAnswered: true,
-    lastActivity: new Date(Date.now() - 6 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 6 * 60 * 60 * 1000)
   },
   {
     id: "8",
@@ -117,7 +119,7 @@ const defaultSolvedThreads: HighlightThread[] = [
     views: 1890,
     coins: 34,
     isAnswered: true,
-    lastActivity: new Date(Date.now() - 7 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 7 * 60 * 60 * 1000)
   },
   {
     id: "9",
@@ -128,7 +130,7 @@ const defaultSolvedThreads: HighlightThread[] = [
     views: 2670,
     coins: 48,
     isAnswered: true,
-    lastActivity: new Date(Date.now() - 8 * 60 * 60 * 1000)
+    lastActivity: new Date(REFERENCE_DATE.getTime() - 8 * 60 * 60 * 1000)
   }
 ];
 

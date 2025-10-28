@@ -202,7 +202,7 @@ export default function WhatsHot() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="w-3 h-3" />
-                      <span>{formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}</span>
+                      <span suppressHydrationWarning>{formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}</span>
                     </div>
                     
                     {/* Content Type Badge */}

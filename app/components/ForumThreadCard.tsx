@@ -204,7 +204,7 @@ export default function ForumThreadCard({
                   <span>{author.reputation}</span>
                 </div>
                 <span className="hidden sm:inline">•</span>
-                <span className="hidden sm:inline truncate">{formatDistanceToNow(lastActivity, { addSuffix: true })}</span>
+                <span suppressHydrationWarning className="hidden sm:inline truncate">{formatDistanceToNow(lastActivity, { addSuffix: true })}</span>
               </div>
             </div>
           </div>

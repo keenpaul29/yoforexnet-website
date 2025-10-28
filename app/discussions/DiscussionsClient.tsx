@@ -638,7 +638,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            <span className="text-[10px]" data-testid={`activity-${thread.slug}`}>
+                            <span suppressHydrationWarning className="text-[10px]" data-testid={`activity-${thread.slug}`}>
                               {formatDistanceToNow(new Date(thread.lastActivityAt), { addSuffix: true })}
                             </span>
                           </div>
@@ -742,7 +742,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                             {' '}
                             <span className="font-medium line-clamp-1">{activity.threadTitle}</span>
                           </p>
-                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                          <p suppressHydrationWarning className="text-[10px] text-muted-foreground mt-0.5">
                             {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
                           </p>
                         </div>

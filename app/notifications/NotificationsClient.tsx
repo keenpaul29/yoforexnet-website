@@ -203,7 +203,7 @@ export default function NotificationsClient({ initialNotifications = [] }: Notif
                             {notification.message}
                           </p>
                           <div className="flex items-center gap-3 mt-2">
-                            <p className="text-xs text-muted-foreground">
+                            <p suppressHydrationWarning className="text-xs text-muted-foreground">
                               {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                             </p>
                             <Badge variant="outline" className="text-xs">

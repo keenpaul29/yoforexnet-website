@@ -114,7 +114,7 @@ export default function TransactionHistoryClient({ initialData = [] }: Transacti
                         </div>
                         
                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                          <span>{formatDistanceToNow(transaction.timestamp, { addSuffix: true })}</span>
+                          <span suppressHydrationWarning>{formatDistanceToNow(transaction.timestamp, { addSuffix: true })}</span>
                           <span>•</span>
                           {getStatusBadge(transaction.status)}
                         </div>

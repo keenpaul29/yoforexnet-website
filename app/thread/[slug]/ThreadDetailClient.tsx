@@ -353,7 +353,7 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
                     </div>
                     <div className="text-xs text-muted-foreground flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {formatDistanceToNow(new Date(thread.createdAt!), { addSuffix: true })}
+                      <span suppressHydrationWarning>{formatDistanceToNow(new Date(thread.createdAt!), { addSuffix: true })}</span>
                     </div>
                   </div>
                 </Link>
@@ -561,7 +561,7 @@ function ReplyCard({
               
               <p className="text-xs text-muted-foreground flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {formatDistanceToNow(new Date(reply.createdAt!), { addSuffix: true })}
+                <span suppressHydrationWarning>{formatDistanceToNow(new Date(reply.createdAt!), { addSuffix: true })}</span>
               </p>
             </div>
           </div>

@@ -150,7 +150,7 @@ export function ReplySection({
                   >
                     {reply.author?.username || 'Unknown'}
                   </Link>
-                  <div className="text-xs text-muted-foreground">
+                  <div suppressHydrationWarning className="text-xs text-muted-foreground">
                     {reply.createdAt && formatDistanceToNow(new Date(reply.createdAt), {
                       addSuffix: true,
                     })}
