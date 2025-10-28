@@ -26,7 +26,6 @@ import {
   AlertCircle
 } from "lucide-react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 
 interface Content {
   id: string;
@@ -100,11 +99,10 @@ export default function MarketplaceClient({ initialContent }: MarketplaceClientP
   const [sortBy, setSortBy] = useState<string>("popular");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch approved content from API with initialData
-  const { data: contentData, isLoading, error } = useQuery<Content[]>({
-    queryKey: ["/api/content?status=approved"],
-    initialData: initialContent,
-  });
+  // Use initial content directly (page uses ISR for data freshness)
+  const contentData = initialContent;
+  const isLoading = false;
+  const error = null;
 
   // Client-side filtering and sorting
   const filteredAndSortedContent = useMemo(() => {
