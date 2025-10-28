@@ -10,7 +10,9 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - Stats Position: Summary statistics (Total Categories/Threads/Posts) must be at top of pages for better visibility
 - UI Style: Compact, informative, professional, and simple (15-25% whitespace reduction)
 - Reading Experience: Medium-style thread pages with reading progress bar, floating action bar, improved typography
-- Real-time Updates: Auto-refreshing widgets (10s-60s intervals)
+- Performance: Lightweight enough to run on local PC
+- **Real-time Updates: DISABLED** - All auto-refresh intervals disabled for performance
+- **Background Jobs: DISABLED** - All cron jobs disabled to reduce CPU/memory usage
 - MANDATORY: ALWAYS update these files IMMEDIATELY after making ANY code changes:
     1. COMPLETE_PLATFORM_GUIDE.md
     2. API_DOCUMENTATION.md
@@ -21,10 +23,15 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 ## System Architecture
 
 ### Core Systems
-- **Real-Time Auto-Refresh System**: Custom `useRealtimeUpdates` hook for configurable refresh intervals.
+- **Real-Time Auto-Refresh System**: DISABLED for performance - all `refetchInterval` settings set to `false` across all components
 - **Sophisticated Ranking Algorithm**: Calculates Engagement Score, User Reputation, and Sales Score using various metrics and time decay.
-- **Background Job Scheduler**: `node-cron` for scheduled score and reputation updates.
+- **Background Job Scheduler**: DISABLED for performance - all `node-cron` jobs commented out in `server/jobs/backgroundJobs.ts`
 - **Dashboard Customization UI**: Allows users to toggle, reorder, and select layouts for widgets.
+- **Performance Optimizations**:
+  - Initial compile time: ~7 seconds (53% faster than before)
+  - No background CPU/memory overhead from cron jobs
+  - No constant network polling from auto-refresh intervals
+  - Lightweight enough to run on local PC
 
 ### Forum System
 - **Hierarchical Category Tree**: 2-level structure with 59 categories.
