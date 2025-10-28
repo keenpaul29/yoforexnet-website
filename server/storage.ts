@@ -341,7 +341,7 @@ export interface IStorage {
   getUserStats(userId: string): Promise<{
     threadsCreated: number;
     repliesPosted: number;
-    likesReceived: number;
+    helpfulVotes: number;
     bestAnswers: number;
     contentSales: number;
     followersCount: number;
@@ -2901,7 +2901,7 @@ export class MemStorage implements IStorage {
   async getUserStats(userId: string): Promise<{
     threadsCreated: number;
     repliesPosted: number;
-    likesReceived: number;
+    helpfulVotes: number;
     bestAnswers: number;
     contentSales: number;
     followersCount: number;
@@ -2913,10 +2913,16 @@ export class MemStorage implements IStorage {
     const contentSales = Array.from(this.contentPurchases.values()).filter(p => p.sellerId === userId).length;
     const followersCount = Array.from(this.userFollowsMap.values()).filter(f => f.followingId === userId).length;
     
+    // Calculate helpful votes from threads and replies created by user
+    const userThreads = Array.from(this.forumThreadsMap.values()).filter(t => t.authorId === userId);
+    const userReplies = Array.from(this.forumRepliesMap.values()).filter(r => r.userId === userId);
+    const helpfulVotes = userThreads.reduce((sum, t) => sum + (t.helpfulVotes || 0), 0) + 
+                        userReplies.reduce((sum, r) => sum + (r.helpfulVotes || 0), 0);
+    
     return {
       threadsCreated,
       repliesPosted,
-      likesReceived: 0,
+      helpfulVotes,
       bestAnswers: 0,
       contentSales,
       followersCount,
@@ -5481,7 +5487,7 @@ export class DrizzleStorage implements IStorage {
   async getUserStats(userId: string): Promise<{
     threadsCreated: number;
     repliesPosted: number;
-    likesReceived: number;
+    helpfulVotes: number;
     bestAnswers: number;
     contentSales: number;
     followersCount: number;
@@ -5511,11 +5517,24 @@ export class DrizzleStorage implements IStorage {
     const followersCount = await db.select({ count: count(userFollows.id) })
       .from(userFollows)
       .where(eq(userFollows.followingId, userId));
+    
+    // Sum helpful votes from threads and replies created by user
+    const threadVotes = await db.select({ 
+      total: sql<number>`COALESCE(SUM(${forumThreads.helpfulVotes}), 0)` 
+    })
+      .from(forumThreads)
+      .where(eq(forumThreads.authorId, userId));
+    
+    const replyVotes = await db.select({ 
+      total: sql<number>`COALESCE(SUM(${forumReplies.helpfulVotes}), 0)` 
+    })
+      .from(forumReplies)
+      .where(eq(forumReplies.userId, userId));
 
     return {
       threadsCreated: threadsCount[0]?.count || 0,
       repliesPosted: repliesCount[0]?.count || 0,
-      likesReceived: 0, // TODO: Implement likes tracking
+      helpfulVotes: (threadVotes[0]?.total || 0) + (replyVotes[0]?.total || 0),
       bestAnswers: 0, // TODO: Implement best answers tracking
       contentSales: salesCount[0]?.count || 0,
       followersCount: followersCount[0]?.count || 0,

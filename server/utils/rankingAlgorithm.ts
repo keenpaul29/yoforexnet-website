@@ -1,7 +1,7 @@
 interface RankingFactors {
   views: number;
   replies: number;
-  likes: number;
+  helpfulVotes: number;
   bookmarks?: number;
   shares?: number;
   downloads?: number;
@@ -13,7 +13,7 @@ interface RankingFactors {
 interface UserStats {
   threadsCreated: number;
   repliesPosted: number;
-  likesReceived: number;
+  helpfulVotes: number;
   bestAnswers: number;
   contentSales: number;
   followersCount: number;
@@ -37,7 +37,7 @@ export function calculateEngagementScore(factors: RankingFactors): number {
   const {
     views,
     replies,
-    likes,
+    helpfulVotes,
     bookmarks = 0,
     shares = 0,
     downloads = 0,
@@ -50,7 +50,7 @@ export function calculateEngagementScore(factors: RankingFactors): number {
   const WEIGHTS = {
     view: 0.1,        // Low weight - passive viewing
     reply: 1.0,       // Active discussion (FIXED: was 5.0)
-    helpfulVote: 2.0, // Medium weight - quality indicator (FIXED: was like)
+    helpfulVote: 2.0, // Medium weight - quality indicator
     bookmark: 3.0,    // Higher than like - shows intent to return
     share: 4.0,       // High weight - content amplification
     download: 10.0,   // Very high - conversion action
@@ -61,7 +61,7 @@ export function calculateEngagementScore(factors: RankingFactors): number {
   let score = 0;
   score += views * WEIGHTS.view;
   score += replies * WEIGHTS.reply;
-  score += likes * WEIGHTS.helpfulVote; // Using likes field to store helpfulVotes
+  score += helpfulVotes * WEIGHTS.helpfulVote;
   score += bookmarks * WEIGHTS.bookmark;
   score += shares * WEIGHTS.share;
   score += downloads * WEIGHTS.download;
@@ -90,7 +90,7 @@ export function calculateUserReputation(userStats: UserStats): number {
   const {
     threadsCreated,
     repliesPosted,
-    likesReceived,
+    helpfulVotes,
     bestAnswers,
     contentSales,
     followersCount,
@@ -103,7 +103,7 @@ export function calculateUserReputation(userStats: UserStats): number {
   // Base activity points (encourages participation) - FIXED coefficients
   reputation += threadsCreated * 1;       // Creating discussions (FIXED: was 10)
   reputation += repliesPosted * 0.5;      // Engaging in conversations (FIXED: was 5)
-  reputation += likesReceived * 2;        // Helpful votes - quality indicator
+  reputation += helpfulVotes * 2;         // Helpful votes - quality indicator
   reputation += uploadsCount * 15;        // Contributing content
 
   // Quality indicators (higher weight for valuable contributions)

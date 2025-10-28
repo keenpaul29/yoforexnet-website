@@ -31,6 +31,11 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
     - Top Sellers section
   - RefreshButton component with loading states and spinning animation
 - **Sophisticated Ranking Algorithm**: Calculates Engagement Score, User Reputation, and Sales Score using various metrics and time decay.
+  - **Engagement Score**: `views×0.1 + replies×1 + helpfulVotes×2` (using actual helpful_votes database columns)
+  - **Reputation Score**: `threads×1 + replies×0.5 + helpfulVotes×2`
+  - **Sales Score**: `totalSales × priceCoins × 0.1`
+  - **Level Calculation**: `Math.floor(totalCoins / 1000)` integrated in 14+ coin transaction points
+  - **Time Decay**: Linear decay formula `1 / (1 + daysSinceCreation / 30)`
 - **Background Job Scheduler**: DISABLED for performance - all `node-cron` jobs commented out in `server/jobs/backgroundJobs.ts`
 - **Dashboard Customization UI**: Allows users to toggle, reorder, and select layouts for widgets.
 - **Performance Optimizations**:
@@ -98,7 +103,12 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Database**: PostgreSQL (Neon-backed) with Drizzle ORM.
 - **Authentication**: Passport.js + Replit OIDC.
 - **Jobs**: `node-cron` scheduler.
-- **Security**: Rate limiting, input validation, XSS protection.
+- **Security**: 
+  - **XSS Protection**: DOMPurify sanitization on all user inputs
+  - **Input Validation**: Server-side Zod schema validation on all forms
+  - **Security Headers**: Helmet with strict CSP (no unsafe-inline/unsafe-eval), HSTS, X-Frame-Options, X-Content-Type-Options
+  - **Rate Limiting**: Activity (1/min), coins (10/15min), content (5/hr)
+  - **NPM Security**: 9 remaining acceptable-risk vulnerabilities (dev-only or no fix available)
 
 ### Admin Dashboard System
 - **Frontend UI**: 20 comprehensive admin sections accessible at `/admin`.

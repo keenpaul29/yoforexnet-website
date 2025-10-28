@@ -67,9 +67,9 @@ async function updateThreadScores(storage: IStorage) {
       const score = calculateEngagementScore({
         views: thread.views,
         replies: thread.replyCount,
-        likes: 0, // TODO: Add likes tracking
-        bookmarks: 0, // TODO: Add bookmarks tracking
-        shares: 0, // TODO: Add shares tracking
+        helpfulVotes: thread.helpfulVotes || 0,
+        bookmarks: thread.bookmarkCount || 0,
+        shares: thread.shareCount || 0,
         recency: thread.createdAt,
         authorReputation
       });
@@ -99,7 +99,7 @@ async function updateUserReputations(storage: IStorage) {
       const reputation = calculateUserReputation({
         threadsCreated: stats.threadsCreated,
         repliesPosted: stats.repliesPosted,
-        likesReceived: stats.likesReceived,
+        helpfulVotes: stats.helpfulVotes,
         bestAnswers: stats.bestAnswers || 0,
         contentSales: stats.contentSales || 0,
         followersCount: stats.followersCount || 0,

@@ -7,13 +7,16 @@ export function setupSecurityHeaders(app: Express) {
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Next.js needs unsafe-inline/eval
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https:", "http:"], // Allow external images
+        scriptSrc: ["'self'"], // Strict CSP - no unsafe-inline or unsafe-eval
+        styleSrc: ["'self'"], // No unsafe-inline needed for API-only server
+        imgSrc: ["'self'", "data:", "https:", "http:"], // Allow external images (OK for API responses)
         fontSrc: ["'self'", "data:"],
-        connectSrc: ["'self'", "https:"],
+        connectSrc: ["'self'"],
         frameSrc: ["'none'"],
         objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
         upgradeInsecureRequests: [],
       },
     },
