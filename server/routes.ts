@@ -3155,8 +3155,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Get top categories based on activity (for homepage)
   app.get("/api/categories/tree/top", async (req, res) => {
-    // Cache for 5 minutes
-    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    // Cache for 60 seconds to match client auto-refresh interval
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
     
     try {
       const limit = parseInt(req.query.limit as string) || 6;

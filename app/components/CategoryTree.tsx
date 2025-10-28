@@ -32,13 +32,13 @@ const getCategoryIcon = (color: string) => {
 };
 
 export function CategoryTree({ categories, limit }: CategoryTreeProps) {
-  // Use all categories if no limit is specified
-  const displayCategories = limit ? categories.slice(0, limit) : categories;
-  const mainCategories = displayCategories.filter(c => !c.parentSlug);
+  // Filter for main (parent) categories first, then apply limit
+  const mainCategories = categories.filter(c => !c.parentSlug);
+  const displayCategories = limit ? mainCategories.slice(0, limit) : mainCategories;
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5" data-testid="category-grid">
-      {mainCategories.map((category) => {
+      {displayCategories.map((category) => {
         return (
           <Link 
             key={category.slug} 

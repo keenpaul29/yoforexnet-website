@@ -2738,13 +2738,13 @@ const getCategoryIcon = (color)=>{
     }, ("TURBOPACK compile-time value", void 0));
 };
 function CategoryTree({ categories, limit }) {
-    // Use all categories if no limit is specified
-    const displayCategories = limit ? categories.slice(0, limit) : categories;
-    const mainCategories = displayCategories.filter((c)=>!c.parentSlug);
+    // Filter for main (parent) categories first, then apply limit
+    const mainCategories = categories.filter((c)=>!c.parentSlug);
+    const displayCategories = limit ? mainCategories.slice(0, limit) : mainCategories;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5",
         "data-testid": "category-grid",
-        children: mainCategories.map((category)=>{
+        children: displayCategories.map((category)=>{
             return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 href: `/category/${category.slug}`,
                 "data-testid": `link-category-${category.slug}`,
@@ -6948,10 +6948,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
     // Fetch top categories with 60s auto-refresh (for homepage display)
     const { data: categoriesData, isLoading: isLoadingCategories } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
-            '/api/categories/tree/top',
-            {
-                limit: 6
-            }
+            '/api/categories/tree/top?limit=6'
         ],
         initialData: initialCategories,
         refetchInterval: 60000,

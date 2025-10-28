@@ -78,7 +78,7 @@ export default function HomeClient({
 }: HomeClientProps) {
   // Fetch top categories with 60s auto-refresh (for homepage display)
   const { data: categoriesData, isLoading: isLoadingCategories } = useQuery({
-    queryKey: ['/api/categories/tree/top', { limit: 6 }],
+    queryKey: ['/api/categories/tree/top?limit=6'],
     initialData: initialCategories,
     refetchInterval: 60000, // Auto-refresh every 60 seconds
     staleTime: 50000,
