@@ -6,5 +6,6 @@
   "/dashboard/settings/page": "app/dashboard/settings/page.js",
   "/discussions/page": "app/discussions/page.js",
   "/members/page": "app/members/page.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/settings/page": "app/settings/page.js"
 }
