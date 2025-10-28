@@ -3151,6 +3151,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No file uploaded" });
       }
 
+      // Additional security: verify file is an image
+      const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+      const fileExt = path.extname(req.file.originalname).toLowerCase();
+      if (!imageExtensions.includes(fileExt)) {
+        // Delete the uploaded file if it's not an image
+        const fs = await import('fs/promises');
+        await fs.unlink(req.file.path).catch(() => {});
+        return res.status(400).json({ error: "Only image files are allowed for profile photos" });
+      }
+
       const authenticatedUserId = getAuthenticatedUserId(req);
       const photoUrl = `/uploads/${req.file.filename}`;
       
