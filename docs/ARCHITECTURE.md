@@ -64,6 +64,18 @@ YoForex runs **two frontend servers** for different purposes:
 - **XSS Protection** - Server-side HTML sanitization
 - **Coin System Security** - Validates negative amounts, overdrafts
 
+### SEO Enhancements (Oct 28, 2025)
+- **SEOPreview Component** - Real-time Google search result preview
+- **Keyword Density Validation** - Automatic analysis with 0.5-3% optimal range
+- **Character Counters** - Live validation for title (30-60 chars) and description (120-160 chars)
+- **SEO Feedback** - Contextual tips and warnings for optimization
+
+### Testing Infrastructure (Oct 28, 2025)
+- **Integration Tests** - `tests/api.test.ts` with 8 critical endpoint tests
+- **Test Framework** - Node.js native HTTP client with TypeScript
+- **Coverage** - Authentication, threads, categories, feedback, brokers, stats
+- **Status** - ✅ 100% pass rate
+
 ---
 
 ## Project Structure

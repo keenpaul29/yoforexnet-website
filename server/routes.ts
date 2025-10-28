@@ -2122,7 +2122,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // NEW: Get platform-wide broker statistics
   app.get("/api/brokers/stats", async (req, res) => {
     try {
-      const allBrokers = await storage.getAllBrokers({ status: "approved" });
+      // Get all brokers (don't filter by status - show stats for all brokers)
+      const allBrokers = await storage.getAllBrokers();
       const verifiedBrokers = allBrokers.filter(b => b.isVerified);
       
       // Calculate total reviews and average rating

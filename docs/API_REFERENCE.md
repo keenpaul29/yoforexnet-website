@@ -48,13 +48,35 @@
    - Optimized for category filtering, date sorting, user lookups
    - All forum, marketplace, and broker queries indexed
 
-### SEO Engine (100% Automated)
+### SEO Engine (Enhanced: Oct 28, 2025)
 All content, threads, and replies automatically generate:
 - **Focus Keywords** - Extracted from title
 - **Meta Descriptions** - First 155 characters
 - **SEO Slugs** - URL-friendly with collision handling
 - **Alt Texts** - Unique for each image
 - **Structured Data** - Schema.org JSON-LD
+
+**Manual SEO Controls (Thread Creation):**
+- **Primary Keyword** - User-defined focus keyword (1-6 words)
+- **SEO Excerpt** - Custom meta description (120-160 chars)
+- **Keyword Density** - Auto-validated (0.5-3% optimal)
+- **Preview Component** - Real-time Google search appearance
+
+### Integration Testing (Oct 28, 2025)
+**Test Coverage:** 8 critical endpoints  
+**Test File:** `tests/api.test.ts`  
+**Run Command:** `npx tsx tests/api.test.ts`  
+**Status:** ✅ 100% pass rate
+
+**Tested Endpoints:**
+- GET /api/categories - List all categories
+- GET /api/threads - List all threads
+- GET /api/stats - Platform statistics
+- POST /api/feedback - Submit feedback
+- GET /api/notifications/unread-count - Notification count
+- GET /api/brokers - Broker listings
+- GET /api/hot - Trending content
+- GET /api/content/top-sellers - Best sellers
 
 ---
 

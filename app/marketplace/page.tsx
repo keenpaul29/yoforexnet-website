@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import MarketplaceClient from './MarketplaceClient';
+import { getInternalApiUrl } from '../lib/api-config';
 
 // Enable ISR with 60-second revalidation
 export const revalidate = 60;
@@ -24,8 +25,9 @@ export const metadata: Metadata = {
 // Fetch marketplace content from Express API
 async function getMarketplaceContent() {
   try {
-    const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
-    const res = await fetch(`${EXPRESS_URL}/api/content?status=approved`, {
+    // Use centralized API config for SSR
+    const apiUrl = getInternalApiUrl();
+    const res = await fetch(`${apiUrl}/api/content?status=approved`, {
       next: { revalidate: 60 },
     });
     

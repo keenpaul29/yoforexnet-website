@@ -14,11 +14,12 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Real-time Updates: DISABLED** - All auto-refresh intervals disabled for performance
 - **Background Jobs: DISABLED** - All cron jobs disabled to reduce CPU/memory usage
 - MANDATORY: ALWAYS update these files IMMEDIATELY after making ANY code changes:
-    1. COMPLETE_PLATFORM_GUIDE.md
-    2. API_DOCUMENTATION.md
-    3. FRONTEND_ARCHITECTURE.md
-    4. API_QUICK_REFERENCE.txt
+    1. docs/PLATFORM_GUIDE.md
+    2. docs/API_REFERENCE.md
+    3. docs/ARCHITECTURE.md
+    4. docs/API_QUICK_REFERENCE.txt
     5. replit.md
+    6. CLIENT_HANDOVER_GUIDE.md (for major changes)
 
 ## System Architecture
 

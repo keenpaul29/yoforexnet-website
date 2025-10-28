@@ -21,7 +21,7 @@ When you import this project from GitHub:
 
 Just click "Import from GitHub" → Wait 30 seconds → Everything works!
 
-📖 **See:** [ZERO_TOUCH_MIGRATION.md](./ZERO_TOUCH_MIGRATION.md) for details
+📖 **See:** [Migration Guide](./docs/MIGRATION_GUIDE.md) for details
 
 **Before you export:** Run `npm run db:export` to include your data in the migration.
 
@@ -64,7 +64,9 @@ npm run dev:hybrid
 | **[Platform Guide](docs/PLATFORM_GUIDE.md)** | Complete feature documentation (5,700+ lines) |
 | **[Architecture](docs/ARCHITECTURE.md)** | Frontend/backend architecture & patterns |
 | **[API Reference](docs/API_REFERENCE.md)** | 60+ API endpoints with examples |
-| **[Deployment](docs/DEPLOYMENT.md)** | Production deployment guide |
+| **[Deployment](docs/DEPLOYMENT.md)** | Replit & VPS deployment guide |
+| **[Migration Guide](docs/MIGRATION_GUIDE.md)** | Zero-touch GitHub migration |
+| **[Client Handover](CLIENT_HANDOVER_GUIDE.md)** | Complete client documentation |
 
 ---
 
