@@ -147,6 +147,19 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("latest");
   const [filterChip, setFilterChip] = useState<string>("all");
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+
+  const toggleCardExpansion = (threadId: string) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(threadId)) {
+        newSet.delete(threadId);
+      } else {
+        newSet.add(threadId);
+      }
+      return newSet;
+    });
+  };
 
   // Fetch data with React Query
   const { data: threads, isLoading: threadsLoading } = useQuery<Thread[]>({
@@ -524,6 +537,8 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                   return new Date(thread.lastActivityAt) > recentDate && thread.replyCount > 2;
                 })();
 
+                const isExpanded = expandedCards.has(thread.id);
+
                 return (
                   <Link key={thread.id} href={`/thread/${thread.slug}`}>
                     <Card 
@@ -570,6 +585,31 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                         <h3 className="font-semibold text-sm line-clamp-2 leading-tight" data-testid={`title-${thread.slug}`}>
                           {thread.title}
                         </h3>
+
+                        {/* Thread Body Preview */}
+                        {thread.body && (
+                          <div>
+                            <p 
+                              className={`text-xs text-muted-foreground leading-relaxed ${isExpanded ? '' : 'line-clamp-3'}`} 
+                              data-testid={`body-preview-${thread.slug}`}
+                            >
+                              {thread.body.replace(/<[^>]*>/g, '')}
+                            </p>
+                            {thread.body.length > 150 && (
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  toggleCardExpansion(thread.id);
+                                }}
+                                className="text-xs text-primary hover:underline mt-1 font-medium"
+                                data-testid={`button-toggle-${thread.slug}`}
+                              >
+                                {isExpanded ? 'Show less' : 'Show more'}
+                              </button>
+                            )}
+                          </div>
+                        )}
 
                         {/* Author Info */}
                         <div className="flex items-center gap-2">

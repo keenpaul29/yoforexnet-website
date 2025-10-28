@@ -1685,6 +1685,13 @@ body {
   overflow: hidden;
 }
 
+.line-clamp-3 {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
 .block {
   display: block;
 }
@@ -4627,10 +4634,6 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .first\:border-l:first-child {
   border-left-width: 1px;
-}
-
-.last\:mb-0:last-child {
-  margin-bottom: 0;
 }
 
 .last\:rounded-r-md:last-child {

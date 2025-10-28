@@ -2728,6 +2728,18 @@ function DiscussionsClient({ initialThreads }) {
     const [categoryFilter, setCategoryFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
     const [sortBy, setSortBy] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("latest");
     const [filterChip, setFilterChip] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
+    const [expandedCards, setExpandedCards] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(new Set());
+    const toggleCardExpansion = (threadId)=>{
+        setExpandedCards((prev)=>{
+            const newSet = new Set(prev);
+            if (newSet.has(threadId)) {
+                newSet.delete(threadId);
+            } else {
+                newSet.add(threadId);
+            }
+            return newSet;
+        });
+    };
     // Fetch data with React Query
     const { data: threads, isLoading: threadsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
@@ -2886,20 +2898,20 @@ function DiscussionsClient({ initialThreads }) {
                             className: "h-10 w-64 mb-2"
                         }, void 0, false, {
                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                            lineNumber: 311,
+                            lineNumber: 324,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                             className: "h-4 w-96"
                         }, void 0, false, {
                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                            lineNumber: 312,
+                            lineNumber: 325,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                    lineNumber: 310,
+                    lineNumber: 323,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2915,18 +2927,18 @@ function DiscussionsClient({ initialThreads }) {
                             className: "h-48"
                         }, i, false, {
                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                            lineNumber: 316,
+                            lineNumber: 329,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                    lineNumber: 314,
+                    lineNumber: 327,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-            lineNumber: 309,
+            lineNumber: 322,
             columnNumber: 7
         }, this);
     }
@@ -2949,14 +2961,14 @@ function DiscussionsClient({ initialThreads }) {
                                                 className: "w-8 h-8 text-primary"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 330,
+                                                lineNumber: 343,
                                                 columnNumber: 15
                                             }, this),
                                             "Recent Discussions"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 329,
+                                        lineNumber: 342,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2964,13 +2976,13 @@ function DiscussionsClient({ initialThreads }) {
                                         children: "Join the conversation. Browse active threads and share your insights."
                                     }, void 0, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 333,
+                                        lineNumber: 346,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 328,
+                                lineNumber: 341,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -2981,20 +2993,20 @@ function DiscussionsClient({ initialThreads }) {
                                         className: "w-4 h-4 mr-2"
                                     }, void 0, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 338,
+                                        lineNumber: 351,
                                         columnNumber: 13
                                     }, this),
                                     "New Thread"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 337,
+                                lineNumber: 350,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                        lineNumber: 327,
+                        lineNumber: 340,
                         columnNumber: 9
                     }, this),
                     !statsLoading && combinedStats && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3013,12 +3025,12 @@ function DiscussionsClient({ initialThreads }) {
                                                     className: "w-5 h-5 text-blue-600 dark:text-blue-400"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 350,
+                                                    lineNumber: 363,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 349,
+                                                lineNumber: 362,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3029,7 +3041,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: combinedStats.totalThreads
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 353,
+                                                        lineNumber: 366,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3037,29 +3049,29 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Total Threads"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 356,
+                                                        lineNumber: 369,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 352,
+                                                lineNumber: 365,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 348,
+                                        lineNumber: 361,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                    lineNumber: 347,
+                                    lineNumber: 360,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 346,
+                                lineNumber: 359,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -3075,12 +3087,12 @@ function DiscussionsClient({ initialThreads }) {
                                                     className: "w-5 h-5 text-green-600 dark:text-green-400"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 366,
+                                                    lineNumber: 379,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 365,
+                                                lineNumber: 378,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3095,7 +3107,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         }).length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 369,
+                                                        lineNumber: 382,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3103,29 +3115,29 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Active Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 376,
+                                                        lineNumber: 389,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 368,
+                                                lineNumber: 381,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 364,
+                                        lineNumber: 377,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                    lineNumber: 363,
+                                    lineNumber: 376,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 362,
+                                lineNumber: 375,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -3141,12 +3153,12 @@ function DiscussionsClient({ initialThreads }) {
                                                     className: "w-5 h-5 text-purple-600 dark:text-purple-400"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 386,
+                                                    lineNumber: 399,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 385,
+                                                lineNumber: 398,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3157,7 +3169,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: combinedStats.totalPosts
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 389,
+                                                        lineNumber: 402,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3165,29 +3177,29 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Total Replies"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 392,
+                                                        lineNumber: 405,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 388,
+                                                lineNumber: 401,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 384,
+                                        lineNumber: 397,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                    lineNumber: 383,
+                                    lineNumber: 396,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 382,
+                                lineNumber: 395,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -3203,12 +3215,12 @@ function DiscussionsClient({ initialThreads }) {
                                                     className: "w-5 h-5 text-orange-600 dark:text-orange-400"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 402,
+                                                    lineNumber: 415,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 401,
+                                                lineNumber: 414,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3219,7 +3231,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: combinedStats.trendingThreads
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 405,
+                                                        lineNumber: 418,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3227,41 +3239,41 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Trending Now"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 408,
+                                                        lineNumber: 421,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 404,
+                                                lineNumber: 417,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 400,
+                                        lineNumber: 413,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                    lineNumber: 399,
+                                    lineNumber: 412,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 398,
+                                lineNumber: 411,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                        lineNumber: 345,
+                        lineNumber: 358,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                lineNumber: 326,
+                lineNumber: 339,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3281,7 +3293,7 @@ function DiscussionsClient({ initialThreads }) {
                                                     className: "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 426,
+                                                    lineNumber: 439,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -3293,13 +3305,13 @@ function DiscussionsClient({ initialThreads }) {
                                                     "data-testid": "input-search-discussions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 427,
+                                                    lineNumber: 440,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 425,
+                                            lineNumber: 438,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3315,12 +3327,12 @@ function DiscussionsClient({ initialThreads }) {
                                                                 placeholder: "All Categories"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 441,
+                                                                lineNumber: 454,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 440,
+                                                            lineNumber: 453,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -3330,7 +3342,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                     children: "All Categories"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                    lineNumber: 444,
+                                                                    lineNumber: 457,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 categories.map((cat)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3338,19 +3350,19 @@ function DiscussionsClient({ initialThreads }) {
                                                                         children: formatCategoryName(cat)
                                                                     }, cat, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 446,
+                                                                        lineNumber: 459,
                                                                         columnNumber: 23
                                                                     }, this))
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 443,
+                                                            lineNumber: 456,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 439,
+                                                    lineNumber: 452,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
@@ -3363,12 +3375,12 @@ function DiscussionsClient({ initialThreads }) {
                                                                 placeholder: "Sort by"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 455,
+                                                                lineNumber: 468,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 454,
+                                                            lineNumber: 467,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -3378,7 +3390,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                     children: "Latest Activity"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                    lineNumber: 458,
+                                                                    lineNumber: 471,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3386,7 +3398,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                     children: "Most Popular"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                    lineNumber: 459,
+                                                                    lineNumber: 472,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3394,7 +3406,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                     children: "Most Replies"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                    lineNumber: 460,
+                                                                    lineNumber: 473,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -3402,25 +3414,25 @@ function DiscussionsClient({ initialThreads }) {
                                                                     children: "Most Views"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                    lineNumber: 461,
+                                                                    lineNumber: 474,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 457,
+                                                            lineNumber: 470,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 453,
+                                                    lineNumber: 466,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 438,
+                                            lineNumber: 451,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3434,7 +3446,7 @@ function DiscussionsClient({ initialThreads }) {
                                                     children: "All"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 468,
+                                                    lineNumber: 481,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3447,14 +3459,14 @@ function DiscussionsClient({ initialThreads }) {
                                                             className: "w-3 h-3 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 482,
+                                                            lineNumber: 495,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Hot"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 476,
+                                                    lineNumber: 489,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3467,14 +3479,14 @@ function DiscussionsClient({ initialThreads }) {
                                                             className: "w-3 h-3 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 491,
+                                                            lineNumber: 504,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Trending"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 485,
+                                                    lineNumber: 498,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3485,7 +3497,7 @@ function DiscussionsClient({ initialThreads }) {
                                                     children: "Unanswered"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 494,
+                                                    lineNumber: 507,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -3498,31 +3510,31 @@ function DiscussionsClient({ initialThreads }) {
                                                             className: "w-3 h-3 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                            lineNumber: 508,
+                                                            lineNumber: 521,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Solved"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 502,
+                                                    lineNumber: 515,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 467,
+                                            lineNumber: 480,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                    lineNumber: 423,
+                                    lineNumber: 436,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 422,
+                                lineNumber: 435,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3535,6 +3547,7 @@ function DiscussionsClient({ initialThreads }) {
                                         recentDate.setHours(recentDate.getHours() - 24);
                                         return new Date(thread.lastActivityAt) > recentDate && thread.replyCount > 2;
                                     })();
+                                    const isExpanded = expandedCards.has(thread.id);
                                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                         href: `/thread/${thread.slug}`,
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -3553,7 +3566,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                 children: formatCategoryName(thread.categorySlug)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 536,
+                                                                lineNumber: 551,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3566,7 +3579,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                         children: "Pinned"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 545,
+                                                                        lineNumber: 560,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     isTrending && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3577,14 +3590,14 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 className: "w-2.5 h-2.5 mr-0.5"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 551,
+                                                                                lineNumber: 566,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             "Trending"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 550,
+                                                                        lineNumber: 565,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     isHot && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3595,14 +3608,14 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 className: "w-2.5 h-2.5 mr-0.5"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 557,
+                                                                                lineNumber: 572,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             "Hot"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 556,
+                                                                        lineNumber: 571,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     thread.hasAcceptedAnswer && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3612,24 +3625,24 @@ function DiscussionsClient({ initialThreads }) {
                                                                             className: "w-2.5 h-2.5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                            lineNumber: 563,
+                                                                            lineNumber: 578,
                                                                             columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 562,
+                                                                        lineNumber: 577,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 543,
+                                                                lineNumber: 558,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 535,
+                                                        lineNumber: 550,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3638,8 +3651,39 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: thread.title
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 570,
+                                                        lineNumber: 585,
                                                         columnNumber: 25
+                                                    }, this),
+                                                    thread.body && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: `text-xs text-muted-foreground leading-relaxed ${isExpanded ? '' : 'line-clamp-3'}`,
+                                                                "data-testid": `body-preview-${thread.slug}`,
+                                                                children: thread.body.replace(/<[^>]*>/g, '')
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/discussions/DiscussionsClient.tsx",
+                                                                lineNumber: 592,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            thread.body.length > 150 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: (e)=>{
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    toggleCardExpansion(thread.id);
+                                                                },
+                                                                className: "text-xs text-primary hover:underline mt-1 font-medium",
+                                                                "data-testid": `button-toggle-${thread.slug}`,
+                                                                children: isExpanded ? 'Show less' : 'Show more'
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/discussions/DiscussionsClient.tsx",
+                                                                lineNumber: 599,
+                                                                columnNumber: 31
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/discussions/DiscussionsClient.tsx",
+                                                        lineNumber: 591,
+                                                        columnNumber: 27
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center gap-2",
@@ -3651,7 +3695,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                         src: thread.author?.profileImageUrl
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 577,
+                                                                        lineNumber: 617,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -3659,13 +3703,13 @@ function DiscussionsClient({ initialThreads }) {
                                                                         children: thread.author?.username?.[0]?.toUpperCase() || 'U'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 578,
+                                                                        lineNumber: 618,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 576,
+                                                                lineNumber: 616,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3674,13 +3718,13 @@ function DiscussionsClient({ initialThreads }) {
                                                                 children: thread.author?.username || 'Unknown'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 582,
+                                                                lineNumber: 622,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 575,
+                                                        lineNumber: 615,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3696,7 +3740,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 className: "w-3 h-3"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 591,
+                                                                                lineNumber: 631,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3704,13 +3748,13 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 children: thread.replyCount
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 592,
+                                                                                lineNumber: 632,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 590,
+                                                                        lineNumber: 630,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3720,7 +3764,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 className: "w-3 h-3"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 595,
+                                                                                lineNumber: 635,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3728,19 +3772,19 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 children: thread.views
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 596,
+                                                                                lineNumber: 636,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 594,
+                                                                        lineNumber: 634,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 589,
+                                                                lineNumber: 629,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3750,7 +3794,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                         className: "w-3 h-3"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 600,
+                                                                        lineNumber: 640,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3761,35 +3805,35 @@ function DiscussionsClient({ initialThreads }) {
                                                                         })
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 601,
+                                                                        lineNumber: 641,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 599,
+                                                                lineNumber: 639,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 588,
+                                                        lineNumber: 628,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 533,
+                                                lineNumber: 548,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 529,
+                                            lineNumber: 544,
                                             columnNumber: 21
                                         }, this)
                                     }, thread.id, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 528,
+                                        lineNumber: 543,
                                         columnNumber: 19
                                     }, this);
                                 }) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3799,23 +3843,23 @@ function DiscussionsClient({ initialThreads }) {
                                         children: "No discussions found matching your filters."
                                     }, void 0, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 613,
+                                        lineNumber: 653,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                    lineNumber: 612,
+                                    lineNumber: 652,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 516,
+                                lineNumber: 529,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                        lineNumber: 420,
+                        lineNumber: 433,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3833,14 +3877,14 @@ function DiscussionsClient({ initialThreads }) {
                                                         className: "w-4 h-4 text-orange-600 dark:text-orange-400"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 625,
+                                                        lineNumber: 665,
                                                         columnNumber: 17
                                                     }, this),
                                                     "Trending Now"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 624,
+                                                lineNumber: 664,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -3848,13 +3892,13 @@ function DiscussionsClient({ initialThreads }) {
                                                 children: "Hot discussions in the last 24 hours"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 628,
+                                                lineNumber: 668,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 623,
+                                        lineNumber: 663,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3864,7 +3908,7 @@ function DiscussionsClient({ initialThreads }) {
                                                 className: "h-16"
                                             }, i, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 635,
+                                                lineNumber: 675,
                                                 columnNumber: 19
                                             }, this)) : trendingThreads && trendingThreads.length > 0 ? trendingThreads.map((thread, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                                 href: `/thread/${thread.slug}`,
@@ -3883,7 +3927,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 642,
+                                                                lineNumber: 682,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3894,7 +3938,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                         children: thread.title
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 646,
+                                                                        lineNumber: 686,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3907,20 +3951,20 @@ function DiscussionsClient({ initialThreads }) {
                                                                                         className: "w-3 h-3"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                        lineNumber: 649,
+                                                                                        lineNumber: 689,
                                                                                         columnNumber: 31
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                         children: thread.replyCount
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                        lineNumber: 650,
+                                                                                        lineNumber: 690,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 648,
+                                                                                lineNumber: 688,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3930,66 +3974,66 @@ function DiscussionsClient({ initialThreads }) {
                                                                                         className: "w-3 h-3"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                        lineNumber: 653,
+                                                                                        lineNumber: 693,
                                                                                         columnNumber: 31
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                         children: thread.views
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                        lineNumber: 654,
+                                                                                        lineNumber: 694,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 652,
+                                                                                lineNumber: 692,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 647,
+                                                                        lineNumber: 687,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 645,
+                                                                lineNumber: 685,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 641,
+                                                        lineNumber: 681,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 640,
+                                                    lineNumber: 680,
                                                     columnNumber: 21
                                                 }, this)
                                             }, thread.threadId, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 639,
+                                                lineNumber: 679,
                                                 columnNumber: 19
                                             }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-xs text-muted-foreground text-center py-4",
                                             children: "No trending discussions right now"
                                         }, void 0, false, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 663,
+                                            lineNumber: 703,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 632,
+                                        lineNumber: 672,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 622,
+                                lineNumber: 662,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -4004,14 +4048,14 @@ function DiscussionsClient({ initialThreads }) {
                                                         className: "w-4 h-4 text-green-600 dark:text-green-400"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 674,
+                                                        lineNumber: 714,
                                                         columnNumber: 17
                                                     }, this),
                                                     "Recent Activity"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 673,
+                                                lineNumber: 713,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -4019,13 +4063,13 @@ function DiscussionsClient({ initialThreads }) {
                                                 children: "Live community updates"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 677,
+                                                lineNumber: 717,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 672,
+                                        lineNumber: 712,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4035,7 +4079,7 @@ function DiscussionsClient({ initialThreads }) {
                                                 className: "h-12"
                                             }, i, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 684,
+                                                lineNumber: 724,
                                                 columnNumber: 19
                                             }, this)) : activityFeed && activityFeed.length > 0 ? activityFeed.slice(0, 10).map((activity, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                                 href: `/thread/${activity.threadId}`,
@@ -4052,7 +4096,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                         src: activity.profileImageUrl
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 692,
+                                                                        lineNumber: 732,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -4060,13 +4104,13 @@ function DiscussionsClient({ initialThreads }) {
                                                                         children: activity.username[0]?.toUpperCase()
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 693,
+                                                                        lineNumber: 733,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 691,
+                                                                lineNumber: 731,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4080,7 +4124,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 children: activity.username
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 699,
+                                                                                lineNumber: 739,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             ' ',
@@ -4089,7 +4133,7 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 children: activity.action
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 701,
+                                                                                lineNumber: 741,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             ' ',
@@ -4098,13 +4142,13 @@ function DiscussionsClient({ initialThreads }) {
                                                                                 children: activity.threadTitle
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                                lineNumber: 703,
+                                                                                lineNumber: 743,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 698,
+                                                                        lineNumber: 738,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4114,47 +4158,47 @@ function DiscussionsClient({ initialThreads }) {
                                                                         })
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                        lineNumber: 705,
+                                                                        lineNumber: 745,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                                lineNumber: 697,
+                                                                lineNumber: 737,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 690,
+                                                        lineNumber: 730,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 689,
+                                                    lineNumber: 729,
                                                     columnNumber: 21
                                                 }, this)
                                             }, idx, false, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 688,
+                                                lineNumber: 728,
                                                 columnNumber: 19
                                             }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-xs text-muted-foreground text-center py-4",
                                             children: "No recent activity"
                                         }, void 0, false, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 714,
+                                            lineNumber: 754,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 681,
+                                        lineNumber: 721,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 671,
+                                lineNumber: 711,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -4168,19 +4212,19 @@ function DiscussionsClient({ initialThreads }) {
                                                     className: "w-4 h-4 text-blue-600 dark:text-blue-400"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                    lineNumber: 725,
+                                                    lineNumber: 765,
                                                     columnNumber: 17
                                                 }, this),
                                                 "Quick Stats"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                            lineNumber: 724,
+                                            lineNumber: 764,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 723,
+                                        lineNumber: 763,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4195,7 +4239,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Active Discussions"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 731,
+                                                        lineNumber: 771,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4207,13 +4251,13 @@ function DiscussionsClient({ initialThreads }) {
                                                         }).length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 732,
+                                                        lineNumber: 772,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 730,
+                                                lineNumber: 770,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4224,7 +4268,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Unanswered"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 741,
+                                                        lineNumber: 781,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4232,13 +4276,13 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: filteredThreads.filter((t)=>t.replyCount === 0).length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 742,
+                                                        lineNumber: 782,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 740,
+                                                lineNumber: 780,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4249,7 +4293,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Solved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 747,
+                                                        lineNumber: 787,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4257,13 +4301,13 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: filteredThreads.filter((t)=>t.hasAcceptedAnswer).length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 748,
+                                                        lineNumber: 788,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 746,
+                                                lineNumber: 786,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4274,7 +4318,7 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: "Categories"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 753,
+                                                        lineNumber: 793,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4282,43 +4326,43 @@ function DiscussionsClient({ initialThreads }) {
                                                         children: categories.length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                        lineNumber: 754,
+                                                        lineNumber: 794,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                                lineNumber: 752,
+                                                lineNumber: 792,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                        lineNumber: 729,
+                                        lineNumber: 769,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                                lineNumber: 722,
+                                lineNumber: 762,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                        lineNumber: 620,
+                        lineNumber: 660,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-                lineNumber: 418,
+                lineNumber: 431,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/discussions/DiscussionsClient.tsx",
-        lineNumber: 324,
+        lineNumber: 337,
         columnNumber: 5
     }, this);
 }
