@@ -179,14 +179,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: "User not found" });
     }
     
-    // Mark profilePicture onboarding step on first successful authentication
-    try {
-      await storage.markOnboardingStep(claims.sub, 'profilePicture');
-    } catch (error) {
-      // Don't fail the request if onboarding step fails
-      console.error('Failed to mark profilePicture:', error);
-    }
-    
     res.json(user);
   });
 
