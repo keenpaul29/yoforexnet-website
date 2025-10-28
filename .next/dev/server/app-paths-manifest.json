@@ -1,8 +1,3 @@
 {
-  "/brokers/page": "app/brokers/page.js",
-  "/categories/page": "app/categories/page.js",
-  "/category/[slug]/page": "app/category/[slug]/page.js",
-  "/discussions/page": "app/discussions/page.js",
-  "/page": "app/page.js",
-  "/settings/page": "app/settings/page.js"
+  "/page": "app/page.js"
 }

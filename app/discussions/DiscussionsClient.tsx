@@ -166,6 +166,15 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
   const { data: trendingThreads, isLoading: trendingLoading } = useTrendingThreads();
   const { data: activityFeed, isLoading: activityLoading } = useActivityFeed();
 
+  // Combine stats with real trending data
+  const combinedStats = useMemo(() => {
+    if (!stats) return null;
+    return {
+      ...stats,
+      trendingThreads: trendingThreads?.length || 0,
+    };
+  }, [stats, trendingThreads]);
+
   // Extract unique categories from threads
   const categories = useMemo(() => {
     if (!threads) return [];
@@ -332,7 +341,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
         </div>
 
         {/* Platform Stats Row */}
-        {!statsLoading && stats && (
+        {!statsLoading && combinedStats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <Card className="bg-card/50 backdrop-blur-sm">
               <CardContent className="p-4">
@@ -342,7 +351,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                   </div>
                   <div>
                     <p className="text-2xl font-bold" data-testid="stat-total-threads">
-                      {stats.totalThreads}
+                      {combinedStats.totalThreads}
                     </p>
                     <p className="text-xs text-muted-foreground">Total Threads</p>
                   </div>
@@ -378,7 +387,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                   </div>
                   <div>
                     <p className="text-2xl font-bold" data-testid="stat-replies-24h">
-                      {stats.totalPosts}
+                      {combinedStats.totalPosts}
                     </p>
                     <p className="text-xs text-muted-foreground">Total Replies</p>
                   </div>
@@ -394,7 +403,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                   </div>
                   <div>
                     <p className="text-2xl font-bold" data-testid="stat-trending-now">
-                      {trendingThreads?.length || 0}
+                      {combinedStats.trendingThreads}
                     </p>
                     <p className="text-xs text-muted-foreground">Trending Now</p>
                   </div>
