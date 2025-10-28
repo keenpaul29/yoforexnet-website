@@ -164,6 +164,15 @@ import { applySEOAutomations, generateUniqueSlug, generateThreadSlug, generateRe
 import { db } from "./db";
 import { eq, and, or, desc, asc, sql, count, inArray, gt, gte, lte, ilike, lt, ne } from "drizzle-orm";
 
+/**
+ * Calculate user level based on total coins
+ * Level = floor(totalCoins / 1000)
+ * Examples: 0 coins=level 0, 1000 coins=level 1, 2500 coins=level 2, 10000 coins=level 10
+ */
+function calculateUserLevel(totalCoins: number): number {
+  return Math.floor(totalCoins / 1000);
+}
+
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<any>;
@@ -1508,7 +1517,12 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return undefined;
     
-    const updatedUser = { ...user, totalCoins: user.totalCoins + coins };
+    const newTotalCoins = user.totalCoins + coins;
+    const updatedUser = { 
+      ...user, 
+      totalCoins: newTotalCoins,
+      level: calculateUserLevel(newTotalCoins)
+    };
     this.users.set(userId, updatedUser);
     return updatedUser;
   }
@@ -1600,15 +1614,15 @@ export class MemStorage implements IStorage {
     
     // Calculate new totals
     const newMinutes = activity.activeMinutes + minutes;
-    const cappedMinutes = Math.min(newMinutes, 100); // Max 100 minutes per day
-    const minutesAdded = cappedMinutes - activity.activeMinutes;
+    const cappedMinutes = Math.min(newMinutes, 500); // Max 500 minutes per day
     
-    // Award coins: 1 coin per 5 minutes (12 coins per hour, max 20 per day)
-    const newCoins = Math.floor(minutesAdded / 5);
+    // Award coins: 0.5 coins per 5 minutes = cappedMinutes / 10 (max 50 coins per day)
+    const totalCoinsEarned = cappedMinutes / 10;
+    const newCoins = totalCoinsEarned - activity.coinsEarned;
     
     // Update activity record
     activity.activeMinutes = cappedMinutes;
-    activity.coinsEarned += newCoins;
+    activity.coinsEarned = totalCoinsEarned;
     activity.lastActivityAt = new Date();
     this.userActivity.set(activity.id, activity);
     
@@ -1689,9 +1703,11 @@ export class MemStorage implements IStorage {
     this.transactions.set(id, transaction);
     
     // Update user's coin balance and stats
+    const newTotalCoins = user.totalCoins + balanceChange;
     const updatedUser = {
       ...user,
-      totalCoins: user.totalCoins + balanceChange,
+      totalCoins: newTotalCoins,
+      level: calculateUserLevel(newTotalCoins),
       weeklyEarned: insertTransaction.type === "earn" || insertTransaction.type === "recharge"
         ? user.weeklyEarned + Math.abs(insertTransaction.amount)
         : user.weeklyEarned
@@ -2856,7 +2872,9 @@ export class MemStorage implements IStorage {
 
     // Award coins
     if (coinsToAward > 0) {
-      user.totalCoins = (user.totalCoins || 0) + coinsToAward;
+      const newTotalCoins = (user.totalCoins || 0) + coinsToAward;
+      user.totalCoins = newTotalCoins;
+      user.level = calculateUserLevel(newTotalCoins);
     }
   }
 
@@ -3154,7 +3172,12 @@ export class MemStorage implements IStorage {
   async adjustUserCoins(userId: string, amount: number, reason: string, adminId: string): Promise<void> {
     const user = this.users.get(userId);
     if (user) {
-      this.users.set(userId, { ...user, totalCoins: user.totalCoins + amount });
+      const newTotalCoins = user.totalCoins + amount;
+      this.users.set(userId, { 
+        ...user, 
+        totalCoins: newTotalCoins,
+        level: calculateUserLevel(newTotalCoins)
+      });
     }
   }
 
@@ -3835,7 +3858,10 @@ export class DrizzleStorage implements IStorage {
   async updateUserCoins(userId: string, coins: number): Promise<User | undefined> {
     const [user] = await db
       .update(users)
-      .set({ totalCoins: sql`${users.totalCoins} + ${coins}` })
+      .set({ 
+        totalCoins: sql`${users.totalCoins} + ${coins}`,
+        level: sql`FLOOR((${users.totalCoins} + ${coins}) / 1000)`
+      })
       .where(eq(users.id, userId))
       .returning();
     return user;
@@ -3947,7 +3973,10 @@ export class DrizzleStorage implements IStorage {
     // Award coins if any new coins earned
     if (newCoins > 0) {
       await db.update(users)
-        .set({ totalCoins: sql`${users.totalCoins} + ${newCoins}` })
+        .set({ 
+          totalCoins: sql`${users.totalCoins} + ${newCoins}`,
+          level: sql`FLOOR((${users.totalCoins} + ${newCoins}) / 1000)`
+        })
         .where(eq(users.id, userId));
 
       await db.insert(coinTransactions).values({
@@ -4022,6 +4051,7 @@ export class DrizzleStorage implements IStorage {
       .update(users)
       .set({ 
         totalCoins: sql`${users.totalCoins} + ${balanceChange}`,
+        level: sql`FLOOR((${users.totalCoins} + ${balanceChange}) / 1000)`,
         weeklyEarned: insertTransaction.type === "earn" || insertTransaction.type === "recharge"
           ? sql`${users.weeklyEarned} + ${Math.abs(insertTransaction.amount)}`
           : users.weeklyEarned
@@ -4394,6 +4424,7 @@ export class DrizzleStorage implements IStorage {
       await tx.update(users)
         .set({ 
           totalCoins: sql`${users.totalCoins} + 1`,
+          level: sql`FLOOR((${users.totalCoins} + 1) / 1000)`,
           weeklyEarned: sql`${users.weeklyEarned} + 1`
         })
         .where(eq(users.id, insertLike.userId));
@@ -4603,8 +4634,28 @@ export class DrizzleStorage implements IStorage {
   }
   
   async getForumThreadBySlug(slug: string): Promise<ForumThread | undefined> {
-    const [thread] = await db.select().from(forumThreads).where(eq(forumThreads.slug, slug));
+    const [result] = await db
+      .select({
+        thread: forumThreads,
+        authorUsername: users.username,
+        authorFirstName: users.firstName,
+        authorLastName: users.lastName,
+      })
+      .from(forumThreads)
+      .leftJoin(users, eq(forumThreads.authorId, users.id))
+      .where(eq(forumThreads.slug, slug));
     
+    if (!result) return undefined;
+    
+    const thread = result.thread;
+    
+    // Get accurate reply count from database
+    const [{ count: actualReplyCount }] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(forumReplies)
+      .where(eq(forumReplies.threadId, thread.id));
+    
+    // Increment view count
     if (thread) {
       await db
         .update(forumThreads)
@@ -4612,7 +4663,14 @@ export class DrizzleStorage implements IStorage {
         .where(eq(forumThreads.id, thread.id));
     }
     
-    return thread;
+    // Return thread with author data merged in and accurate reply count
+    return {
+      ...thread,
+      replyCount: actualReplyCount,
+      authorUsername: result.authorUsername,
+      authorFirstName: result.authorFirstName,
+      authorLastName: result.authorLastName,
+    } as ForumThread;
   }
   
   async listForumThreads(filters?: { categorySlug?: string; status?: string; isPinned?: boolean; limit?: number }): Promise<ForumThread[]> {
@@ -4715,11 +4773,25 @@ export class DrizzleStorage implements IStorage {
   }
   
   async listForumReplies(threadId: string): Promise<ForumReply[]> {
-    return await db
-      .select()
+    const results = await db
+      .select({
+        reply: forumReplies,
+        authorUsername: users.username,
+        authorFirstName: users.firstName,
+        authorLastName: users.lastName,
+      })
       .from(forumReplies)
+      .leftJoin(users, eq(forumReplies.userId, users.id))
       .where(eq(forumReplies.threadId, threadId))
       .orderBy(forumReplies.createdAt);
+    
+    // Return replies with author data merged in
+    return results.map(result => ({
+      ...result.reply,
+      authorUsername: result.authorUsername,
+      authorFirstName: result.authorFirstName,
+      authorLastName: result.authorLastName,
+    } as ForumReply));
   }
   
   async markReplyAsAccepted(replyId: string): Promise<ForumReply | null> {
@@ -5854,9 +5926,13 @@ export class DrizzleStorage implements IStorage {
       adminNotes: data.adminNotes,
     }).returning();
 
+    const newTotalCoins = user.totalCoins - data.amount;
     await db
       .update(users)
-      .set({ totalCoins: user.totalCoins - data.amount })
+      .set({ 
+        totalCoins: newTotalCoins,
+        level: calculateUserLevel(newTotalCoins)
+      })
       .where(eq(users.id, userId));
 
     return withdrawal;
@@ -5908,9 +5984,13 @@ export class DrizzleStorage implements IStorage {
 
     const user = await this.getUser(userId);
     if (user) {
+      const newTotalCoins = user.totalCoins + withdrawal.amount;
       await db
         .update(users)
-        .set({ totalCoins: user.totalCoins + withdrawal.amount })
+        .set({ 
+          totalCoins: newTotalCoins,
+          level: calculateUserLevel(newTotalCoins)
+        })
         .where(eq(users.id, userId));
     }
 
@@ -6401,7 +6481,10 @@ export class DrizzleStorage implements IStorage {
       await db.transaction(async (tx) => {
         await tx
           .update(users)
-          .set({ totalCoins: sql`${users.totalCoins} + ${amount}` })
+          .set({ 
+            totalCoins: sql`${users.totalCoins} + ${amount}`,
+            level: sql`FLOOR((${users.totalCoins} + ${amount}) / 1000)`
+          })
           .where(eq(users.id, userId));
         
         await tx.insert(coinTransactions).values({
@@ -7304,9 +7387,13 @@ export class DrizzleStorage implements IStorage {
           status: 'completed',
         }).returning();
         
+        const balanceChange = type === 'spend' ? -amount : amount;
         await tx
           .update(users)
-          .set({ totalCoins: sql`${users.totalCoins} + ${type === 'spend' ? -amount : amount}` })
+          .set({ 
+            totalCoins: sql`${users.totalCoins} + ${balanceChange}`,
+            level: sql`FLOOR((${users.totalCoins} + ${balanceChange}) / 1000)`
+          })
           .where(eq(users.id, userId));
         
         await tx.insert(adminActions).values({
@@ -7390,7 +7477,10 @@ export class DrizzleStorage implements IStorage {
           // Refund coins
           await tx
             .update(users)
-            .set({ totalCoins: sql`${users.totalCoins} + ${withdrawal.amount}` })
+            .set({ 
+              totalCoins: sql`${users.totalCoins} + ${withdrawal.amount}`,
+              level: sql`FLOOR((${users.totalCoins} + ${withdrawal.amount}) / 1000)`
+            })
             .where(eq(users.id, withdrawal.userId));
           
           await tx.insert(adminActions).values({
@@ -7563,7 +7653,10 @@ export class DrizzleStorage implements IStorage {
       return await db.transaction(async (tx) => {
         await tx
           .update(users)
-          .set({ totalCoins: sql`${users.totalCoins} + ${refund.amount}` })
+          .set({ 
+            totalCoins: sql`${users.totalCoins} + ${refund.amount}`,
+            level: sql`FLOOR((${users.totalCoins} + ${refund.amount}) / 1000)`
+          })
           .where(eq(users.id, refund.userId));
         
         const [transaction] = await tx.insert(coinTransactions).values({

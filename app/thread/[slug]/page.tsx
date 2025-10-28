@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import type { ForumThread, ForumReply } from '@shared/schema';
 import ThreadDetailClient from './ThreadDetailClient';
 
@@ -93,6 +94,11 @@ export default async function ThreadDetailPage({ params }: PageProps) {
   
   // Fetch thread data from Express API
   const thread: ForumThread | null = await fetchData(`/api/threads/slug/${slug}`);
+  
+  // Return 404 if thread doesn't exist
+  if (!thread) {
+    notFound();
+  }
   
   // Fetch replies if thread exists
   let replies: ForumReply[] = [];

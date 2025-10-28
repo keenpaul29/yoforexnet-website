@@ -218,17 +218,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Extract userId from session (may be null for anonymous feedback)
       const userId = req.isAuthenticated() ? (req.user as any)?.claims?.sub : null;
 
-      // Validate request body using insertFeedbackSchema
-      const validatedData = insertFeedbackSchema.parse({
+      // 1. Validate with Zod schema using safeParse
+      const validationResult = insertFeedbackSchema.safeParse({
         userId: userId,
         type: req.body.type,
         subject: req.body.subject,
         message: req.body.message,
         email: req.body.email,
       });
-
-      // Persist feedback to database
-      const createdFeedback = await storage.createFeedback(validatedData);
+      
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        });
+      }
+      
+      // 2. Sanitize inputs to prevent XSS (no HTML allowed in feedback)
+      const sanitized = sanitizeRequestBody(validationResult.data, []);
+      
+      // 3. Create feedback with sanitized data
+      const createdFeedback = await storage.createFeedback(sanitized);
 
       console.log(`[FEEDBACK] New feedback created:`);
       console.log(`  ID: ${createdFeedback.id}`);
@@ -243,14 +253,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error: any) {
       console.error('[FEEDBACK] Error:', error);
-      
-      if (error.name === 'ZodError') {
-        return res.status(400).json({ 
-          error: "Invalid feedback data",
-          details: error.errors 
-        });
-      }
-      
       res.status(500).json({ error: error.message });
     }
   });
@@ -1839,11 +1841,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const authenticatedUserId = getAuthenticatedUserId(req);
       
-      const validated = insertContentReviewSchema.parse(req.body);
-      // Override userId with authenticated user ID
-      validated.userId = authenticatedUserId;
+      // 1. Validate with Zod schema
+      const validationResult = insertContentReviewSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        });
+      }
       
-      const review = await storage.createReview(validated);
+      // 2. Sanitize inputs to prevent XSS (allow HTML in review field)
+      const sanitized = sanitizeRequestBody(validationResult.data, ['review']);
+      
+      // Override userId with authenticated user ID
+      sanitized.userId = authenticatedUserId;
+      
+      // 3. Create review with sanitized data
+      const review = await storage.createReview(sanitized);
       
       // Award 5 coins for review (pending moderation approval)
       // Note: Coins will be awarded when admin approves the review
@@ -1871,7 +1885,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(401).json({ error: "Not authenticated" });
         }
       }
-      res.status(400).json({ error: "Invalid review data" });
+      res.status(500).json({ error: "Invalid review data" });
     }
   });
   
@@ -2241,18 +2255,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const authenticatedUserId = getAuthenticatedUserId(req);
       
-      const validated = insertBrokerReviewSchema.parse(req.body);
-      // Override userId with authenticated user ID
-      validated.userId = authenticatedUserId;
+      // 1. Validate with Zod schema
+      const validationResult = insertBrokerReviewSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        });
+      }
       
-      const review = await storage.createBrokerReview(validated);
+      // 2. Sanitize inputs to prevent XSS (allow HTML in reviewTitle and reviewBody)
+      const sanitized = sanitizeRequestBody(validationResult.data, ['reviewTitle', 'reviewBody']);
+      
+      // Override userId with authenticated user ID
+      sanitized.userId = authenticatedUserId;
+      
+      // 3. Create review with sanitized data
+      const review = await storage.createBrokerReview(sanitized);
       
       // Update broker's overall rating
-      await storage.updateBrokerRating(validated.brokerId);
+      await storage.updateBrokerRating(sanitized.brokerId);
       
       // AWARD COINS: Only for normal reviews (NOT scam reports)
       // Scam reports require admin verification before awarding coins
-      if (!validated.isScamReport) {
+      if (!sanitized.isScamReport) {
         try {
           await storage.beginLedgerTransaction(
             'earn',
@@ -2262,7 +2288,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 userId: authenticatedUserId,
                 direction: 'credit',
                 amount: 50,
-                memo: `Reviewed broker: ${validated.brokerId}`,
+                memo: `Reviewed broker: ${sanitized.brokerId}`,
               },
               {
                 userId: 'system',
@@ -2301,7 +2327,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(401).json({ error: "Not authenticated" });
         }
       }
-      res.status(400).json({ error: "Invalid review data" });
+      res.status(500).json({ error: "Invalid review data" });
     }
   });
 
@@ -2458,11 +2484,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const authenticatedUserId = getAuthenticatedUserId(req);
       
-      // Sanitize inputs - allow HTML in body only
-      const sanitized = sanitizeRequestBody(req.body, ['body']);
+      // 1. Validate schema (includes title 15-90 chars, body 150+ words, caps detection)
+      const validationResult = insertForumThreadSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        });
+      }
       
-      // Validate schema (includes title 15-90 chars, body 150+ words, caps detection)
-      const validated = insertForumThreadSchema.parse(sanitized);
+      // 2. Sanitize inputs - allow HTML in body only
+      const validated = sanitizeRequestBody(validationResult.data, ['body']);
       
       // Override authorId with authenticated user ID
       validated.authorId = authenticatedUserId;
@@ -2951,14 +2983,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const authenticatedUserId = getAuthenticatedUserId(req);
       
-      // Sanitize inputs - allow HTML in body only
-      const sanitized = sanitizeRequestBody(req.body, ['body']);
-      
-      // Validate schema
-      const validated = insertForumReplySchema.parse({
-        ...sanitized,
+      // 1. Validate schema
+      const validationResult = insertForumReplySchema.safeParse({
+        ...req.body,
         threadId: req.params.threadId,
       });
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        });
+      }
+      
+      // 2. Sanitize inputs - allow HTML in body only
+      const validated = sanitizeRequestBody(validationResult.data, ['body']);
       // Override userId/authorId with authenticated user ID
       validated.userId = authenticatedUserId;
       
@@ -3709,7 +3747,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/user/profile", isAuthenticated, async (req, res) => {
     try {
       const authenticatedUserId = getAuthenticatedUserId(req);
-      const validated = updateUserProfileSchema.parse(req.body);
+      
+      // 1. Validate with Zod schema
+      const validationResult = updateUserProfileSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Validation failed', 
+          details: validationResult.error.errors 
+        });
+      }
+      
+      // 2. Sanitize inputs to prevent XSS (allow HTML in bio field)
+      const validated = sanitizeRequestBody(validationResult.data, ['bio']);
       
       // Separate fields for users table vs profiles table
       const userFields: any = {};

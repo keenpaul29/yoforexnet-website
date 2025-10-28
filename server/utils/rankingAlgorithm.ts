@@ -49,8 +49,8 @@ export function calculateEngagementScore(factors: RankingFactors): number {
   // Weight different actions based on engagement value
   const WEIGHTS = {
     view: 0.1,        // Low weight - passive viewing
-    reply: 5.0,       // High weight - active discussion
-    like: 2.0,        // Medium weight - appreciation
+    reply: 1.0,       // Active discussion (FIXED: was 5.0)
+    helpfulVote: 2.0, // Medium weight - quality indicator (FIXED: was like)
     bookmark: 3.0,    // Higher than like - shows intent to return
     share: 4.0,       // High weight - content amplification
     download: 10.0,   // Very high - conversion action
@@ -61,7 +61,7 @@ export function calculateEngagementScore(factors: RankingFactors): number {
   let score = 0;
   score += views * WEIGHTS.view;
   score += replies * WEIGHTS.reply;
-  score += likes * WEIGHTS.like;
+  score += likes * WEIGHTS.helpfulVote; // Using likes field to store helpfulVotes
   score += bookmarks * WEIGHTS.bookmark;
   score += shares * WEIGHTS.share;
   score += downloads * WEIGHTS.download;
@@ -100,10 +100,10 @@ export function calculateUserReputation(userStats: UserStats): number {
 
   let reputation = 0;
 
-  // Base activity points (encourages participation)
-  reputation += threadsCreated * 10;      // Creating discussions
-  reputation += repliesPosted * 5;        // Engaging in conversations
-  reputation += likesReceived * 2;        // Community appreciation
+  // Base activity points (encourages participation) - FIXED coefficients
+  reputation += threadsCreated * 1;       // Creating discussions (FIXED: was 10)
+  reputation += repliesPosted * 0.5;      // Engaging in conversations (FIXED: was 5)
+  reputation += likesReceived * 2;        // Helpful votes - quality indicator
   reputation += uploadsCount * 15;        // Contributing content
 
   // Quality indicators (higher weight for valuable contributions)
@@ -132,8 +132,8 @@ export function calculateSalesScore(stats: ContentSalesStats): number {
     downloads
   } = stats;
 
-  // Revenue impact (most important for sellers)
-  const revenueScore = totalSales * priceCoins;
+  // Revenue impact (most important for sellers) - FIXED: added 0.1 multiplier
+  const revenueScore = totalSales * priceCoins * 0.1;
 
   // Social proof (reviews indicate trust)
   const reviewScore = reviewCount * 10;

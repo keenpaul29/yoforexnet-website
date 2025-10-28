@@ -20,10 +20,10 @@ export function calculateHotScore(thread: ForumThread): number {
   const replies = thread.replyCount || 0;
   const isPinned = thread.isPinned || false;
   
-  // Weighted scoring
+  // Weighted scoring - FIXED: reply weight from 5 to 1
   const score = (
     views * 0.1 +           // Views have low weight
-    replies * 5 +           // Replies have high weight
+    replies * 1 +           // Replies weight (FIXED: was 5)
     (isPinned ? 100 : 0)    // Pinned threads get significant boost
   );
   

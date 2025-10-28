@@ -581,7 +581,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                           </FormControl>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Short and clear works best</span>
-                            <span data-testid="text-char-count">{titleCharCount}/90 characters</span>
+                            <span data-testid="text-char-count">{titleCharCount} characters (15-90 required)</span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -605,7 +605,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                           </FormControl>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Share the basics: pair, timeframe, broker, your rules/results, and what you need</span>
-                            <span data-testid="text-body-char-count">{bodyCharCount}/500 characters</span>
+                            <span data-testid="text-body-char-count">{bodyCharCount} characters (500-50,000 required)</span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -1071,7 +1071,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                     )}
 
                     {/* Optional SEO Section */}
-                    <Accordion type="single" collapsible>
+                    <Accordion type="single" collapsible defaultValue="seo">
                       <AccordionItem value="seo">
                         <AccordionTrigger data-testid="button-toggle-seo">
                           Help others find this (optional)

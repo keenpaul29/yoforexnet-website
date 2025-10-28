@@ -54,6 +54,10 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 ### Coin Economy System
 - **Virtual Currency**: "Gold coins" with an exchange rate of 100 coins = $5.50 USD.
 - **Earning Methods**: Coins earned through content publishing, replies, backtests, violation reports, daily check-ins, and a referral program.
+  - **Activity Tracking**: 0.5 coins per 5 minutes of platform activity (max 500 minutes = 50 coins per day)
+  - **Accepted Answer**: 25 coins awarded when your reply is marked as the accepted solution by the thread author
+  - **Thread Creation**: Varies by content type and quality
+  - **Daily Check-ins**: Streak-based rewards
 - **Withdrawal System**: Minimum 1000 coins, 5% fee, supports USDT/BTC/ETH.
 - **UI Integration**: Pricing displays both coins and USD equivalents.
 

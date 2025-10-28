@@ -70,6 +70,9 @@ export const users = pgTable("users", {
   // Daily Earning system
   lastJournalPost: date("last_journal_post"),
   
+  // User level system
+  level: integer("level").default(0).notNull(),
+  
   // Timestamps
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -77,6 +80,8 @@ export const users = pgTable("users", {
   usernameIdx: index("idx_users_username").on(table.username),
   emailIdx: index("idx_users_email").on(table.email),
   reputationIdx: index("idx_users_reputation").on(table.reputationScore),
+  levelIdx: index("idx_users_level").on(table.level),
+  coinsIdx: index("idx_users_coins").on(table.totalCoins),
   coinsCheck: check("chk_user_coins_nonnegative", sql`${table.totalCoins} >= 0`),
 }));
 
@@ -431,6 +436,7 @@ export const forumThreads = pgTable("forum_threads", {
   // Ranking system
   engagementScore: integer("engagement_score").notNull().default(0),
   lastScoreUpdate: timestamp("last_score_update"),
+  helpfulVotes: integer("helpful_votes").notNull().default(0),
   
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -443,6 +449,7 @@ export const forumThreads = pgTable("forum_threads", {
   engagementScoreIdx: index("idx_forum_threads_engagement").on(table.engagementScore),
   lastActivityAtIdx: index("idx_forum_threads_last_activity").on(table.lastActivityAt),
   slugIdx: index("idx_forum_threads_slug").on(table.slug),
+  helpfulVotesIdx: index("idx_forum_threads_helpful_votes").on(table.helpfulVotes),
 }));
 
 // Forum Thread Replies (with SEO for each reply)
@@ -456,6 +463,7 @@ export const forumReplies = pgTable("forum_replies", {
   metaDescription: text("meta_description"), // SEO: Auto-generated from body
   imageUrls: text("image_urls").array(),
   helpful: integer("helpful").notNull().default(0),
+  helpfulVotes: integer("helpful_votes").notNull().default(0),
   isAccepted: boolean("is_accepted").notNull().default(false),
   isVerified: boolean("is_verified").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -464,6 +472,7 @@ export const forumReplies = pgTable("forum_replies", {
   threadIdIdx: index("idx_forum_replies_thread_id").on(table.threadId),
   createdAtIdx: index("idx_forum_replies_created_at").on(table.createdAt),
   slugIdx: index("idx_forum_replies_slug").on(table.slug),
+  helpfulVotesIdx: index("idx_forum_replies_helpful_votes").on(table.helpfulVotes),
 }));
 
 // Forum Categories with dynamic stats and hierarchical support
@@ -1175,6 +1184,11 @@ export const insertFeedbackSchema = createInsertSchema(feedback).omit({
   status: true,
   priority: true,
   adminNotes: true,
+}).extend({
+  type: z.enum(["bug", "feature", "improvement", "other"]),
+  subject: z.string().min(10, "Subject must be at least 10 characters").max(200, "Subject must be at most 200 characters"),
+  message: z.string().min(50, "Message must be at least 50 characters").max(5000, "Message must be at most 5000 characters"),
+  email: z.string().email("Invalid email format").optional(),
 });
 export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
 export type Feedback = typeof feedback.$inferSelect;
@@ -1239,8 +1253,8 @@ export const insertContentReviewSchema = createInsertSchema(contentReviews).omit
   status: true,
   rewardGiven: true,
 }).extend({
-  rating: z.number().min(1).max(5),
-  review: z.string().min(50).max(1000),
+  rating: z.number().min(1, "Rating must be between 1 and 5").max(5, "Rating must be between 1 and 5"),
+  review: z.string().min(100, "Review must be at least 100 characters").max(1000, "Review must be at most 1000 characters"),
 });
 
 export const insertContentLikeSchema = createInsertSchema(contentLikes).omit({

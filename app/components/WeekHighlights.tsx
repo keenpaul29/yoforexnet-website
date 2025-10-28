@@ -294,7 +294,7 @@ export default function WeekHighlights({
 
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5 text-orange-500/70" />
-                  <span>{formatDistanceToNow(thread.lastActivity, { addSuffix: true })}</span>
+                  <span suppressHydrationWarning>{formatDistanceToNow(thread.lastActivity, { addSuffix: true })}</span>
                 </div>
               </div>
             </div>

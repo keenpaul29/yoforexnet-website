@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import CategoryDiscussionClient from './CategoryDiscussionClient';
 import type { ForumCategory, ForumThread } from '@shared/schema';
 
@@ -101,6 +102,11 @@ export default async function CategoryDiscussionPage({ params }: { params: Promi
     } catch (error) {
       console.error('Error parsing threads:', error);
     }
+  }
+
+  // Return 404 if category doesn't exist
+  if (!category) {
+    notFound();
   }
 
   // Pass all data to Client Component

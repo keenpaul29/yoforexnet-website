@@ -4,11 +4,15 @@ import { setupVite, serveStatic, log } from "./vite";
 import { generalApiLimiter } from "./rateLimiting";
 import { storage } from "./storage";
 import { startBackgroundJobs } from "./jobs/backgroundJobs";
+import { setupSecurityHeaders } from "./middleware/securityHeaders";
 
 const app = express();
 
 // Trust first proxy - required for correct rate limiting behind load balancers/proxies
 app.set("trust proxy", 1);
+
+// Apply security headers to all requests
+setupSecurityHeaders(app);
 
 declare module 'http' {
   interface IncomingMessage {
