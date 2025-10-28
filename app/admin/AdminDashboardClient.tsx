@@ -21,7 +21,13 @@ import {
   FileText, 
   Store, 
   Building, 
-  DollarSign 
+  DollarSign,
+  TrendingUp,
+  Settings as SettingsIcon,
+  Shield,
+  Mail,
+  HelpCircle,
+  FileBarChart2
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import AdminOverview from "./sections/Overview";
@@ -30,6 +36,12 @@ import AdminContent from "./sections/Content";
 import AdminMarketplace from "./sections/Marketplace";
 import AdminBrokers from "./sections/Brokers";
 import AdminFinance from "./sections/Finance";
+import Analytics from "./sections/Analytics";
+import Settings from "./sections/Settings";
+import Security from "./sections/Security";
+import Communications from "./sections/Communications";
+import Support from "./sections/Support";
+import Logs from "./sections/Logs";
 
 const sections = [
   { id: "overview", icon: BarChart3, label: "Overview", path: "/admin" },
@@ -38,6 +50,12 @@ const sections = [
   { id: "marketplace", icon: Store, label: "Marketplace", path: "/admin/marketplace" },
   { id: "brokers", icon: Building, label: "Brokers", path: "/admin/brokers" },
   { id: "finance", icon: DollarSign, label: "Finance", path: "/admin/finance" },
+  { id: "analytics", icon: TrendingUp, label: "Analytics", path: "/admin/analytics" },
+  { id: "settings", icon: SettingsIcon, label: "Settings", path: "/admin/settings" },
+  { id: "security", icon: Shield, label: "Security", path: "/admin/security" },
+  { id: "communications", icon: Mail, label: "Communications", path: "/admin/communications" },
+  { id: "support", icon: HelpCircle, label: "Support", path: "/admin/support" },
+  { id: "logs", icon: FileBarChart2, label: "Audit Logs", path: "/admin/logs" },
 ];
 
 function AdminSidebar() {
@@ -87,6 +105,18 @@ export function AdminDashboardClient() {
         return <AdminBrokers />;
       case "/admin/finance":
         return <AdminFinance />;
+      case "/admin/analytics":
+        return <Analytics />;
+      case "/admin/settings":
+        return <Settings />;
+      case "/admin/security":
+        return <Security />;
+      case "/admin/communications":
+        return <Communications />;
+      case "/admin/support":
+        return <Support />;
+      case "/admin/logs":
+        return <Logs />;
       default:
         return <AdminOverview />;
     }
