@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MessageCircle, Eye, TrendingUp, CheckCircle2, Coins, FileText, Activity, BarChart3 } from "lucide-react";
+import { MessageCircle, Eye, TrendingUp, CheckCircle2, Coins, FileText, Activity, BarChart3, HelpCircle, MessageSquare, Star, BookOpen, Lightbulb, Code } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 interface ForumThreadCardProps {
@@ -18,6 +18,7 @@ interface ForumThreadCardProps {
     reputation: number;
   };
   category: string;
+  threadType?: "question" | "discussion" | "review" | "journal" | "guide" | "program_sharing";
   replyCount: number;
   viewCount: number;
   coinsEarned?: number;
@@ -87,6 +88,15 @@ const getCategoryStyles = (category: string) => {
   };
 };
 
+const threadTypeConfig = {
+  question: { icon: HelpCircle, label: "Question", color: "text-blue-600 dark:text-blue-400" },
+  discussion: { icon: MessageSquare, label: "Discussion", color: "text-gray-600 dark:text-gray-400" },
+  review: { icon: Star, label: "Review", color: "text-yellow-600 dark:text-yellow-400" },
+  journal: { icon: BookOpen, label: "Journal", color: "text-purple-600 dark:text-purple-400" },
+  guide: { icon: Lightbulb, label: "Guide", color: "text-green-600 dark:text-green-400" },
+  program_sharing: { icon: Code, label: "Program", color: "text-indigo-600 dark:text-indigo-400" },
+};
+
 export default function ForumThreadCard({
   id,
   slug,
@@ -94,6 +104,7 @@ export default function ForumThreadCard({
   excerpt,
   author,
   category,
+  threadType = "discussion",
   replyCount,
   viewCount,
   coinsEarned = 0,
@@ -106,6 +117,8 @@ export default function ForumThreadCard({
 }: ForumThreadCardProps) {
   const categoryStyles = getCategoryStyles(category);
   const threadUrl = slug ? `/thread/${slug}` : `/thread/${id}`;
+  const threadConfig = threadTypeConfig[threadType];
+  const ThreadIcon = threadConfig.icon;
   
   return (
     <Link href={threadUrl} data-testid={`link-thread-${id}`}>
@@ -130,6 +143,14 @@ export default function ForumThreadCard({
                 {isPinned && (
                   <Badge variant="secondary" className="text-[10px] h-4 px-1.5">Pinned</Badge>
                 )}
+                <Badge 
+                  variant="outline"
+                  className={`text-[10px] h-4 px-1.5 ${threadConfig.color}`}
+                  data-testid="badge-thread-type"
+                >
+                  <ThreadIcon className="h-2.5 w-2.5 mr-0.5" />
+                  {threadConfig.label}
+                </Badge>
                 <Badge 
                   className={`text-[10px] h-4 px-1.5 border-0 ${categoryStyles.badgeBg} ${categoryStyles.badgeText}`}
                   data-testid="badge-category"

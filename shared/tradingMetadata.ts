@@ -155,6 +155,12 @@ export const THREAD_TYPES = [
     description: "How-to or tutorial",
     icon: "Lightbulb",
   },
+  {
+    value: "program_sharing",
+    label: "Program Sharing",
+    description: "Share EA/indicator/code",
+    icon: "Code",
+  },
 ] as const;
 
 // Utility functions

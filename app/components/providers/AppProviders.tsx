@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
+import { ActivityTracker } from "@/components/ActivityTracker";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       <ThemeProvider>
         <TooltipProvider>
           <AuthProvider>
+            <ActivityTracker />
             {children}
             <Toaster />
           </AuthProvider>

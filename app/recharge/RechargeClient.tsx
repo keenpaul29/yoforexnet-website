@@ -18,7 +18,7 @@ interface RechargeClientProps {
 export default function RechargeClient({ initialPackages }: RechargeClientProps) {
   const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
   const [customAmount, setCustomAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "crypto">("stripe");
+  const [paymentMethod, setPaymentMethod] = useState<"btc" | "eth" | "usdt">("usdt");
 
   const { data: packages = initialPackages } = useQuery<CoinPackage[]>({
     queryKey: ["/api/recharge/packages"],
@@ -135,39 +135,57 @@ export default function RechargeClient({ initialPackages }: RechargeClientProps)
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Wallet className="h-5 w-5 text-primary" />
-                  Payment Method
+                  Select Cryptocurrency
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div
-                  onClick={() => setPaymentMethod("stripe")}
+                  onClick={() => setPaymentMethod("btc")}
                   className={`p-4 border-2 rounded-lg cursor-pointer hover-elevate ${
-                    paymentMethod === "stripe" ? "border-primary bg-primary/5" : "border-border"
+                    paymentMethod === "btc" ? "border-primary bg-primary/5" : "border-border"
                   }`}
-                  data-testid="payment-stripe"
+                  data-testid="payment-btc"
                 >
                   <div className="flex items-center gap-3">
-                    <CreditCard className="h-6 w-6 text-primary" />
+                    <Wallet className="h-6 w-6 text-primary" />
                     <div>
-                      <div className="font-semibold">Credit/Debit Card</div>
+                      <div className="font-semibold">Bitcoin (BTC)</div>
                       <div className="text-sm text-muted-foreground">
-                        Secure payment via Stripe
+                        Pay with Bitcoin on-chain
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div
-                  onClick={() => setPaymentMethod("crypto")}
+                  onClick={() => setPaymentMethod("eth")}
                   className={`p-4 border-2 rounded-lg cursor-pointer hover-elevate ${
-                    paymentMethod === "crypto" ? "border-primary bg-primary/5" : "border-border"
+                    paymentMethod === "eth" ? "border-primary bg-primary/5" : "border-border"
                   }`}
-                  data-testid="payment-crypto"
+                  data-testid="payment-eth"
                 >
                   <div className="flex items-center gap-3">
                     <Wallet className="h-6 w-6 text-primary" />
                     <div>
-                      <div className="font-semibold">Cryptocurrency (USDT)</div>
+                      <div className="font-semibold">Ethereum (ETH)</div>
+                      <div className="text-sm text-muted-foreground">
+                        Pay with Ethereum (ERC20)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setPaymentMethod("usdt")}
+                  className={`p-4 border-2 rounded-lg cursor-pointer hover-elevate ${
+                    paymentMethod === "usdt" ? "border-primary bg-primary/5" : "border-border"
+                  }`}
+                  data-testid="payment-usdt"
+                >
+                  <div className="flex items-center gap-3">
+                    <Wallet className="h-6 w-6 text-primary" />
+                    <div>
+                      <div className="font-semibold">Tether (USDT)</div>
                       <div className="text-sm text-muted-foreground">
                         Pay with USDT (TRC20/ERC20)
                       </div>
@@ -182,7 +200,7 @@ export default function RechargeClient({ initialPackages }: RechargeClientProps)
                   disabled={!selectedPackage && !customAmount}
                   data-testid="button-proceed-payment"
                 >
-                  Proceed to Payment
+                  Proceed to {paymentMethod.toUpperCase()} Payment
                 </Button>
               </CardContent>
             </Card>

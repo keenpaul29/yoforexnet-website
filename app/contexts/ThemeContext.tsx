@@ -12,20 +12,26 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'light';
+  const [theme, setTheme] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
+
+  // Hydration-safe: Only read localStorage after component mounts
+  useEffect(() => {
+    setMounted(true);
     const stored = localStorage.getItem("theme");
-    if (stored === "light" || stored === "dark") return stored;
-    // Default to light mode
-    return "light";
-  });
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+    }
+  }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+    
     const root = document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
     localStorage.setItem("theme", theme);
-  }, [theme]);
+  }, [theme, mounted]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));

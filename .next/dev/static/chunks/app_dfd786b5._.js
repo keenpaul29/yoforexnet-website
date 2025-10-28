@@ -209,25 +209,29 @@ var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.sign
 const ThemeContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"])(undefined);
 function ThemeProvider({ children }) {
     _s();
-    const [theme, setTheme] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        "ThemeProvider.useState": ()=>{
-            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-            ;
-            const stored = localStorage.getItem("theme");
-            if (stored === "light" || stored === "dark") return stored;
-            // Default to light mode
-            return "light";
-        }
-    }["ThemeProvider.useState"]);
+    const [theme, setTheme] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("light");
+    const [mounted, setMounted] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // Hydration-safe: Only read localStorage after component mounts
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ThemeProvider.useEffect": ()=>{
+            setMounted(true);
+            const stored = localStorage.getItem("theme");
+            if (stored === "light" || stored === "dark") {
+                setTheme(stored);
+            }
+        }
+    }["ThemeProvider.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ThemeProvider.useEffect": ()=>{
+            if (!mounted) return;
             const root = document.documentElement;
             root.classList.remove("light", "dark");
             root.classList.add(theme);
             localStorage.setItem("theme", theme);
         }
     }["ThemeProvider.useEffect"], [
-        theme
+        theme,
+        mounted
     ]);
     const toggleTheme = ()=>{
         setTheme((prev)=>prev === "light" ? "dark" : "light");
@@ -240,11 +244,11 @@ function ThemeProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/app/contexts/ThemeContext.tsx",
-        lineNumber: 35,
+        lineNumber: 41,
         columnNumber: 5
     }, this);
 }
-_s(ThemeProvider, "7W1rVVq2dhcv2fIXunsTR5CnZno=");
+_s(ThemeProvider, "fqhTJOakwRKvaOykVeD8S7Yfj/s=");
 _c = ThemeProvider;
 function useTheme() {
     _s1();

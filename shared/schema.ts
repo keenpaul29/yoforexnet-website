@@ -388,7 +388,7 @@ export const forumThreads = pgTable("forum_threads", {
   metaDescription: text("meta_description"),
   
   // Enhanced SEO & Thread Type
-  threadType: text("thread_type").notNull().$type<"question" | "discussion" | "review" | "journal" | "guide">().default("discussion"),
+  threadType: text("thread_type").notNull().$type<"question" | "discussion" | "review" | "journal" | "guide" | "program_sharing">().default("discussion"),
   seoExcerpt: text("seo_excerpt"), // 120-160 chars, optional
   primaryKeyword: text("primary_keyword"), // 1-6 words, optional
   language: text("language").notNull().default("en"),

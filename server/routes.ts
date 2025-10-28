@@ -43,6 +43,7 @@ import {
   contentCreationLimiter,
   reviewReplyLimiter,
   adminOperationLimiter,
+  activityTrackingLimiter,
 } from "./rateLimiting.js";
 import { generateSlug, generateFocusKeyword, generateMetaDescription as generateMetaDescriptionOld, generateImageAltTexts } from './seo.js';
 import { emailService } from './services/emailService.js';
@@ -1223,6 +1224,106 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // POST /api/activity/track - Track user activity and award coins (SECURE VERSION)
+  // CRITICAL SECURITY: Uses server-side session timestamps to prevent coin farming
+  app.post("/api/activity/track", isAuthenticated, activityTrackingLimiter, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      
+      // Initialize session if not present
+      if (!req.session) {
+        return res.status(500).json({ error: "Session not initialized" });
+      }
+
+      const now = Date.now();
+      const sessionKey = `lastActivityPing_${userId}`;
+      const lastPing = req.session[sessionKey] as number | undefined;
+
+      // First ping - just set the timestamp, don't award coins
+      if (!lastPing) {
+        req.session[sessionKey] = now;
+        return res.json({
+          success: true,
+          coinsEarned: 0,
+          totalMinutes: 0,
+          dailyLimit: false,
+          message: "Activity tracking started",
+        });
+      }
+
+      // Calculate elapsed time in minutes (server-side calculation, cannot be spoofed)
+      const elapsedMs = now - lastPing;
+      const elapsedMinutes = Math.floor(elapsedMs / 60000);
+
+      // Cap at 5 minutes to prevent long idle time claims
+      // If more than 5 minutes passed, only count 5 minutes
+      const minutesToAward = Math.min(elapsedMinutes, 5);
+
+      // Ignore if less than 1 minute has passed (too soon)
+      if (minutesToAward < 1) {
+        return res.json({
+          success: true,
+          coinsEarned: 0,
+          totalMinutes: 0,
+          dailyLimit: false,
+          message: "Not enough time elapsed since last ping",
+        });
+      }
+
+      // Update the last ping timestamp
+      req.session[sessionKey] = now;
+
+      // Record activity with SERVER-CALCULATED minutes (not client-supplied)
+      const result = await storage.recordActivity(userId, minutesToAward);
+
+      // Create notification if coins were earned
+      if (result.coinsEarned > 0) {
+        await storage.createNotification({
+          userId,
+          type: "coin_earned",
+          title: "Activity Reward!",
+          message: `You earned ${result.coinsEarned} coins for being active!`,
+          read: false,
+        });
+
+        res.json({
+          success: true,
+          coinsEarned: result.coinsEarned,
+          totalMinutes: result.totalMinutes,
+          dailyLimit: false,
+        });
+      } else {
+        // Daily limit reached
+        res.json({
+          success: true,
+          coinsEarned: 0,
+          totalMinutes: result.totalMinutes,
+          dailyLimit: true,
+        });
+      }
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // GET /api/activity/today - Get today's activity stats
+  app.get("/api/activity/today", isAuthenticated, async (req, res) => {
+    try {
+      const userId = getAuthenticatedUserId(req);
+      const activity = await storage.getTodayActivity(userId);
+      
+      res.json(activity || { activeMinutes: 0, coinsEarned: 0 });
+    } catch (error: any) {
+      if (error.message === "No authenticated user") {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // GET /api/coins/summary - Get earning breakdown
   app.get("/api/coins/summary", isAuthenticated, async (req, res) => {
     try {
@@ -1942,36 +2043,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(brokers);
   });
 
-  // NEW: Search brokers with autocomplete (with logo auto-fetch)
+  // Search brokers with autocomplete (optimized)
   app.get("/api/brokers/search", async (req, res) => {
     try {
       const query = (req.query.q as string || '').trim();
+      const limit = parseInt(req.query.limit as string) || 10;
       
       if (!query) {
-        return res.json({ brokers: [] });
+        return res.json([]);
       }
 
-      // Get all brokers and filter by name
-      const allBrokers = await storage.getAllBrokers({});
+      // Use optimized search method
+      const matchingBrokers = await storage.searchBrokers(query, limit);
       
-      // Case-insensitive search
-      const matchingBrokers = allBrokers
-        .filter((broker: any) => 
-          broker.name.toLowerCase().includes(query.toLowerCase())
-        )
-        .slice(0, 5) // Return top 5 matches
-        .map((broker: any) => ({
-          id: broker.id,
-          name: broker.name,
-          slug: broker.slug,
-          websiteUrl: broker.websiteUrl,
-          logoUrl: broker.logoUrl || getPlaceholderLogo(broker.name),
-          isVerified: broker.isVerified,
-          overallRating: broker.overallRating,
-          reviewCount: broker.reviewCount,
-        }));
+      // Map to consistent response format with logo fallback
+      const results = matchingBrokers.map((broker: any) => ({
+        id: broker.id,
+        name: broker.name,
+        slug: broker.slug,
+        websiteUrl: broker.websiteUrl,
+        logoUrl: broker.logoUrl || getPlaceholderLogo(broker.name),
+        isVerified: broker.isVerified,
+        overallRating: broker.overallRating,
+        reviewCount: broker.reviewCount,
+      }));
 
-      res.json({ brokers: matchingBrokers });
+      res.json(results);
     } catch (error: any) {
       console.error('[Broker Search] Error:', error);
       res.status(500).json({ error: error.message || "Failed to search brokers" });
@@ -4982,33 +5079,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== Daily Earning System =====
+  // NOTE: Activity tracking endpoint is defined earlier with proper security measures
   
-  // Track user activity (5-minute intervals)
-  app.post('/api/activity/track', isAuthenticated, async (req, res) => {
-    try {
-      const userId = getAuthenticatedUserId(req);
-      const { minutes } = req.body;
-      
-      if (!minutes || minutes !== 5) {
-        return res.status(400).json({ message: 'Invalid minutes value. Must be 5.' });
-      }
-      
-      const result = await storage.recordActivity(userId, minutes);
-      const dailyLimit = result.totalMinutes >= 100;
-      
-      res.json({
-        success: true,
-        coinsEarned: result.coinsEarned,
-        totalMinutes: result.totalMinutes,
-        dailyLimit
-      });
-    } catch (error) {
-      console.error('Error tracking activity:', error);
-      res.status(500).json({ message: 'Failed to track activity' });
-    }
-  });
-  
-  // Get today's activity stats
+  // Get today's activity stats (DUPLICATE - consider removing if already exists above)
   app.get('/api/activity/today', isAuthenticated, async (req, res) => {
     try {
       const userId = getAuthenticatedUserId(req);

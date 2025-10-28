@@ -5,9 +5,9 @@ import Link from "next/link";
 export default function EnhancedFooter() {
   return (
     <footer className="border-t mt-auto">
-      <div className="container max-w-7xl mx-auto px-4 py-12">
+      <div className="container max-w-7xl mx-auto px-4 py-8">
         {/* Main Footer Content - 5 Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
           {/* Column 1: About YoForex */}
           <div>
             <h3 className="font-semibold mb-4">About YoForex</h3>

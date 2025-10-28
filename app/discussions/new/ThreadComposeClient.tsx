@@ -46,7 +46,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthPrompt } from "@/hooks/useAuthPrompt";
 import { apiRequest } from "@/lib/queryClient";
-import { AlertCircle, ChevronLeft, ChevronRight, HelpCircle, MessageSquare, Star, BookOpen, Lightbulb, X, Upload, FileText, Loader2, Check, Copy, Share2, Bell } from "lucide-react";
+import { AlertCircle, ChevronLeft, ChevronRight, HelpCircle, MessageSquare, Star, BookOpen, Lightbulb, Code, X, Upload, FileText, Loader2, Check, Copy, Share2, Bell } from "lucide-react";
+import SEOPreview from "@/components/SEOPreview";
 
 // Form validation schema
 const threadFormSchema = z.object({
@@ -62,15 +63,11 @@ const threadFormSchema = z.object({
       { message: "Let's tone this down a bit so more folks read it" }
     ),
   body: z.string()
-    .min(10, "Body is required")
-    .max(50000, "Body is too long")
-    .refine(
-      (val) => countWords(val) >= 150,
-      { message: "A little more context helps people reply. Two more sentences? (150 words minimum)" }
-    ),
+    .min(500, "A little more context helps people reply. Add a few more details? (500 characters minimum)")
+    .max(50000, "Body is too long"),
   categorySlug: z.string().min(1, "Please select a category"),
   subcategorySlug: z.string().optional(),
-  threadType: z.enum(["question", "discussion", "review", "journal", "guide"]).default("discussion"),
+  threadType: z.enum(["question", "discussion", "review", "journal", "guide", "program_sharing"]).default("discussion"),
   seoExcerpt: z.string()
     .min(120, "SEO excerpt should be at least 120 characters")
     .max(160, "SEO excerpt should not exceed 160 characters")
@@ -151,8 +148,8 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
   const [hashtagInput, setHashtagInput] = useState("");
   const [proInput, setProInput] = useState("");
   const [conInput, setConInput] = useState("");
-  const [wordCount, setWordCount] = useState(0);
-  const [charCount, setCharCount] = useState(0);
+  const [bodyCharCount, setBodyCharCount] = useState(0);
+  const [titleCharCount, setTitleCharCount] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; url: string }>>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [showCustomBroker, setShowCustomBroker] = useState(false);
@@ -241,10 +238,10 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
     }
   }, [watchedValues.title, watchedValues.body]);
 
-  // Update word count
+  // Update character counts
   useEffect(() => {
-    setWordCount(countWords(watchedValues.body || ""));
-    setCharCount((watchedValues.title || "").length);
+    setBodyCharCount((watchedValues.body || "").length);
+    setTitleCharCount((watchedValues.title || "").length);
   }, [watchedValues.body, watchedValues.title]);
 
   // Skip step 1 if no subcategories
@@ -500,6 +497,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
     review: Star,
     journal: BookOpen,
     guide: Lightbulb,
+    program_sharing: Code,
   };
 
   return (
@@ -583,7 +581,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                           </FormControl>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Short and clear works best</span>
-                            <span data-testid="text-char-count">{charCount}/90 chars</span>
+                            <span data-testid="text-char-count">{titleCharCount}/90 characters</span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -607,7 +605,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                           </FormControl>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Share the basics: pair, timeframe, broker, your rules/results, and what you need</span>
-                            <span data-testid="text-word-count">{wordCount} words</span>
+                            <span data-testid="text-body-char-count">{bodyCharCount}/500 characters</span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -1117,6 +1115,14 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                                 <FormMessage />
                               </FormItem>
                             )}
+                          />
+
+                          {/* SEO Preview Component */}
+                          <SEOPreview
+                            title={watchedValues.title || ""}
+                            seoExcerpt={watchedValues.seoExcerpt || ""}
+                            primaryKeyword={watchedValues.primaryKeyword || ""}
+                            body={watchedValues.body || ""}
                           />
                         </AccordionContent>
                       </AccordionItem>

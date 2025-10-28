@@ -44,7 +44,12 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Hierarchical Category Tree**: 2-level structure with 59 categories.
 - **Thread Management**: Features for creating, editing, pinning, locking, and deleting threads.
 - **Interaction**: Supports nested replies with @mentions, accepted answers, and helpful votes.
-- **SEO**: Auto-generated slugs, meta descriptions, and view tracking.
+- **SEO Enhancements**: 
+  - Auto-generated slugs, meta descriptions, and view tracking
+  - SEO Preview Component showing Google search appearance
+  - Primary keyword field with keyword density validation (0.5-3% optimal range)
+  - SEO excerpt field (120-160 characters) with character counter
+  - Real-time validation and feedback for search optimization
 
 ### Coin Economy System
 - **Virtual Currency**: "Gold coins" with an exchange rate of 100 coins = $5.50 USD.
@@ -99,6 +104,13 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 ### Educational Content
 - **Guides System**: Markdown-based educational guides at `/guides/[slug]`.
 - **Available Guides**: Includes "How to Earn Coins" covering earning methods, leveling, and withdrawal.
+
+## Testing & Quality Assurance
+- **Integration Tests**: Comprehensive API endpoint smoke tests at `tests/api.test.ts`
+- **Test Coverage**: 8 critical endpoints tested (threads, feedback, categories, stats, notifications, brokers, hot content, top sellers)
+- **Test Framework**: Node.js native HTTP client with TypeScript
+- **Run Tests**: `npx tsx tests/api.test.ts`
+- **All Tests**: ✅ Passing (100% success rate)
 
 ## External Dependencies
 - **Stripe**: For credit/debit card payments.

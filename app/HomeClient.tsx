@@ -125,15 +125,15 @@ export default function HomeClient({
       <Header />
       <StatsBar />
       
-      <main className="container max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-6">
+      <main className="container max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">
-          <aside className="lg:col-span-1 space-y-3 sm:space-y-4 order-2 lg:order-1">
+          <aside className="lg:col-span-1 space-y-3 order-2 lg:order-1">
             <OnboardingChecklist />
             <CoinBalance />
             <TrustLevel />
           </aside>
 
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6 order-1 lg:order-2">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4 order-1 lg:order-2">
             <section>
               <WeekHighlights />
             </section>
@@ -170,7 +170,7 @@ export default function HomeClient({
             </section>
           </div>
 
-          <aside className="lg:col-span-1 space-y-3 sm:space-y-4 order-3">
+          <aside className="lg:col-span-1 space-y-3 order-3">
             <WhatsHot />
             <TopSellers />
             <Leaderboard />

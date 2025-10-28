@@ -100,7 +100,7 @@ export default function SubmitBrokerReviewClient({ initialBrokers }: SubmitBroke
         try {
           const response = await fetch(`/api/brokers/search?q=${encodeURIComponent(searchQuery)}`);
           const data = await response.json();
-          setSearchResults(data.brokers || []);
+          setSearchResults(Array.isArray(data) ? data : (data.brokers || []));
         } catch (error) {
           console.error('Search error:', error);
           setSearchResults([]);

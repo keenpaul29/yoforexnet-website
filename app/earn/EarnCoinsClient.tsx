@@ -117,12 +117,20 @@ export default function EarnCoinsClient() {
           <p className="text-muted-foreground mb-4">
             Multiple ways to earn coins by contributing quality content and helping the community grow
           </p>
-          <Link href="/guides/how-to-earn-coins">
-            <Button variant="outline" className="gap-2" data-testid="button-learn-more">
-              <BookOpen className="h-4 w-4" />
-              Learn More: Complete Guide to Earning Coins & Leveling Up
-            </Button>
-          </Link>
+          <div className="flex gap-2 flex-wrap">
+            <Link href="/guides/badges-levels">
+              <Button variant="outline" className="gap-2" data-testid="button-learn-leveling">
+                <Award className="h-4 w-4" />
+                Badges & Leveling System
+              </Button>
+            </Link>
+            <Link href="/guides/how-to-earn-coins">
+              <Button variant="outline" className="gap-2" data-testid="button-learn-earning">
+                <BookOpen className="h-4 w-4" />
+                Complete Earning Guide
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

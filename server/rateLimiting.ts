@@ -155,3 +155,26 @@ export const adminOperationLimiter = rateLimit({
     });
   },
 });
+
+/**
+ * Activity tracking rate limiter
+ * 1 request per minute to prevent coin farming abuse
+ * This prevents rapid-fire requests from malicious scripts
+ */
+export const activityTrackingLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 1, // 1 request per minute
+  message: {
+    error: "Activity tracking is rate limited. Please wait before sending another heartbeat.",
+    retryAfter: "1 minute",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: false, // Count all requests, even successful ones
+  handler: (req: Request, res: Response) => {
+    res.status(429).json({
+      error: "Too many activity tracking requests. Please wait 1 minute between heartbeats.",
+      retryAfter: "1 minute",
+    });
+  },
+});

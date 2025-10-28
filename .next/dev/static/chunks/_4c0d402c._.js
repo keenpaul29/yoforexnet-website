@@ -2701,9 +2701,9 @@ function StatsBar() {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "border-y bg-muted/30",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "container max-w-7xl mx-auto px-4 py-6",
+                className: "container max-w-7xl mx-auto px-4 py-4",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-2 md:grid-cols-4 gap-6",
+                    className: "grid grid-cols-2 md:grid-cols-4 gap-4",
                     children: [
                         1,
                         2,
@@ -2767,10 +2767,10 @@ function StatsBar() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "border-y bg-muted/30",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "container max-w-7xl mx-auto px-4 py-6",
+            className: "container max-w-7xl mx-auto px-4 py-4",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex items-center justify-between mb-4",
+                    className: "flex items-center justify-between mb-3",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "text-xs text-muted-foreground",
@@ -2798,7 +2798,7 @@ function StatsBar() {
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-2 md:grid-cols-4 gap-6",
+                    className: "grid grid-cols-2 md:grid-cols-4 gap-4",
                     children: stats.map((stat)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center gap-3",
                             children: [
@@ -2828,7 +2828,7 @@ function StatsBar() {
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "text-sm text-muted-foreground font-medium",
+                                            className: "text-sm text-muted-foreground font-medium truncate",
                                             children: stat.label
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/StatsBar.tsx",
@@ -2912,7 +2912,7 @@ _c1 = Card;
 Card.displayName = "Card";
 const CardHeader = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c2 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         ref: ref,
-        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex flex-col space-y-1.5 p-6", className),
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex flex-col space-y-1.5 p-4", className),
         ...props
     }, void 0, false, {
         fileName: "[project]/app/components/ui/card.tsx",
@@ -2945,7 +2945,7 @@ _c7 = CardDescription;
 CardDescription.displayName = "CardDescription";
 const CardContent = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c8 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         ref: ref,
-        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("p-6 pt-0", className),
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("p-4 pt-0", className),
         ...props
     }, void 0, false, {
         fileName: "[project]/app/components/ui/card.tsx",
@@ -2956,7 +2956,7 @@ _c9 = CardContent;
 CardContent.displayName = "CardContent";
 const CardFooter = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c10 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         ref: ref,
-        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center p-6 pt-0", className),
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center p-4 pt-0", className),
         ...props
     }, void 0, false, {
         fileName: "[project]/app/components/ui/card.tsx",
@@ -3176,6 +3176,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/file-text.js [app-client] (ecmascript) <export default as FileText>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$activity$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Activity$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/activity.js [app-client] (ecmascript) <export default as Activity>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chart$2d$column$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BarChart3$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chart-column.js [app-client] (ecmascript) <export default as BarChart3>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$help$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__HelpCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-help.js [app-client] (ecmascript) <export default as HelpCircle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/message-square.js [app-client] (ecmascript) <export default as MessageSquare>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/star.js [app-client] (ecmascript) <export default as Star>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/book-open.js [app-client] (ecmascript) <export default as BookOpen>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$lightbulb$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Lightbulb$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/lightbulb.js [app-client] (ecmascript) <export default as Lightbulb>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$code$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Code$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/code.js [app-client] (ecmascript) <export default as Code>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$formatDistanceToNow$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/date-fns/formatDistanceToNow.mjs [app-client] (ecmascript)");
 "use client";
 ;
@@ -3235,9 +3241,43 @@ const getCategoryStyles = (category)=>{
         badgeText: 'text-gray-700 dark:text-gray-300'
     };
 };
-function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCount, viewCount, coinsEarned = 0, isAnswered = false, isPinned = false, hasSetFile = false, hasBacktest = false, isLiveVerified = false, lastActivity }) {
+const threadTypeConfig = {
+    question: {
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$help$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__HelpCircle$3e$__["HelpCircle"],
+        label: "Question",
+        color: "text-blue-600 dark:text-blue-400"
+    },
+    discussion: {
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__["MessageSquare"],
+        label: "Discussion",
+        color: "text-gray-600 dark:text-gray-400"
+    },
+    review: {
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"],
+        label: "Review",
+        color: "text-yellow-600 dark:text-yellow-400"
+    },
+    journal: {
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"],
+        label: "Journal",
+        color: "text-purple-600 dark:text-purple-400"
+    },
+    guide: {
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$lightbulb$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Lightbulb$3e$__["Lightbulb"],
+        label: "Guide",
+        color: "text-green-600 dark:text-green-400"
+    },
+    program_sharing: {
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$code$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Code$3e$__["Code"],
+        label: "Program",
+        color: "text-indigo-600 dark:text-indigo-400"
+    }
+};
+function ForumThreadCard({ id, slug, title, excerpt, author, category, threadType = "discussion", replyCount, viewCount, coinsEarned = 0, isAnswered = false, isPinned = false, hasSetFile = false, hasBacktest = false, isLiveVerified = false, lastActivity }) {
     const categoryStyles = getCategoryStyles(category);
     const threadUrl = slug ? `/thread/${slug}` : `/thread/${id}`;
+    const threadConfig = threadTypeConfig[threadType];
+    const ThreadIcon = threadConfig.icon;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
         href: threadUrl,
         "data-testid": `link-thread-${id}`,
@@ -3262,7 +3302,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         src: author.avatar
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 124,
+                                        lineNumber: 137,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -3270,13 +3310,13 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         children: author.name.slice(0, 2).toUpperCase()
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 125,
+                                        lineNumber: 138,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 123,
+                                lineNumber: 136,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3291,8 +3331,27 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                 children: "Pinned"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 131,
+                                                lineNumber: 144,
                                                 columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                variant: "outline",
+                                                className: `text-[10px] h-4 px-1.5 ${threadConfig.color}`,
+                                                "data-testid": "badge-thread-type",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ThreadIcon, {
+                                                        className: "h-2.5 w-2.5 mr-0.5"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/components/ForumThreadCard.tsx",
+                                                        lineNumber: 151,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    threadConfig.label
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/components/ForumThreadCard.tsx",
+                                                lineNumber: 146,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                 className: `text-[10px] h-4 px-1.5 border-0 ${categoryStyles.badgeBg} ${categoryStyles.badgeText}`,
@@ -3300,7 +3359,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                 children: category
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 133,
+                                                lineNumber: 154,
                                                 columnNumber: 17
                                             }, this),
                                             isAnswered && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3310,20 +3369,20 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 141,
+                                                        lineNumber: 162,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Solved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 142,
+                                                        lineNumber: 163,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 140,
+                                                lineNumber: 161,
                                                 columnNumber: 19
                                             }, this),
                                             isLiveVerified && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3334,14 +3393,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 147,
+                                                        lineNumber: 168,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Live"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 146,
+                                                lineNumber: 167,
                                                 columnNumber: 19
                                             }, this),
                                             hasSetFile && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3352,14 +3411,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 153,
+                                                        lineNumber: 174,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Set"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 152,
+                                                lineNumber: 173,
                                                 columnNumber: 19
                                             }, this),
                                             hasBacktest && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3370,14 +3429,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 180,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Test"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 158,
+                                                lineNumber: 179,
                                                 columnNumber: 19
                                             }, this),
                                             coinsEarned > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3387,7 +3446,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 165,
+                                                        lineNumber: 186,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3397,19 +3456,19 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 166,
+                                                        lineNumber: 187,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 164,
+                                                lineNumber: 185,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 129,
+                                        lineNumber: 142,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3418,7 +3477,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         children: title
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 171,
+                                        lineNumber: 192,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3426,7 +3485,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         children: excerpt
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 175,
+                                        lineNumber: 196,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3438,7 +3497,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                 children: author.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 180,
+                                                lineNumber: 201,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3448,20 +3507,20 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 182,
+                                                        lineNumber: 203,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: author.reputation
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 183,
+                                                        lineNumber: 204,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 181,
+                                                lineNumber: 202,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3469,7 +3528,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                 children: "•"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 185,
+                                                lineNumber: 206,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3479,30 +3538,30 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                                 })
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 186,
+                                                lineNumber: 207,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 179,
+                                        lineNumber: 200,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 128,
+                                lineNumber: 141,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                        lineNumber: 122,
+                        lineNumber: 135,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/components/ForumThreadCard.tsx",
-                    lineNumber: 121,
+                    lineNumber: 134,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3518,7 +3577,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         className: "h-3.5 w-3.5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 195,
+                                        lineNumber: 216,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3529,13 +3588,13 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 196,
+                                        lineNumber: 217,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 194,
+                                lineNumber: 215,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3546,7 +3605,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         className: "h-3.5 w-3.5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 199,
+                                        lineNumber: 220,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3556,35 +3615,35 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, replyCoun
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 200,
+                                        lineNumber: 221,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 198,
+                                lineNumber: 219,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                        lineNumber: 193,
+                        lineNumber: 214,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/components/ForumThreadCard.tsx",
-                    lineNumber: 192,
+                    lineNumber: 213,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/ForumThreadCard.tsx",
-            lineNumber: 112,
+            lineNumber: 125,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/ForumThreadCard.tsx",
-        lineNumber: 111,
+        lineNumber: 124,
         columnNumber: 5
     }, this);
 }
@@ -6556,10 +6615,10 @@ function EnhancedFooter() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
         className: "border-t mt-auto",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "container max-w-7xl mx-auto px-4 py-12",
+            className: "container max-w-7xl mx-auto px-4 py-8",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8",
+                    className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             children: [
@@ -7505,12 +7564,12 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "container max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-6",
+                className: "container max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
-                            className: "lg:col-span-1 space-y-3 sm:space-y-4 order-2 lg:order-1",
+                            className: "lg:col-span-1 space-y-3 order-2 lg:order-1",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$OnboardingChecklist$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["OnboardingChecklist"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",
@@ -7534,7 +7593,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "lg:col-span-2 space-y-4 sm:space-y-6 order-1 lg:order-2",
+                            className: "lg:col-span-2 space-y-3 sm:space-y-4 order-1 lg:order-2",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$WeekHighlights$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
@@ -7660,7 +7719,7 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
-                            className: "lg:col-span-1 space-y-3 sm:space-y-4 order-3",
+                            className: "lg:col-span-1 space-y-3 order-3",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$WhatsHot$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/HomeClient.tsx",

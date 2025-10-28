@@ -216,6 +216,7 @@ export interface IStorage {
   getBroker(id: string): Promise<Broker | undefined>;
   getBrokerBySlug(slug: string): Promise<Broker | undefined>;
   getAllBrokers(filters?: { isVerified?: boolean; status?: string }): Promise<Broker[]>;
+  searchBrokers(query: string, limit?: number): Promise<Broker[]>;
   
   createBrokerReview(review: InsertBrokerReview): Promise<BrokerReview>;
   getBrokerReview(reviewId: string): Promise<BrokerReview | null>;
@@ -2183,6 +2184,30 @@ export class MemStorage implements IStorage {
     
     return brokerList.sort((a, b) => (b.overallRating || 0) - (a.overallRating || 0));
   }
+
+  async searchBrokers(query: string, limit: number = 10): Promise<Broker[]> {
+    const lowerQuery = query.toLowerCase().trim();
+    if (!lowerQuery) return [];
+    
+    const brokerList = Array.from(this.brokers.values())
+      .filter((b) => b.status === 'approved') // Only show approved brokers
+      .filter((b) => 
+        b.name.toLowerCase().includes(lowerQuery) ||
+        (b.websiteUrl && b.websiteUrl.toLowerCase().includes(lowerQuery))
+      )
+      .sort((a, b) => {
+        // Prioritize exact matches
+        const aExact = a.name.toLowerCase() === lowerQuery ? 1 : 0;
+        const bExact = b.name.toLowerCase() === lowerQuery ? 1 : 0;
+        if (aExact !== bExact) return bExact - aExact;
+        
+        // Then by rating
+        return (b.overallRating || 0) - (a.overallRating || 0);
+      })
+      .slice(0, limit);
+    
+    return brokerList;
+  }
   
   async createBrokerReview(insertReview: InsertBrokerReview): Promise<BrokerReview> {
     // Verify broker exists
@@ -3890,11 +3915,12 @@ export class DrizzleStorage implements IStorage {
       )
     });
 
-    // Calculate coins to award (1 coin per 5 minutes, max 20 coins/day)
+    // Calculate coins to award (0.5 coins per 5 minutes, max 50 coins/day)
     const newMinutes = (activity?.activeMinutes || 0) + minutes;
-    const maxMinutes = 100; // 100 minutes = 20 coins max
+    const maxMinutes = 500; // 500 minutes = 50 coins max (0.5 coins per 5 minutes)
     const cappedMinutes = Math.min(newMinutes, maxMinutes);
-    const totalCoinsEarned = Math.floor(cappedMinutes / 5);
+    // Formula: 0.5 coins per 5 minutes = minutes / 10
+    const totalCoinsEarned = cappedMinutes / 10;
     const previousCoins = activity?.coinsEarned || 0;
     const newCoins = totalCoinsEarned - previousCoins;
 
@@ -4446,6 +4472,25 @@ export class DrizzleStorage implements IStorage {
     }
     
     return await query.orderBy(desc(brokers.overallRating));
+  }
+
+  async searchBrokers(query: string, limit: number = 10): Promise<Broker[]> {
+    const lowerQuery = query.toLowerCase().trim();
+    if (!lowerQuery) return [];
+    
+    const results = await db
+      .select()
+      .from(brokers)
+      .where(
+        and(
+          eq(brokers.status, 'approved'),
+          sql`LOWER(${brokers.name}) LIKE ${`%${lowerQuery}%`}`
+        )
+      )
+      .orderBy(desc(brokers.overallRating))
+      .limit(limit);
+    
+    return results;
   }
 
   async createBrokerReview(insertReview: InsertBrokerReview): Promise<BrokerReview> {

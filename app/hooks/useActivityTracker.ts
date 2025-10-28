@@ -14,12 +14,13 @@ export function useActivityTracker(enabled = true) {
   const startTimeRef = useRef<number>(Date.now());
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track activity mutation
+  // Track activity mutation (SECURE VERSION - no client-supplied minutes)
+  // Server calculates elapsed time from session timestamps to prevent coin farming
   const trackMutation = useMutation({
     mutationFn: async () => {
       return apiRequest<{success: boolean, coinsEarned: number, totalMinutes: number}>('/api/activity/track', {
         method: 'POST',
-        body: { minutes: 5 }
+        body: {} // Empty body - server uses session timestamps to calculate elapsed time
       });
     },
     onSuccess: (data: any) => {
