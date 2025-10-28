@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, Star, Coins, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { RefreshButton } from "./RefreshButton";
 
 interface TopSeller {
   id: string;
@@ -35,7 +36,7 @@ interface TopSellersResponse {
 }
 
 export default function TopSellers() {
-  const { data, isLoading } = useQuery<TopSellersResponse>({
+  const { data, isLoading, refetch } = useQuery<TopSellersResponse>({
     queryKey: ["/api/content/top-sellers"],
     staleTime: 5 * 60 * 1000, // 5 minutes, no auto-refresh for performance
   });
@@ -66,11 +67,18 @@ export default function TopSellers() {
             <Trophy className="w-4 h-4 text-amber-500" />
             Top Sellers
           </CardTitle>
-          <Link href="/marketplace?sort=sales" data-testid="link-see-all-sellers">
-            <Button variant="ghost" size="sm" className="h-7 text-xs" data-testid="button-see-all-sellers">
-              See All
-            </Button>
-          </Link>
+          <div className="flex items-center gap-1">
+            <RefreshButton 
+              onRefresh={async () => { await refetch(); }}
+              size="icon"
+              variant="ghost"
+            />
+            <Link href="/marketplace?sort=sales" data-testid="link-see-all-sellers">
+              <Button variant="ghost" size="sm" className="h-7 text-xs" data-testid="button-see-all-sellers">
+                See All
+              </Button>
+            </Link>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
