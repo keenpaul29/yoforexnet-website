@@ -4,3 +4,7 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Auto-setup marker files (generated during migration)
+.setup-complete
+.setup.log
