@@ -1,248 +1,126 @@
-[00:01:03.396] Server  LOG      ✓ Ready in 62.9s
-[00:01:03.399] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:02.039] Server  LOG      ✓ Ready in 1390ms
+[00:00:02.042] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:01:03.476] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+[00:00:05.137] Server  LOG      ○ Compiling / ...
+[00:00:12.903] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.932] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.934] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:12.938] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.939] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:12.940] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.940] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:12.987] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.987] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:12.989] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.989] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:12.991] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.992] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:13.030] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.030] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:13.032] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.032] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:13.033] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.033] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:13.125] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:17.918] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.485] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.492] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.498] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+https://react.dev/link/hydration-mismatch
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 47 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 48 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 49 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 50 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 51 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 52 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 53 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 54 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 55 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 56 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 57 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 58 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 59 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 60 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 61 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 62 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 63 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 64 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 65 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 66 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 67 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 68 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 69 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 70 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 71 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 72 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 73 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 74 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 0 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 1 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 2 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 3 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 4 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 5 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 6 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 7 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 8 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 9 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 10 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 11 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 12 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 13 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 14 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 15 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 16 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 17 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 18 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 19 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 20 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 21 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 22 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 23 seconds
-[00:01:03.675] Browser LOG     [Activity Tracker] User active for 24 seconds
-[00:01:03.705] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" suppressHydrationWarning={true}>
+                          <head>
+                            <script>
+                            <script
+                              dangerouslySetInnerHTML={{
++                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
+-                               __html: ""
+                              }}
+-                             src="/__replco/static/devtools/injected.js"
+-                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
+                            >
+                          ...
+                            <div className="border-t p...">
+                              <p>
+                              <div className="flex flex-...">
+                                <p>
+                                <p>
++                                 1761766537688
+-                                 1761766535197
+                  ...
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.708] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+[00:00:23.512] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.711] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.714] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.776] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+https://react.dev/link/hydration-mismatch
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.780] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" suppressHydrationWarning={true}>
+                          <head>
+                            <script>
+                            <script
+                              dangerouslySetInnerHTML={{
++                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
+-                               __html: ""
+                              }}
+-                             src="/__replco/static/devtools/injected.js"
+-                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
+                            >
+                          ...
+                            <div className="border-t p...">
+                              <p>
+                              <div className="flex flex-...">
+                                <p>
+                                <p>
++                                 1761766542314
+-                                 1761766534885
+                  ...
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.785] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.789] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.794] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.797] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.800] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:03.805] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:04.759] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:04.761] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:04.764] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:04.766] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:45.063] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:45.067] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:45.072] Server  ERROR    ⨯ TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-[00:01:45.078] Server  ERROR   TurbopackInternalError: inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges
-
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk_operation failed
-- Execution of pick_endpoint failed
-- Execution of entrypoints_without_collectibles_operation failed
-- inner_of_uppers_lost_follower is not able to remove follower TaskId 17 (ProjectContainer::entrypoints) from TaskId 16 (EntrypointsOperation::new) as they don't exist as upper or follower edges

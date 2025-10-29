@@ -7001,12 +7001,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const claims = (req.user as any)?.claims;
       
       await storage.takeReportAction({
-        reportId,
         contentId: validatedData.contentId,
         contentType: validatedData.contentType,
         actionType: validatedData.actionType,
         moderatorId: claims.sub,
-        moderatorUsername: claims.username || claims.sub,
         reason: validatedData.reason,
         suspendDays: validatedData.suspendDays,
       });
@@ -7059,7 +7057,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contentIds,
         contentType,
         moderatorId: claims.sub,
-        moderatorUsername: claims.username || claims.sub,
         reason,
       });
       
@@ -7242,7 +7239,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = approveWithdrawalSchema.parse(req.body);
       const adminId = getAuthenticatedUserId(req);
 
-      const result = await storage.approveWithdrawal(withdrawalId, adminId, validatedData.notes);
+      const result = await storage.approveWithdrawal(withdrawalId, adminId);
 
       // Log admin action
       await db.insert(adminActions).values({
