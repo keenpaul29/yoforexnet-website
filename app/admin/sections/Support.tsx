@@ -17,6 +17,32 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { formatDistanceToNow } from "date-fns";
 
+interface Message {
+  id: number;
+  sender: string;
+  content: string;
+  createdAt: string;
+}
+
+interface Ticket {
+  id: number;
+  username: string;
+  subject: string;
+  status: string;
+  priority: string;
+  category?: string;
+  createdAt: string;
+  messages?: Message[];
+  tags?: string[];
+}
+
+interface SupportStats {
+  openTickets: number;
+  avgResponseTime: string;
+  avgResolutionTime: string;
+  satisfactionScore: number;
+}
+
 export default function Support() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -24,13 +50,22 @@ export default function Support() {
   const [selectedTicket, setSelectedTicket] = useState<any>(null);
   const { toast } = useToast();
 
-  const { data: tickets, isLoading: ticketsLoading } = useQuery({
+  const { data: ticketsRaw, isLoading: ticketsLoading } = useQuery<Ticket[]>({
     queryKey: ["/api/admin/support/tickets", { status: statusFilter, priority: priorityFilter, category: categoryFilter }]
   });
 
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const tickets: Ticket[] = Array.isArray(ticketsRaw) ? ticketsRaw : [];
+
+  const { data: statsRaw, isLoading: statsLoading } = useQuery<SupportStats>({
     queryKey: ["/api/admin/support/stats"]
   });
+
+  const stats: SupportStats = statsRaw || {
+    openTickets: 0,
+    avgResponseTime: '0h',
+    avgResolutionTime: '0h',
+    satisfactionScore: 0
+  };
 
   const updateTicketMutation = useMutation({
     mutationFn: async ({ ticketId, data }: { ticketId: number; data: any }) => {
@@ -106,7 +141,7 @@ export default function Support() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold" data-testid="text-open-tickets">
-                {stats?.openTickets || 0}
+                {stats.openTickets}
               </div>
               <p className="text-xs text-muted-foreground">Awaiting response</p>
             </CardContent>
@@ -118,7 +153,7 @@ export default function Support() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold" data-testid="text-avg-response-time">
-                {stats?.avgResponseTime || '0h'}
+                {stats.avgResponseTime}
               </div>
               <p className="text-xs text-muted-foreground">Time to first response</p>
             </CardContent>
@@ -130,7 +165,7 @@ export default function Support() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold" data-testid="text-avg-resolution-time">
-                {stats?.avgResolutionTime || '0h'}
+                {stats.avgResolutionTime}
               </div>
               <p className="text-xs text-muted-foreground">Time to close</p>
             </CardContent>
@@ -142,7 +177,7 @@ export default function Support() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold" data-testid="text-satisfaction-score">
-                {stats?.satisfactionScore || 0}%
+                {stats.satisfactionScore}%
               </div>
               <p className="text-xs text-muted-foreground">User satisfaction</p>
             </CardContent>
@@ -204,7 +239,7 @@ export default function Support() {
       ) : (
         <Card data-testid="card-tickets">
           <CardHeader>
-            <CardTitle>Support Tickets ({tickets?.length || 0})</CardTitle>
+            <CardTitle>Support Tickets ({tickets.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -221,8 +256,8 @@ export default function Support() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {tickets && tickets.length > 0 ? (
-                    tickets.map((ticket: any) => (
+                  {tickets.length > 0 ? (
+                    tickets.map((ticket) => (
                       <TableRow key={ticket.id} data-testid={`ticket-${ticket.id}`}>
                         <TableCell>#{ticket.id}</TableCell>
                         <TableCell>{ticket.username}</TableCell>
@@ -305,7 +340,7 @@ export default function Support() {
                 <Label>Conversation</Label>
                 <div className="border rounded-md p-4 space-y-4 max-h-96 overflow-y-auto">
                   {selectedTicket.messages && selectedTicket.messages.length > 0 ? (
-                    selectedTicket.messages.map((message: any) => (
+                    selectedTicket.messages.map((message: Message) => (
                       <div key={message.id} className="space-y-1">
                         <div className="flex items-center justify-between">
                           <p className="font-medium">{message.sender}</p>

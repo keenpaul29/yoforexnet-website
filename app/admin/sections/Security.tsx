@@ -18,6 +18,56 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { formatDistanceToNow } from "date-fns";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
+interface SecurityEvent {
+  id: number;
+  type: string;
+  severity: string;
+  description: string;
+  resolved: boolean;
+  createdAt: string;
+}
+
+interface IPBan {
+  id: number;
+  ipAddress: string;
+  reason: string;
+  bannedBy: string;
+  createdAt: string;
+  active: boolean;
+}
+
+interface ResponseTimeDataPoint {
+  time: string;
+  responseTime: number;
+}
+
+interface ErrorRateDataPoint {
+  time: string;
+  errors: number;
+}
+
+interface Alert {
+  id: number;
+  message: string;
+  severity: string;
+  time: string;
+}
+
+interface PerformanceMetrics {
+  cpu: number;
+  memory: number;
+  disk: number;
+  network: number;
+  responseTimeData: ResponseTimeDataPoint[];
+  errorRateData: ErrorRateDataPoint[];
+  dbQueryTime: {
+    avg: number;
+    min: number;
+    max: number;
+  };
+  alerts: Alert[];
+}
+
 export default function Security() {
   const [activeTab, setActiveTab] = useState("security-events");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -27,17 +77,32 @@ export default function Security() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const { toast } = useToast();
 
-  const { data: securityEvents, isLoading: eventsLoading } = useQuery({
+  const { data: securityEventsRaw, isLoading: eventsLoading } = useQuery<SecurityEvent[]>({
     queryKey: ["/api/admin/security/events", { type: typeFilter, severity: severityFilter, resolved: resolvedFilter }]
   });
 
-  const { data: ipBans, isLoading: bansLoading } = useQuery({
+  const securityEvents: SecurityEvent[] = Array.isArray(securityEventsRaw) ? securityEventsRaw : [];
+
+  const { data: ipBansRaw, isLoading: bansLoading } = useQuery<IPBan[]>({
     queryKey: ["/api/admin/security/ip-bans", { status: banFilter }]
   });
 
-  const { data: performanceMetrics, isLoading: metricsLoading } = useQuery({
+  const ipBans: IPBan[] = Array.isArray(ipBansRaw) ? ipBansRaw : [];
+
+  const { data: performanceMetricsRaw, isLoading: metricsLoading } = useQuery<PerformanceMetrics>({
     queryKey: ["/api/admin/security/performance-metrics"]
   });
+
+  const performanceMetrics: PerformanceMetrics = performanceMetricsRaw || {
+    cpu: 0,
+    memory: 0,
+    disk: 0,
+    network: 0,
+    responseTimeData: [],
+    errorRateData: [],
+    dbQueryTime: { avg: 0, min: 0, max: 0 },
+    alerts: []
+  };
 
   const resolveEventMutation = useMutation({
     mutationFn: async ({ eventId, notes }: { eventId: number; notes: string }) => {
@@ -157,7 +222,7 @@ export default function Security() {
           ) : (
             <Card data-testid="card-security-events">
               <CardHeader>
-                <CardTitle>Security Events ({securityEvents?.length || 0})</CardTitle>
+                <CardTitle>Security Events ({securityEvents.length})</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -173,8 +238,8 @@ export default function Security() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {securityEvents && securityEvents.length > 0 ? (
-                        securityEvents.map((event: any) => (
+                      {securityEvents.length > 0 ? (
+                        securityEvents.map((event) => (
                           <TableRow key={event.id} data-testid={`event-${event.id}`}>
                             <TableCell>
                               {formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}
@@ -342,8 +407,8 @@ export default function Security() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {ipBans && ipBans.length > 0 ? (
-                        ipBans.map((ban: any) => (
+                      {ipBans.length > 0 ? (
+                        ipBans.map((ban) => (
                           <TableRow key={ban.id} data-testid={`ban-${ban.id}`}>
                             <TableCell>{ban.ipAddress}</TableCell>
                             <TableCell>{ban.reason}</TableCell>
@@ -406,7 +471,7 @@ export default function Security() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-cpu">
-                      {performanceMetrics?.cpu || 0}%
+                      {performanceMetrics.cpu}%
                     </div>
                     <p className="text-xs text-muted-foreground">Current usage</p>
                   </CardContent>
@@ -418,7 +483,7 @@ export default function Security() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-memory">
-                      {performanceMetrics?.memory || 0}%
+                      {performanceMetrics.memory}%
                     </div>
                     <p className="text-xs text-muted-foreground">Used</p>
                   </CardContent>
@@ -430,7 +495,7 @@ export default function Security() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-disk">
-                      {performanceMetrics?.disk || 0}%
+                      {performanceMetrics.disk}%
                     </div>
                     <p className="text-xs text-muted-foreground">Used</p>
                   </CardContent>
@@ -442,7 +507,7 @@ export default function Security() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-network">
-                      {performanceMetrics?.network || 0} MB/s
+                      {performanceMetrics.network} MB/s
                     </div>
                     <p className="text-xs text-muted-foreground">Throughput</p>
                   </CardContent>
@@ -457,7 +522,7 @@ export default function Security() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={250}>
-                      <LineChart data={performanceMetrics?.responseTimeData || []}>
+                      <LineChart data={performanceMetrics.responseTimeData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="time" />
                         <YAxis />
@@ -474,7 +539,7 @@ export default function Security() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={250}>
-                      <LineChart data={performanceMetrics?.errorRateData || []}>
+                      <LineChart data={performanceMetrics.errorRateData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="time" />
                         <YAxis />
@@ -494,15 +559,15 @@ export default function Security() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">Average</p>
-                      <p className="text-2xl font-bold">{performanceMetrics?.dbQueryTime?.avg || 0}ms</p>
+                      <p className="text-2xl font-bold">{performanceMetrics.dbQueryTime.avg}ms</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Min</p>
-                      <p className="text-2xl font-bold">{performanceMetrics?.dbQueryTime?.min || 0}ms</p>
+                      <p className="text-2xl font-bold">{performanceMetrics.dbQueryTime.min}ms</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Max</p>
-                      <p className="text-2xl font-bold">{performanceMetrics?.dbQueryTime?.max || 0}ms</p>
+                      <p className="text-2xl font-bold">{performanceMetrics.dbQueryTime.max}ms</p>
                     </div>
                   </div>
                 </CardContent>
@@ -523,8 +588,8 @@ export default function Security() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {performanceMetrics?.alerts && performanceMetrics.alerts.length > 0 ? (
-                          performanceMetrics.alerts.map((alert: any) => (
+                        {performanceMetrics.alerts.length > 0 ? (
+                          performanceMetrics.alerts.map((alert) => (
                             <TableRow key={alert.id}>
                               <TableCell>{alert.message}</TableCell>
                               <TableCell>
@@ -533,7 +598,7 @@ export default function Security() {
                                 </Badge>
                               </TableCell>
                               <TableCell>
-                                {formatDistanceToNow(new Date(alert.createdAt), { addSuffix: true })}
+                                {formatDistanceToNow(new Date(alert.time), { addSuffix: true })}
                               </TableCell>
                             </TableRow>
                           ))

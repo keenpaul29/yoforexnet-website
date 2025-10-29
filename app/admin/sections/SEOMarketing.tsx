@@ -17,6 +17,52 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Search, ExternalLink, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
+interface ContentItem {
+  id: number;
+  title: string;
+  type: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string;
+}
+
+interface Campaign {
+  id: number;
+  name: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  budget: number;
+  performance?: number;
+}
+
+interface CampaignStats {
+  reach: number;
+  conversions: number;
+  roi: number;
+}
+
+interface SearchRanking {
+  id: number;
+  page: string;
+  keyword: string;
+  position: number;
+  change: number;
+}
+
+interface TopQuery {
+  query: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+}
+
+interface SitemapStatus {
+  lastGenerated?: string;
+  totalUrls: number;
+  sitemapUrl?: string;
+}
+
 export default function SEOMarketing() {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,29 +70,47 @@ export default function SEOMarketing() {
   const [isCreateCampaignOpen, setIsCreateCampaignOpen] = useState(false);
   const [selectedContent, setSelectedContent] = useState<any>(null);
 
-  const { data: contentList, isLoading: contentLoading } = useQuery({
+  const { data: contentListRaw, isLoading: contentLoading } = useQuery<ContentItem[]>({
     queryKey: ["/api/admin/seo/content", searchQuery]
   });
 
-  const { data: campaigns, isLoading: campaignsLoading } = useQuery({
+  const contentList: ContentItem[] = Array.isArray(contentListRaw) ? contentListRaw : [];
+
+  const { data: campaignsRaw, isLoading: campaignsLoading } = useQuery<Campaign[]>({
     queryKey: ["/api/admin/seo/campaigns"]
   });
 
-  const { data: campaignStats, isLoading: campaignStatsLoading } = useQuery({
+  const campaigns: Campaign[] = Array.isArray(campaignsRaw) ? campaignsRaw : [];
+
+  const { data: campaignStatsRaw, isLoading: campaignStatsLoading } = useQuery<CampaignStats>({
     queryKey: ["/api/admin/seo/campaign-stats"]
   });
 
-  const { data: searchRankings, isLoading: rankingsLoading } = useQuery({
+  const campaignStats: CampaignStats = campaignStatsRaw || {
+    reach: 0,
+    conversions: 0,
+    roi: 0
+  };
+
+  const { data: searchRankingsRaw, isLoading: rankingsLoading } = useQuery<SearchRanking[]>({
     queryKey: ["/api/admin/seo/search-rankings"]
   });
 
-  const { data: topQueries, isLoading: queriesLoading } = useQuery({
+  const searchRankings: SearchRanking[] = Array.isArray(searchRankingsRaw) ? searchRankingsRaw : [];
+
+  const { data: topQueriesRaw, isLoading: queriesLoading } = useQuery<TopQuery[]>({
     queryKey: ["/api/admin/seo/top-queries"]
   });
 
-  const { data: sitemapStatus, isLoading: sitemapLoading } = useQuery({
+  const topQueries: TopQuery[] = Array.isArray(topQueriesRaw) ? topQueriesRaw : [];
+
+  const { data: sitemapStatusRaw, isLoading: sitemapLoading } = useQuery<SitemapStatus>({
     queryKey: ["/api/admin/seo/sitemap-status"]
   });
+
+  const sitemapStatus: SitemapStatus = sitemapStatusRaw || {
+    totalUrls: 0
+  };
 
   const updateMetaMutation = useMutation({
     mutationFn: (data: any) => apiRequest(`/api/admin/seo/meta/${data.id}`, "PATCH", data),
@@ -143,7 +207,7 @@ export default function SEOMarketing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {contentList?.map((content: any) => (
+                      {contentList.map((content) => (
                         <TableRow key={content.id} data-testid={`content-${content.id}`}>
                           <TableCell className="font-medium max-w-xs truncate" data-testid={`content-title-${content.id}`}>
                             {content.title}
@@ -168,7 +232,7 @@ export default function SEOMarketing() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!contentList || contentList.length === 0) && (
+                      {contentList.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                             No content found
@@ -299,7 +363,7 @@ export default function SEOMarketing() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-campaign-reach">
-                      {campaignStats?.reach?.toLocaleString() || 0}
+                      {campaignStats.reach.toLocaleString()}
                     </div>
                   </CardContent>
                 </Card>
@@ -309,7 +373,7 @@ export default function SEOMarketing() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-campaign-conversions">
-                      {campaignStats?.conversions || 0}
+                      {campaignStats.conversions}
                     </div>
                   </CardContent>
                 </Card>
@@ -319,7 +383,7 @@ export default function SEOMarketing() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-campaign-roi">
-                      {campaignStats?.roi || 0}%
+                      {campaignStats.roi}%
                     </div>
                   </CardContent>
                 </Card>
@@ -347,7 +411,7 @@ export default function SEOMarketing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {campaigns?.map((campaign: any) => (
+                      {campaigns.map((campaign) => (
                         <TableRow key={campaign.id} data-testid={`campaign-${campaign.id}`}>
                           <TableCell className="font-medium" data-testid={`campaign-name-${campaign.id}`}>
                             {campaign.name}
@@ -359,13 +423,13 @@ export default function SEOMarketing() {
                           </TableCell>
                           <TableCell>{new Date(campaign.startDate).toLocaleDateString()}</TableCell>
                           <TableCell>{new Date(campaign.endDate).toLocaleDateString()}</TableCell>
-                          <TableCell>${campaign.budget?.toLocaleString()}</TableCell>
+                          <TableCell>${campaign.budget.toLocaleString()}</TableCell>
                           <TableCell>
                             <Badge variant="outline">{campaign.performance || 0}% CTR</Badge>
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!campaigns || campaigns.length === 0) && (
+                      {campaigns.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No campaigns created
@@ -404,7 +468,7 @@ export default function SEOMarketing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {searchRankings?.map((ranking: any) => (
+                      {searchRankings.map((ranking) => (
                         <TableRow key={ranking.id}>
                           <TableCell className="max-w-xs truncate">{ranking.page}</TableCell>
                           <TableCell>{ranking.keyword}</TableCell>
@@ -418,7 +482,7 @@ export default function SEOMarketing() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!searchRankings || searchRankings.length === 0) && (
+                      {searchRankings.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                             No ranking data available
@@ -453,17 +517,17 @@ export default function SEOMarketing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {topQueries?.map((query: any, index: number) => (
+                      {topQueries.map((query, index) => (
                         <TableRow key={index}>
                           <TableCell className="font-medium">{query.query}</TableCell>
-                          <TableCell>{query.impressions?.toLocaleString()}</TableCell>
-                          <TableCell>{query.clicks?.toLocaleString()}</TableCell>
+                          <TableCell>{query.impressions.toLocaleString()}</TableCell>
+                          <TableCell>{query.clicks.toLocaleString()}</TableCell>
                           <TableCell>
                             <Badge variant="outline">{query.ctr}%</Badge>
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!topQueries || topQueries.length === 0) && (
+                      {topQueries.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                             No query data available
@@ -497,16 +561,16 @@ export default function SEOMarketing() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">Last Generated:</span>
                     <span className="font-medium">
-                      {sitemapStatus?.lastGenerated 
+                      {sitemapStatus.lastGenerated 
                         ? formatDistanceToNow(new Date(sitemapStatus.lastGenerated), { addSuffix: true })
                         : 'Never'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">Total URLs:</span>
-                    <Badge variant="secondary">{sitemapStatus?.totalUrls || 0}</Badge>
+                    <Badge variant="secondary">{sitemapStatus.totalUrls}</Badge>
                   </div>
-                  {sitemapStatus?.sitemapUrl && (
+                  {sitemapStatus.sitemapUrl && (
                     <div className="flex items-center gap-2 pt-2">
                       <a
                         href={sitemapStatus.sitemapUrl}

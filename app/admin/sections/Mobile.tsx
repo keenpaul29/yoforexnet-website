@@ -21,37 +21,98 @@ import { Bell, Smartphone } from "lucide-react";
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--accent))', 'hsl(var(--muted))', 'hsl(var(--destructive))'];
 
+interface Notification {
+  id: string;
+  title: string;
+  targetType: string;
+  deliveredCount: number;
+  openedCount: number;
+  ctr: number;
+  sentAt: string;
+}
+
+interface AppVersion {
+  id: string;
+  version: string;
+  platform: string;
+  releaseDate: string;
+  userCount: number;
+  forceUpdate: boolean;
+}
+
+interface VersionDistribution {
+  version: string;
+  count: number;
+  percentage: number;
+}
+
+interface DeviceType {
+  name: string;
+  value: number;
+  percentage: number;
+}
+
+interface OSDistribution {
+  name: string;
+  count: number;
+}
+
+interface BrowserDistribution {
+  name: string;
+  count: number;
+}
+
+interface ScreenResolution {
+  resolution: string;
+  count: number;
+  percentage: number;
+}
+
 export default function Mobile() {
   const { toast } = useToast();
   const [targetType, setTargetType] = useState("all");
 
-  const { data: notificationHistory, isLoading: historyLoading } = useQuery({
+  const { data: notificationHistoryRaw, isLoading: historyLoading } = useQuery<Notification[]>({
     queryKey: ["/api/admin/mobile/notification-history"]
   });
 
-  const { data: appVersions, isLoading: versionsLoading } = useQuery({
+  const notificationHistory: Notification[] = Array.isArray(notificationHistoryRaw) ? notificationHistoryRaw : [];
+
+  const { data: appVersionsRaw, isLoading: versionsLoading } = useQuery<AppVersion[]>({
     queryKey: ["/api/admin/mobile/app-versions"]
   });
 
-  const { data: versionDistribution, isLoading: versionDistLoading } = useQuery({
+  const appVersions: AppVersion[] = Array.isArray(appVersionsRaw) ? appVersionsRaw : [];
+
+  const { data: versionDistributionRaw, isLoading: versionDistLoading } = useQuery<VersionDistribution[]>({
     queryKey: ["/api/admin/mobile/version-distribution"]
   });
 
-  const { data: deviceTypes, isLoading: deviceTypesLoading } = useQuery({
+  const versionDistribution: VersionDistribution[] = Array.isArray(versionDistributionRaw) ? versionDistributionRaw : [];
+
+  const { data: deviceTypesRaw, isLoading: deviceTypesLoading } = useQuery<DeviceType[]>({
     queryKey: ["/api/admin/mobile/device-types"]
   });
 
-  const { data: osDistribution, isLoading: osDistLoading } = useQuery({
+  const deviceTypes: DeviceType[] = Array.isArray(deviceTypesRaw) ? deviceTypesRaw : [];
+
+  const { data: osDistributionRaw, isLoading: osDistLoading } = useQuery<OSDistribution[]>({
     queryKey: ["/api/admin/mobile/os-distribution"]
   });
 
-  const { data: browserDistribution, isLoading: browserDistLoading } = useQuery({
+  const osDistribution: OSDistribution[] = Array.isArray(osDistributionRaw) ? osDistributionRaw : [];
+
+  const { data: browserDistributionRaw, isLoading: browserDistLoading } = useQuery<BrowserDistribution[]>({
     queryKey: ["/api/admin/mobile/browser-distribution"]
   });
 
-  const { data: screenResolutions, isLoading: resolutionsLoading } = useQuery({
+  const browserDistribution: BrowserDistribution[] = Array.isArray(browserDistributionRaw) ? browserDistributionRaw : [];
+
+  const { data: screenResolutionsRaw, isLoading: resolutionsLoading } = useQuery<ScreenResolution[]>({
     queryKey: ["/api/admin/mobile/screen-resolutions"]
   });
+
+  const screenResolutions: ScreenResolution[] = Array.isArray(screenResolutionsRaw) ? screenResolutionsRaw : [];
 
   const sendNotificationMutation = useMutation({
     mutationFn: (data: any) => apiRequest("/api/admin/mobile/send-notification", "POST", data),
@@ -182,23 +243,23 @@ export default function Mobile() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {notificationHistory?.map((notification: any) => (
+                      {notificationHistory.map((notification) => (
                         <TableRow key={notification.id}>
                           <TableCell className="font-medium max-w-xs truncate">{notification.title}</TableCell>
                           <TableCell>
                             <Badge variant="secondary">{notification.targetType}</Badge>
                           </TableCell>
-                          <TableCell>{notification.deliveredCount || 0}</TableCell>
-                          <TableCell>{notification.openedCount || 0}</TableCell>
+                          <TableCell>{notification.deliveredCount}</TableCell>
+                          <TableCell>{notification.openedCount}</TableCell>
                           <TableCell>
                             <Badge variant="outline">
-                              {notification.ctr || 0}%
+                              {notification.ctr}%
                             </Badge>
                           </TableCell>
                           <TableCell>{formatDistanceToNow(new Date(notification.sentAt), { addSuffix: true })}</TableCell>
                         </TableRow>
                       ))}
-                      {(!notificationHistory || notificationHistory.length === 0) && (
+                      {notificationHistory.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No notifications sent yet
@@ -235,7 +296,7 @@ export default function Mobile() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {appVersions?.map((version: any) => (
+                      {appVersions.map((version) => (
                         <TableRow key={version.id} data-testid={`version-${version.id}`}>
                           <TableCell className="font-medium">{version.version}</TableCell>
                           <TableCell>
@@ -243,7 +304,7 @@ export default function Mobile() {
                           </TableCell>
                           <TableCell>{new Date(version.releaseDate).toLocaleDateString()}</TableCell>
                           <TableCell>
-                            <Badge variant="outline">{version.userCount || 0} users</Badge>
+                            <Badge variant="outline">{version.userCount} users</Badge>
                           </TableCell>
                           <TableCell>
                             <Switch
@@ -256,7 +317,7 @@ export default function Mobile() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!appVersions || appVersions.length === 0) && (
+                      {appVersions.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                             No app versions found
@@ -277,7 +338,7 @@ export default function Mobile() {
             <CardContent>
               {versionDistLoading ? (
                 <Skeleton className="h-64" />
-              ) : versionDistribution && versionDistribution.length > 0 ? (
+              ) : versionDistribution.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
                     <Pie
@@ -290,7 +351,7 @@ export default function Mobile() {
                       fill="hsl(var(--primary))"
                       dataKey="count"
                     >
-                      {versionDistribution.map((entry: any, index: number) => (
+                      {versionDistribution.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -318,7 +379,7 @@ export default function Mobile() {
               <CardContent>
                 {deviceTypesLoading ? (
                   <Skeleton className="h-64" />
-                ) : deviceTypes && deviceTypes.length > 0 ? (
+                ) : deviceTypes.length > 0 ? (
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
                       <Pie
@@ -331,7 +392,7 @@ export default function Mobile() {
                         fill="hsl(var(--primary))"
                         dataKey="value"
                       >
-                        {deviceTypes.map((entry: any, index: number) => (
+                        {deviceTypes.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -354,7 +415,7 @@ export default function Mobile() {
               <CardContent>
                 {osDistLoading ? (
                   <Skeleton className="h-64" />
-                ) : osDistribution && osDistribution.length > 0 ? (
+                ) : osDistribution.length > 0 ? (
                   <ResponsiveContainer width="100%" height={250}>
                     <BarChart data={osDistribution}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -379,7 +440,7 @@ export default function Mobile() {
               <CardContent>
                 {browserDistLoading ? (
                   <Skeleton className="h-64" />
-                ) : browserDistribution && browserDistribution.length > 0 ? (
+                ) : browserDistribution.length > 0 ? (
                   <ResponsiveContainer width="100%" height={250}>
                     <BarChart data={browserDistribution}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -406,7 +467,7 @@ export default function Mobile() {
                   <div className="space-y-2">
                     {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-8" />)}
                   </div>
-                ) : screenResolutions && screenResolutions.length > 0 ? (
+                ) : screenResolutions.length > 0 ? (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
@@ -417,7 +478,7 @@ export default function Mobile() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {screenResolutions.map((resolution: any, index: number) => (
+                        {screenResolutions.map((resolution, index) => (
                           <TableRow key={index}>
                             <TableCell className="font-medium">{resolution.resolution}</TableCell>
                             <TableCell>{resolution.count}</TableCell>

@@ -14,24 +14,70 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import AddContentDialog from "./AddContentDialog";
 
+interface MarketplaceStats {
+  totalItems: number;
+  pendingItems: number;
+  totalSales: number;
+  salesThisWeek: number;
+  totalRevenue: number;
+  revenueThisWeek: number;
+}
+
+interface MarketplaceItem {
+  id: number;
+  title: string;
+  sellerUsername: string;
+  coinPrice: number;
+  sales: number;
+  status: string;
+  createdAt: string;
+}
+
+interface TopSellingItem {
+  id: number;
+  title: string;
+  sales: number;
+  coinPrice: number;
+}
+
+interface RevenueDataPoint {
+  date: string;
+  revenue: number;
+}
+
 export default function AdminMarketplace() {
   const { toast } = useToast();
 
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: statsRaw, isLoading: statsLoading } = useQuery<MarketplaceStats>({
     queryKey: ["/api/admin/marketplace/stats"]
   });
 
-  const { data: items, isLoading: itemsLoading } = useQuery({
+  const stats: MarketplaceStats = statsRaw || {
+    totalItems: 0,
+    pendingItems: 0,
+    totalSales: 0,
+    salesThisWeek: 0,
+    totalRevenue: 0,
+    revenueThisWeek: 0
+  };
+
+  const { data: itemsRaw, isLoading: itemsLoading } = useQuery<MarketplaceItem[]>({
     queryKey: ["/api/admin/marketplace/items"]
   });
 
-  const { data: topSelling, isLoading: topLoading } = useQuery({
+  const items: MarketplaceItem[] = Array.isArray(itemsRaw) ? itemsRaw : [];
+
+  const { data: topSellingRaw, isLoading: topLoading } = useQuery<TopSellingItem[]>({
     queryKey: ["/api/admin/marketplace/top-selling"]
   });
 
-  const { data: revenueData, isLoading: revenueLoading } = useQuery({
+  const topSelling: TopSellingItem[] = Array.isArray(topSellingRaw) ? topSellingRaw : [];
+
+  const { data: revenueDataRaw, isLoading: revenueLoading } = useQuery<RevenueDataPoint[]>({
     queryKey: ["/api/admin/marketplace/revenue-chart"]
   });
+
+  const revenueData: RevenueDataPoint[] = Array.isArray(revenueDataRaw) ? revenueDataRaw : [];
 
   const approveItemMutation = useMutation({
     mutationFn: async (itemId: number) => {
@@ -79,10 +125,10 @@ export default function AdminMarketplace() {
             ) : (
               <>
                 <div className="text-2xl font-bold" data-testid="text-total-items">
-                  {stats?.totalItems || 0}
+                  {stats.totalItems}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {stats?.pendingItems || 0} pending approval
+                  {stats.pendingItems} pending approval
                 </p>
               </>
             )}
@@ -100,10 +146,10 @@ export default function AdminMarketplace() {
             ) : (
               <>
                 <div className="text-2xl font-bold" data-testid="text-total-sales">
-                  {stats?.totalSales || 0}
+                  {stats.totalSales}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +{stats?.salesThisWeek || 0} this week
+                  +{stats.salesThisWeek} this week
                 </p>
               </>
             )}
@@ -121,10 +167,10 @@ export default function AdminMarketplace() {
             ) : (
               <>
                 <div className="text-2xl font-bold" data-testid="text-marketplace-revenue">
-                  ${stats?.totalRevenue || 0}
+                  ${stats.totalRevenue}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +${stats?.revenueThisWeek || 0} this week
+                  +${stats.revenueThisWeek} this week
                 </p>
               </>
             )}
@@ -140,7 +186,7 @@ export default function AdminMarketplace() {
         <CardContent>
           {revenueLoading ? (
             <Skeleton className="h-64" />
-          ) : revenueData && revenueData.length > 0 ? (
+          ) : revenueData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -170,18 +216,18 @@ export default function AdminMarketplace() {
                 <Skeleton key={i} className="h-12" />
               ))}
             </div>
-          ) : topSelling && topSelling.length > 0 ? (
+          ) : topSelling.length > 0 ? (
             <div className="space-y-3">
-              {topSelling.map((item: any, index: number) => (
+              {topSelling.map((item, index) => (
                 <div key={item.id} className="flex items-center justify-between p-3 rounded-lg border">
                   <div className="flex items-center gap-3">
                     <div className="text-lg font-bold text-muted-foreground">#{index + 1}</div>
                     <div>
                       <p className="font-medium">{item.title}</p>
-                      <p className="text-sm text-muted-foreground">{item.sales || 0} sales</p>
+                      <p className="text-sm text-muted-foreground">{item.sales} sales</p>
                     </div>
                   </div>
-                  <Badge>{item.coinPrice || 0} coins</Badge>
+                  <Badge>{item.coinPrice} coins</Badge>
                 </div>
               ))}
             </div>
@@ -194,7 +240,7 @@ export default function AdminMarketplace() {
       {/* Marketplace Items Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Marketplace Items ({items?.length || 0})</CardTitle>
+          <CardTitle>Marketplace Items ({items.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {itemsLoading ? (
@@ -218,15 +264,15 @@ export default function AdminMarketplace() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {items && items.length > 0 ? (
-                    items.map((item: any) => (
+                  {items.length > 0 ? (
+                    items.map((item) => (
                       <TableRow key={item.id} data-testid={`item-row-${item.id}`}>
                         <TableCell data-testid={`item-title-${item.id}`}>
                           {item.title}
                         </TableCell>
                         <TableCell>{item.sellerUsername}</TableCell>
-                        <TableCell>{item.coinPrice || 0} coins</TableCell>
-                        <TableCell>{item.sales || 0}</TableCell>
+                        <TableCell>{item.coinPrice} coins</TableCell>
+                        <TableCell>{item.sales}</TableCell>
                         <TableCell>
                           <Badge variant={item.status === 'approved' ? 'default' : 'secondary'}>
                             {item.status}

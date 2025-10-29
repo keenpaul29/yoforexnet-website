@@ -9,22 +9,73 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface OverviewStats {
+  users: {
+    total: number;
+    new24h: number;
+  };
+  content: {
+    total: number;
+    new24h: number;
+  };
+  revenue: {
+    total: number;
+    today: number;
+  };
+  moderation: {
+    pending: number;
+    reports: number;
+  };
+}
+
+interface ActivityFeedItem {
+  id: string;
+  adminUsername: string;
+  actionType: string;
+  targetType: string;
+  status: string;
+  createdAt: string;
+}
+
+interface UserGrowthDataPoint {
+  date: string;
+  users: number;
+}
+
+interface ContentTrendDataPoint {
+  date: string;
+  count: number;
+}
+
 export default function AdminOverview() {
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: statsRaw, isLoading: statsLoading } = useQuery<OverviewStats>({
     queryKey: ["/api/admin/overview/stats"]
   });
 
-  const { data: activityFeed, isLoading: activityLoading } = useQuery({
+  const stats: OverviewStats = statsRaw || {
+    users: { total: 0, new24h: 0 },
+    content: { total: 0, new24h: 0 },
+    revenue: { total: 0, today: 0 },
+    moderation: { pending: 0, reports: 0 }
+  };
+
+  const { data: activityFeedRaw, isLoading: activityLoading } = useQuery<ActivityFeedItem[]>({
     queryKey: ["/api/admin/overview/activity-feed"]
   });
 
-  const { data: userGrowth, isLoading: growthLoading } = useQuery({
+  const activityFeed: ActivityFeedItem[] = Array.isArray(activityFeedRaw) ? activityFeedRaw : [];
+
+  const { data: userGrowthRaw, isLoading: growthLoading } = useQuery<UserGrowthDataPoint[]>({
     queryKey: ["/api/admin/overview/user-growth"]
   });
 
-  const { data: contentTrend, isLoading: trendLoading } = useQuery({
+  const userGrowth: UserGrowthDataPoint[] = Array.isArray(userGrowthRaw) ? userGrowthRaw : [];
+
+  const { data: contentTrendRaw, isLoading: trendLoading } = useQuery<ContentTrendDataPoint[]>({
     queryKey: ["/api/admin/overview/content-trend"]
   });
+
+  const contentTrend: ContentTrendDataPoint[] = Array.isArray(contentTrendRaw) ? contentTrendRaw : [];
 
   if (statsLoading) {
     return (
@@ -52,10 +103,10 @@ export default function AdminOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-total-users">
-              {stats?.users?.total || 0}
+              {stats.users.total}
             </div>
             <p className="text-xs text-muted-foreground">
-              +{stats?.users?.new24h || 0} in last 24h
+              +{stats.users.new24h} in last 24h
             </p>
           </CardContent>
         </Card>
@@ -67,10 +118,10 @@ export default function AdminOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-total-content">
-              {stats?.content?.total || 0}
+              {stats.content.total}
             </div>
             <p className="text-xs text-muted-foreground">
-              +{stats?.content?.new24h || 0} in last 24h
+              +{stats.content.new24h} in last 24h
             </p>
           </CardContent>
         </Card>
@@ -82,10 +133,10 @@ export default function AdminOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-total-revenue">
-              ${stats?.revenue?.total || 0}
+              ${stats.revenue.total}
             </div>
             <p className="text-xs text-muted-foreground">
-              +${stats?.revenue?.today || 0} today
+              +${stats.revenue.today} today
             </p>
           </CardContent>
         </Card>
@@ -97,10 +148,10 @@ export default function AdminOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-pending-moderation">
-              {stats?.moderation?.pending || 0}
+              {stats.moderation.pending}
             </div>
             <p className="text-xs text-muted-foreground">
-              {stats?.moderation?.reports || 0} reports
+              {stats.moderation.reports} reports
             </p>
           </CardContent>
         </Card>
@@ -115,7 +166,7 @@ export default function AdminOverview() {
           <CardContent>
             {growthLoading ? (
               <Skeleton className="h-64" />
-            ) : userGrowth && userGrowth.length > 0 ? (
+            ) : userGrowth.length > 0 ? (
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={userGrowth}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -140,7 +191,7 @@ export default function AdminOverview() {
           <CardContent>
             {trendLoading ? (
               <Skeleton className="h-64" />
-            ) : contentTrend && contentTrend.length > 0 ? (
+            ) : contentTrend.length > 0 ? (
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={contentTrend}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -171,7 +222,7 @@ export default function AdminOverview() {
                 <Skeleton key={i} className="h-12" />
               ))}
             </div>
-          ) : activityFeed && activityFeed.length > 0 ? (
+          ) : activityFeed.length > 0 ? (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -184,7 +235,7 @@ export default function AdminOverview() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {activityFeed.map((activity: any) => (
+                  {activityFeed.map((activity) => (
                     <TableRow key={activity.id} data-testid={`activity-${activity.id}`}>
                       <TableCell data-testid={`activity-admin-${activity.id}`}>
                         {activity.adminUsername || 'System'}

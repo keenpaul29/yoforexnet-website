@@ -18,50 +18,151 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Activity, Cpu, Database, Trash2 } from "lucide-react";
 
+interface SystemMetrics {
+  cpu: number;
+  memory: number;
+  diskIO: number;
+  network: number;
+}
+
+interface ResponseTimeDataPoint {
+  time: string;
+  responseTime: number;
+}
+
+interface ThroughputDataPoint {
+  time: string;
+  rps: number;
+}
+
+interface Alert {
+  id: string;
+  metricType: string;
+  condition: string;
+  threshold: number;
+  currentValue: number;
+  triggered: boolean;
+}
+
+interface AlertHistoryDataPoint {
+  date: string;
+  count: number;
+}
+
+interface SlowQuery {
+  query: string;
+  executionTime: number;
+  callCount: number;
+  lastRun: string;
+}
+
+interface DatabaseMetrics {
+  avgQueryTime: number;
+  activeConnections: number;
+  maxConnections: number;
+  poolUsage: number;
+}
+
+interface QueryHistogramDataPoint {
+  range: string;
+  count: number;
+}
+
+interface CacheStats {
+  hitRate: number;
+  hits: number;
+  misses: number;
+  size: number;
+  keyCount: number;
+}
+
+interface CachedKey {
+  key: string;
+  hits: number;
+  size: number;
+  ttl: number;
+}
+
 export default function Performance() {
   const { toast } = useToast();
   const [isSetAlertOpen, setIsSetAlertOpen] = useState(false);
   const [showClearCacheDialog, setShowClearCacheDialog] = useState(false);
 
-  const { data: systemMetrics, isLoading: metricsLoading } = useQuery({
+  const { data: systemMetricsRaw, isLoading: metricsLoading } = useQuery<SystemMetrics>({
     queryKey: ["/api/admin/performance/system-metrics"]
   });
 
-  const { data: responseTimeData, isLoading: responseTimeLoading } = useQuery({
+  const systemMetrics: SystemMetrics = systemMetricsRaw || {
+    cpu: 0,
+    memory: 0,
+    diskIO: 0,
+    network: 0
+  };
+
+  const { data: responseTimeDataRaw, isLoading: responseTimeLoading } = useQuery<ResponseTimeDataPoint[]>({
     queryKey: ["/api/admin/performance/response-time"]
   });
 
-  const { data: throughputData, isLoading: throughputLoading } = useQuery({
+  const responseTimeData: ResponseTimeDataPoint[] = Array.isArray(responseTimeDataRaw) ? responseTimeDataRaw : [];
+
+  const { data: throughputDataRaw, isLoading: throughputLoading } = useQuery<ThroughputDataPoint[]>({
     queryKey: ["/api/admin/performance/throughput"]
   });
 
-  const { data: alerts, isLoading: alertsLoading } = useQuery({
+  const throughputData: ThroughputDataPoint[] = Array.isArray(throughputDataRaw) ? throughputDataRaw : [];
+
+  const { data: alertsRaw, isLoading: alertsLoading } = useQuery<Alert[]>({
     queryKey: ["/api/admin/performance/alerts"]
   });
 
-  const { data: alertHistory, isLoading: alertHistoryLoading } = useQuery({
+  const alerts: Alert[] = Array.isArray(alertsRaw) ? alertsRaw : [];
+
+  const { data: alertHistoryRaw, isLoading: alertHistoryLoading } = useQuery<AlertHistoryDataPoint[]>({
     queryKey: ["/api/admin/performance/alert-history"]
   });
 
-  const { data: slowQueries, isLoading: slowQueriesLoading } = useQuery({
+  const alertHistory: AlertHistoryDataPoint[] = Array.isArray(alertHistoryRaw) ? alertHistoryRaw : [];
+
+  const { data: slowQueriesRaw, isLoading: slowQueriesLoading } = useQuery<SlowQuery[]>({
     queryKey: ["/api/admin/performance/slow-queries"]
   });
 
-  const { data: dbMetrics, isLoading: dbMetricsLoading } = useQuery({
+  const slowQueries: SlowQuery[] = Array.isArray(slowQueriesRaw) ? slowQueriesRaw : [];
+
+  const { data: dbMetricsRaw, isLoading: dbMetricsLoading } = useQuery<DatabaseMetrics>({
     queryKey: ["/api/admin/performance/database-metrics"]
   });
 
-  const { data: queryHistogram, isLoading: histogramLoading } = useQuery({
+  const dbMetrics: DatabaseMetrics = dbMetricsRaw || {
+    avgQueryTime: 0,
+    activeConnections: 0,
+    maxConnections: 0,
+    poolUsage: 0
+  };
+
+  const { data: queryHistogramRaw, isLoading: histogramLoading } = useQuery<QueryHistogramDataPoint[]>({
     queryKey: ["/api/admin/performance/query-histogram"]
   });
 
-  const { data: cacheStats, isLoading: cacheStatsLoading } = useQuery({
+  const queryHistogram: QueryHistogramDataPoint[] = Array.isArray(queryHistogramRaw) ? queryHistogramRaw : [];
+
+  const { data: cacheStatsRaw, isLoading: cacheStatsLoading } = useQuery<CacheStats>({
     queryKey: ["/api/admin/performance/cache-stats"]
   });
 
-  const { data: cachedKeys, isLoading: cachedKeysLoading } = useQuery({
+  const cacheStats: CacheStats = cacheStatsRaw || {
+    hitRate: 0,
+    hits: 0,
+    misses: 0,
+    size: 0,
+    keyCount: 0
+  };
+
+  const { data: cachedKeysRaw, isLoading: cachedKeysLoading } = useQuery<CachedKey[]>({
     queryKey: ["/api/admin/performance/cached-keys"]
   });
+
+  const cachedKeys: CachedKey[] = Array.isArray(cachedKeysRaw) ? cachedKeysRaw : [];
 
   const recordMetricMutation = useMutation({
     mutationFn: () => apiRequest("/api/admin/performance/record-metric", "POST"),
@@ -137,7 +238,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-cpu-usage">
-                      {systemMetrics?.cpu || 0}%
+                      {systemMetrics.cpu}%
                     </div>
                   </CardContent>
                 </Card>
@@ -147,7 +248,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-memory-usage">
-                      {systemMetrics?.memory || 0}%
+                      {systemMetrics.memory}%
                     </div>
                   </CardContent>
                 </Card>
@@ -157,7 +258,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-disk-io">
-                      {systemMetrics?.diskIO || 0} MB/s
+                      {systemMetrics.diskIO} MB/s
                     </div>
                   </CardContent>
                 </Card>
@@ -167,7 +268,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-network">
-                      {systemMetrics?.network || 0} MB/s
+                      {systemMetrics.network} MB/s
                     </div>
                   </CardContent>
                 </Card>
@@ -183,7 +284,7 @@ export default function Performance() {
               <CardContent>
                 {responseTimeLoading ? (
                   <Skeleton className="h-64" />
-                ) : responseTimeData && responseTimeData.length > 0 ? (
+                ) : responseTimeData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={250}>
                     <LineChart data={responseTimeData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -208,7 +309,7 @@ export default function Performance() {
               <CardContent>
                 {throughputLoading ? (
                   <Skeleton className="h-64" />
-                ) : throughputData && throughputData.length > 0 ? (
+                ) : throughputData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={250}>
                     <LineChart data={throughputData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -281,7 +382,7 @@ export default function Performance() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {alerts?.map((alert: any) => (
+                      {alerts.map((alert) => (
                         <TableRow key={alert.id}>
                           <TableCell className="font-medium">{alert.metricType}</TableCell>
                           <TableCell>{alert.condition}</TableCell>
@@ -294,7 +395,7 @@ export default function Performance() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!alerts || alerts.length === 0) && (
+                      {alerts.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                             No alerts configured
@@ -315,7 +416,7 @@ export default function Performance() {
             <CardContent>
               {alertHistoryLoading ? (
                 <Skeleton className="h-64" />
-              ) : alertHistory && alertHistory.length > 0 ? (
+              ) : alertHistory.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={alertHistory}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -349,7 +450,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-query-time">
-                      {dbMetrics?.avgQueryTime || 0}ms
+                      {dbMetrics.avgQueryTime}ms
                     </div>
                   </CardContent>
                 </Card>
@@ -359,7 +460,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-connections">
-                      {dbMetrics?.activeConnections || 0} / {dbMetrics?.maxConnections || 0}
+                      {dbMetrics.activeConnections} / {dbMetrics.maxConnections}
                     </div>
                   </CardContent>
                 </Card>
@@ -369,7 +470,7 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-pool-usage">
-                      {dbMetrics?.poolUsage || 0}%
+                      {dbMetrics.poolUsage}%
                     </div>
                   </CardContent>
                 </Card>
@@ -398,7 +499,7 @@ export default function Performance() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {slowQueries?.map((query: any, index: number) => (
+                      {slowQueries.map((query, index) => (
                         <TableRow key={index}>
                           <TableCell className="font-mono text-xs max-w-md truncate">{query.query}</TableCell>
                           <TableCell>
@@ -408,7 +509,7 @@ export default function Performance() {
                           <TableCell>{formatDistanceToNow(new Date(query.lastRun), { addSuffix: true })}</TableCell>
                         </TableRow>
                       ))}
-                      {(!slowQueries || slowQueries.length === 0) && (
+                      {slowQueries.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                             No slow queries detected
@@ -429,7 +530,7 @@ export default function Performance() {
             <CardContent>
               {histogramLoading ? (
                 <Skeleton className="h-64" />
-              ) : queryHistogram && queryHistogram.length > 0 ? (
+              ) : queryHistogram.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={queryHistogram}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -472,10 +573,10 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-hit-rate">
-                      {cacheStats?.hitRate || 0}%
+                      {cacheStats.hitRate}%
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {cacheStats?.hits || 0} hits / {cacheStats?.misses || 0} misses
+                      {cacheStats.hits} hits / {cacheStats.misses} misses
                     </p>
                   </CardContent>
                 </Card>
@@ -485,10 +586,10 @@ export default function Performance() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-cache-size">
-                      {cacheStats?.size || 0} MB
+                      {cacheStats.size} MB
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {cacheStats?.keyCount || 0} keys stored
+                      {cacheStats.keyCount} keys stored
                     </p>
                   </CardContent>
                 </Card>
@@ -517,7 +618,7 @@ export default function Performance() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {cachedKeys?.map((key: any, index: number) => (
+                      {cachedKeys.map((key, index) => (
                         <TableRow key={index}>
                           <TableCell className="font-mono text-xs max-w-md truncate">{key.key}</TableCell>
                           <TableCell>
@@ -527,7 +628,7 @@ export default function Performance() {
                           <TableCell>{key.ttl}s</TableCell>
                         </TableRow>
                       ))}
-                      {(!cachedKeys || cachedKeys.length === 0) && (
+                      {cachedKeys.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                             No cached keys
@@ -540,28 +641,28 @@ export default function Performance() {
               )}
             </CardContent>
           </Card>
-
-          <AlertDialog open={showClearCacheDialog} onOpenChange={setShowClearCacheDialog}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Clear Cache</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to clear all cached data? This may temporarily impact performance.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel data-testid="button-cancel-clear">Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => clearCacheMutation.mutate()}
-                  data-testid="button-confirm-clear"
-                >
-                  Clear Cache
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </TabsContent>
       </Tabs>
+
+      <AlertDialog open={showClearCacheDialog} onOpenChange={setShowClearCacheDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear Cache</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to clear the entire cache? This action cannot be undone and may temporarily affect performance.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => clearCacheMutation.mutate()}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Clear Cache
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

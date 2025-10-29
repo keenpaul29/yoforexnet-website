@@ -19,30 +19,94 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Badge } from "@/components/ui/badge";
 
+interface GeneralSettings {
+  siteName: string;
+  siteDescription: string;
+  maintenanceMode: boolean;
+  registrationEnabled: boolean;
+}
+
+interface RechargePackage {
+  id: number;
+  name: string;
+  coins: number;
+  price: number;
+  bonus: number;
+}
+
+interface CoinSettings {
+  usdToCoinsRate: number;
+  packages: RechargePackage[];
+  minWithdrawal: number;
+  withdrawalFee: number;
+}
+
+interface EmailTemplate {
+  id: number;
+  name: string;
+  subject: string;
+  type: string;
+}
+
+interface FeatureFlag {
+  id: number;
+  name: string;
+  description: string;
+  enabled: boolean;
+  rolloutPercentage: number;
+}
+
+interface AdminRole {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+}
+
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("general");
   const [searchTemplate, setSearchTemplate] = useState("");
   const { toast } = useToast();
 
-  const { data: generalSettings, isLoading: generalLoading } = useQuery({
+  const { data: generalSettingsRaw, isLoading: generalLoading } = useQuery<GeneralSettings>({
     queryKey: ["/api/admin/settings/general"]
   });
 
-  const { data: coinSettings, isLoading: coinLoading } = useQuery({
+  const generalSettings: GeneralSettings = generalSettingsRaw || {
+    siteName: 'YoForex',
+    siteDescription: '',
+    maintenanceMode: false,
+    registrationEnabled: true
+  };
+
+  const { data: coinSettingsRaw, isLoading: coinLoading } = useQuery<CoinSettings>({
     queryKey: ["/api/admin/settings/coin-economy"]
   });
 
-  const { data: emailTemplates, isLoading: templatesLoading } = useQuery({
+  const coinSettings: CoinSettings = coinSettingsRaw || {
+    usdToCoinsRate: 100,
+    packages: [],
+    minWithdrawal: 1000,
+    withdrawalFee: 5
+  };
+
+  const { data: emailTemplatesRaw, isLoading: templatesLoading } = useQuery<EmailTemplate[]>({
     queryKey: ["/api/admin/settings/email-templates", { search: searchTemplate }]
   });
 
-  const { data: featureFlags, isLoading: flagsLoading } = useQuery({
+  const emailTemplates: EmailTemplate[] = Array.isArray(emailTemplatesRaw) ? emailTemplatesRaw : [];
+
+  const { data: featureFlagsRaw, isLoading: flagsLoading } = useQuery<FeatureFlag[]>({
     queryKey: ["/api/admin/settings/feature-flags"]
   });
 
-  const { data: adminRoles, isLoading: rolesLoading } = useQuery({
+  const featureFlags: FeatureFlag[] = Array.isArray(featureFlagsRaw) ? featureFlagsRaw : [];
+
+  const { data: adminRolesRaw, isLoading: rolesLoading } = useQuery<AdminRole[]>({
     queryKey: ["/api/admin/settings/admin-roles"]
   });
+
+  const adminRoles: AdminRole[] = Array.isArray(adminRolesRaw) ? adminRolesRaw : [];
 
   const updateGeneralMutation = useMutation({
     mutationFn: async (settings: any) => {
@@ -123,7 +187,7 @@ export default function Settings() {
                   <Label htmlFor="site-name">Site Name</Label>
                   <Input
                     id="site-name"
-                    defaultValue={generalSettings?.siteName || 'YoForex'}
+                    defaultValue={generalSettings.siteName}
                     data-testid="input-site-name"
                   />
                 </div>
@@ -132,7 +196,7 @@ export default function Settings() {
                   <Label htmlFor="site-description">Site Description</Label>
                   <Textarea
                     id="site-description"
-                    defaultValue={generalSettings?.siteDescription || ''}
+                    defaultValue={generalSettings.siteDescription}
                     data-testid="textarea-site-description"
                   />
                 </div>
@@ -144,7 +208,7 @@ export default function Settings() {
                   </div>
                   <Switch
                     id="maintenance-mode"
-                    defaultChecked={generalSettings?.maintenanceMode || false}
+                    defaultChecked={generalSettings.maintenanceMode}
                     data-testid="switch-maintenance-mode"
                   />
                 </div>
@@ -156,7 +220,7 @@ export default function Settings() {
                   </div>
                   <Switch
                     id="registration-enabled"
-                    defaultChecked={generalSettings?.registrationEnabled !== false}
+                    defaultChecked={generalSettings.registrationEnabled}
                     data-testid="switch-registration-enabled"
                   />
                 </div>
@@ -189,7 +253,7 @@ export default function Settings() {
                     <Input
                       id="usd-to-coins"
                       type="number"
-                      defaultValue={coinSettings?.usdToCoinsRate || 100}
+                      defaultValue={coinSettings.usdToCoinsRate}
                       data-testid="input-usd-to-coins"
                     />
                     <p className="text-sm text-muted-foreground">1 USD = X coins</p>
@@ -215,13 +279,13 @@ export default function Settings() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {coinSettings?.packages && coinSettings.packages.length > 0 ? (
-                          coinSettings.packages.map((pkg: any) => (
+                        {coinSettings.packages.length > 0 ? (
+                          coinSettings.packages.map((pkg) => (
                             <TableRow key={pkg.id} data-testid={`package-${pkg.id}`}>
                               <TableCell>{pkg.name}</TableCell>
                               <TableCell>{pkg.coins}</TableCell>
                               <TableCell>${pkg.price}</TableCell>
-                              <TableCell>{pkg.bonus || 0}%</TableCell>
+                              <TableCell>{pkg.bonus}%</TableCell>
                               <TableCell>
                                 <Button size="sm" variant="outline" data-testid={`button-edit-package-${pkg.id}`}>
                                   Edit
@@ -252,7 +316,7 @@ export default function Settings() {
                     <Input
                       id="min-withdrawal"
                       type="number"
-                      defaultValue={coinSettings?.minWithdrawal || 1000}
+                      defaultValue={coinSettings.minWithdrawal}
                       data-testid="input-min-withdrawal"
                     />
                   </div>
@@ -261,7 +325,7 @@ export default function Settings() {
                     <Input
                       id="withdrawal-fee"
                       type="number"
-                      defaultValue={coinSettings?.withdrawalFee || 5}
+                      defaultValue={coinSettings.withdrawalFee}
                       data-testid="input-withdrawal-fee"
                     />
                   </div>
@@ -307,8 +371,8 @@ export default function Settings() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {emailTemplates && emailTemplates.length > 0 ? (
-                        emailTemplates.map((template: any) => (
+                      {emailTemplates.length > 0 ? (
+                        emailTemplates.map((template) => (
                           <TableRow key={template.id} data-testid={`template-${template.id}`}>
                             <TableCell>{template.name}</TableCell>
                             <TableCell>{template.subject}</TableCell>
@@ -364,8 +428,8 @@ export default function Settings() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {featureFlags && featureFlags.length > 0 ? (
-                        featureFlags.map((flag: any) => (
+                      {featureFlags.length > 0 ? (
+                        featureFlags.map((flag) => (
                           <TableRow key={flag.id} data-testid={`flag-${flag.id}`}>
                             <TableCell>{flag.name}</TableCell>
                             <TableCell>{flag.description}</TableCell>
@@ -381,7 +445,7 @@ export default function Settings() {
                             <TableCell>
                               <div className="w-24">
                                 <Slider
-                                  defaultValue={[flag.rolloutPercentage || 100]}
+                                  defaultValue={[flag.rolloutPercentage]}
                                   max={100}
                                   step={1}
                                   data-testid={`slider-rollout-${flag.id}`}
@@ -431,8 +495,8 @@ export default function Settings() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {adminRoles && adminRoles.length > 0 ? (
-                        adminRoles.map((admin: any) => (
+                      {adminRoles.length > 0 ? (
+                        adminRoles.map((admin) => (
                           <TableRow key={admin.id} data-testid={`admin-${admin.id}`}>
                             <TableCell>{admin.username}</TableCell>
                             <TableCell>{admin.email}</TableCell>
