@@ -1894,6 +1894,10 @@ body {
   height: 100svh;
 }
 
+.h-\[400px\] {
+  height: 400px;
+}
+
 .max-h-80 {
   max-height: 20rem;
 }
@@ -2462,8 +2466,16 @@ body {
   resize: none;
 }
 
+.list-inside {
+  list-style-position: inside;
+}
+
 .list-none {
   list-style-type: none;
+}
+
+.list-disc {
+  list-style-type: disc;
 }
 
 .grid-cols-1 {
