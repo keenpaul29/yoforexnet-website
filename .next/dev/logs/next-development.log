@@ -1,25 +1,16 @@
-[00:00:01.169] Server  LOG      ✓ Ready in 865ms
-[00:00:01.172] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:04.003] Server  LOG      ✓ Ready in 3.6s
+[00:00:04.005] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:04.223] Server  LOG      ○ Compiling / ...
-[00:00:09.299] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.318] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.319] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:09.322] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.323] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:09.325] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.325] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:09.420] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.496] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.497] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:09.498] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.498] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:09.501] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:09.501] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:10.501] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:10.548] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:13.412] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[00:00:08.120] Server  LOG      ○ Compiling / ...
+[00:00:11.812] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.830] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.831] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:11.834] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.835] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:11.836] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.837] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:11.917] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:16.085] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -63,6 +54,3 @@ It can also happen if the client has a browser extension installed which messes 
                           ...
                   ...
 
-[00:03:38.714] Server  LOG      ○ Compiling /admin ...
-[00:03:42.158] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:03:57.256] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
