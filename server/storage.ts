@@ -104,6 +104,7 @@ import {
   userActivity,
   coinTransactions,
   rechargeOrders,
+  subscriptions,
   withdrawalRequests,
   feedback,
   content,
@@ -5166,8 +5167,8 @@ export class MemStorage implements IStorage {
   // PHASE 3: Finance Management (9 methods) - MemStorage Stubs
   // ============================================================================
 
-  async getTotalRevenue(period?: string): Promise<{ total: number; change: number; trend: 'up' | 'down' }> {
-    return { total: 0, change: 0, trend: 'up' };
+  async getTotalRevenue(period?: string): Promise<{ totalRevenue: number; change: number }> {
+    return { totalRevenue: 0, change: 0 };
   }
 
   async getRevenueTrend(days: number): Promise<Array<{ date: string; revenue: number }>> {
@@ -5188,8 +5189,8 @@ export class MemStorage implements IStorage {
     };
   }
 
-  async getRevenuePeriod(period: string): Promise<number> {
-    return 0;
+  async getRevenuePeriod(period: 'today' | 'week' | 'month' | 'year' | 'all'): Promise<{ totalRevenue: number; count: number }> {
+    return { totalRevenue: 0, count: 0 };
   }
 
   async getAllWithdrawals(filters?: any): Promise<{ items: any[]; total: number }> {
