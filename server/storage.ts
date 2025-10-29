@@ -757,17 +757,17 @@ export interface IStorage {
   /**
    * Approve withdrawal request
    */
-  approveWithdrawal(withdrawalId: number, approvedBy: string): Promise<void>;
+  approveWithdrawal(withdrawalId: string, approvedBy: string): Promise<void>;
   
   /**
    * Reject withdrawal request
    */
-  rejectWithdrawal(withdrawalId: number, reason: string, rejectedBy: string): Promise<void>;
+  rejectWithdrawal(withdrawalId: string, reason: string, rejectedBy: string): Promise<void>;
   
   /**
    * Process withdrawal (mark as completed)
    */
-  processWithdrawal(withdrawalId: number, processedBy: string, transactionHash?: string): Promise<void>;
+  processWithdrawal(withdrawalId: string, processedBy: string, transactionHash?: string): Promise<void>;
   
   /**
    * Get withdrawal statistics
@@ -3003,6 +3003,29 @@ export class MemStorage implements IStorage {
     throw new Error("MemStorage does not support messaging operations");
   }
 
+  async searchMessages(userId: string, query: string, filterUserId?: string): Promise<Array<{
+    id: string;
+    conversationId: string;
+    senderId: string;
+    senderUsername: string;
+    text: string;
+    timestamp: Date;
+  }>> {
+    throw new Error("MemStorage does not support messaging operations");
+  }
+
+  async addMessageReaction(messageId: string, userId: string, emoji: string): Promise<void> {
+    throw new Error("MemStorage does not support messaging operations");
+  }
+
+  async removeMessageReaction(messageId: string, userId: string, emoji: string): Promise<void> {
+    throw new Error("MemStorage does not support messaging operations");
+  }
+
+  async getMessageReactions(messageId: string): Promise<Array<{ emoji: string; count: number; userIds: string[] }>> {
+    throw new Error("MemStorage does not support messaging operations");
+  }
+
   // Dashboard Preferences (Stubs - MemStorage does not support dashboard preferences)
   async getDashboardPreferences(userId: string): Promise<DashboardPreferences | null> {
     throw new Error("MemStorage does not support dashboard preferences");
@@ -3379,15 +3402,15 @@ export class MemStorage implements IStorage {
     return [];
   }
 
-  async approveWithdrawal(withdrawalId: number, approvedBy: string): Promise<void> {
+  async approveWithdrawal(withdrawalId: string, approvedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async rejectWithdrawal(withdrawalId: number, reason: string, rejectedBy: string): Promise<void> {
+  async rejectWithdrawal(withdrawalId: string, reason: string, rejectedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async processWithdrawal(withdrawalId: number, processedBy: string, transactionHash?: string): Promise<void> {
+  async processWithdrawal(withdrawalId: string, processedBy: string, transactionHash?: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 

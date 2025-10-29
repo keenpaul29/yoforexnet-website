@@ -131,3 +131,163 @@ https://react.dev/link/hydration-mismatch
                 ...
               ...
 
+[00:06:32.985] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:32.985] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:32.988] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:32.988] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:32.989] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:32.990] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:42.378] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:42.875] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LoadingBoundary name="/" loading={null}>
+      <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+        <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="page.tsx">
+                  <SegmentTrieNode>
+                  <HomePage>
+                    <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                      <div className="min-h-scre...">
+                        <Header>
+                        <StatsBar>
+                        <main className="container ...">
+                          <div className="grid grid-...">
+                            <aside>
+                            <div className="lg:col-spa...">
+                              <section>
+                              <section>
+                              <section>
+                                <div>
+                                <div className="space-y-2 ...">
+-                                 <a
+-                                   data-testid="link-thread-eab533f8-4895-453b-b302-7410861db0ba"
+-                                   href="/thread/signal-services-are-they-worth-it"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-535a7da6-8f5d-434e-9d2f-01ca881e86cb"
+-                                   href="/thread/vps-in-singapore-vs-london-latency-comparison"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-81e16228-6a6e-431e-b48a-7c7b0e14076f"
+-                                   href="/thread/trend-following-on-h4-which-pairs-work-best"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-39140584-e353-4aed-a5fe-45d876539d0b"
+-                                   href="/thread/mql5-programming-where-to-start"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-f0d24926-8128-4f79-bddf-77cb60ef3a83"
+-                                   href="/thread/eurusd-scalping-best-indicators"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-733910b1-e164-41f2-a144-15efb859d16d"
+-                                   href="/thread/beginner-question-what-is-leverage"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-1853f20b-eb1f-424f-ae80-7b4ad9e5b9f3"
+-                                   href="/thread/python-bot-vs-mql5-ea-which-is-faster"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-bd452157-03bf-46a2-a1f6-6594aba6f13c"
+-                                   href="/thread/hedging-strategy-how-to-calculate-position-sizes"
+-                                 >
+                            ...
+                        ...
+                ...
+              ...
+
+[00:07:06.020] Server  LOG      ○ Compiling /thread/[slug] ...
+[00:07:07.753] Server  ERROR   Failed to fetch /api/threads/slug/signal-services-are-they-worth-it: 404 "Not Found"
+[00:07:07.753] Server  ERROR   Failed to fetch /api/threads/slug/signal-services-are-they-worth-it: 404 "Not Found"
+[00:07:18.186] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:07:18.186] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:07:18.188] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:07:18.190] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:07:18.191] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:07:18.191] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:07:22.254] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LoadingBoundary name="/" loading={null}>
+      <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+        <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="page.tsx">
+                  <SegmentTrieNode>
+                  <HomePage>
+                    <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                      <div className="min-h-scre...">
+                        <Header>
+                        <StatsBar>
+                        <main className="container ...">
+                          <div className="grid grid-...">
+                            <aside>
+                            <div className="lg:col-spa...">
+                              <section>
+                              <section>
+                              <section>
+                                <div>
+                                <div className="space-y-2 ...">
+-                                 <a
+-                                   data-testid="link-thread-eab533f8-4895-453b-b302-7410861db0ba"
+-                                   href="/thread/signal-services-are-they-worth-it"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-535a7da6-8f5d-434e-9d2f-01ca881e86cb"
+-                                   href="/thread/vps-in-singapore-vs-london-latency-comparison"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-81e16228-6a6e-431e-b48a-7c7b0e14076f"
+-                                   href="/thread/trend-following-on-h4-which-pairs-work-best"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-39140584-e353-4aed-a5fe-45d876539d0b"
+-                                   href="/thread/mql5-programming-where-to-start"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-f0d24926-8128-4f79-bddf-77cb60ef3a83"
+-                                   href="/thread/eurusd-scalping-best-indicators"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-733910b1-e164-41f2-a144-15efb859d16d"
+-                                   href="/thread/beginner-question-what-is-leverage"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-1853f20b-eb1f-424f-ae80-7b4ad9e5b9f3"
+-                                   href="/thread/python-bot-vs-mql5-ea-which-is-faster"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-bd452157-03bf-46a2-a1f6-6594aba6f13c"
+-                                   href="/thread/hedging-strategy-how-to-calculate-position-sizes"
+-                                 >
+                            ...
+                        ...
+                ...
+              ...
+
