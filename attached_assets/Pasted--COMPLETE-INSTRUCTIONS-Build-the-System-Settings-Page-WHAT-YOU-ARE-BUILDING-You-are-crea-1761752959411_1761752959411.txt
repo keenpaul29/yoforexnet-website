@@ -1,0 +1,660 @@
+## COMPLETE INSTRUCTIONS: Build the System Settings Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating a System Settings page for YoForex forum admin panel. This is the central configuration hub where admins control all forum settings including general site settings, coin economy, email templates, feature flags, and admin role management.
+
+***
+
+## PART 1: BACKEND (Server Side - Settings Management)
+
+### What the Backend Does
+The backend stores and manages all system configurations, validates setting changes, and provides APIs to read/update settings across different categories.
+
+### Create These Files:
+
+**File 1: System Settings Routes (routes/settings.js)**
+
+Create URLs for settings management:
+
+1. `/api/settings/general` - Get general settings
+2. `/api/settings/general/update` - Update general settings
+3. `/api/settings/coin-economy` - Get coin economy settings
+4. `/api/settings/coin-economy/update` - Update coin settings
+5. `/api/settings/email-templates` - Get all email templates
+6. `/api/settings/email-templates/:id` - Get single template
+7. `/api/settings/email-templates/:id/update` - Update template
+8. `/api/settings/feature-flags` - Get all feature flags
+9. `/api/settings/feature-flags/update` - Toggle feature flags
+10. `/api/settings/admin-roles` - Get all admin roles
+11. `/api/settings/admin-roles/create` - Create new role
+12. `/api/settings/admin-roles/:id/update` - Update role permissions
+13. `/api/settings/admin-roles/:id/delete` - Delete role
+14. `/api/settings/backup` - Export all settings
+15. `/api/settings/restore` - Import/restore settings
+
+**File 2: Settings Service (services/settingsService.js)**
+
+Functions that handle settings:
+
+**Function 1: Get General Settings**
+- Query `settings` table
+- Return:
+  - Site Name (e.g., "YoForex")
+  - Site Description/Tagline
+  - Site URL
+  - Site Logo URL
+  - Favicon URL
+  - Contact Email
+  - Support Email
+  - Timezone
+  - Language (default)
+  - Date Format
+  - Time Format
+  - Maintenance Mode (on/off)
+  - Registration Enabled (on/off)
+  - Email Verification Required (on/off)
+  - Terms of Service URL
+  - Privacy Policy URL
+
+**Function 2: Update General Settings**
+- Receive settings object
+- Validate each field:
+  - Site name not empty
+  - Email format valid
+  - URL format valid
+- Update settings in database
+- Clear cache (settings are cached)
+- Log changes in admin_actions
+- Return success
+
+**Function 3: Get Coin Economy Settings**
+- Query coin-related settings:
+  - Coin Name (e.g., "Gold Coins", "Forum Coins")
+  - Coin Symbol (e.g., "🪙", "💰")
+  - Starting Balance (new users get X coins)
+  - Earn Rates:
+    - Coins per post
+    - Coins per thread
+    - Coins per like received
+    - Coins per login (daily)
+    - Coins per referral
+  - Purchase Rates (real money → coins):
+    - 100 coins = $1
+    - 1000 coins = $9
+    - 5000 coins = $40
+  - Withdrawal Settings:
+    - Minimum withdrawal amount
+    - Withdrawal fee percentage
+    - Withdrawal processing time
+  - Coin Spending:
+    - Cost to boost thread
+    - Cost to send gift
+    - Cost to unlock premium content
+
+**Function 4: Update Coin Economy**
+- Receive coin settings
+- Validate:
+  - Rates must be positive numbers
+  - Percentages between 0-100
+- Update database
+- Recalculate any affected transactions
+- Return success
+
+**Function 5: Get Email Templates**
+- Query `email_templates` table
+- For each template include:
+  - Template ID
+  - Template Name (e.g., "Welcome Email", "Password Reset")
+  - Subject Line
+  - Email Body (HTML + Plain Text)
+  - Variables available ({{username}}, {{link}}, etc.)
+  - Last modified
+  - Preview available
+- Return all templates
+
+**Function 6: Update Email Template**
+- Find template by ID
+- Update subject and body
+- Validate HTML (no script tags)
+- Check variables are properly formatted
+- Set updated_at timestamp
+- Return updated template
+
+**Function 7: Get Feature Flags**
+- Query `feature_flags` table
+- For each feature:
+  - Feature Name
+  - Feature Key (unique identifier)
+  - Description
+  - Enabled (on/off)
+  - Rollout Percentage (0-100%)
+  - Target Users (all, premium, beta testers)
+  - Launch Date
+- Return all flags
+
+**Function 8: Toggle Feature Flags**
+- Receive flag updates
+- Update enabled status
+- Update rollout percentage if changed
+- Log flag changes
+- Return updated flags
+
+**Function 9: Get Admin Roles**
+- Query `admin_roles` table
+- For each role:
+  - Role ID
+  - Role Name (Admin, Moderator, Editor, etc.)
+  - Role Description
+  - Permissions Array:
+    - Can manage users
+    - Can moderate content
+    - Can manage finance
+    - Can edit settings
+    - Can view analytics
+    - (and many more)
+  - Number of users with this role
+  - Created date
+- Return all roles
+
+**Function 10: Create Admin Role**
+- Insert new role with:
+  - Role name
+  - Description
+  - Permissions array
+- Set created_by to admin ID
+- Return new role
+
+**Function 11: Update Admin Role**
+- Find role by ID
+- Update name, description, permissions
+- Log changes
+- Update all users with this role (recalculate permissions)
+- Return updated role
+
+**Function 12: Delete Admin Role**
+- Find role by ID
+- Check if any users have this role
+- If yes, prevent deletion or reassign users
+- Delete role from database
+- Log deletion
+- Return success
+
+---
+
+## PART 2: FRONTEND (Display Side - Settings Interface)
+
+### What the Frontend Does
+Shows organized settings interface with tabs, forms, toggles, and save functionality.
+
+### Create These Files:
+
+**File 1: Main System Settings Page (app/admin/settings/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "System Settings"[1]
+
+**Section 2: Five Category Tabs**[1]
+
+Tab 1: **General** (default active)[1]
+- Basic forum settings
+
+Tab 2: **Coin Economy**[1]
+- Coin system configuration
+
+Tab 3: **Email Templates**[1]
+- Email template editor
+
+Tab 4: **Feature Flags**[1]
+- Toggle new features
+
+Tab 5: **Admin Roles**[1]
+- Manage admin permissions
+
+***
+
+## GENERAL SETTINGS TAB CONTENT[1]
+
+**Section 1: Tab Header**
+- Title: "General Settings"[1]
+
+**Section 2: Settings Form**
+
+Form with these fields:
+
+**Site Identity:**
+- **Site Name**[1]
+  - Label: "Site Name"
+  - Text input
+  - Current value: "YoForex"[1]
+  - Help text: "Your forum's display name"
+
+- **Site Description**[1]
+  - Label: "Site Description"
+  - Text area (multiple lines)[1]
+  - Help text: "Brief description for SEO and social media"
+
+- **Site URL**
+  - Text input
+  - Example: "https://yoforex.com"
+  - Validation: Must be valid URL
+
+- **Site Logo**
+  - File upload
+  - Current logo preview (if exists)
+  - Accepted formats: PNG, JPG, SVG
+  - Max size: 2MB
+
+**Contact Information:**
+- **Contact Email**
+  - Text input
+  - Validation: Valid email format
+  
+- **Support Email**
+  - Text input
+  - For user support inquiries
+
+**Localization:**
+- **Timezone**
+  - Dropdown
+  - Options: All world timezones
+  - Default: UTC
+
+- **Default Language**
+  - Dropdown
+  - Options: English, Spanish, French, etc.
+
+**Site Behavior:**
+- **Maintenance Mode**[1]
+  - Toggle switch (on/off)[1]
+  - Label: "Enable site maintenance mode"
+  - Help text: "Site will show maintenance message to visitors"
+  - Currently OFF[1]
+
+- **Registration Enabled**[1]
+  - Toggle switch (on/off)[1]
+  - Label: "Allow new user registrations"
+  - Help text: "Turn off to prevent new signups"
+  - Currently ON[1]
+
+- **Email Verification Required**
+  - Toggle switch
+  - Label: "Require email verification for new users"
+
+**Legal Pages:**
+- **Terms of Service URL**
+  - Text input
+  
+- **Privacy Policy URL**
+  - Text input
+
+**Section 3: Save Button**[1]
+- Blue button: "Save Changes"[1]
+- Positioned at bottom left
+- Shows success toast notification after save
+
+***
+
+## COIN ECONOMY TAB CONTENT
+
+When "Coin Economy" tab is selected:
+
+**Section 1: Basic Coin Settings**
+
+- **Coin Name**
+  - Text input
+  - Default: "Gold Coins"
+
+- **Coin Symbol**
+  - Text input or emoji picker
+  - Default: "🪙"
+
+- **Starting Balance**
+  - Number input
+  - Default: 100
+  - Help text: "Coins given to new users"
+
+**Section 2: Earning Rates**
+
+Card showing earning opportunities:
+
+- **Per Post Created**
+  - Number input: X coins
+  - Default: 5 coins
+
+- **Per Thread Created**
+  - Number input: X coins
+  - Default: 10 coins
+
+- **Per Like Received**
+  - Number input: X coins
+  - Default: 1 coin
+
+- **Daily Login Bonus**
+  - Number input: X coins
+  - Default: 10 coins
+
+- **Per Referral**
+  - Number input: X coins
+  - Default: 50 coins
+
+**Section 3: Purchase Rates**
+
+Table showing coin packages:
+
+| Package | Coins | Price |
+|---------|-------|-------|
+| Small   | 100   | $1.00 |
+| Medium  | 1,000 | $9.00 |
+| Large   | 5,000 | $40.00|
+
+- Editable cells
+- Add/Remove package buttons
+
+**Section 4: Withdrawal Settings**
+
+- **Minimum Withdrawal**
+  - Number input
+  - Example: 1000 coins
+
+- **Withdrawal Fee**
+  - Number input (percentage)
+  - Example: 5%
+
+- **Processing Time**
+  - Dropdown: Instant, 24 hours, 48 hours, 7 days
+
+**Section 5: Spending Options**
+
+- **Boost Thread Cost**
+  - Number input: X coins
+  
+- **Send Gift Cost**
+  - Number input: X coins
+
+- **Unlock Premium Content**
+  - Number input: X coins
+
+**Save Changes button at bottom**
+
+***
+
+## EMAIL TEMPLATES TAB CONTENT
+
+When "Email Templates" tab is selected:
+
+**Section 1: Template List**
+
+Left sidebar showing template names:
+- Welcome Email
+- Email Verification
+- Password Reset
+- New Reply Notification
+- Payment Confirmation
+- Withdrawal Approved
+- Account Suspended
+- Weekly Digest
+
+Click template to edit on right side.
+
+**Section 2: Template Editor**
+
+When template selected, show:
+
+- **Template Name**
+  - Read-only display
+
+- **Subject Line**
+  - Text input
+  - Variables: {{username}}, {{siteName}}
+  - Example: "Welcome to {{siteName}}, {{username}}!"
+
+- **Email Body**
+  - Rich text editor (HTML)
+  - Variables available list shown
+  - Format toolbar (bold, italic, link, image)
+  - Preview button
+
+- **Preview**
+  - Button: "Preview Email"
+  - Opens modal showing rendered email
+
+- **Variables Available:**
+  - {{username}}
+  - {{userEmail}}
+  - {{siteName}}
+  - {{siteUrl}}
+  - {{actionUrl}}
+  - {{date}}
+  - (context-specific variables)
+
+**Save Template button**
+
+***
+
+## FEATURE FLAGS TAB CONTENT
+
+When "Feature Flags" tab is selected:
+
+**Section 1: Feature Flags List**
+
+Table showing all features:
+
+Columns:
+- **Feature Name**: Display name
+- **Description**: What it does
+- **Enabled**: Toggle switch
+- **Rollout %**: Slider (0-100%)
+- **Target**: Dropdown (All Users, Premium, Beta)
+- **Actions**: Edit button
+
+**Example Features:**
+- Dark Mode Theme
+- AI Chat Assistant
+- Video Uploads
+- Cryptocurrency Payments
+- Live Chat Support
+- Mobile App API
+- Advanced Analytics
+- Social Login (Google, Facebook)
+
+**Section 2: Add New Feature Flag**
+
+Button: "+ Add Feature Flag"
+Opens modal with:
+- Feature Name
+- Feature Key (slug)
+- Description
+- Enable toggle
+- Rollout percentage
+- Target audience
+
+**Save All Flags button**
+
+***
+
+## ADMIN ROLES TAB CONTENT
+
+When "Admin Roles" tab is selected:
+
+**Section 1: Roles List**
+
+Cards showing each role:
+
+**Super Admin Role Card:**
+- Role Name: "Super Admin"
+- Description: "Full access to all features"
+- Users with role: 2
+- Permissions: Full Access badge
+- Actions: Edit (cannot delete super admin)
+
+**Moderator Role Card:**
+- Role Name: "Moderator"
+- Description: "Can moderate content and manage users"
+- Users with role: 5
+- Permissions: List of granted permissions
+- Actions: Edit, Delete
+
+**Editor Role Card:**
+- Role Name: "Editor"
+- Description: "Can manage content and media"
+- Users with role: 3
+- Permissions badges
+- Actions: Edit, Delete
+
+**Section 2: Create Role Button**
+
+Button: "+ Create New Role"
+Opens role creation modal
+
+**Section 3: Edit Role Modal**
+
+When editing role:
+- Role Name (text input)
+- Role Description (text area)
+- Permissions (organized checkboxes):
+  
+  **User Management:**
+  - View Users
+  - Edit Users
+  - Ban Users
+  - Delete Users
+  
+  **Content Management:**
+  - View Content
+  - Edit Content
+  - Delete Content
+  - Moderate Content
+  
+  **Financial:**
+  - View Transactions
+  - Process Withdrawals
+  - Manage Subscriptions
+  
+  **Settings:**
+  - Edit Settings
+  - Manage Roles
+  
+  **Analytics:**
+  - View Analytics
+  - Export Reports
+
+- Save Role button
+- Delete Role button (if not default role)
+
+***
+
+## PART 3: ADDITIONAL FEATURES
+
+### Settings Search:
+
+**Global Settings Search:**
+- Search box at top of page
+- Search across all settings
+- Results show which tab contains setting
+- Click result to navigate to that setting
+
+### Settings Backup/Restore:
+
+**Backup Settings:**
+- Button: "Export Settings"
+- Downloads JSON file with all settings
+- Includes timestamp in filename
+
+**Restore Settings:**
+- Button: "Import Settings"
+- Upload JSON file
+- Preview changes before applying
+- Confirm restoration
+
+### Settings History:
+
+**Change Log:**
+- View history of setting changes
+- Shows: What changed, who changed it, when
+- Revert to previous setting value
+- Audit trail for compliance
+
+***
+
+## PART 4: VALIDATION & ERROR HANDLING
+
+### Form Validation:
+
+**Client-Side:**
+- Real-time validation as user types
+- Show red border on invalid fields
+- Display error message below field
+- Prevent save if validation errors
+
+**Server-Side:**
+- Validate all inputs on backend
+- Return specific error messages
+- Sanitize inputs to prevent XSS
+- Check permissions before allowing changes
+
+### Error Messages:
+
+**Examples:**
+- "Site name cannot be empty"
+- "Invalid email format"
+- "URL must start with https://"
+- "Coin amounts must be positive numbers"
+- "Cannot delete role with active users"
+
+---
+
+## PART 5: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Tabs scroll horizontally
+- Forms stack vertically
+- Full-width inputs
+- Toggle switches prominent
+- Save button fixed at bottom
+
+### On Tablets:
+- Two-column form layout
+- Compact spacing
+- All tabs accessible
+
+### On Computers:
+- Full form layout[1]
+- Side-by-side sections
+- All features visible
+- Plenty of whitespace
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See five tabs: General, Coin Economy, Email Templates, Feature Flags, Admin Roles[1]
+✅ View General Settings form[1]
+✅ Edit site name ("YoForex")[1]
+✅ Edit site description (large text area)[1]
+✅ Toggle maintenance mode (ON/OFF switch)[1]
+✅ Toggle registration enabled (ON/OFF switch)[1]
+✅ Click "Save Changes" button to save[1]
+✅ Configure coin economy (earning rates, purchase rates)
+✅ Edit email templates with rich text editor
+✅ Preview email templates before saving
+✅ Toggle feature flags on/off
+✅ Set feature rollout percentages
+✅ Create custom admin roles
+✅ Assign granular permissions to roles
+✅ Edit existing admin roles
+✅ Delete unused admin roles
+✅ See real-time validation errors
+✅ Export all settings as backup
+✅ Import/restore settings from backup
+✅ View settings change history
+✅ Search across all settings
+✅ See success notifications after save
+✅ Works on phone, tablet, and computer
+
+**The admin now has complete control over all YoForex forum settings with an intuitive, organized interface!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/912cb49f-2dd2-4879-b334-8520341c6902/image.jpg?AWSAccessKeyId=ASIA2F3EMEYETDONGILI&Signature=By7WVxyCaIxDs2fHeo9PawV%2FyPk%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECAaCXVzLWVhc3QtMSJHMEUCIDLMA%2Bc440xpgYGW74uY6MPFux%2BDtkFChDhDyGYGaAuOAiEAt%2ByJoV%2Fw3CGTqyD%2Fe5DLCFofQZ0PSXd%2Fx3W0kEY3n0sq%2FAQI2f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDDTsl3mdyr%2FL2xhn9yrQBDvEYZosEh5KpgcVq1HwTpJBxyCRxQn0Dmv%2FBkIIxejkmDcR4eXCFfsTmtc%2FsdBO2EGJ9HvblIzVZim6cNK4J0K2C%2Fpi8BTh5mYS36kU%2FJWGu8bWGQpM9okqVywSRG6naEnWhIsiyE0mKckpsbBnFjoZo4lQ%2B7%2FvSsV2zz34MIyt1y9eZWOt0iEyagEnJD8BHsKBKFYHALQ4H4aPlD7GFRyeXEq9h7px0%2FIG2ebpWZKBHU1Uw1J0mtSy5Y2Y1UXHQv9B1Cb%2BEXjxn1hsIsL2FnPiogpyCVrmnnDy9Cc2Ib%2B%2Ba9hRSG%2FPry8XNKN5DEOuWQOcDMBS682n2QwQXzvSgoGfXzfKepCUt0u54KVEvroIkL3HeoVvImxSUpz5eBvjW9Pn6x5%2FnM3KoImwcA6r6TjAYb6D5jsb2Lm9L%2BjPx4AAPnpHvsYW8G5KH0Ai3WPeDC3tgJfP6LmNLgPzXLHj8e2UO2Ww7jnUFXG%2BUgr1uZRG%2F8DJ9018tpnfCLKFplMP%2FsCa%2Fa%2BRzhYhzDyCnN%2BaKzN8iJORxiCLfo7ZkrDi1oO0YRPZFuGbjtGcd5rnsBN8f%2BvIsFaiIzNoU4dUQQt9Ty1FKnvEE0kO3ViY7t1e88KSWHp7bGP7N2a4aFSJE%2Fbk95yHoT8v6W7vuN8NRXF40S7qkIV%2FE3aKNcbzvdnrWHZyw1fPtVo1KEw8YRUxDWdwB%2FPrdReud3MjpI9auhX%2BQyI08jYUsUrbhuB8%2FIVHhMU52e3k8GUmp48rmTT1nwctNb2Pf01TMhyYD7g1%2BcTwr1gwjumIyAY6mAHcv2sTqO533uw%2B%2B3U%2BGelXwML%2FKU1F0KdDpc7%2B3CexM0VLy4SxMxpOcX195eMVMBw1L2BL64AZHzdkXEfAHxWh24tNG5m%2BLQm0Z5ZoB6ZFg4U5uGkmoY8x8Sp4wfLnL8XsD84IDHvx1E4MAk8sXriEfAJL2m%2F2ndNI%2Bzf3wubA%2B7YEhkBJZG1%2FJ9FhJxdiBwZcQV4h%2FyvfOw%3D%3D&Expires=1761753570)

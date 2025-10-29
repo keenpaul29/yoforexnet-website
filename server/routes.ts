@@ -29,6 +29,7 @@ import {
   profiles,
   forumReplies
 } from "../shared/schema.js";
+import { z } from "zod";
 import { db } from "./db.js";
 import { eq, and, gt, asc } from "drizzle-orm";
 import {
@@ -5270,6 +5271,398 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting webhook:', error);
       res.status(500).json({ message: 'Failed to delete webhook' });
+    }
+  });
+
+  // ============================================
+  // ADMIN USER MANAGEMENT & OVERVIEW ROUTES (15 routes)
+  // ============================================
+
+  // Zod schemas for admin user management routes
+  const adminUsersQuerySchema = z.object({
+    page: z.coerce.number().min(1).optional().default(1),
+    limit: z.coerce.number().min(1).max(100).optional().default(50),
+    search: z.string().optional(),
+    role: z.enum(['member', 'moderator', 'admin']).optional(),
+    status: z.enum(['active', 'suspended', 'banned']).optional(),
+    sortBy: z.string().optional(),
+    sortOrder: z.enum(['asc', 'desc']).optional()
+  });
+
+  const banUserSchema = z.object({
+    reason: z.string().min(1),
+    bannedBy: z.string().optional()
+  });
+
+  const suspendUserSchema = z.object({
+    suspendedUntil: z.string(),
+    reason: z.string().min(1),
+    suspendedBy: z.string().optional()
+  });
+
+  const activateUserSchema = z.object({
+    activatedBy: z.string().optional()
+  });
+
+  const changeRoleSchema = z.object({
+    role: z.enum(['member', 'moderator', 'admin']),
+    changedBy: z.string().optional()
+  });
+
+  const adjustCoinsSchema = z.object({
+    amount: z.number(),
+    reason: z.string().min(1),
+    adjustedBy: z.string().optional()
+  });
+
+  const adjustReputationSchema = z.object({
+    amount: z.number(),
+    reason: z.string().min(1)
+  });
+
+  const addBadgeSchema = z.object({
+    badge: z.string().min(1),
+    addedBy: z.string().optional()
+  });
+
+  const removeBadgeSchema = z.object({
+    badge: z.string().min(1),
+    removedBy: z.string().optional()
+  });
+
+  // 1. GET /api/admin/users - Get paginated list of users with filters
+  app.get('/api/admin/users', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const params = adminUsersQuerySchema.parse(req.query);
+      const { page, limit, ...filters } = params;
+      
+      const result = await storage.getAdminUsers({
+        ...filters,
+        limit,
+        offset: (page - 1) * limit
+      });
+      
+      res.json({
+        users: result.users,
+        total: result.total,
+        page,
+        limit
+      });
+    } catch (error: any) {
+      console.error('Error fetching admin users:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to fetch users' });
+    }
+  });
+
+  // 2. GET /api/admin/users/:id - Get single user details
+  app.get('/api/admin/users/:id', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const user = await storage.getUserById(req.params.id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).json({ message: 'Failed to fetch user' });
+    }
+  });
+
+  // 3. POST /api/admin/users/:id/ban - Ban a user
+  app.post('/api/admin/users/:id/ban', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = banUserSchema.parse(req.body);
+      
+      await storage.banUser(
+        req.params.id,
+        validated.reason,
+        validated.bannedBy || adminUserId
+      );
+      
+      res.json({ success: true, message: 'User banned successfully' });
+    } catch (error: any) {
+      console.error('Error banning user:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to ban user' });
+    }
+  });
+
+  // 4. POST /api/admin/users/:id/suspend - Suspend a user
+  app.post('/api/admin/users/:id/suspend', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = suspendUserSchema.parse(req.body);
+      
+      const suspendedUntil = new Date(validated.suspendedUntil);
+      const duration = Math.floor((suspendedUntil.getTime() - Date.now()) / 1000);
+      
+      await storage.suspendUser(
+        req.params.id,
+        validated.reason,
+        validated.suspendedBy || adminUserId,
+        duration
+      );
+      
+      res.json({ success: true, message: 'User suspended successfully' });
+    } catch (error: any) {
+      console.error('Error suspending user:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to suspend user' });
+    }
+  });
+
+  // 5. POST /api/admin/users/:id/activate - Activate/unban a user
+  app.post('/api/admin/users/:id/activate', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = activateUserSchema.parse(req.body);
+      
+      await storage.unbanUser(
+        req.params.id,
+        validated.activatedBy || adminUserId
+      );
+      
+      res.json({ success: true, message: 'User activated successfully' });
+    } catch (error: any) {
+      console.error('Error activating user:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to activate user' });
+    }
+  });
+
+  // 6. POST /api/admin/users/:id/role - Change user role
+  app.post('/api/admin/users/:id/role', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = changeRoleSchema.parse(req.body);
+      
+      await storage.changeUserRole(
+        req.params.id,
+        validated.role,
+        validated.changedBy || adminUserId
+      );
+      
+      res.json({ success: true, message: 'User role changed successfully' });
+    } catch (error: any) {
+      console.error('Error changing user role:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to change user role' });
+    }
+  });
+
+  // 7. POST /api/admin/users/:id/coins - Adjust user coins
+  app.post('/api/admin/users/:id/coins', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = adjustCoinsSchema.parse(req.body);
+      
+      await storage.adjustUserCoins(
+        req.params.id,
+        validated.amount,
+        validated.reason,
+        validated.adjustedBy || adminUserId
+      );
+      
+      // Fetch updated user to get new balance
+      const user = await storage.getUserById(req.params.id);
+      
+      res.json({ 
+        success: true, 
+        newBalance: user?.totalCoins || 0 
+      });
+    } catch (error: any) {
+      console.error('Error adjusting user coins:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to adjust user coins' });
+    }
+  });
+
+  // 8. POST /api/admin/users/:id/reputation - Adjust user reputation
+  app.post('/api/admin/users/:id/reputation', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = adjustReputationSchema.parse(req.body);
+      
+      await storage.adjustUserReputation(
+        req.params.id,
+        validated.amount,
+        validated.reason,
+        adminUserId
+      );
+      
+      // Fetch updated user to get new reputation
+      const user = await storage.getUserById(req.params.id);
+      
+      res.json({ 
+        success: true, 
+        newScore: user?.reputationScore || 0 
+      });
+    } catch (error: any) {
+      console.error('Error adjusting user reputation:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to adjust user reputation' });
+    }
+  });
+
+  // 9. POST /api/admin/users/:id/badge - Add badge to user
+  app.post('/api/admin/users/:id/badge', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = addBadgeSchema.parse(req.body);
+      
+      await storage.addUserBadge(
+        req.params.id,
+        validated.badge,
+        validated.addedBy || adminUserId
+      );
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error('Error adding user badge:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to add user badge' });
+    }
+  });
+
+  // 10. DELETE /api/admin/users/:id/badge - Remove badge from user
+  app.delete('/api/admin/users/:id/badge', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminUserId = getAuthenticatedUserId(req);
+      const validated = removeBadgeSchema.parse(req.body);
+      
+      await storage.removeUserBadge(
+        req.params.id,
+        validated.badge,
+        validated.removedBy || adminUserId
+      );
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error('Error removing user badge:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to remove user badge' });
+    }
+  });
+
+  // 11. GET /api/admin/users/export/csv - Export users to CSV
+  app.get('/api/admin/users/export/csv', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const { search, role, status } = req.query;
+      
+      const result = await storage.getAdminUsers({
+        search: search as string | undefined,
+        role: role as string | undefined,
+        status: status as string | undefined,
+        limit: 10000 // Large limit for export
+      });
+      
+      const csv = [
+        ['ID', 'Username', 'Email', 'Role', 'Status', 'Coins', 'Reputation', 'Created At'],
+        ...result.users.map(u => [
+          u.id,
+          u.username,
+          u.email || '',
+          u.role,
+          u.status,
+          u.totalCoins.toString(),
+          u.reputationScore.toString(),
+          u.createdAt?.toISOString() || ''
+        ])
+      ].map(row => row.join(',')).join('\n');
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="users-export.csv"');
+      res.send(csv);
+    } catch (error) {
+      console.error('Error exporting users:', error);
+      res.status(500).json({ message: 'Failed to export users' });
+    }
+  });
+
+  // 12. GET /api/admin/overview/revenue-breakdown - Get revenue by source
+  app.get('/api/admin/overview/revenue-breakdown', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      // Calculate revenue from rechargeOrders table
+      const startDate = new Date(0); // All time
+      const endDate = new Date();
+      const revenueStats = await storage.getRevenueStats(startDate, endDate);
+      
+      res.json({
+        stripe: revenueStats.stripe || 0,
+        crypto: revenueStats.crypto || 0,
+        total: revenueStats.total || 0
+      });
+    } catch (error) {
+      console.error('Error fetching revenue breakdown:', error);
+      res.status(500).json({ message: 'Failed to fetch revenue breakdown' });
+    }
+  });
+
+  // 13. GET /api/admin/overview/engagement-metrics - Get engagement stats
+  app.get('/api/admin/overview/engagement-metrics', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const metrics = await storage.getEngagementMetrics();
+      res.json(metrics);
+    } catch (error) {
+      console.error('Error fetching engagement metrics:', error);
+      res.status(500).json({ message: 'Failed to fetch engagement metrics' });
+    }
+  });
+
+  // 14. GET /api/admin/overview/top-content - Get top 10 threads by views
+  app.get('/api/admin/overview/top-content', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const threads = await storage.getTopContentByViews(10);
+      res.json({ threads });
+    } catch (error) {
+      console.error('Error fetching top content:', error);
+      res.status(500).json({ message: 'Failed to fetch top content' });
+    }
+  });
+
+  // 15. GET /api/admin/overview/top-users - Get top 10 users by reputation
+  app.get('/api/admin/overview/top-users', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const users = await storage.getTopUsersByReputation(10);
+      res.json({ users });
+    } catch (error) {
+      console.error('Error fetching top users:', error);
+      res.status(500).json({ message: 'Failed to fetch top users' });
     }
   });
 

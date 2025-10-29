@@ -1,0 +1,616 @@
+## COMPLETE INSTRUCTIONS: Build the API & Integrations Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating an API & Integrations page for YoForex forum admin panel. This page lets admins manage API keys for third-party access, configure webhooks for external services, and monitor API event logs to track all API activities.
+
+***
+
+## PART 1: BACKEND (Server Side - API Management)
+
+### What the Backend Does
+The backend generates and manages API keys, handles webhook configurations, logs all API events, and provides security controls for external integrations.
+
+### Create These Files:
+
+**File 1: API & Integrations Routes (routes/api-integrations.js)**
+
+Create URLs for API management:
+
+1. `/api/integrations/keys` - Get all API keys
+2. `/api/integrations/keys/create` - Create new API key
+3. `/api/integrations/keys/:id` - Get single API key details
+4. `/api/integrations/keys/:id/regenerate` - Regenerate API key
+5. `/api/integrations/keys/:id/revoke` - Revoke/delete API key
+6. `/api/integrations/keys/:id/update` - Update key permissions
+7. `/api/integrations/webhooks` - Get all webhooks
+8. `/api/integrations/webhooks/create` - Create new webhook
+9. `/api/integrations/webhooks/:id/update` - Update webhook
+10. `/api/integrations/webhooks/:id/delete` - Delete webhook
+11. `/api/integrations/webhooks/:id/test` - Test webhook
+12. `/api/integrations/event-logs` - Get API event logs
+13. `/api/integrations/event-logs/export` - Export logs to CSV
+14. `/api/integrations/stats` - Get API usage statistics
+
+**File 2: API Management Service (services/apiIntegrationsService.js)**
+
+Functions that handle API management:
+
+**Function 1: Get All API Keys**
+- Query `api_keys` table
+- For each API key include:
+  - Key ID
+  - Key Name (e.g., "Mobile App", "External Dashboard")
+  - API Key (masked: "sk_live_abc...xyz")
+  - Permissions granted (read users, write posts, read analytics, etc.)
+  - Rate limit (requests per minute/hour)
+  - Last used timestamp
+  - Total usage count (requests made)
+  - Created date
+  - Created by (admin username)
+  - Status (active, revoked)
+- Sort by created date (newest first)
+- Return all keys
+
+**Function 2: Create API Key**
+- Generate secure random API key (32-64 characters)
+- Format: `sk_live_` + random string (for production) or `sk_test_` (for testing)
+- Insert in `api_keys` table with:
+  - Key name (provided by admin)
+  - Permissions (array of allowed actions)
+  - Rate limit settings
+  - Expiration date (optional)
+  - Created by admin ID
+- Hash key before storing (store hash, show key only once)
+- Return plaintext key (only shown this one time)
+
+**Function 3: Regenerate API Key**
+- Find existing key by ID
+- Generate new key string
+- Update database with new key hash
+- Invalidate old key immediately
+- Log regeneration action
+- Return new key (shown only once)
+
+**Function 4: Revoke API Key**
+- Find key by ID
+- Set status to "revoked"
+- Set revoked_at timestamp
+- Set revoked_by to admin username
+- Key no longer works for authentication
+- Keep record for audit purposes
+- Return success
+
+**Function 5: Update Key Permissions**
+- Find key by ID
+- Update permissions array
+- Update rate limits if changed
+- Log permission change
+- Return updated key info
+
+**Function 6: Get All Webhooks**
+- Query `webhooks` table
+- For each webhook include:
+  - Webhook ID
+  - Webhook name (e.g., "Slack Notifications", "Discord Alerts")
+  - Target URL (where events are sent)
+  - Events subscribed to (user.created, post.created, payment.completed, etc.)
+  - Status (active, paused)
+  - Last triggered timestamp
+  - Total deliveries count
+  - Success rate (successful vs failed deliveries)
+  - Created date
+- Sort by created date
+- Return all webhooks
+
+**Function 7: Create Webhook**
+- Insert in `webhooks` table with:
+  - Webhook name
+  - Target URL (must be HTTPS)
+  - Events to subscribe to (array)
+  - Secret key for signature verification
+  - Headers to include (optional)
+- Validate URL is reachable
+- Send test payload to verify endpoint works
+- Return webhook details
+
+**Function 8: Update Webhook**
+- Find webhook by ID
+- Update: name, URL, events, status
+- Validate new URL if changed
+- Log changes
+- Return updated webhook
+
+**Function 9: Delete Webhook**
+- Find webhook by ID
+- Delete from database
+- Stop sending events to this URL
+- Log deletion
+- Return success
+
+**Function 10: Test Webhook**
+- Find webhook by ID
+- Send test payload to target URL
+- Test payload includes sample data
+- Measure response time
+- Check response status code
+- Return test results (success/failure, response time, error if any)
+
+**Function 11: Get Event Logs**
+- Query `api_event_logs` table
+- For each event include:
+  - Event ID
+  - Event type (API call, webhook delivery, authentication attempt)
+  - API key used (if API call)
+  - Webhook triggered (if webhook)
+  - Endpoint accessed
+  - HTTP method (GET, POST, PUT, DELETE)
+  - Response status (200, 401, 404, 500, etc.)
+  - Response time (milliseconds)
+  - IP address
+  - Timestamp
+  - Request payload (if applicable)
+  - Response data (if applicable)
+- Filter by: Date range, Event type, API key, Status code
+- Sort by timestamp (newest first)
+- Pagination: 50 events per page
+
+**Function 12: Export Logs**
+- Get filtered event logs
+- Format as CSV with columns:
+  - Date/Time, Event Type, API Key, Endpoint, Method, Status, Response Time, IP
+- Return downloadable CSV file
+
+**Function 13: Get API Usage Statistics**
+- Calculate:
+  - Total API calls today
+  - Total API calls this week
+  - Total API calls this month
+  - Most used API key
+  - Most accessed endpoint
+  - Average response time
+  - Error rate (% of failed requests)
+  - Peak usage time (hourly breakdown)
+- Return statistics summary
+
+***
+
+## PART 2: FRONTEND (Display Side - API & Integrations Interface)
+
+### What the Frontend Does
+Shows API key management, webhook configuration, and event log monitoring with comprehensive details.
+
+### Create These Files:
+
+**File 1: Main API & Integrations Page (app/admin/api-integrations/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "API & Integrations"[1]
+
+**Section 2: Three Category Tabs**[1]
+
+Tab 1: **API Keys** (default active)[1]
+- Manage API keys for external access
+
+Tab 2: **Webhooks**[1]
+- Configure webhooks for event notifications
+
+Tab 3: **Event Logs**[1]
+- View all API and webhook events
+
+---
+
+## API KEYS TAB CONTENT[1]
+
+**Section 1: Tab Header**
+- Title: "API Keys"[1]
+- Blue button top right: "Create API Key"[1]
+  - Click opens modal to create new key
+
+**Section 2: API Keys Table**[1]
+
+Table with these columns:
+
+Column 1: **Name**[1]
+- API key name (e.g., "Mobile App", "Analytics Dashboard")
+- Badge showing key type (Live/Test)
+- Icon indicating active/revoked status
+
+Column 2: **Key**[1]
+- Masked API key: `sk_live_abc...xyz`
+- Click to reveal/copy full key
+- Copy button icon
+
+Column 3: **Permissions**[1]
+- List of granted permissions
+- Show as badges (Read Users, Write Posts, etc.)
+- Shows "X more" if many permissions
+- Click to see all
+
+Column 4: **Rate Limit**[1]
+- Requests per minute/hour limit
+- Example: "100/min" or "1000/hr"
+- Progress bar showing current usage if near limit
+
+Column 5: **Last Used**[1]
+- Timestamp when key was last used
+- Format: "2 hours ago" or "Never used"
+- Show warning if not used in 30+ days
+
+Column 6: **Usage**[1]
+- Total requests made with this key
+- Example: "1,234 requests"
+- Click to see detailed usage chart
+
+Column 7: **Actions**[1]
+- Three-dot menu button
+- Dropdown with options:
+  - View Details
+  - Edit Permissions
+  - Regenerate Key
+  - Revoke Key
+  - View Usage Stats
+  - Delete
+
+**Table Features:**
+- Pagination (20 keys per page)
+- Sort by: Name, Last Used, Usage
+- Empty state: "No API keys created"[1]
+- Filter by: Active, Revoked
+
+***
+
+## WEBHOOKS TAB CONTENT
+
+When "Webhooks" tab is selected:
+
+**Section 1: Tab Header**
+- Title: "Webhooks"
+- Blue button: "Create Webhook"
+
+**Section 2: Webhooks Table**
+
+Columns:
+- **Name**: Webhook name
+- **URL**: Target endpoint URL (truncated if long)
+- **Events**: List of subscribed events (badges)
+- **Status**: Active/Paused toggle
+- **Last Triggered**: When last event sent
+- **Deliveries**: Total delivery count
+- **Success Rate**: Percentage successful (e.g., "98%")
+- **Actions**: Edit, Test, Delete
+
+**Empty state:** "No webhooks configured"
+
+**Webhook Types/Events Available:**
+- User Events: `user.created`, `user.updated`, `user.deleted`
+- Content Events: `thread.created`, `post.created`, `post.edited`
+- Payment Events: `payment.completed`, `subscription.created`, `withdrawal.processed`
+- Moderation Events: `content.flagged`, `user.banned`, `content.approved`
+- System Events: `backup.completed`, `error.critical`
+
+***
+
+## EVENT LOGS TAB CONTENT
+
+When "Event Logs" tab is selected:
+
+**Section 1: Tab Header**
+- Title: "Event Logs"
+- Filter dropdowns:
+  - Event Type (All, API Calls, Webhooks, Auth)
+  - Date Range (Today, Last 7 Days, Last 30 Days, Custom)
+  - Status (All, Success, Failed)
+- Export button: "Export Logs"
+
+**Section 2: Event Logs Table**
+
+Columns:
+- **Timestamp**: Date and time
+- **Event Type**: Badge (API Call, Webhook, Auth)
+- **API Key/Webhook**: Which key or webhook used
+- **Endpoint**: API endpoint or webhook URL
+- **Method**: GET, POST, PUT, DELETE
+- **Status**: HTTP status code (200, 401, 404, 500)
+- **Response Time**: Milliseconds
+- **IP Address**: Source IP
+- **Actions**: View Details
+
+**Status Code Colors:**
+- 2xx (Success): Green
+- 4xx (Client Error): Yellow/Orange
+- 5xx (Server Error): Red
+
+**Section 3: Real-Time Log Stream**
+
+Live activity feed showing:
+- Most recent events appearing at top
+- Auto-refresh every 5 seconds
+- Pause button to stop auto-refresh
+- Each event shows icon, description, time
+
+***
+
+## PART 3: MODALS AND POPUPS
+
+### Create These Popup Windows:
+
+**Modal 1: Create API Key**[1]
+
+When clicking "Create API Key":
+- Title: "Create New API Key"
+- Fields:
+  - Key Name (text input) - required
+    - Example: "Mobile App", "External Dashboard"
+  - Description (text area)
+    - Purpose of this key
+  - Key Type (radio buttons):
+    - Live (production use)
+    - Test (development/testing)
+  - Permissions (checkboxes):
+    - **Users**: Read Users, Write Users, Delete Users
+    - **Content**: Read Posts, Write Posts, Edit Posts, Delete Posts
+    - **Analytics**: Read Analytics
+    - **Finance**: Read Transactions, Process Payments
+    - **Admin**: Full Access (all permissions)
+  - Rate Limit:
+    - Requests per minute (slider: 10-1000)
+    - Requests per hour (slider: 100-10000)
+  - Expiration (optional):
+    - Never (default)
+    - 30 days
+    - 90 days
+    - 1 year
+    - Custom date picker
+- Button: "Generate API Key" (blue)
+- Cancel button
+
+**After Creation:**
+- Show success modal with:
+  - Title: "API Key Created Successfully"
+  - Warning: "Save this key now! You won't see it again."
+  - Display full API key (copyable)
+  - Copy button
+  - Download as text file button
+  - Confirm button (closes modal)
+
+**Modal 2: Regenerate API Key**
+
+When regenerating:
+- Warning: "Regenerate API Key?"
+- Text: "This will invalidate the old key immediately. Any apps using the old key will stop working."
+- Checkbox: "I understand this will break existing integrations"
+- Red button: "Regenerate Key"
+- Cancel button
+
+After regeneration:
+- Show new key (one-time display)
+- Copy button
+- Warning: "Update your apps with this new key"
+
+**Modal 3: Revoke API Key**
+
+When revoking:
+- Warning: "Revoke API Key?"
+- Text: "This key will no longer work. This action cannot be undone."
+- Show key name and last used date
+- Checkbox: "Yes, revoke this key"
+- Red button: "Revoke Key"
+- Cancel button
+
+**Modal 4: Edit API Key Permissions**
+
+When editing:
+- Title: "Edit Permissions - [Key Name]"
+- Current permissions shown (checkboxes)
+- Can add/remove permissions
+- Rate limit adjustments
+- Save Changes button
+- Cancel button
+
+**Modal 5: View API Key Usage Stats**
+
+When viewing usage:
+- Title: "[Key Name] - Usage Statistics"
+- Total requests made
+- Requests by endpoint (bar chart)
+- Requests over time (line chart)
+- Success vs error rate (pie chart)
+- Average response time
+- Most accessed endpoints (table)
+- Geographic usage (if tracked)
+- Export usage report button
+- Close button
+
+**Modal 6: Create Webhook**
+
+When creating webhook:
+- Title: "Create New Webhook"
+- Fields:
+  - Webhook Name (text input) - required
+  - Target URL (text input) - required
+    - Must start with https://
+    - Validate URL format
+  - Events to Subscribe (checkboxes):
+    - User Events (expand to see all)
+    - Content Events
+    - Payment Events
+    - Moderation Events
+    - System Events
+  - Secret Key (auto-generated, shown)
+    - Used for signature verification
+    - Copy button
+  - Custom Headers (key-value pairs, optional)
+    - Add header button
+- Test Connection button (sends test payload)
+- Create Webhook button (blue)
+- Cancel button
+
+**Modal 7: Test Webhook**
+
+When testing:
+- Title: "Test Webhook - [Name]"
+- Shows test payload being sent
+- Real-time response display:
+  - Status code
+  - Response body
+  - Response headers
+  - Response time
+- Success indicator (green checkmark or red error)
+- If error, show error details
+- Retry button
+- Close button
+
+**Modal 8: View Event Log Details**
+
+When viewing log entry:
+- Title: "Event Details"
+- Complete event information:
+  - Event ID
+  - Timestamp
+  - Event type
+  - API key or webhook used
+  - Full endpoint URL
+  - HTTP method
+  - Request headers (formatted JSON)
+  - Request body (formatted JSON)
+  - Response status
+  - Response headers
+  - Response body
+  - Response time
+  - IP address
+  - User agent
+- Copy buttons for request/response data
+- Close button
+
+***
+
+## PART 4: SECURITY FEATURES
+
+### API Key Security:
+
+**Best Practices:**
+- Keys are hashed before storage (bcrypt)
+- Plaintext key shown only once at creation
+- Automatic key rotation reminders
+- Flag unused keys (>30 days no activity)
+- Rate limiting enforcement
+- IP whitelisting (optional feature)
+
+**Security Alerts:**
+- Alert on suspicious activity (rapid requests, unusual endpoints)
+- Alert on failed authentication attempts
+- Email admin on key regeneration
+- Log all permission changes
+
+### Webhook Security:
+
+**HMAC Signature:**
+- Generate HMAC signature for each webhook payload
+- Send in `X-Webhook-Signature` header
+- Recipients can verify authenticity
+- Use secret key for verification
+
+**Retry Logic:**
+- Retry failed webhooks (exponential backoff)
+- Max 3 retry attempts
+- Track delivery failures
+- Disable webhook after X consecutive failures
+
+***
+
+## PART 5: DOCUMENTATION SECTION
+
+### Add Documentation Tab/Page:
+
+**API Documentation:**
+- Link to full API documentation
+- Available endpoints list
+- Authentication guide
+- Rate limits explained
+- Example requests (cURL, JavaScript, Python)
+- Response formats
+- Error codes explained
+
+**Webhook Documentation:**
+- Event payload formats
+- Signature verification guide
+- Retry behavior
+- Best practices
+- Testing guide
+
+***
+
+## PART 6: REAL-TIME FEATURES
+
+### Live Monitoring:
+- Real-time event log updates (WebSocket)
+- Live API usage counter (requests per second)
+- Active connections indicator
+- Rate limit warnings (approaching limit)
+- Webhook delivery status updates
+
+### Notifications:
+- Toast notification on new API call
+- Alert on failed webhook deliveries
+- Warning on rate limit exceeded
+- Critical alert on authentication failures
+
+***
+
+## PART 7: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Tabs scroll horizontally if needed
+- Table converts to cards
+- Each API key as expandable card
+- Actions in dropdown menu
+- Copy button prominent
+
+### On Tablets:
+- Table shows key columns only
+- Some columns hidden
+- Full details in modal
+- Event logs as list
+
+### On Computers:
+- Full table with all columns[1]
+- All features visible
+- Side-by-side views
+- Multi-select for bulk actions
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See three tabs: API Keys, Webhooks, Event Logs[1]
+✅ View API keys table with columns[1]
+✅ See table columns: Name, Key, Permissions, Rate Limit, Last Used, Usage, Actions[1]
+✅ View empty state: "No API keys created"[1]
+✅ Click "Create API Key" button[1]
+✅ Generate new API keys with custom permissions
+✅ Copy API keys to clipboard
+✅ Mask/reveal API keys for security
+✅ Set rate limits per key
+✅ Edit API key permissions
+✅ Regenerate API keys (invalidates old)
+✅ Revoke API keys
+✅ View API key usage statistics
+✅ Create webhooks with event subscriptions
+✅ Test webhook endpoints
+✅ Monitor webhook delivery success rates
+✅ View detailed event logs
+✅ Filter logs by type, date, status
+✅ Export logs to CSV
+✅ See real-time API activity
+✅ Get security alerts
+✅ Access API documentation
+✅ Works on phone, tablet, and computer
+✅ Professional API management interface
+
+**The admin now has enterprise-grade API and webhook management for secure third-party integrations with YoForex forum!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/0b396f09-7f9c-4c7b-82d9-8325575b5295/image.jpg?AWSAccessKeyId=ASIA2F3EMEYEUVMXO2QE&Signature=5HZ32SOhg9dzXfnJdx0%2B1NoPqPA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECAaCXVzLWVhc3QtMSJIMEYCIQD7TnH3sDjvSFB%2FlXR2A2%2Fx9pMHMrMgpjHeBJEF4i4eUAIhANSxppjPPKHjNWcwEN%2BJI2lNv%2Bz%2BVNFtNqNjL1gSTm9WKvwECNn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQARoMNjk5NzUzMzA5NzA1IgxJZW5rwKYYNJFBg8cq0AQzHvry2NTyLEgDcJ8Q3XaXEY80RYbGxPDI3fIHqlKNqmz9JrEFJmGRdhaTOwb%2FaSZh6DN%2BfTwuOPGNs71Co%2B6r9LiYwvdrnoi7NW0W9ffnHwkdsyh%2FY0Ey%2F2RxwEumhX2BfXdA%2B0Xks20bcIJu9inFD00OVSwd0XggRW3BHMdP6d%2B1YV6DnuyZqhRqtbKHIpDc22hTMp9fJHUpzvA71BJAcVcbousL%2FZhOmszprPC5oLA4WYevCePwr02BGR7AUJiTk91c6mtYGk4EVsCud733M%2BVnUr2ee0UoscUoJe%2F5MByNuUABmpIN12cqbbM5EGGtB4OJ1sNAMejUgBv%2FMlNWvkxaxO5M7z3hoWsWBr5eTruGlhVOt2rPuuSEDDhalpZTLL0Ka68CJqJeIDvuijfJ7gFPihzEhSITex4yHLM9Uw8tud2y72mHYchbkH9CEI4nP2sDZJWSPipO4kAxDgtbgqp%2Fwnmy8j1p%2BnOdTsQS2uG58B7NP6%2Blh2ZJNtFpo6qKNB1WuPXvPiHDsciAhrV3fXLlB5Vb97WFurR%2FPzm%2BfcGt3OMSOhJBObeiOGLCXFZufwOU6MWdXsOnUD%2B8VKWWUieXbXKHZk30%2Fm7xXfrQrL%2F3HxXYODY11H5fcONjLz6V5iwwQrN%2BH%2BYPWzJavg3kEodbsmOG%2Fc3stX0pBSUEw5FFYbCrSUBcTIpCA5QYCiNY%2FD09pp4jTtuWt6FOqa%2FufzwaWiwn%2FxqDwA37VwE3lbFNpuNectuhLgumOUYqIin0Ze1AXSLU1AVCqstACv7uMI7qiMgGOpcBFZp6eHoQAr8CDtzMCo6Iqrw8f8aWzf4%2BTj26LhCf0N2s12W2A10y%2FprPxxrjUX5QuCHROg7ADin0uSnh%2BtfgXOadVtYdhkFxNRb6RNcRHmLMV0hGIej7Fkbp%2Bt7lSDvs5Y2bXH0buo55IEsmQF7bTn698FGWxo5%2Bh4RFzyp9481Rur%2B1i6yMTqELfb5GgX7eFqAWQD%2FXUw%3D%3D&Expires=1761753479)

@@ -1,0 +1,609 @@
+## COMPLETE INSTRUCTIONS: Build the Content Studio Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating a Content Studio page for YoForex forum admin panel. This page provides a centralized media library for managing all uploaded files (images, videos, documents, EAs, indicators) and a content revision system to track changes made to forum content over time.
+
+***
+
+## PART 1: BACKEND (Server Side - Media & Content Management)
+
+### What the Backend Does
+The backend manages file uploads, stores media files, tracks content revisions, handles file metadata, and provides search and filtering capabilities.
+
+### Create These Files:
+
+**File 1: Content Studio Routes (routes/content-studio.js)**
+
+Create URLs for content management:
+
+1. `/api/content-studio/media/all` - Get all media files
+2. `/api/content-studio/media/upload` - Upload new file
+3. `/api/content-studio/media/:id` - Get single file details
+4. `/api/content-studio/media/:id/update` - Update file metadata
+5. `/api/content-studio/media/:id/delete` - Delete file
+6. `/api/content-studio/media/bulk-delete` - Delete multiple files
+7. `/api/content-studio/media/search` - Search files by name or type
+8. `/api/content-studio/media/stats` - Get storage statistics
+9. `/api/content-studio/revisions` - Get content revision history
+10. `/api/content-studio/revisions/:id` - Get specific revision details
+11. `/api/content-studio/revisions/:id/restore` - Restore previous version
+12. `/api/content-studio/revisions/compare` - Compare two revisions
+
+**File 2: Content Studio Service (services/contentStudioService.js)**
+
+Functions that handle media and revisions:
+
+**Function 1: Get All Media Files**
+- Query `media_library` table
+- For each file include:
+  - File ID
+  - Filename
+  - File type (image, video, document, EA file, indicator, etc.)
+  - File extension (.jpg, .png, .mp4, .pdf, .ex4, .ex5, .mq5)
+  - File size (in bytes, KB, MB)
+  - Dimensions (for images: width × height)
+  - Uploaded by (username)
+  - Upload date
+  - Last modified
+  - Number of uses (how many posts/threads use this file)
+  - File URL (public access link)
+  - Thumbnail URL (for images/videos)
+  - Alt text (for images)
+  - Description
+- Sort options: Date (newest/oldest), Size, Name, Type
+- Filter by: Type, Uploader, Date range
+- Pagination: 50 files per page
+
+**Function 2: Upload File**
+- Accept file upload (multipart/form-data)
+- Validate:
+  - File type allowed (images, videos, PDFs, EAs, indicators)
+  - File size within limit (e.g., 10MB for images, 50MB for videos)
+  - Filename safe (no special characters)
+- Store file in cloud storage (AWS S3, Cloudinary, etc.) or local storage
+- Generate thumbnail for images/videos
+- Create database entry with metadata
+- Return file URL and ID
+
+**Function 3: Update File Metadata**
+- Find file by ID
+- Update: filename, alt text, description, tags
+- Set updated_at timestamp
+- Record change in admin_actions
+- Return updated file data
+
+**Function 4: Delete File**
+- Find file by ID
+- Check if file is being used (referenced in posts/threads)
+- If in use, show warning or prevent deletion
+- Delete file from storage
+- Remove database entry
+- Record deletion
+- Return success
+
+**Function 5: Bulk Delete**
+- Receive array of file IDs
+- Check each for usage
+- Delete unused files
+- Show summary: X deleted, Y skipped (in use)
+- Return results
+
+**Function 6: Search Media Files**
+- Search by filename
+- Filter by file type
+- Filter by uploader
+- Filter by date range
+- Return matching files
+
+**Function 7: Get Storage Statistics**
+- Calculate total storage used
+- Break down by file type:
+  - Images: X GB
+  - Videos: X GB
+  - Documents: X GB
+  - EA files: X GB
+- Count files by type
+- Show largest files (top 10)
+- Calculate storage capacity remaining
+
+**Function 8: Get Content Revisions**
+- Query `content_revisions` table
+- Track all changes to threads and posts
+- For each revision include:
+  - Revision ID
+  - Content ID (thread or post ID)
+  - Content type (thread, post)
+  - Content title
+  - Previous version (text snapshot)
+  - New version (text snapshot)
+  - Changes made (diff/comparison)
+  - Edited by (username)
+  - Edit date and time
+  - Edit reason (if provided)
+  - Revision number (v1, v2, v3...)
+- Sort by date (newest first)
+- Filter by: Content type, Editor, Date range
+
+**Function 9: Get Specific Revision**
+- Find revision by ID
+- Return complete revision data:
+  - Full previous content
+  - Full new content
+  - Character-by-character differences
+  - Metadata changes (title, tags, category)
+  - Who made changes
+  - When changed
+
+**Function 10: Restore Previous Version**
+- Find revision by ID
+- Get previous content version
+- Restore content to that version
+- Create new revision entry marking restoration
+- Notify content author
+- Return success
+
+**Function 11: Compare Revisions**
+- Get two revision IDs
+- Fetch both versions
+- Generate diff:
+  - Text added (green highlight)
+  - Text removed (red highlight)
+  - Text unchanged (normal)
+- Show side-by-side comparison
+- Return comparison data
+
+---
+
+## PART 2: FRONTEND (Display Side - Content Studio Interface)
+
+### What the Frontend Does
+Shows media library with file grid/list view, upload functionality, and content revision tracking system.
+
+### Create These Files:
+
+**File 1: Main Content Studio Page (app/admin/content-studio/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "Content Studio"[1]
+
+**Section 2: Two Category Tabs**[1]
+
+Tab 1: **Media Library** (default active)[1]
+- Centralized file management system
+
+Tab 2: **Content Revisions**[1]
+- Track all content changes and edits
+
+***
+
+## MEDIA LIBRARY TAB CONTENT[1]
+
+**Section 1: Tab Header**
+- Title: "Media Library"[1]
+- Search box left side: "Search files..."[1]
+  - Search icon inside
+  - Searches by filename
+- Dropdown next to search: "All Types"[1]
+  - Filter options:
+    - All Types
+    - Images (.jpg, .png, .gif, .webp)
+    - Videos (.mp4, .avi, .mov)
+    - Documents (.pdf, .doc, .xls)
+    - EA Files (.ex4, .ex5)
+    - Indicators (.mq4, .mq5)
+    - Other
+- Blue button right side: "Upload File"[1]
+  - Opens file upload dialog
+
+**Section 2: Storage Stats Bar** (above files)
+
+Horizontal bar showing:
+- Storage Used: 2.4 GB / 10 GB (24%)
+- Progress bar (colored fill)
+- By type breakdown:
+  - Images: 1.2 GB
+  - Videos: 800 MB
+  - Documents: 200 MB
+  - EA/Indicators: 200 MB
+
+**Section 3: Media Files Display**
+
+**View Options:**
+- Toggle between: Grid View (default) / List View
+- Sort dropdown: Newest, Oldest, Largest, Smallest, Name A-Z
+
+**Grid View Layout:**
+Display files as cards in grid (4-5 columns on desktop):
+
+Each card shows:
+- File thumbnail/preview (if image)
+- File icon (if document, EA, etc.)
+- Filename (truncated if long)
+- File type badge (.jpg, .pdf, .ex5)
+- File size (e.g., "2.4 MB")
+- Upload date ("3 days ago")
+- Checkbox for selection (bulk actions)
+- Hover actions:
+  - View/Preview
+  - Download
+  - Copy URL
+  - Edit Details
+  - Delete
+
+**List View Layout:**
+Table with columns:
+- Checkbox (select)
+- Preview (thumbnail)
+- Filename
+- Type
+- Size
+- Uploaded By
+- Upload Date
+- Uses (count of references)
+- Actions (dropdown menu)
+
+**Empty State:** "No media files found"[1]
+- Icon: Empty folder or image icon
+- Text: "No media files found"
+- Button: "Upload your first file"
+
+**Section 4: Bulk Actions Bar**
+
+When files are selected (checked):
+- Shows at bottom of screen (fixed position)
+- Text: "X files selected"
+- Actions:
+  - Download Selected (zip file)
+  - Delete Selected (with confirmation)
+  - Add Tags (bulk tagging)
+  - Move to Folder (if folders implemented)
+  - Clear Selection
+
+***
+
+## CONTENT REVISIONS TAB CONTENT
+
+When "Content Revisions" tab is selected:
+
+**Section 1: Tab Header**
+- Title: "Content Revisions"
+- Search box: "Search content..."
+- Filter dropdown: "All Content Types"
+  - Options: All, Threads, Posts, Pages
+
+**Section 2: Revisions Timeline**
+
+Display as timeline or table:
+
+**Table View:**
+
+Columns:
+- Content Title (e.g., "Best Gold Trading Strategy")
+- Content Type (Thread/Post badge)
+- Edited By (username with avatar)
+- Edit Date (timestamp)
+- Revision Number (v1, v2, v3)
+- Changes (summary: "Content modified", "Title changed")
+- Actions:
+  - View Diff
+  - View Full Revision
+  - Restore Version
+  - Compare with Current
+
+**Timeline View (alternative):**
+- Chronological list showing all edits
+- Each entry shows:
+  - Date/time
+  - What was edited (thread title)
+  - Who edited (username)
+  - Quick summary of changes
+  - View details button
+
+**Section 3: Recent Changes Summary**
+
+Stats cards showing:
+- Total Revisions Today: X
+- Total Revisions This Week: X
+- Most Active Editor: [Username]
+- Most Edited Content: [Title]
+
+---
+
+## PART 3: MODALS AND POPUPS
+
+### Create These Popup Windows:
+
+**Modal 1: Upload File**[1]
+
+When clicking "Upload File" button:
+- Large modal
+- Title: "Upload Media Files"
+- Drag & drop area:
+  - Text: "Drag files here or click to browse"
+  - Click to open file picker
+  - Support multiple file upload
+- Accepted formats list shown:
+  - Images: JPG, PNG, GIF, WEBP (max 10 MB)
+  - Videos: MP4, AVI, MOV (max 50 MB)
+  - Documents: PDF, DOC, XLS (max 20 MB)
+  - EA Files: EX4, EX5, MQ4, MQ5 (max 5 MB)
+- Upload progress bar for each file
+- Fields for each file:
+  - Alt text (for images)
+  - Description
+  - Tags (comma-separated)
+- Upload button (processes all files)
+- Cancel button
+
+**Modal 2: File Details / Edit Metadata**
+
+When viewing file details:
+- Title: "File Details"
+- File preview (image/video player/document viewer)
+- Editable fields:
+  - Filename (text input)
+  - Alt Text (text input)
+  - Description (text area)
+  - Tags (tag input with autocomplete)
+- Read-only info:
+  - File type
+  - File size
+  - Dimensions (if image)
+  - Upload date
+  - Uploaded by
+  - Public URL (with copy button)
+  - Number of uses (with "View Uses" button)
+- Action buttons:
+  - Save Changes
+  - Download
+  - Delete
+  - Close
+
+**Modal 3: Delete Confirmation**
+
+When deleting file:
+- Warning: "Delete File?"
+- Show file preview and name
+- If file in use:
+  - Alert: "This file is used in X posts/threads"
+  - List of where it's used (clickable links)
+  - Warning: "Deleting will break these links"
+- Checkbox: "Yes, delete permanently"
+- Red button: "Delete File"
+- Cancel button
+
+**Modal 4: View Revision Diff**
+
+When viewing changes:
+- Title: "Revision History - [Content Title]"
+- Two-panel view:
+  - Left: Previous version
+  - Right: Current version
+- Diff highlighting:
+  - Removed text: Red background with strikethrough
+  - Added text: Green background
+  - Unchanged text: Normal
+- Metadata changes shown:
+  - Title changed: "Old Title" → "New Title"
+  - Category changed: "Category A" → "Category B"
+  - Tags modified
+- Info bar:
+  - Edited by: [Username]
+  - Edit date: [Timestamp]
+  - Edit reason: [Text if provided]
+- Action buttons:
+  - Restore This Version
+  - View Full Content
+  - Compare with Another Version
+  - Close
+
+**Modal 5: Restore Version Confirmation**
+
+When restoring old version:
+- Warning: "Restore Previous Version?"
+- Text: "This will replace current content with version from [date]"
+- Show preview of what will be restored
+- Text area: Reason for restoration (optional)
+- Checkbox: "Notify content author"
+- Button: "Restore Version"
+- Cancel button
+
+**Modal 6: Compare Revisions**
+
+When comparing versions:
+- Title: "Compare Revisions"
+- Dropdown: Select Revision A (from dropdown list)
+- Dropdown: Select Revision B (from dropdown list)
+- Two-panel comparison showing both versions
+- Highlight differences
+- Metadata comparison
+- Button: "Restore Revision A" or "Restore Revision B"
+- Close button
+
+**Modal 7: View File Usage**
+
+When viewing where file is used:
+- Title: "File Usage - [Filename]"
+- Table showing:
+  - Content title (thread/post title)
+  - Content type (Thread/Post)
+  - Author
+  - Date posted
+  - Link to content (clickable)
+- Total uses count
+- Button: "Replace in All" (replace with different file)
+- Close button
+
+***
+
+## PART 4: ADVANCED FEATURES
+
+### File Organization:
+
+**Folders/Categories:**
+- Create folders to organize files:
+  - Trading Charts
+  - EA Files
+  - User Avatars
+  - Broker Logos
+  - Tutorial Images
+- Drag-and-drop files between folders
+- Folder permissions (who can access)
+
+**Tags System:**
+- Add multiple tags per file
+- Tag autocomplete (suggests existing tags)
+- Click tag to see all files with that tag
+- Tag cloud showing popular tags
+
+### Image Editing:
+
+**Basic Image Editor:**
+- Crop image
+- Resize image
+- Rotate image
+- Add text overlay
+- Adjust brightness/contrast
+- Save as new file or replace
+
+### CDN Integration:
+
+**Content Delivery:**
+- Integrate with CDN (Cloudinary, AWS CloudFront)
+- Auto-optimize images (compress, format conversion)
+- Generate multiple sizes (thumbnail, medium, large)
+- Fast global delivery
+- Show CDN stats
+
+***
+
+## PART 5: STORAGE MANAGEMENT
+
+### Storage Alerts:
+
+**Automatic Alerts:**
+- Warning at 75% storage capacity
+- Critical at 90% storage capacity
+- Email admin when approaching limit
+- Suggest cleanup actions
+
+**Storage Optimization:**
+- Find duplicate files
+- Find unused files (not referenced anywhere)
+- Find large files (suggest compression)
+- Bulk delete old files (older than X days)
+
+**Storage Analytics:**
+- Chart showing storage growth over time
+- Storage by uploader (which users upload most)
+- Storage by category
+- Largest files list (top 20)
+
+***
+
+## PART 6: CONTENT REVISION FEATURES
+
+### Auto-Save Drafts:
+
+**Draft System:**
+- Auto-save content every 30 seconds
+- Keep drafts for recovery
+- Show "Draft saved at [time]"
+- Restore draft if browser crashes
+
+### Revision Comparison Tools:
+
+**Advanced Comparison:**
+- Line-by-line diff
+- Word-by-word diff
+- Character-by-character diff
+- Show statistics (words added/removed)
+
+### Revision Rollback:
+
+**Undo Changes:**
+- One-click rollback to previous version
+- Undo last X edits
+- Restore to specific date/time
+- Batch restore multiple contents
+
+***
+
+## PART 7: PERMISSIONS & SECURITY
+
+### File Access Control:
+
+**Permissions:**
+- Public files (anyone can access)
+- Members only (logged-in users)
+- Premium only (paying members)
+- Admin only (private files)
+- Set per file or folder
+
+### Security Features:
+
+**File Security:**
+- Malware scanning on upload
+- Block suspicious file types
+- Watermark images (optional)
+- Prevent hotlinking
+- Secure download links (expire after X hours)
+
+---
+
+## PART 8: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Grid shows 2 columns
+- Upload button prominent
+- File cards simplified
+- Actions in dropdown menu
+- Search full width
+
+### On Tablets:
+- Grid shows 3 columns
+- Compact file cards
+- Side-by-side comparison works
+- Some features hidden in menus
+
+### On Computers:
+- Grid shows 4-5 columns[1]
+- All features visible
+- Drag-and-drop works
+- Multiple file selection easy
+- Split-screen comparisons
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See two tabs: Media Library, Content Revisions[1]
+✅ View empty state: "No media files found"[1]
+✅ Search files by name[1]
+✅ Filter files by type dropdown[1]
+✅ Upload new files with blue "Upload File" button[1]
+✅ View files in grid or list layout
+✅ See file details (name, type, size, date)
+✅ Download files
+✅ Copy file URLs
+✅ Edit file metadata (alt text, description, tags)
+✅ Delete files (with usage warning)
+✅ Bulk select and delete multiple files
+✅ See storage usage statistics
+✅ View content revision history
+✅ See who edited what and when
+✅ Compare two versions (diff view)
+✅ Restore previous content versions
+✅ Track all changes with timestamps
+✅ Organize files with folders and tags
+✅ Get storage alerts when approaching limit
+✅ Works on phone, tablet, and computer
+✅ Professional media management interface
+
+**The admin now has a complete content studio with centralized media management and comprehensive revision tracking for the YoForex forum!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/a58b9a95-bffa-4cb7-bd4d-d5062b3b6671/image.jpg?AWSAccessKeyId=ASIA2F3EMEYE6FRAUP6K&Signature=RTdtcxqdCNlwNaXCaTTTGhnxlDo%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEB8aCXVzLWVhc3QtMSJHMEUCIBMdrVHYPMtn%2By7z3nm5hetNgtvQ0UT1tLzIHo%2BEmvwbAiEAzwMO3w3CXpgr0Zr5tGYsxttbBSPJ4GOW09ozqDspYUIq%2FAQI2P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDLCTGomlFZpmy%2B3gjirQBMdApNf5r5TLnDkSmdFGErWSsMNejfz%2FwuuVuByXNLepxFPtH1GIHj9zBkx4OB4tl3h7vAgr8WYJ9RFXBB%2BRhmLkb8J6jxTqzft91SI5G4csDvjJq94H9dqiZ0nRtVMpKSI%2FCgud%2BjuDsGTuAJ%2BVDv6d4XBjSx2jpfNHuFPq8j1dntgzGA7BwuXZ5YCjns%2FbgJ2IK5UDP5a5FWsVLTRI6PxBUc3P4qsYGb%2BJ5txIEr71P8MYPzgKjFuFCPln3e6Rz3scMihcO77k1chHGp5EeWmmG%2FZIBEP6hqn5uTb4mRk2t9rzxL9MgeTPTul18KHhD3VodXVcYHEySSBvlCeGD6UiZHCaB0bUEBsOE4SGLD4a%2FmhOyYWOcF8c4Y%2FzF7l0ut2zKC87ttAG%2B65o6nvWQRBN6BJqsfQu44%2BNxymS8XD8naOhZC2XgINShJk5LUWYxYQbVTfl2lNEpQlVECuDR4uevbQw1jwPPCbcrjCr7MGBFj8q7rD3Jugt6r3bB5riQ9bT2nGCP67hrik%2FUIexDRIQvil9A4OJF0yLao%2FrjirOrIcdmCMedE2rtFVeKH1ElMSpenLP3Sf8Eue5mhqc2Lie6m5Lhkt9mURnhVhd3%2BvXlusIUIAC6624IVXGzvg9BjLFQGAOXmGLbdS4oF3V7umm0M%2F675DHEk0%2FzDg1j5L0IEZ4jAT2mjyNZ7fEsRuKj4zsm2joiJVMsU5R9Xqpei3jVohqIIOh1AIqkxKb3dmrxmLF0XMJfsM%2B9vN0GjfKfQkHaxXLYyr63u4%2BEMXX0uww79iIyAY6mAFM9CGVxqLQWD33YdDzOCsVy%2FqRKZyYm6Syf0Vb9PLfr4ypCmzbgvNL%2BDrCmNvT33KrJK%2FE3LpGYfXJ1vpI6dmiTt4SfqWpkxhLWsnHSbwrduE3MTNzUGvFmpevM77MYjvcuIa8G1q3rI76dEtkHvHxaBXjD6%2Fs9eW6uyJxrExOY6MD5rjqIPGEh146wIGAc5kPIiWc4CO%2FLA%3D%3D&Expires=1761753235)

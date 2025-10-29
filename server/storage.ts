@@ -1378,6 +1378,42 @@ export interface IStorage {
     status: string;
     createdAt: string;
   }>>;
+  
+  /**
+   * Get engagement metrics
+   * Returns daily active users, posts, comments, and likes for today
+   */
+  getEngagementMetrics(): Promise<{
+    dau: number;
+    postsToday: number;
+    commentsToday: number;
+    likesToday: number;
+  }>;
+  
+  /**
+   * Get top content by views
+   * Returns top N threads sorted by views
+   */
+  getTopContentByViews(limit: number): Promise<Array<{
+    id: string;
+    title: string;
+    views: number;
+    author: string;
+    createdAt: Date;
+  }>>;
+  
+  /**
+   * Get top users by reputation
+   * Returns top N users sorted by reputation score
+   */
+  getTopUsersByReputation(limit: number): Promise<Array<{
+    id: string;
+    username: string;
+    reputation: number;
+    coins: number;
+    badges: string[];
+    posts: number;
+  }>>;
 }
 
 export class MemStorage implements IStorage {
@@ -9758,6 +9794,123 @@ export class DrizzleStorage implements IStorage {
       }));
     } catch (error) {
       console.error("Error getting recent admin actions:", error);
+      throw error;
+    }
+  }
+  
+  async getEngagementMetrics(): Promise<{
+    dau: number;
+    postsToday: number;
+    commentsToday: number;
+    likesToday: number;
+  }> {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      // Count daily active users (users who posted or commented today)
+      const [dauResult] = await db
+        .select({ count: sql<number>`COUNT(DISTINCT ${forumThreads.authorId})` })
+        .from(forumThreads)
+        .where(gte(forumThreads.createdAt, today));
+      
+      // Count posts (threads) created today
+      const [postsResult] = await db
+        .select({ count: count() })
+        .from(forumThreads)
+        .where(gte(forumThreads.createdAt, today));
+      
+      // Count comments (replies) created today
+      const [commentsResult] = await db
+        .select({ count: count() })
+        .from(forumReplies)
+        .where(gte(forumReplies.createdAt, today));
+      
+      // Count likes given today
+      const [likesResult] = await db
+        .select({ count: count() })
+        .from(contentLikes)
+        .where(gte(contentLikes.createdAt, today));
+      
+      return {
+        dau: dauResult?.count || 0,
+        postsToday: postsResult?.count || 0,
+        commentsToday: commentsResult?.count || 0,
+        likesToday: likesResult?.count || 0
+      };
+    } catch (error) {
+      console.error("Error getting engagement metrics:", error);
+      throw error;
+    }
+  }
+  
+  async getTopContentByViews(limit: number): Promise<Array<{
+    id: string;
+    title: string;
+    views: number;
+    author: string;
+    createdAt: Date;
+  }>> {
+    try {
+      const results = await db
+        .select({
+          id: forumThreads.id,
+          title: forumThreads.title,
+          views: forumThreads.views,
+          authorId: forumThreads.authorId,
+          authorUsername: users.username,
+          createdAt: forumThreads.createdAt
+        })
+        .from(forumThreads)
+        .leftJoin(users, eq(forumThreads.authorId, users.id))
+        .orderBy(desc(forumThreads.views))
+        .limit(limit);
+      
+      return results.map(row => ({
+        id: row.id || '',
+        title: row.title || '',
+        views: row.views || 0,
+        author: row.authorUsername || 'Unknown',
+        createdAt: row.createdAt || new Date()
+      }));
+    } catch (error) {
+      console.error("Error getting top content by views:", error);
+      throw error;
+    }
+  }
+  
+  async getTopUsersByReputation(limit: number): Promise<Array<{
+    id: string;
+    username: string;
+    reputation: number;
+    coins: number;
+    badges: string[];
+    posts: number;
+  }>> {
+    try {
+      const results = await db
+        .select({
+          id: users.id,
+          username: users.username,
+          reputation: users.reputationScore,
+          coins: users.totalCoins,
+          badges: users.badges,
+          postsCount: sql<number>`(SELECT COUNT(*) FROM ${forumThreads} WHERE ${forumThreads.authorId} = ${users.id})`
+        })
+        .from(users)
+        .orderBy(desc(users.reputationScore))
+        .limit(limit);
+      
+      return results.map(row => ({
+        id: row.id || '',
+        username: row.username || '',
+        reputation: row.reputation || 0,
+        coins: row.coins || 0,
+        badges: row.badges || [],
+        posts: Number(row.postsCount) || 0
+      }));
+    } catch (error) {
+      console.error("Error getting top users by reputation:", error);
       throw error;
     }
   }
