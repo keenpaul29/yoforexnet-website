@@ -1,22 +1,22 @@
-[00:00:01.191] Server  LOG      ✓ Ready in 746ms
-[00:00:01.192] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.262] Server  LOG      ✓ Ready in 783ms
+[00:00:01.268] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:04.223] Server  LOG      ○ Compiling / ...
-[00:00:18.196] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.231] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.232] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:18.237] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.237] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:18.239] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.239] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:18.409] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.409] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:18.416] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.417] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:18.419] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.419] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:18.607] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:23.869] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:04.290] Server  LOG      ○ Compiling / ...
+[00:00:12.375] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.403] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.404] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:12.413] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.414] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:12.415] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.416] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:12.593] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.594] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:12.595] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.595] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:12.597] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:12.597] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:12.761] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:17.904] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -63,8 +63,11 @@ https://react.dev/link/hydration-mismatch
                               <div className="flex flex-...">
                                 <p>
                                 <p>
-+                                 1761746929887
--                                 1761746969979
++                                 1761747319923
+-                                 1761747359407
                   ...
 
-[00:00:25.027] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:18.300] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:44.850] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:44.928] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

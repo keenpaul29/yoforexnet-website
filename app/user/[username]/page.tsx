@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import ProfileClient from './ProfileClient';
-import SchemaGenerator from '@/components/SchemaGenerator';
+import { SchemaScript } from '@/components/SchemaGenerator';
 import { generatePersonSchema } from '@/lib/schema-generator';
 
 // Express API base URL
@@ -83,7 +83,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
   // Pass profile data to Client Component
   return (
     <>
-      {personSchema && <SchemaGenerator schema={personSchema} />}
+      {personSchema && <SchemaScript schema={personSchema} />}
       <ProfileClient
         username={username}
         initialData={profileData}
