@@ -13,8 +13,8 @@ import { notFound } from 'next/navigation';
 import { getInternalApiUrl } from '@/lib/api-config';
 import { getCategoryByPath } from '@/lib/category-path';
 import BreadcrumbSchema from '@/components/BreadcrumbSchema';
-import { db } from '../../../../lib/db';
-import { forumCategories } from '../../../../shared/schema';
+import { db } from '@/lib/db';
+import { forumCategories } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 
 // Dynamic imports for components with dynamic route segments
@@ -111,11 +111,19 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   
   // Try to find a thread first (most specific content)
   let thread = null;
+  let replies = [];
   try {
     const apiUrl = getInternalApiUrl();
-    const response = await fetch(`${apiUrl}/api/threads/by-slug/${lastSlug}`);
-    if (response.ok) {
-      thread = await response.json();
+    const [threadRes, repliesRes] = await Promise.all([
+      fetch(`${apiUrl}/api/threads/slug/${lastSlug}`),
+      fetch(`${apiUrl}/api/threads/slug/${lastSlug}/replies`).catch(() => null),
+    ]);
+    
+    if (threadRes.ok) {
+      thread = await threadRes.json();
+      if (repliesRes && repliesRes.ok) {
+        replies = await repliesRes.json();
+      }
     }
   } catch (error) {
     // Not a thread
@@ -124,26 +132,53 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   if (thread) {
     // Render thread detail page with hierarchical breadcrumbs
     const { default: ThreadDetailClient } = await loadThreadClient();
-    return <ThreadDetailClient slug={lastSlug} />;
+    return <ThreadDetailClient initialThread={thread} initialReplies={replies} />;
   }
   
   // Try to find marketplace content
   let content = null;
+  let author = null;
+  let reviews = [];
+  let similarContent = [];
+  let authorReleases = [];
+  
   try {
     const apiUrl = getInternalApiUrl();
-    const response = await fetch(`${apiUrl}/api/content/by-slug/${lastSlug}`);
-    if (response.ok) {
-      content = await response.json();
+    const contentRes = await fetch(`${apiUrl}/api/content/slug/${lastSlug}`);
+    
+    if (contentRes.ok) {
+      content = await contentRes.json();
+      
+      // Fetch additional content data in parallel
+      const [authorRes, reviewsRes, similarRes, releasesRes] = await Promise.all([
+        fetch(`${apiUrl}/api/users/${content.authorId}`).catch(() => null),
+        fetch(`${apiUrl}/api/content/${content.id}/reviews`).catch(() => null),
+        fetch(`${apiUrl}/api/content/${content.id}/similar`).catch(() => null),
+        fetch(`${apiUrl}/api/users/${content.authorId}/content`).catch(() => null),
+      ]);
+      
+      if (authorRes && authorRes.ok) author = await authorRes.json();
+      if (reviewsRes && reviewsRes.ok) reviews = await reviewsRes.json();
+      if (similarRes && similarRes.ok) similarContent = await similarRes.json();
+      if (releasesRes && releasesRes.ok) authorReleases = await releasesRes.json();
     }
   } catch (error) {
     // Not content either
   }
   
   if (content) {
-    // Redirect to content detail page (or render inline)
-    // For now, import and render the content client
+    // Render content detail page with all required data
     const { default: ContentDetailClient } = await loadContentClient();
-    return <ContentDetailClient slug={lastSlug} />;
+    return (
+      <ContentDetailClient 
+        slug={lastSlug}
+        initialContent={content}
+        initialAuthor={author}
+        initialReviews={reviews}
+        initialSimilarContent={similarContent}
+        initialAuthorReleases={authorReleases}
+      />
+    );
   }
   
   // Must be a category browsing page
@@ -180,12 +215,28 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
     }
   }
   
+  // Fetch threads for this category
+  let threads = [];
+  try {
+    const apiUrl = getInternalApiUrl();
+    const threadsRes = await fetch(`${apiUrl}/api/categories/${category.slug}/threads`);
+    if (threadsRes.ok) {
+      threads = await threadsRes.json();
+    }
+  } catch (error) {
+    console.error('Error fetching category threads:', error);
+  }
+  
   // Render category discussion page with breadcrumbs
   const { default: CategoryDiscussionClient } = await loadCategoryClient();
   return (
     <>
       <BreadcrumbSchema path={breadcrumbPath} />
-      <CategoryDiscussionClient slug={category.slug} />
+      <CategoryDiscussionClient 
+        slug={category.slug} 
+        initialCategory={category}
+        initialThreads={threads}
+      />
     </>
   );
 }
