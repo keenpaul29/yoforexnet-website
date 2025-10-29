@@ -2198,6 +2198,10 @@ body {
   width: 1px;
 }
 
+.w-\[80px\] {
+  width: 80px;
+}
+
 .min-w-0 {
   min-width: 0;
 }
@@ -6319,6 +6323,14 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .md\:w-auto {
     width: auto;
+  }
+
+  .md\:w-\[180px\] {
+    width: 180px;
+  }
+
+  .md\:w-\[200px\] {
+    width: 200px;
   }
 
   .md\:min-w-80 {
