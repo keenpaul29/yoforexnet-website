@@ -14,21 +14,58 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+// Type definitions for API responses
+interface Broker {
+  id: number;
+  name: string;
+  country?: string;
+  regulation?: string;
+  verified: boolean;
+  reviewCount?: number;
+  rating?: number;
+}
+
+interface ScamReport {
+  id: number;
+  brokerName: string;
+  reporterUsername: string;
+  reason: string;
+  status: string;
+  createdAt: string;
+}
+
+interface Review {
+  id: number;
+  brokerName: string;
+  reviewerUsername: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+}
+
 export default function AdminBrokers() {
   const [search, setSearch] = useState("");
   const { toast } = useToast();
 
-  const { data: brokers, isLoading: brokersLoading } = useQuery({
+  // Add explicit type annotations to ensure TypeScript knows the structure
+  const { data: brokersData, isLoading: brokersLoading } = useQuery<Broker[]>({
     queryKey: ["/api/admin/brokers", { search }]
   });
 
-  const { data: scamReports, isLoading: reportsLoading } = useQuery({
+  // Defensive programming: ensure arrays are always defined
+  const brokers: Broker[] = Array.isArray(brokersData) ? brokersData : [];
+
+  const { data: scamReportsData, isLoading: reportsLoading } = useQuery<ScamReport[]>({
     queryKey: ["/api/admin/brokers/scam-reports"]
   });
 
-  const { data: reviews, isLoading: reviewsLoading } = useQuery({
+  const scamReports: ScamReport[] = Array.isArray(scamReportsData) ? scamReportsData : [];
+
+  const { data: reviewsData, isLoading: reviewsLoading } = useQuery<Review[]>({
     queryKey: ["/api/admin/brokers/reviews"]
   });
+
+  const reviews: Review[] = Array.isArray(reviewsData) ? reviewsData : [];
 
   const verifyBrokerMutation = useMutation({
     mutationFn: async (brokerId: number) => {
@@ -79,7 +116,7 @@ export default function AdminBrokers() {
             Brokers
           </TabsTrigger>
           <TabsTrigger value="scam-reports" data-testid="tab-scam-reports">
-            Scam Reports ({scamReports?.length || 0})
+            Scam Reports ({scamReports.length})
           </TabsTrigger>
           <TabsTrigger value="reviews" data-testid="tab-broker-reviews">
             Reviews
@@ -109,7 +146,7 @@ export default function AdminBrokers() {
           {/* Brokers Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Brokers ({brokers?.length || 0})</CardTitle>
+              <CardTitle>Brokers ({brokers.length})</CardTitle>
             </CardHeader>
             <CardContent>
               {brokersLoading ? (
@@ -133,8 +170,8 @@ export default function AdminBrokers() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {brokers && brokers.length > 0 ? (
-                        brokers.map((broker: any) => (
+                      {brokers.length > 0 ? (
+                        brokers.map((broker: Broker) => (
                           <TableRow key={broker.id} data-testid={`broker-row-${broker.id}`}>
                             <TableCell data-testid={`broker-name-${broker.id}`}>
                               {broker.name}
@@ -203,7 +240,7 @@ export default function AdminBrokers() {
         <TabsContent value="scam-reports" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Scam Reports ({scamReports?.length || 0})</CardTitle>
+              <CardTitle>Scam Reports ({scamReports.length})</CardTitle>
             </CardHeader>
             <CardContent>
               {reportsLoading ? (
@@ -226,8 +263,8 @@ export default function AdminBrokers() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {scamReports && scamReports.length > 0 ? (
-                        scamReports.map((report: any) => (
+                      {scamReports.length > 0 ? (
+                        scamReports.map((report: ScamReport) => (
                           <TableRow key={report.id} data-testid={`scam-report-${report.id}`}>
                             <TableCell>{report.brokerName}</TableCell>
                             <TableCell>{report.reporterUsername}</TableCell>
@@ -285,7 +322,7 @@ export default function AdminBrokers() {
         <TabsContent value="reviews" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Broker Reviews ({reviews?.length || 0})</CardTitle>
+              <CardTitle>Recent Broker Reviews ({reviews.length})</CardTitle>
             </CardHeader>
             <CardContent>
               {reviewsLoading ? (
@@ -308,8 +345,8 @@ export default function AdminBrokers() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {reviews && reviews.length > 0 ? (
-                        reviews.map((review: any) => (
+                      {reviews.length > 0 ? (
+                        reviews.map((review: Review) => (
                           <TableRow key={review.id} data-testid={`review-row-${review.id}`}>
                             <TableCell>{review.brokerName}</TableCell>
                             <TableCell>{review.reviewerUsername}</TableCell>

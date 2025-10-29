@@ -18,26 +18,48 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Upload, Image as ImageIcon, FileText, Video, Trash2, Eye } from "lucide-react";
 
+interface MediaFile {
+  id: string;
+  filename: string;
+  url: string;
+  type: string;
+  altText?: string;
+  tags?: string[];
+  usageCount?: number;
+}
+
+interface Revision {
+  id: string;
+  revisionNumber: number;
+  changedBy: string;
+  changedFields?: string[];
+  timestamp: string;
+}
+
 export default function ContentStudio() {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [fileTypeFilter, setFileTypeFilter] = useState("all");
   const [isEditMediaOpen, setIsEditMediaOpen] = useState(false);
   const [deleteMediaId, setDeleteMediaId] = useState<string | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<any>(null);
+  const [selectedMedia, setSelectedMedia] = useState<MediaFile | null>(null);
   const [contentType, setContentType] = useState("");
   const [contentId, setContentId] = useState("");
   const [isRestoreOpen, setIsRestoreOpen] = useState(false);
-  const [selectedRevision, setSelectedRevision] = useState<any>(null);
+  const [selectedRevision, setSelectedRevision] = useState<Revision | null>(null);
 
-  const { data: mediaFiles, isLoading: mediaLoading } = useQuery({
+  const { data: mediaFilesRaw, isLoading: mediaLoading } = useQuery<MediaFile[]>({
     queryKey: ["/api/admin/content-studio/media", searchQuery, fileTypeFilter]
   });
 
-  const { data: revisions, isLoading: revisionsLoading } = useQuery({
+  const mediaFiles = Array.isArray(mediaFilesRaw) ? mediaFilesRaw : [];
+
+  const { data: revisionsRaw, isLoading: revisionsLoading } = useQuery<Revision[]>({
     queryKey: ["/api/admin/content-studio/revisions", contentType, contentId],
     enabled: !!contentType && !!contentId
   });
+
+  const revisions = Array.isArray(revisionsRaw) ? revisionsRaw : [];
 
   const uploadMediaMutation = useMutation({
     mutationFn: (data: FormData) => apiRequest("/api/admin/content-studio/media/upload", "POST", data),
@@ -89,7 +111,7 @@ export default function ContentStudio() {
     const formData = new FormData(e.currentTarget);
     const tags = (formData.get("tags") as string).split(",").map(t => t.trim()).filter(Boolean);
     updateMediaMutation.mutate({
-      id: selectedMedia.id,
+      id: selectedMedia?.id,
       altText: formData.get("altText"),
       tags
     });
@@ -154,7 +176,7 @@ export default function ContentStudio() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {mediaFiles?.map((media: any) => (
+              {mediaFiles.map((media) => (
                 <Card key={media.id} data-testid={`media-card-${media.id}`}>
                   <CardHeader className="p-0">
                     <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center overflow-hidden">
@@ -177,7 +199,7 @@ export default function ContentStudio() {
                       {media.filename}
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {media.tags?.map((tag: string, index: number) => (
+                      {media.tags?.map((tag, index) => (
                         <Badge key={index} variant="secondary" className="text-xs">
                           {tag}
                         </Badge>
@@ -210,7 +232,7 @@ export default function ContentStudio() {
                   </CardFooter>
                 </Card>
               ))}
-              {(!mediaFiles || mediaFiles.length === 0) && (
+              {mediaFiles.length === 0 && (
                 <div className="col-span-full text-center py-12 text-muted-foreground">
                   No media files found
                 </div>
@@ -332,7 +354,7 @@ export default function ContentStudio() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {revisions?.map((revision: any) => (
+                        {revisions.map((revision) => (
                           <TableRow key={revision.id} data-testid={`revision-${revision.id}`}>
                             <TableCell>
                               <Badge variant="secondary">#{revision.revisionNumber}</Badge>
@@ -340,7 +362,7 @@ export default function ContentStudio() {
                             <TableCell>{revision.changedBy}</TableCell>
                             <TableCell>
                               <div className="flex flex-wrap gap-1">
-                                {revision.changedFields?.map((field: string, index: number) => (
+                                {revision.changedFields?.map((field, index) => (
                                   <Badge key={index} variant="outline" className="text-xs">
                                     {field}
                                   </Badge>
@@ -375,7 +397,7 @@ export default function ContentStudio() {
                             </TableCell>
                           </TableRow>
                         ))}
-                        {(!revisions || revisions.length === 0) && (
+                        {revisions.length === 0 && (
                           <TableRow>
                             <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                               No revisions found

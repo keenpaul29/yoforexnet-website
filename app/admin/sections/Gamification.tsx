@@ -17,6 +17,40 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Award, Trophy } from "lucide-react";
 
+interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  rarity: string;
+  imageUrl?: string;
+  totalEarned?: number;
+}
+
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  criteria: string;
+  rewardCoins: number;
+  completionRate?: number;
+}
+
+interface LeaderboardEntry {
+  id: string;
+  username: string;
+  score: number;
+}
+
+interface Goal {
+  name: string;
+  participants: number;
+}
+
+interface GoalCompletionPoint {
+  date: string;
+  completionRate: number;
+}
+
 export default function Gamification() {
   const { toast } = useToast();
   const [isCreateBadgeOpen, setIsCreateBadgeOpen] = useState(false);
@@ -24,25 +58,35 @@ export default function Gamification() {
   const [leaderboardType, setLeaderboardType] = useState("contributors");
   const [timePeriod, setTimePeriod] = useState("all-time");
 
-  const { data: badges, isLoading: badgesLoading } = useQuery({
+  const { data: badgesRaw, isLoading: badgesLoading } = useQuery<Badge[]>({
     queryKey: ["/api/admin/gamification/badges"]
   });
 
-  const { data: achievements, isLoading: achievementsLoading } = useQuery({
+  const badges = Array.isArray(badgesRaw) ? badgesRaw : [];
+
+  const { data: achievementsRaw, isLoading: achievementsLoading } = useQuery<Achievement[]>({
     queryKey: ["/api/admin/gamification/achievements"]
   });
 
-  const { data: leaderboard, isLoading: leaderboardLoading } = useQuery({
+  const achievements = Array.isArray(achievementsRaw) ? achievementsRaw : [];
+
+  const { data: leaderboardRaw, isLoading: leaderboardLoading } = useQuery<LeaderboardEntry[]>({
     queryKey: ["/api/admin/gamification/leaderboard", leaderboardType, timePeriod]
   });
 
-  const { data: goals, isLoading: goalsLoading } = useQuery({
+  const leaderboard = Array.isArray(leaderboardRaw) ? leaderboardRaw : [];
+
+  const { data: goalsRaw, isLoading: goalsLoading } = useQuery<Goal[]>({
     queryKey: ["/api/admin/gamification/goals"]
   });
 
-  const { data: goalCompletionData, isLoading: goalCompletionLoading } = useQuery({
+  const goals = Array.isArray(goalsRaw) ? goalsRaw : [];
+
+  const { data: goalCompletionDataRaw, isLoading: goalCompletionLoading } = useQuery<GoalCompletionPoint[]>({
     queryKey: ["/api/admin/gamification/goal-completion"]
   });
+
+  const goalCompletionData = Array.isArray(goalCompletionDataRaw) ? goalCompletionDataRaw : [];
 
   const createBadgeMutation = useMutation({
     mutationFn: (data: any) => apiRequest("/api/admin/gamification/badges", "POST", data),
@@ -150,7 +194,7 @@ export default function Gamification() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {badges?.map((badge: any) => (
+              {badges.map((badge) => (
                 <Card key={badge.id} data-testid={`badge-card-${badge.id}`}>
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
@@ -175,7 +219,7 @@ export default function Gamification() {
                   </CardFooter>
                 </Card>
               ))}
-              {(!badges || badges.length === 0) && (
+              {badges.length === 0 && (
                 <div className="col-span-full text-center py-12 text-muted-foreground">
                   No badges created yet
                 </div>
@@ -241,7 +285,7 @@ export default function Gamification() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {achievements?.map((achievement: any) => (
+                      {achievements.map((achievement) => (
                         <TableRow key={achievement.id} data-testid={`achievement-${achievement.id}`}>
                           <TableCell className="font-medium" data-testid={`achievement-name-${achievement.id}`}>
                             {achievement.name}
@@ -254,7 +298,7 @@ export default function Gamification() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!achievements || achievements.length === 0) && (
+                      {achievements.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                             No achievements created
@@ -313,7 +357,7 @@ export default function Gamification() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {leaderboard?.map((entry: any, index: number) => (
+                      {leaderboard.map((entry, index) => (
                         <TableRow key={entry.id} data-testid={`leaderboard-${index}`}>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -327,7 +371,7 @@ export default function Gamification() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!leaderboard || leaderboard.length === 0) && (
+                      {leaderboard.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
                             No data available
@@ -352,7 +396,7 @@ export default function Gamification() {
             <CardContent>
               {goalCompletionLoading ? (
                 <Skeleton className="h-64" />
-              ) : goalCompletionData && goalCompletionData.length > 0 ? (
+              ) : goalCompletionData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <LineChart data={goalCompletionData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -379,7 +423,7 @@ export default function Gamification() {
                 <div className="space-y-2">
                   {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12" />)}
                 </div>
-              ) : goals && goals.length > 0 ? (
+              ) : goals.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={goals}>
                     <CartesianGrid strokeDasharray="3 3" />

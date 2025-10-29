@@ -16,29 +16,87 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
 
+interface FinanceOverview {
+  totalRevenue: number;
+  revenueGrowth: number;
+  pendingWithdrawals: number;
+  pendingWithdrawalCount: number;
+  totalTransactions: number;
+  transactionsToday: number;
+  topEarner?: {
+    username: string;
+    earnings: number;
+  };
+}
+
+interface Transaction {
+  id: string;
+  username: string;
+  type: string;
+  amount: number;
+  description?: string;
+  createdAt: string;
+}
+
+interface Withdrawal {
+  id: number;
+  username: string;
+  amount: number;
+  method?: string;
+  walletAddress?: string;
+  createdAt: string;
+}
+
+interface RevenueChartPoint {
+  date: string;
+  revenue: number;
+}
+
+interface RevenueSourcePoint {
+  name: string;
+  value: number;
+}
+
 export default function AdminFinance() {
   const [periodFilter, setPeriodFilter] = useState("30d");
   const { toast } = useToast();
 
-  const { data: overview, isLoading: overviewLoading } = useQuery({
+  const { data: overviewRaw, isLoading: overviewLoading } = useQuery<FinanceOverview>({
     queryKey: ["/api/admin/finance/overview"]
   });
 
-  const { data: transactions, isLoading: transactionsLoading } = useQuery({
+  const overview: FinanceOverview = overviewRaw ?? {
+    totalRevenue: 0,
+    revenueGrowth: 0,
+    pendingWithdrawals: 0,
+    pendingWithdrawalCount: 0,
+    totalTransactions: 0,
+    transactionsToday: 0
+  };
+
+  const { data: transactionsRaw, isLoading: transactionsLoading } = useQuery<Transaction[]>({
     queryKey: ["/api/admin/finance/transactions", { period: periodFilter }]
   });
 
-  const { data: withdrawals, isLoading: withdrawalsLoading } = useQuery({
+  const transactions = Array.isArray(transactionsRaw) ? transactionsRaw : [];
+
+  const { data: withdrawalsRaw, isLoading: withdrawalsLoading } = useQuery<Withdrawal[]>({
     queryKey: ["/api/admin/finance/withdrawals/pending"]
   });
 
-  const { data: revenueChart, isLoading: chartLoading } = useQuery({
+  const withdrawals = Array.isArray(withdrawalsRaw) ? withdrawalsRaw : [];
+
+  const { data: revenueChartRaw, isLoading: chartLoading } = useQuery<RevenueChartPoint[]>({
     queryKey: ["/api/admin/finance/revenue-chart", { period: periodFilter }]
   });
 
-  const { data: revenueBySource, isLoading: sourceLoading } = useQuery({
+  const revenueChart = Array.isArray(revenueChartRaw) ? revenueChartRaw : [];
+
+  const { data: revenueBySourceRaw, isLoading: sourceLoading } = useQuery<RevenueSourcePoint[]>({
     queryKey: ["/api/admin/finance/revenue-by-source"]
   });
+
+  const revenueBySource = Array.isArray(revenueBySourceRaw) ? revenueBySourceRaw : [];
 
   const approveWithdrawalMutation = useMutation({
     mutationFn: async (withdrawalId: number) => {
@@ -95,11 +153,11 @@ export default function AdminFinance() {
             ) : (
               <>
                 <div className="text-2xl font-bold" data-testid="text-finance-revenue">
-                  ${overview?.totalRevenue || 0}
+                  ${overview.totalRevenue}
                 </div>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <TrendingUp className="h-3 w-3" />
-                  +{overview?.revenueGrowth || 0}% vs last period
+                  +{overview.revenueGrowth}% vs last period
                 </p>
               </>
             )}
@@ -117,10 +175,10 @@ export default function AdminFinance() {
             ) : (
               <>
                 <div className="text-2xl font-bold" data-testid="text-pending-withdrawals">
-                  ${overview?.pendingWithdrawals || 0}
+                  ${overview.pendingWithdrawals}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {overview?.pendingWithdrawalCount || 0} requests
+                  {overview.pendingWithdrawalCount} requests
                 </p>
               </>
             )}
@@ -138,10 +196,10 @@ export default function AdminFinance() {
             ) : (
               <>
                 <div className="text-2xl font-bold" data-testid="text-total-transactions">
-                  {overview?.totalTransactions || 0}
+                  {overview.totalTransactions}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {overview?.transactionsToday || 0} today
+                  {overview.transactionsToday} today
                 </p>
               </>
             )}
@@ -159,10 +217,10 @@ export default function AdminFinance() {
             ) : (
               <>
                 <div className="text-lg font-bold truncate">
-                  {overview?.topEarner?.username || 'N/A'}
+                  {overview.topEarner?.username || 'N/A'}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  ${overview?.topEarner?.earnings || 0} earned
+                  ${overview.topEarner?.earnings || 0} earned
                 </p>
               </>
             )}
@@ -179,7 +237,7 @@ export default function AdminFinance() {
           <CardContent>
             {chartLoading ? (
               <Skeleton className="h-64" />
-            ) : revenueChart && revenueChart.length > 0 ? (
+            ) : revenueChart.length > 0 ? (
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={revenueChart}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -204,7 +262,7 @@ export default function AdminFinance() {
           <CardContent>
             {sourceLoading ? (
               <Skeleton className="h-64" />
-            ) : revenueBySource && revenueBySource.length > 0 ? (
+            ) : revenueBySource.length > 0 ? (
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
@@ -216,7 +274,7 @@ export default function AdminFinance() {
                     outerRadius={80}
                     label
                   >
-                    {revenueBySource.map((entry: any, index: number) => (
+                    {revenueBySource.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -235,7 +293,7 @@ export default function AdminFinance() {
       {/* Pending Withdrawals */}
       <Card>
         <CardHeader>
-          <CardTitle>Pending Withdrawals ({withdrawals?.length || 0})</CardTitle>
+          <CardTitle>Pending Withdrawals ({withdrawals.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {withdrawalsLoading ? (
@@ -258,14 +316,14 @@ export default function AdminFinance() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {withdrawals && withdrawals.length > 0 ? (
-                    withdrawals.map((withdrawal: any) => (
+                  {withdrawals.length > 0 ? (
+                    withdrawals.map((withdrawal) => (
                       <TableRow key={withdrawal.id} data-testid={`withdrawal-row-${withdrawal.id}`}>
                         <TableCell data-testid={`withdrawal-user-${withdrawal.id}`}>
                           {withdrawal.username}
                         </TableCell>
                         <TableCell data-testid={`withdrawal-amount-${withdrawal.id}`}>
-                          ${withdrawal.amount || 0}
+                          ${withdrawal.amount}
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline">{withdrawal.method || 'USDT'}</Badge>
@@ -320,7 +378,7 @@ export default function AdminFinance() {
       {/* Recent Transactions */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Transactions ({transactions?.length || 0})</CardTitle>
+          <CardTitle>Recent Transactions ({transactions.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {transactionsLoading ? (
@@ -342,8 +400,8 @@ export default function AdminFinance() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transactions && transactions.length > 0 ? (
-                    transactions.map((txn: any) => (
+                  {transactions.length > 0 ? (
+                    transactions.map((txn) => (
                       <TableRow key={txn.id} data-testid={`transaction-row-${txn.id}`}>
                         <TableCell>{txn.username}</TableCell>
                         <TableCell>

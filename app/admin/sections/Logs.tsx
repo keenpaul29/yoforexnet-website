@@ -13,6 +13,53 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 import { Download } from "lucide-react";
 
+interface AdminLog {
+  id: string;
+  createdAt: string;
+  adminUsername: string;
+  actionType: string;
+  targetType: string;
+  details: string;
+  ipAddress: string;
+}
+
+interface SecurityLog {
+  id: string;
+  createdAt: string;
+  eventType: string;
+  severity: string;
+  description: string;
+  username?: string;
+  ipAddress: string;
+}
+
+interface PerformanceLog {
+  id: string;
+  createdAt: string;
+  metricType: string;
+  value: number;
+  unit: string;
+  status: string;
+}
+
+interface PerformanceLogsData {
+  aggregations?: {
+    avg: number;
+    min: number;
+    max: number;
+  };
+  logs: PerformanceLog[];
+}
+
+interface SystemEvent {
+  id: string;
+  createdAt: string;
+  eventType: string;
+  severity: string;
+  description: string;
+  component: string;
+}
+
 export default function Logs() {
   const [activeTab, setActiveTab] = useState("admin-actions");
   const [adminFilter, setAdminFilter] = useState("all");
@@ -23,21 +70,32 @@ export default function Logs() {
   const [metricTypeFilter, setMetricTypeFilter] = useState("all");
   const [eventTypeFilter, setEventTypeFilter] = useState("all");
 
-  const { data: adminLogs, isLoading: adminLogsLoading } = useQuery({
+  const { data: adminLogsRaw, isLoading: adminLogsLoading } = useQuery<AdminLog[]>({
     queryKey: ["/api/admin/logs/admin-actions", { admin: adminFilter, actionType: actionTypeFilter, targetType: targetTypeFilter, search }]
   });
 
-  const { data: securityLogs, isLoading: securityLogsLoading } = useQuery({
+  const adminLogs = Array.isArray(adminLogsRaw) ? adminLogsRaw : [];
+
+  const { data: securityLogsRaw, isLoading: securityLogsLoading } = useQuery<SecurityLog[]>({
     queryKey: ["/api/admin/logs/security", { severity: severityFilter, eventType: eventTypeFilter }]
   });
 
-  const { data: performanceLogs, isLoading: performanceLogsLoading } = useQuery({
+  const securityLogs = Array.isArray(securityLogsRaw) ? securityLogsRaw : [];
+
+  const { data: performanceLogsRaw, isLoading: performanceLogsLoading } = useQuery<PerformanceLogsData>({
     queryKey: ["/api/admin/logs/performance", { metricType: metricTypeFilter }]
   });
 
-  const { data: systemEvents, isLoading: systemEventsLoading } = useQuery({
+  const performanceLogs: PerformanceLogsData = performanceLogsRaw ?? {
+    aggregations: { avg: 0, min: 0, max: 0 },
+    logs: []
+  };
+
+  const { data: systemEventsRaw, isLoading: systemEventsLoading } = useQuery<SystemEvent[]>({
     queryKey: ["/api/admin/logs/system-events", { severity: severityFilter, eventType: eventTypeFilter }]
   });
+
+  const systemEvents = Array.isArray(systemEventsRaw) ? systemEventsRaw : [];
 
   const exportLogs = (format: 'csv' | 'json') => {
     console.log(`Exporting logs as ${format}`);
@@ -164,7 +222,7 @@ export default function Logs() {
           ) : (
             <Card data-testid="card-admin-logs">
               <CardHeader>
-                <CardTitle>Admin Action Logs ({adminLogs?.length || 0})</CardTitle>
+                <CardTitle>Admin Action Logs ({adminLogs.length})</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -180,8 +238,8 @@ export default function Logs() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {adminLogs && adminLogs.length > 0 ? (
-                        adminLogs.map((log: any) => (
+                      {adminLogs.length > 0 ? (
+                        adminLogs.map((log) => (
                           <TableRow key={log.id} data-testid={`log-${log.id}`}>
                             <TableCell>
                               {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
@@ -251,7 +309,7 @@ export default function Logs() {
           ) : (
             <Card data-testid="card-security-logs">
               <CardHeader>
-                <CardTitle>Security Event Logs ({securityLogs?.length || 0})</CardTitle>
+                <CardTitle>Security Event Logs ({securityLogs.length})</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -267,8 +325,8 @@ export default function Logs() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {securityLogs && securityLogs.length > 0 ? (
-                        securityLogs.map((log: any) => (
+                      {securityLogs.length > 0 ? (
+                        securityLogs.map((log) => (
                           <TableRow key={log.id} data-testid={`security-log-${log.id}`}>
                             <TableCell>
                               {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
@@ -344,7 +402,7 @@ export default function Logs() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-avg-metric">
-                      {performanceLogs?.aggregations?.avg || 0}
+                      {performanceLogs.aggregations?.avg || 0}
                     </div>
                     <p className="text-xs text-muted-foreground">Average value</p>
                   </CardContent>
@@ -356,7 +414,7 @@ export default function Logs() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-min-metric">
-                      {performanceLogs?.aggregations?.min || 0}
+                      {performanceLogs.aggregations?.min || 0}
                     </div>
                     <p className="text-xs text-muted-foreground">Minimum value</p>
                   </CardContent>
@@ -368,7 +426,7 @@ export default function Logs() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-max-metric">
-                      {performanceLogs?.aggregations?.max || 0}
+                      {performanceLogs.aggregations?.max || 0}
                     </div>
                     <p className="text-xs text-muted-foreground">Maximum value</p>
                   </CardContent>
@@ -377,7 +435,7 @@ export default function Logs() {
 
               <Card data-testid="card-performance-logs">
                 <CardHeader>
-                  <CardTitle>Performance Metrics ({performanceLogs?.logs?.length || 0})</CardTitle>
+                  <CardTitle>Performance Metrics ({performanceLogs.logs.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -392,8 +450,8 @@ export default function Logs() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {performanceLogs?.logs && performanceLogs.logs.length > 0 ? (
-                          performanceLogs.logs.map((log: any) => (
+                        {performanceLogs.logs.length > 0 ? (
+                          performanceLogs.logs.map((log) => (
                             <TableRow key={log.id} data-testid={`perf-log-${log.id}`}>
                               <TableCell>
                                 {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
@@ -465,7 +523,7 @@ export default function Logs() {
           ) : (
             <Card data-testid="card-system-events">
               <CardHeader>
-                <CardTitle>System Events ({systemEvents?.length || 0})</CardTitle>
+                <CardTitle>System Events ({systemEvents.length})</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -480,8 +538,8 @@ export default function Logs() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {systemEvents && systemEvents.length > 0 ? (
-                        systemEvents.map((event: any) => (
+                      {systemEvents.length > 0 ? (
+                        systemEvents.map((event) => (
                           <TableRow key={event.id} data-testid={`system-event-${event.id}`}>
                             <TableCell>
                               {formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}

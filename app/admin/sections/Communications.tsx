@@ -19,22 +19,71 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { formatDistanceToNow } from "date-fns";
 import { Eye, MousePointer } from "lucide-react";
 
+// Type definitions for API responses
+interface Announcement {
+  id: number;
+  title: string;
+  type: string;
+  audience: string;
+  active: boolean;
+  views?: number;
+  clicks?: number;
+  createdAt: string;
+}
+
+interface Campaign {
+  id: number;
+  name: string;
+  subject: string;
+  sent?: number;
+  opened?: number;
+  clicked?: number;
+  status: string;
+  createdAt: string;
+}
+
+interface CampaignStats {
+  sent: number;
+  opened: number;
+  openRate: number;
+  clicked: number;
+  clickRate: number;
+  bounced: number;
+  bounceRate: number;
+}
+
 export default function Communications() {
   const [activeTab, setActiveTab] = useState("announcements");
   const [createAnnouncementOpen, setCreateAnnouncementOpen] = useState(false);
   const { toast } = useToast();
 
-  const { data: announcements, isLoading: announcementsLoading } = useQuery({
+  // Add explicit type annotations to ensure TypeScript knows the structure
+  const { data: announcementsData, isLoading: announcementsLoading } = useQuery<Announcement[]>({
     queryKey: ["/api/admin/communications/announcements"]
   });
 
-  const { data: campaigns, isLoading: campaignsLoading } = useQuery({
+  // Defensive programming: ensure arrays are always defined
+  const announcements: Announcement[] = Array.isArray(announcementsData) ? announcementsData : [];
+
+  const { data: campaignsData, isLoading: campaignsLoading } = useQuery<Campaign[]>({
     queryKey: ["/api/admin/communications/campaigns"]
   });
 
-  const { data: campaignStats, isLoading: statsLoading } = useQuery({
+  const campaigns: Campaign[] = Array.isArray(campaignsData) ? campaignsData : [];
+
+  const { data: campaignStatsData, isLoading: statsLoading } = useQuery<CampaignStats>({
     queryKey: ["/api/admin/communications/campaign-stats"]
   });
+
+  const campaignStats: CampaignStats = campaignStatsData || {
+    sent: 0,
+    opened: 0,
+    openRate: 0,
+    clicked: 0,
+    clickRate: 0,
+    bounced: 0,
+    bounceRate: 0
+  };
 
   const createAnnouncementMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -221,8 +270,8 @@ export default function Communications() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {announcements && announcements.length > 0 ? (
-                        announcements.map((announcement: any) => (
+                      {announcements.length > 0 ? (
+                        announcements.map((announcement: Announcement) => (
                           <TableRow key={announcement.id} data-testid={`announcement-${announcement.id}`}>
                             <TableCell>{announcement.title}</TableCell>
                             <TableCell>
@@ -312,7 +361,7 @@ export default function Communications() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold" data-testid="text-sent">
-                    {campaignStats?.sent || 0}
+                    {campaignStats.sent}
                   </div>
                   <p className="text-xs text-muted-foreground">Emails sent</p>
                 </CardContent>
@@ -324,10 +373,10 @@ export default function Communications() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold" data-testid="text-opened">
-                    {campaignStats?.opened || 0}
+                    {campaignStats.opened}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {campaignStats?.openRate || 0}% open rate
+                    {campaignStats.openRate}% open rate
                   </p>
                 </CardContent>
               </Card>
@@ -338,10 +387,10 @@ export default function Communications() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold" data-testid="text-clicked">
-                    {campaignStats?.clicked || 0}
+                    {campaignStats.clicked}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {campaignStats?.clickRate || 0}% click rate
+                    {campaignStats.clickRate}% click rate
                   </p>
                 </CardContent>
               </Card>
@@ -352,10 +401,10 @@ export default function Communications() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold" data-testid="text-bounced">
-                    {campaignStats?.bounced || 0}
+                    {campaignStats.bounced}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {campaignStats?.bounceRate || 0}% bounce rate
+                    {campaignStats.bounceRate}% bounce rate
                   </p>
                 </CardContent>
               </Card>
@@ -386,8 +435,8 @@ export default function Communications() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {campaigns && campaigns.length > 0 ? (
-                        campaigns.map((campaign: any) => (
+                      {campaigns.length > 0 ? (
+                        campaigns.map((campaign: Campaign) => (
                           <TableRow key={campaign.id} data-testid={`campaign-${campaign.id}`}>
                             <TableCell>{campaign.name}</TableCell>
                             <TableCell>{campaign.subject}</TableCell>

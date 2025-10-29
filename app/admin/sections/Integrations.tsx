@@ -28,6 +28,34 @@ const WEBHOOK_EVENTS = [
   { id: "comment.posted", label: "Comment Posted" }
 ];
 
+interface ApiKey {
+  id: string;
+  name: string;
+  key: string;
+  permissions: string;
+  rateLimit: number;
+  lastUsedAt?: string;
+  usageCount?: number;
+}
+
+interface WebhookConfig {
+  id: string;
+  url: string;
+  events?: string[];
+  active: boolean;
+  successCount?: number;
+  failureCount?: number;
+}
+
+interface EventLog {
+  id: string;
+  eventType: string;
+  webhookUrl: string;
+  status: string;
+  response?: string;
+  createdAt: string;
+}
+
 export default function Integrations() {
   const { toast } = useToast();
   const [isCreateApiKeyOpen, setIsCreateApiKeyOpen] = useState(false);
@@ -38,17 +66,23 @@ export default function Integrations() {
   const [filterEventType, setFilterEventType] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  const { data: apiKeys, isLoading: apiKeysLoading } = useQuery({
+  const { data: apiKeysRaw, isLoading: apiKeysLoading } = useQuery<ApiKey[]>({
     queryKey: ["/api/admin/integrations/api-keys"]
   });
 
-  const { data: webhooks, isLoading: webhooksLoading } = useQuery({
+  const apiKeys = Array.isArray(apiKeysRaw) ? apiKeysRaw : [];
+
+  const { data: webhooksRaw, isLoading: webhooksLoading } = useQuery<WebhookConfig[]>({
     queryKey: ["/api/admin/integrations/webhooks"]
   });
 
-  const { data: eventLogs, isLoading: eventLogsLoading } = useQuery({
+  const webhooks = Array.isArray(webhooksRaw) ? webhooksRaw : [];
+
+  const { data: eventLogsRaw, isLoading: eventLogsLoading } = useQuery<EventLog[]>({
     queryKey: ["/api/admin/integrations/event-logs", filterWebhook, filterEventType, filterStatus]
   });
+
+  const eventLogs = Array.isArray(eventLogsRaw) ? eventLogsRaw : [];
 
   const createApiKeyMutation = useMutation({
     mutationFn: (data: any) => apiRequest("/api/admin/integrations/api-keys", "POST", data),
@@ -197,7 +231,7 @@ export default function Integrations() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {apiKeys?.map((key: any) => (
+                      {apiKeys.map((key) => (
                         <TableRow key={key.id} data-testid={`api-key-${key.id}`}>
                           <TableCell className="font-medium" data-testid={`api-key-name-${key.id}`}>
                             {key.name}
@@ -227,7 +261,7 @@ export default function Integrations() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!apiKeys || apiKeys.length === 0) && (
+                      {apiKeys.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                             No API keys created
@@ -338,21 +372,21 @@ export default function Integrations() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {webhooks?.map((webhook: any) => (
+                      {webhooks.map((webhook) => (
                         <TableRow key={webhook.id} data-testid={`webhook-${webhook.id}`}>
                           <TableCell className="font-mono text-xs max-w-xs truncate" data-testid={`webhook-url-${webhook.id}`}>
                             {webhook.url}
                           </TableCell>
                           <TableCell>
                             <div className="flex flex-wrap gap-1">
-                              {webhook.events?.slice(0, 2).map((event: string) => (
+                              {webhook.events?.slice(0, 2).map((event) => (
                                 <Badge key={event} variant="secondary" className="text-xs">
                                   {event}
                                 </Badge>
                               ))}
-                              {webhook.events?.length > 2 && (
+                              {(webhook.events?.length ?? 0) > 2 && (
                                 <Badge variant="secondary" className="text-xs">
-                                  +{webhook.events.length - 2}
+                                  +{(webhook.events?.length ?? 0) - 2}
                                 </Badge>
                               )}
                             </div>
@@ -366,7 +400,7 @@ export default function Integrations() {
                             <Badge variant="outline">{webhook.successCount || 0}</Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={webhook.failureCount > 0 ? 'destructive' : 'outline'}>
+                            <Badge variant={(webhook.failureCount ?? 0) > 0 ? 'destructive' : 'outline'}>
                               {webhook.failureCount || 0}
                             </Badge>
                           </TableCell>
@@ -383,7 +417,7 @@ export default function Integrations() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!webhooks || webhooks.length === 0) && (
+                      {webhooks.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No webhooks configured
@@ -408,7 +442,7 @@ export default function Integrations() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Webhooks</SelectItem>
-                  {webhooks?.map((webhook: any) => (
+                  {webhooks.map((webhook) => (
                     <SelectItem key={webhook.id} value={webhook.id}>
                       {webhook.url.substring(0, 30)}...
                     </SelectItem>
@@ -462,7 +496,7 @@ export default function Integrations() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {eventLogs?.map((log: any) => (
+                      {eventLogs.map((log) => (
                         <TableRow key={log.id}>
                           <TableCell>
                             <Badge variant="secondary">{log.eventType}</Badge>
@@ -497,7 +531,7 @@ export default function Integrations() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!eventLogs || eventLogs.length === 0) && (
+                      {eventLogs.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No event logs found

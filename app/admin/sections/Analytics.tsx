@@ -10,24 +10,155 @@ import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area, X
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))', '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c'];
 
+// Type definitions for API responses
+interface GrowthDataPoint {
+  date: string;
+  users: number;
+}
+
+interface CountryDataPoint {
+  country: string;
+  users: number;
+}
+
+interface ActiveInactiveDataPoint {
+  name: string;
+  value: number;
+}
+
+interface UsersAnalyticsData {
+  dau: number;
+  mau: number;
+  newUsers: number;
+  churnRate: number;
+  growthData: GrowthDataPoint[];
+  countryData: CountryDataPoint[];
+  activeInactiveData: ActiveInactiveDataPoint[];
+}
+
+interface ContentTrendDataPoint {
+  date: string;
+  count: number;
+}
+
+interface TypeDistributionPoint {
+  name: string;
+  value: number;
+}
+
+interface TopCreator {
+  id: string;
+  username: string;
+  posts: number;
+  views: number;
+  avgQuality?: number;
+}
+
+interface QualityScore {
+  score: string;
+  count: number;
+}
+
+interface ContentAnalyticsData {
+  trendData: ContentTrendDataPoint[];
+  typeDistribution: TypeDistributionPoint[];
+  topCreators: TopCreator[];
+  qualityScores: QualityScore[];
+}
+
+interface RevenueTrendPoint {
+  date: string;
+  revenue: number;
+}
+
+interface RevenueSourcePoint {
+  name: string;
+  value: number;
+}
+
+interface TopEarner {
+  id: string;
+  username: string;
+  totalEarnings: number;
+  monthlyEarnings: number;
+  sales: number;
+}
+
+interface TransactionVolumePoint {
+  date: string;
+  volume: number;
+}
+
+interface FinancialAnalyticsData {
+  revenueTrend: RevenueTrendPoint[];
+  revenueBySource: RevenueSourcePoint[];
+  topEarners: TopEarner[];
+  transactionVolume: TransactionVolumePoint[];
+}
+
+interface HeatmapDataPoint {
+  hour: string;
+  activity: number;
+}
+
+interface EngagementAnalyticsData {
+  avgSessionDuration: string;
+  bounceRate: number;
+  pagesPerSession: number;
+  heatmapData: HeatmapDataPoint[];
+}
+
 export default function Analytics() {
   const [activeTab, setActiveTab] = useState("users");
 
-  const { data: usersData, isLoading: usersLoading } = useQuery({
+  // Add explicit type annotations to ensure TypeScript knows the structure
+  const { data: usersDataRaw, isLoading: usersLoading } = useQuery<UsersAnalyticsData>({
     queryKey: ["/api/admin/analytics/users"]
   });
 
-  const { data: contentData, isLoading: contentLoading } = useQuery({
+  // Defensive programming: ensure usersData always has the required structure
+  const usersData: UsersAnalyticsData = usersDataRaw || {
+    dau: 0,
+    mau: 0,
+    newUsers: 0,
+    churnRate: 0,
+    growthData: [],
+    countryData: [],
+    activeInactiveData: []
+  };
+
+  const { data: contentDataRaw, isLoading: contentLoading } = useQuery<ContentAnalyticsData>({
     queryKey: ["/api/admin/analytics/content"]
   });
 
-  const { data: financialData, isLoading: financialLoading } = useQuery({
+  const contentData: ContentAnalyticsData = contentDataRaw || {
+    trendData: [],
+    typeDistribution: [],
+    topCreators: [],
+    qualityScores: []
+  };
+
+  const { data: financialDataRaw, isLoading: financialLoading } = useQuery<FinancialAnalyticsData>({
     queryKey: ["/api/admin/analytics/financial"]
   });
 
-  const { data: engagementData, isLoading: engagementLoading } = useQuery({
+  const financialData: FinancialAnalyticsData = financialDataRaw || {
+    revenueTrend: [],
+    revenueBySource: [],
+    topEarners: [],
+    transactionVolume: []
+  };
+
+  const { data: engagementDataRaw, isLoading: engagementLoading } = useQuery<EngagementAnalyticsData>({
     queryKey: ["/api/admin/analytics/engagement"]
   });
+
+  const engagementData: EngagementAnalyticsData = engagementDataRaw || {
+    avgSessionDuration: '0m',
+    bounceRate: 0,
+    pagesPerSession: 0,
+    heatmapData: []
+  };
 
   return (
     <div className="space-y-6">
@@ -62,7 +193,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-dau">
-                      {usersData?.dau || 0}
+                      {usersData.dau}
                     </div>
                     <p className="text-xs text-muted-foreground">Daily Active Users</p>
                   </CardContent>
@@ -74,7 +205,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-mau">
-                      {usersData?.mau || 0}
+                      {usersData.mau}
                     </div>
                     <p className="text-xs text-muted-foreground">Monthly Active Users</p>
                   </CardContent>
@@ -86,7 +217,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-new-users">
-                      {usersData?.newUsers || 0}
+                      {usersData.newUsers}
                     </div>
                     <p className="text-xs text-muted-foreground">Last 30 days</p>
                   </CardContent>
@@ -98,7 +229,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-churn-rate">
-                      {usersData?.churnRate || 0}%
+                      {usersData.churnRate}%
                     </div>
                     <p className="text-xs text-muted-foreground">Monthly churn</p>
                   </CardContent>
@@ -113,7 +244,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={250}>
-                      <LineChart data={usersData?.growthData || []}>
+                      <LineChart data={usersData.growthData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
@@ -131,7 +262,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={usersData?.countryData || []}>
+                      <BarChart data={usersData.countryData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="country" />
                         <YAxis />
@@ -150,7 +281,7 @@ export default function Analytics() {
                     <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
                         <Pie
-                          data={usersData?.activeInactiveData || []}
+                          data={usersData.activeInactiveData}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
@@ -159,7 +290,7 @@ export default function Analytics() {
                           fill="#8884d8"
                           dataKey="value"
                         >
-                          {(usersData?.activeInactiveData || []).map((_: any, index: number) => (
+                          {usersData.activeInactiveData.map((_: any, index: number) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -189,7 +320,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={250}>
-                      <LineChart data={contentData?.trendData || []}>
+                      <LineChart data={contentData.trendData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
@@ -209,7 +340,7 @@ export default function Analytics() {
                     <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
                         <Pie
-                          data={contentData?.typeDistribution || []}
+                          data={contentData.typeDistribution}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
@@ -218,7 +349,7 @@ export default function Analytics() {
                           fill="#8884d8"
                           dataKey="value"
                         >
-                          {(contentData?.typeDistribution || []).map((_: any, index: number) => (
+                          {contentData.typeDistribution.map((_: any, index: number) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -246,8 +377,8 @@ export default function Analytics() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {contentData?.topCreators && contentData.topCreators.length > 0 ? (
-                          contentData.topCreators.map((creator: any, index: number) => (
+                        {contentData.topCreators.length > 0 ? (
+                          contentData.topCreators.map((creator: TopCreator, index: number) => (
                             <TableRow key={creator.id} data-testid={`creator-${creator.id}`}>
                               <TableCell data-testid={`creator-rank-${creator.id}`}>{index + 1}</TableCell>
                               <TableCell>{creator.username}</TableCell>
@@ -275,7 +406,7 @@ export default function Analytics() {
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={contentData?.qualityScores || []}>
+                    <BarChart data={contentData.qualityScores}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="score" />
                       <YAxis />
@@ -305,7 +436,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={250}>
-                      <AreaChart data={financialData?.revenueTrend || []}>
+                      <AreaChart data={financialData.revenueTrend}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
@@ -325,7 +456,7 @@ export default function Analytics() {
                     <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
                         <Pie
-                          data={financialData?.revenueBySource || []}
+                          data={financialData.revenueBySource}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
@@ -334,7 +465,7 @@ export default function Analytics() {
                           fill="#8884d8"
                           dataKey="value"
                         >
-                          {(financialData?.revenueBySource || []).map((_: any, index: number) => (
+                          {financialData.revenueBySource.map((_: any, index: number) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -362,8 +493,8 @@ export default function Analytics() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {financialData?.topEarners && financialData.topEarners.length > 0 ? (
-                          financialData.topEarners.map((earner: any, index: number) => (
+                        {financialData.topEarners.length > 0 ? (
+                          financialData.topEarners.map((earner: TopEarner, index: number) => (
                             <TableRow key={earner.id} data-testid={`earner-${earner.id}`}>
                               <TableCell data-testid={`earner-rank-${earner.id}`}>{index + 1}</TableCell>
                               <TableCell>{earner.username}</TableCell>
@@ -391,7 +522,7 @@ export default function Analytics() {
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={financialData?.transactionVolume || []}>
+                    <BarChart data={financialData.transactionVolume}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="date" />
                       <YAxis />
@@ -424,7 +555,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-avg-session">
-                      {engagementData?.avgSessionDuration || '0m'}
+                      {engagementData.avgSessionDuration}
                     </div>
                     <p className="text-xs text-muted-foreground">Per user session</p>
                   </CardContent>
@@ -436,7 +567,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-bounce-rate">
-                      {engagementData?.bounceRate || 0}%
+                      {engagementData.bounceRate}%
                     </div>
                     <p className="text-xs text-muted-foreground">Single page visits</p>
                   </CardContent>
@@ -448,7 +579,7 @@ export default function Analytics() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-pages-per-session">
-                      {engagementData?.pagesPerSession || 0}
+                      {engagementData.pagesPerSession}
                     </div>
                     <p className="text-xs text-muted-foreground">Average pages</p>
                   </CardContent>
@@ -461,7 +592,7 @@ export default function Analytics() {
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={engagementData?.heatmapData || []}>
+                    <BarChart data={engagementData.heatmapData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="hour" />
                       <YAxis />

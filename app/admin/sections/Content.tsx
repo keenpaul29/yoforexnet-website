@@ -14,18 +14,32 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+// Type definitions for API responses
+interface ContentItem {
+  id: number;
+  title: string;
+  type: string;
+  authorUsername: string;
+  status: string;
+  createdAt: string;
+}
+
 export default function AdminContent() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("pending");
   const { toast } = useToast();
 
-  const { data: moderationQueue, isLoading: queueLoading } = useQuery({
+  const { data: moderationQueueData, isLoading: queueLoading } = useQuery<ContentItem[]>({
     queryKey: ["/api/admin/content/moderation-queue", { type: typeFilter, status: statusFilter }]
   });
 
-  const { data: reportedContent, isLoading: reportsLoading } = useQuery({
+  const moderationQueue: ContentItem[] = Array.isArray(moderationQueueData) ? moderationQueueData : [];
+
+  const { data: reportedContentData, isLoading: reportsLoading } = useQuery<ContentItem[]>({
     queryKey: ["/api/admin/content/reported"]
   });
+
+  const reportedContent: ContentItem[] = Array.isArray(reportedContentData) ? reportedContentData : [];
 
   const approveMutation = useMutation({
     mutationFn: async (contentId: number) => {
