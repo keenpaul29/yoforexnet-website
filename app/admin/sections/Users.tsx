@@ -15,16 +15,29 @@ import { formatDistanceToNow } from "date-fns";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface AdminUser {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  status: 'active' | 'suspended' | 'banned';
+  coinBalance: number;
+  createdAt: string;
+  reputation: number;
+}
+
 export default function AdminUsers() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const { toast } = useToast();
 
-  const { data: users, isLoading } = useQuery({
+  const { data: usersRaw, isLoading } = useQuery<AdminUser[]>({
     queryKey: ["/api/admin/users", { search, role: roleFilter, status: statusFilter }]
   });
+
+  const users: AdminUser[] = Array.isArray(usersRaw) ? usersRaw : [];
 
   const banUserMutation = useMutation({
     mutationFn: async ({ userId, reason }: { userId: number; reason: string }) => {
@@ -113,7 +126,7 @@ export default function AdminUsers() {
       {/* Users Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Users ({users?.length || 0})</CardTitle>
+          <CardTitle>Users ({users.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -130,8 +143,8 @@ export default function AdminUsers() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users && users.length > 0 ? (
-                  users.map((user: any) => (
+                {users.length > 0 ? (
+                  users.map((user) => (
                     <TableRow key={user.id} data-testid={`user-row-${user.id}`}>
                       <TableCell data-testid={`user-name-${user.id}`}>
                         {user.username}
@@ -146,7 +159,7 @@ export default function AdminUsers() {
                         </Badge>
                       </TableCell>
                       <TableCell data-testid={`user-coins-${user.id}`}>
-                        {user.coinBalance || 0}
+                        {user.coinBalance}
                       </TableCell>
                       <TableCell>
                         {formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}
@@ -211,11 +224,11 @@ export default function AdminUsers() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Coin Balance</p>
-                  <p className="font-medium">{selectedUser.coinBalance || 0}</p>
+                  <p className="font-medium">{selectedUser.coinBalance}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Reputation</p>
-                  <p className="font-medium">{selectedUser.reputation || 0}</p>
+                  <p className="font-medium">{selectedUser.reputation}</p>
                 </div>
               </div>
               <div className="flex gap-2 flex-wrap">

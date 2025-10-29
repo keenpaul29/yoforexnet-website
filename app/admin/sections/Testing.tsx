@@ -18,21 +18,59 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Play, Square, Trophy } from "lucide-react";
 
+interface TestVariant {
+  id: string;
+  name: string;
+}
+
+interface TestResult {
+  variantId: string;
+  variantName: string;
+  impressions: number;
+  conversions: number;
+  conversionRate: number;
+}
+
+interface ABTest {
+  id: string;
+  name: string;
+  description?: string;
+  status: 'draft' | 'running' | 'completed';
+  variants: TestVariant[];
+  trafficAllocation: Record<string, number>;
+  results?: TestResult[];
+  winner?: string;
+}
+
+interface FeatureFlag {
+  id: string;
+  key: string;
+  name: string;
+  description?: string;
+  enabled: boolean;
+  rollout: number;
+  targetUsers: string[];
+}
+
 export default function Testing() {
   const { toast } = useToast();
   const [isCreateTestOpen, setIsCreateTestOpen] = useState(false);
   const [isCreateFlagOpen, setIsCreateFlagOpen] = useState(false);
   const [isRolloutDialogOpen, setIsRolloutDialogOpen] = useState(false);
-  const [selectedFlag, setSelectedFlag] = useState<any>(null);
+  const [selectedFlag, setSelectedFlag] = useState<FeatureFlag | null>(null);
   const [rolloutPercentage, setRolloutPercentage] = useState([0]);
 
-  const { data: abTests, isLoading: testsLoading } = useQuery({
+  const { data: abTestsRaw, isLoading: testsLoading } = useQuery<ABTest[]>({
     queryKey: ["/api/admin/testing/ab-tests"]
   });
 
-  const { data: featureFlags, isLoading: flagsLoading } = useQuery({
+  const abTests: ABTest[] = Array.isArray(abTestsRaw) ? abTestsRaw : [];
+
+  const { data: featureFlagsRaw, isLoading: flagsLoading } = useQuery<FeatureFlag[]>({
     queryKey: ["/api/admin/testing/feature-flags"]
   });
+
+  const featureFlags: FeatureFlag[] = Array.isArray(featureFlagsRaw) ? featureFlagsRaw : [];
 
   const createTestMutation = useMutation({
     mutationFn: (data: any) => apiRequest("/api/admin/testing/ab-tests", "POST", data),
@@ -221,7 +259,7 @@ export default function Testing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {abTests?.map((test: any) => (
+                      {abTests.map((test) => (
                         <TableRow key={test.id} data-testid={`test-${test.id}`}>
                           <TableCell className="font-medium" data-testid={`test-name-${test.id}`}>
                             {test.name}
@@ -239,7 +277,7 @@ export default function Testing() {
                           </TableCell>
                           <TableCell>
                             <div className="flex flex-wrap gap-1">
-                              {test.variants?.map((variant: any) => (
+                              {test.variants.map((variant) => (
                                 <Badge key={variant.id} variant="outline" className="text-xs">
                                   {variant.name}
                                 </Badge>
@@ -248,7 +286,7 @@ export default function Testing() {
                           </TableCell>
                           <TableCell>
                             <div className="text-xs">
-                              {Object.entries(test.trafficAllocation || {}).map(([key, value]) => (
+                              {Object.entries(test.trafficAllocation).map(([key, value]) => (
                                 <div key={key}>{key}: {value}%</div>
                               ))}
                             </div>
@@ -283,7 +321,7 @@ export default function Testing() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!abTests || abTests.length === 0) && (
+                      {abTests.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                             No A/B tests created
@@ -297,7 +335,7 @@ export default function Testing() {
             </CardContent>
           </Card>
 
-          {abTests?.filter((test: any) => test.status === 'running' || test.status === 'completed').map((test: any) => (
+          {abTests.filter((test) => test.status === 'running' || test.status === 'completed').map((test) => (
             <Card key={`results-${test.id}`}>
               <CardHeader className="flex flex-row items-center justify-between gap-2">
                 <CardTitle>Results: {test.name}</CardTitle>
@@ -321,7 +359,7 @@ export default function Testing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {test.results?.map((result: any) => (
+                      {(test.results || []).map((result) => (
                         <TableRow key={result.variantId}>
                           <TableCell className="font-medium">{result.variantName}</TableCell>
                           <TableCell>{result.impressions}</TableCell>
@@ -424,7 +462,7 @@ export default function Testing() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {featureFlags?.map((flag: any) => (
+                      {featureFlags.map((flag) => (
                         <TableRow key={flag.id} data-testid={`flag-${flag.id}`}>
                           <TableCell className="font-mono text-sm" data-testid={`flag-key-${flag.id}`}>
                             {flag.key}
@@ -440,11 +478,11 @@ export default function Testing() {
                             />
                           </TableCell>
                           <TableCell>
-                            <Badge variant="secondary">{flag.rollout || 0}%</Badge>
+                            <Badge variant="secondary">{flag.rollout}%</Badge>
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline">
-                              {flag.targetUsers?.length || 0} users
+                              {flag.targetUsers.length} users
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -453,7 +491,7 @@ export default function Testing() {
                               variant="outline"
                               onClick={() => {
                                 setSelectedFlag(flag);
-                                setRolloutPercentage([flag.rollout || 0]);
+                                setRolloutPercentage([flag.rollout]);
                                 setIsRolloutDialogOpen(true);
                               }}
                               data-testid={`button-rollout-${flag.id}`}
@@ -463,7 +501,7 @@ export default function Testing() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!featureFlags || featureFlags.length === 0) && (
+                      {featureFlags.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No feature flags created
