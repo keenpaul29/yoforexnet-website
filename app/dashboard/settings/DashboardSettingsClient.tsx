@@ -114,8 +114,14 @@ const WIDGET_DEFINITIONS = [
   },
 ];
 
+interface DashboardPreferences {
+  widgetOrder: string[];
+  enabledWidgets: string[];
+  layoutType: LayoutType;
+}
+
 interface DashboardSettingsClientProps {
-  initialData: any;
+  initialData: DashboardPreferences;
 }
 
 export default function DashboardSettingsClient({ initialData }: DashboardSettingsClientProps) {
@@ -124,7 +130,7 @@ export default function DashboardSettingsClient({ initialData }: DashboardSettin
   const [layout, setLayout] = useState<LayoutType>('default');
   const [hasChanges, setHasChanges] = useState(false);
 
-  const { data: preferences, isLoading } = useQuery({
+  const { data: preferences, isLoading } = useQuery<DashboardPreferences>({
     queryKey: ['/api/dashboard/preferences'],
     initialData,
   });

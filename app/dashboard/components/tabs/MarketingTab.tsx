@@ -53,7 +53,7 @@ export function MarketingTab() {
     queryKey: ["/api/me/campaigns", filters],
   });
 
-  const { data: statsData, isLoading: statsLoading } = useQuery({
+  const { data: statsData, isLoading: statsLoading } = useQuery<Record<string, any>>({
     queryKey: ["/api/me/campaign-stats"],
   });
 

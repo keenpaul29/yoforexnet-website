@@ -7,8 +7,14 @@ import { DataTable } from "../shared/DataTable";
 import { Eye, Download, Star, MessageSquare } from "lucide-react";
 import { Line, LineChart, Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
+interface SalesDashboardData {
+  totalRevenue: number;
+  totalSales: number;
+  avgSale: number;
+}
+
 export function AnalyticsTab() {
-  const { data: salesData, isLoading } = useQuery({
+  const { data: salesData, isLoading } = useQuery<SalesDashboardData>({
     queryKey: ["/api/me/sales-dashboard"],
   });
 
