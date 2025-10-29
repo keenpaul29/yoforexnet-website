@@ -2230,10 +2230,6 @@ body {
   min-width: 140px;
 }
 
-.min-w-\[200px\] {
-  min-width: 200px;
-}
-
 .min-w-\[24px\] {
   min-width: 24px;
 }
@@ -2284,6 +2280,10 @@ body {
 
 .max-w-\[150px\] {
   max-width: 150px;
+}
+
+.max-w-\[1600px\] {
+  max-width: 1600px;
 }
 
 .max-w-\[1800px\] {
@@ -3122,6 +3122,10 @@ body {
   background-color: hsl(var(--background) / var(--tw-bg-opacity, 1));
 }
 
+.bg-background\/50 {
+  background-color: hsl(var(--background) / .5);
+}
+
 .bg-background\/95 {
   background-color: hsl(var(--background) / .95);
 }
@@ -3480,6 +3484,12 @@ body {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-green-500\/10 {
+  --tw-gradient-from: #22c55e1a var(--tw-gradient-from-position);
+  --tw-gradient-to: #22c55e00 var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .from-orange-500\/10 {
   --tw-gradient-from: #f973161a var(--tw-gradient-from-position);
   --tw-gradient-to: #f9731600 var(--tw-gradient-to-position);
@@ -3495,6 +3505,12 @@ body {
 .from-orange-500\/5 {
   --tw-gradient-from: #f973160d var(--tw-gradient-from-position);
   --tw-gradient-to: #f9731600 var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-primary {
+  --tw-gradient-from: hsl(var(--primary) / 1) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
@@ -3516,6 +3532,12 @@ body {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-yellow-500 {
+  --tw-gradient-from: #eab308 var(--tw-gradient-from-position);
+  --tw-gradient-to: #eab30800 var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .from-yellow-500\/20 {
   --tw-gradient-from: #eab30833 var(--tw-gradient-from-position);
   --tw-gradient-to: #eab30800 var(--tw-gradient-to-position);
@@ -3525,6 +3547,11 @@ body {
 .via-primary\/10 {
   --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--primary) / .1) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+.via-purple-500\/5 {
+  --tw-gradient-to: #a855f700 var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #a855f70d var(--tw-gradient-via-position), var(--tw-gradient-to);
 }
 
 .via-red-500\/5 {
@@ -3544,8 +3571,16 @@ body {
   --tw-gradient-to: hsl(var(--background) / 1) var(--tw-gradient-to-position);
 }
 
+.to-blue-500\/10 {
+  --tw-gradient-to: #3b82f61a var(--tw-gradient-to-position);
+}
+
 .to-gray-600\/15 {
   --tw-gradient-to: #4b556326 var(--tw-gradient-to-position);
+}
+
+.to-orange-500 {
+  --tw-gradient-to: #f97316 var(--tw-gradient-to-position);
 }
 
 .to-orange-600\/20 {
@@ -3566,6 +3601,10 @@ body {
 
 .to-primary\/5 {
   --tw-gradient-to: hsl(var(--primary) / .05) var(--tw-gradient-to-position);
+}
+
+.to-purple-600 {
+  --tw-gradient-to: #9333ea var(--tw-gradient-to-position);
 }
 
 .to-red-500\/10 {
@@ -3753,6 +3792,10 @@ body {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+.pb-0 {
+  padding-bottom: 0;
 }
 
 .pb-2 {
@@ -3950,6 +3993,10 @@ body {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .tabular-nums {
@@ -6184,6 +6231,11 @@ input[type="search"]::-webkit-search-cancel-button {
   color: #fb923cb3;
 }
 
+.dark\:text-pink-400:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(244 114 182 / var(--tw-text-opacity, 1));
+}
+
 .dark\:text-primary:is(.dark *) {
   --tw-text-opacity: 1;
   color: hsl(var(--primary) / var(--tw-text-opacity, 1));
@@ -6266,10 +6318,6 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .sm\:flex {
     display: flex;
-  }
-
-  .sm\:hidden {
-    display: none;
   }
 
   .sm\:w-\[400px\] {
@@ -6402,10 +6450,6 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .md\:flex {
     display: flex;
-  }
-
-  .md\:inline-grid {
-    display: inline-grid;
   }
 
   .md\:hidden {
