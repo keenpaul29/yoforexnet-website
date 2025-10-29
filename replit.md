@@ -72,6 +72,11 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Publishing Flow**: Multi-step process with validation and file management.
 - **Pricing**: Free or coin-based content, with MT4/MT5 platform support.
 - **Interaction**: Purchase, review, like, and Q&A systems.
+- **File Storage**: Replit Object Storage (Google Cloud Storage) for persistent EA files and screenshots
+  - **Protected EA Files**: ACL-controlled downloads (owner + purchasers only)
+  - **Public Screenshots**: Viewable by everyone for product pages
+  - **Presigned Uploads**: Direct client-to-storage uploads via presigned URLs
+  - **Access Control**: Database-backed purchaser verification for file downloads
 
 ### User & Social System
 - **Authentication**: Replit OIDC with PostgreSQL-backed sessions.
@@ -104,11 +109,21 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **Database**: PostgreSQL (Neon-backed) with Drizzle ORM.
 - **Authentication**: Passport.js + Replit OIDC.
 - **Jobs**: `node-cron` scheduler.
+- **Object Storage**: Replit Object Storage (Google Cloud Storage) for persistent file uploads
+  - **Service Layer**: `server/objectStorage.ts` - Storage operations and presigned URL generation
+  - **ACL System**: `server/objectAcl.ts` - Access control policies for protected files
+  - **Endpoints**: 
+    - POST `/api/objects/upload` - Get presigned upload URL
+    - GET `/objects/:path` - Download files with ACL checks
+    - PUT `/api/content/files` - Set ACL policies after upload
+  - **Access Groups**: PURCHASERS (content buyers), FOLLOWERS (author followers)
+  - **Environment Variables**: `PRIVATE_OBJECT_DIR`, `PUBLIC_OBJECT_SEARCH_PATHS`
 - **Security**: 
   - **XSS Protection**: DOMPurify sanitization on all user inputs
   - **Input Validation**: Server-side Zod schema validation on all forms
   - **Security Headers**: Helmet with strict CSP (no unsafe-inline/unsafe-eval), HSTS, X-Frame-Options, X-Content-Type-Options
   - **Rate Limiting**: General API (500 req/15min), Activity (1/min), coins (10/15min), content (5/hr)
+  - **File Access Control**: ACL policies enforce owner + purchaser permissions for EA files
   - **NPM Security**: 9 remaining acceptable-risk vulnerabilities (dev-only or no fix available)
 
 ### Admin Dashboard System
@@ -137,11 +152,47 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 ## External Dependencies
 - **Stripe**: For credit/debit card payments.
 - **Replit Auth**: OIDC authentication.
+- **Replit Object Storage**: Google Cloud Storage for persistent file uploads (EA files, screenshots).
 - **PostgreSQL**: Neon-backed database.
 - **Clearbit Logo API**: Primary broker logo source.
 - **Google S2 Favicon API**: Fallback for broker logos.
 
-## Recent Updates (October 28, 2025)
+## Recent Updates (October 29, 2025)
+### Object Storage Integration
+**Status**: ✅ PRODUCTION READY
+
+**Implementation Completed**:
+1. ✅ Integrated Replit Object Storage blueprint (blueprint:javascript_object_storage)
+2. ✅ Created ObjectStorageService for file operations (server/objectStorage.ts)
+3. ✅ Implemented ACL system for protected file access (server/objectAcl.ts)
+4. ✅ Built ObjectUploader React component with Uppy integration (app/components/ObjectUploader.tsx)
+5. ✅ Added 3 REST endpoints: upload, download, set ACL (server/routes.ts lines 176-264)
+6. ✅ Fixed critical ACL bugs: enum types, database queries, input validation
+7. ✅ Created comprehensive setup guide (docs/OBJECT_STORAGE_SETUP.md)
+8. ✅ Fixed TypeScript compilation error in AIAutomation.tsx (type annotations + API endpoint)
+
+**Architect Reviews**: 
+- Initial review: FAIL - Found 4 critical bugs in ACL implementation
+- Post-fix review: PASS - All blockers resolved, production ready
+
+**Key Features**:
+- Persistent EA file storage (survives autoscale restarts)
+- ACL-protected downloads (owner + purchasers only)
+- Direct client-to-storage uploads via presigned URLs
+- Database-backed purchaser verification
+- Public screenshots for product pages
+- Comprehensive error handling and validation
+
+**Setup Required**:
+1. Create bucket in Replit Object Storage tool: `yoforex-files`
+2. Set environment variables: `PRIVATE_OBJECT_DIR=/yoforex-files/content`
+3. (Optional) Set `PUBLIC_OBJECT_SEARCH_PATHS=/yoforex-files/public`
+
+**Documentation**: See docs/OBJECT_STORAGE_SETUP.md for complete guide
+
+---
+
+## Previous Updates (October 28, 2025)
 ### Pre-Client Handover Testing Marathon
 **Status**: ✅ PRODUCTION READY
 

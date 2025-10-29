@@ -21,39 +21,109 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Play, Ban } from "lucide-react";
 
+// Type definitions for API responses
+interface AutomationRule {
+  id: string;
+  name: string;
+  triggerType: string;
+  triggerConfig: string;
+  actionType: string;
+  actionConfig: string;
+  enabled: boolean;
+  executionCount?: number;
+  lastExecutedAt?: string;
+}
+
+interface ModerationStats {
+  accuracyRate: number;
+  falsePositives: number;
+  falseNegatives: number;
+  timeSavedHours: number;
+}
+
+interface ModerationDecision {
+  id: string;
+  contentPreview: string;
+  decision: 'approved' | 'rejected';
+  confidence: number;
+}
+
+interface SentimentData {
+  name: string;
+  value: number;
+}
+
+interface SpamMetrics {
+  accuracy: number;
+  blocked: number;
+  flagged: number;
+}
+
+interface FlaggedContent {
+  id: string;
+  contentPreview: string;
+  spamScore: number;
+  authorUsername: string;
+  flaggedAt: string;
+}
+
 export default function AIAutomation() {
   const { toast } = useToast();
   const [isCreateRuleOpen, setIsCreateRuleOpen] = useState(false);
   const [sensitivity, setSensitivity] = useState([70]);
 
-  const { data: automationRules, isLoading: rulesLoading } = useQuery({
-    queryKey: ["/api/admin/ai/automation-rules"]
+  // Fix: Changed endpoint from /api/admin/ai/automation-rules to /api/admin/automation/rules
+  // Add explicit type annotation to ensure TypeScript knows this returns an array
+  const { data: automationRulesData, isLoading: rulesLoading } = useQuery<AutomationRule[]>({
+    queryKey: ["/api/admin/automation/rules"]
   });
 
-  const { data: moderationStats, isLoading: moderationStatsLoading } = useQuery({
+  // Defensive programming: ensure automationRules is always an array
+  const automationRules = Array.isArray(automationRulesData) ? automationRulesData : [];
+
+  const { data: moderationStatsData, isLoading: moderationStatsLoading } = useQuery<ModerationStats>({
     queryKey: ["/api/admin/ai/moderation-stats"]
   });
 
-  const { data: moderationDecisions, isLoading: decisionsLoading } = useQuery({
+  const moderationStats = moderationStatsData || {
+    accuracyRate: 0,
+    falsePositives: 0,
+    falseNegatives: 0,
+    timeSavedHours: 0
+  };
+
+  const { data: moderationDecisionsData, isLoading: decisionsLoading } = useQuery<ModerationDecision[]>({
     queryKey: ["/api/admin/ai/moderation-decisions"]
   });
 
-  const { data: sentimentData, isLoading: sentimentLoading } = useQuery({
+  const moderationDecisions = Array.isArray(moderationDecisionsData) ? moderationDecisionsData : [];
+
+  const { data: sentimentDataRaw, isLoading: sentimentLoading } = useQuery<SentimentData[]>({
     queryKey: ["/api/admin/ai/sentiment-distribution"]
   });
 
-  const { data: spamMetrics, isLoading: spamMetricsLoading } = useQuery({
+  const sentimentData = Array.isArray(sentimentDataRaw) ? sentimentDataRaw : [];
+
+  const { data: spamMetricsData, isLoading: spamMetricsLoading } = useQuery<SpamMetrics>({
     queryKey: ["/api/admin/ai/spam-metrics"]
   });
 
-  const { data: flaggedContent, isLoading: flaggedLoading } = useQuery({
+  const spamMetrics = spamMetricsData || {
+    accuracy: 0,
+    blocked: 0,
+    flagged: 0
+  };
+
+  const { data: flaggedContentData, isLoading: flaggedLoading } = useQuery<FlaggedContent[]>({
     queryKey: ["/api/admin/ai/flagged-content"]
   });
 
+  const flaggedContent = Array.isArray(flaggedContentData) ? flaggedContentData : [];
+
   const createRuleMutation = useMutation({
-    mutationFn: (data: any) => apiRequest("/api/admin/ai/automation-rules", "POST", data),
+    mutationFn: (data: any) => apiRequest("/api/admin/automation/rules", "POST", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/ai/automation-rules"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/automation/rules"] });
       toast({ title: "Rule created successfully" });
       setIsCreateRuleOpen(false);
     }
@@ -61,17 +131,17 @@ export default function AIAutomation() {
 
   const toggleRuleMutation = useMutation({
     mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) => 
-      apiRequest(`/api/admin/ai/automation-rules/${id}/toggle`, "PATCH", { enabled }),
+      apiRequest(`/api/admin/automation/rules/${id}`, "PATCH", { enabled }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/ai/automation-rules"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/automation/rules"] });
       toast({ title: "Rule updated" });
     }
   });
 
   const executeRuleMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/admin/ai/automation-rules/${id}/execute`, "POST"),
+    mutationFn: (id: string) => apiRequest(`/api/admin/automation/rules/${id}/execute`, "POST"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/ai/automation-rules"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/automation/rules"] });
       toast({ title: "Rule executed successfully" });
     }
   });
@@ -227,7 +297,7 @@ export default function AIAutomation() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {automationRules?.map((rule: any) => (
+                      {automationRules.map((rule) => (
                         <TableRow key={rule.id} data-testid={`rule-${rule.id}`}>
                           <TableCell data-testid={`rule-name-${rule.id}`}>{rule.name}</TableCell>
                           <TableCell>{rule.triggerType}</TableCell>
@@ -257,7 +327,7 @@ export default function AIAutomation() {
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!automationRules || automationRules.length === 0) && (
+                      {automationRules.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                             No automation rules created
@@ -286,7 +356,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-accuracy-rate">
-                      {moderationStats?.accuracyRate || 0}%
+                      {moderationStats.accuracyRate}%
                     </div>
                   </CardContent>
                 </Card>
@@ -296,7 +366,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-false-positives">
-                      {moderationStats?.falsePositives || 0}
+                      {moderationStats.falsePositives}
                     </div>
                   </CardContent>
                 </Card>
@@ -306,7 +376,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-false-negatives">
-                      {moderationStats?.falseNegatives || 0}
+                      {moderationStats.falseNegatives}
                     </div>
                   </CardContent>
                 </Card>
@@ -316,7 +386,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-time-saved">
-                      {moderationStats?.timeSavedHours || 0}h
+                      {moderationStats.timeSavedHours}h
                     </div>
                   </CardContent>
                 </Card>
@@ -346,7 +416,7 @@ export default function AIAutomation() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {moderationDecisions?.map((decision: any) => (
+                        {moderationDecisions.map((decision) => (
                           <TableRow key={decision.id}>
                             <TableCell className="max-w-xs truncate">{decision.contentPreview}</TableCell>
                             <TableCell>
@@ -367,7 +437,7 @@ export default function AIAutomation() {
                             </TableCell>
                           </TableRow>
                         ))}
-                        {(!moderationDecisions || moderationDecisions.length === 0) && (
+                        {moderationDecisions.length === 0 && (
                           <TableRow>
                             <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                               No recent decisions
@@ -388,7 +458,7 @@ export default function AIAutomation() {
               <CardContent>
                 {sentimentLoading ? (
                   <Skeleton className="h-64" />
-                ) : sentimentData && sentimentData.length > 0 ? (
+                ) : sentimentData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
                       <Pie
@@ -401,7 +471,7 @@ export default function AIAutomation() {
                         fill="hsl(var(--primary))"
                         dataKey="value"
                       >
-                        {sentimentData.map((entry: any, index: number) => (
+                        {sentimentData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -433,7 +503,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-spam-accuracy">
-                      {spamMetrics?.accuracy || 0}%
+                      {spamMetrics.accuracy}%
                     </div>
                   </CardContent>
                 </Card>
@@ -443,7 +513,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-spam-blocked">
-                      {spamMetrics?.blocked || 0}
+                      {spamMetrics.blocked}
                     </div>
                   </CardContent>
                 </Card>
@@ -453,7 +523,7 @@ export default function AIAutomation() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold" data-testid="text-spam-flagged">
-                      {spamMetrics?.flagged || 0}
+                      {spamMetrics.flagged}
                     </div>
                   </CardContent>
                 </Card>
@@ -511,7 +581,7 @@ export default function AIAutomation() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {flaggedContent?.map((item: any) => (
+                      {flaggedContent.map((item) => (
                         <TableRow key={item.id}>
                           <TableCell className="max-w-xs truncate">{item.contentPreview}</TableCell>
                           <TableCell>
@@ -525,14 +595,14 @@ export default function AIAutomation() {
                             <Button 
                               size="sm" 
                               variant="outline"
-                              data-testid={`button-review-${item.id}`}
+                              data-testid={`button-approve-${item.id}`}
                             >
-                              Review
+                              Approve
                             </Button>
                           </TableCell>
                         </TableRow>
                       ))}
-                      {(!flaggedContent || flaggedContent.length === 0) && (
+                      {flaggedContent.length === 0 && (
                         <TableRow>
                           <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                             No flagged content
