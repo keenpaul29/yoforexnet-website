@@ -50,13 +50,17 @@ export const getQueryFn: <T>(options: {
     return await res.json();
   };
 
-// Use centralized API config (no hardcoded URLs)
-const EXPRESS_API_URL = getApiBaseUrl();
-
+// CRITICAL FIX: Don't set baseUrl at module load time!
+// The issue: getApiBaseUrl() is called during module initialization, which happens on the server
+// during SSR. This means EXPRESS_API_URL gets set to the server URL (http://127.0.0.1:3001)
+// and that value is baked into the client bundle, causing client-side queries to fail.
+//
+// Solution: Use relative URLs (no baseUrl) which works with Next.js rewrites.
+// Client-side queries will use paths like '/api/stats' instead of absolute server URLs.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw", baseUrl: EXPRESS_API_URL }),
+      queryFn: getQueryFn({ on401: "throw" }), // No baseUrl - use relative URLs
       refetchInterval: false,
       refetchOnWindowFocus: false,
       staleTime: Infinity,

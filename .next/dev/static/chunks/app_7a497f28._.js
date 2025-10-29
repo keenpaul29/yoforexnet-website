@@ -168,14 +168,11 @@ const getQueryFn = ({ on401: unauthorizedBehavior, baseUrl })=>async ({ queryKey
         await throwIfResNotOk(res);
         return await res.json();
     };
-// Use centralized API config (no hardcoded URLs)
-const EXPRESS_API_URL = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$api$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getApiBaseUrl"])();
 const queryClient = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$query$2d$core$2f$build$2f$modern$2f$queryClient$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["QueryClient"]({
     defaultOptions: {
         queries: {
             queryFn: getQueryFn({
-                on401: "throw",
-                baseUrl: EXPRESS_API_URL
+                on401: "throw"
             }),
             refetchInterval: false,
             refetchOnWindowFocus: false,

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Users, UserPlus } from 'lucide-react';
 
-const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+// FIXED: Use relative URLs for client-side API calls (works with Next.js rewrites)
+// No hardcoded localhost URLs in client components!
 
 interface FollowButtonProps {
   userId: string;
@@ -18,13 +19,13 @@ export function FollowButton({ userId, username }: FollowButtonProps) {
 
   useEffect(() => {
     // Fetch current user
-    fetch(`${EXPRESS_URL}/api/me`, { credentials: 'include' })
+    fetch('/api/me', { credentials: 'include' })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         setUser(data);
         // Check if following
         if (data?.id && data.id !== userId) {
-          fetch(`${EXPRESS_URL}/api/users/${userId}/followers?checkFollower=${data.id}`, {
+          fetch(`/api/users/${userId}/followers?checkFollower=${data.id}`, {
             credentials: 'include',
           })
             .then((res) => res.json())
@@ -37,7 +38,7 @@ export function FollowButton({ userId, username }: FollowButtonProps) {
 
   const handleFollow = async () => {
     if (!user) {
-      window.location.href = `${EXPRESS_URL}/api/login`;
+      window.location.href = '/api/login';
       return;
     }
 
@@ -46,14 +47,14 @@ export function FollowButton({ userId, username }: FollowButtonProps) {
     try {
       if (isFollowing) {
         // Unfollow
-        await fetch(`${EXPRESS_URL}/api/users/${userId}/unfollow`, {
+        await fetch(`/api/users/${userId}/unfollow`, {
           method: 'DELETE',
           credentials: 'include',
         });
         setIsFollowing(false);
       } else {
         // Follow
-        await fetch(`${EXPRESS_URL}/api/users/${userId}/follow`, {
+        await fetch(`/api/users/${userId}/follow`, {
           method: 'POST',
           credentials: 'include',
         });

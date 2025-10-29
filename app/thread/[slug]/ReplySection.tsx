@@ -12,7 +12,8 @@ import { ThumbsUp, CheckCircle2, MessageSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
-const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+// FIXED: Use relative URLs for client-side API calls (works with Next.js rewrites)
+// No hardcoded localhost URLs in client components!
 
 interface ReplySectionProps {
   threadId: string;
@@ -37,7 +38,7 @@ export function ReplySection({
 
   // Fetch current user on mount
   useState(() => {
-    fetch(`${EXPRESS_URL}/api/me`, { credentials: 'include' })
+    fetch('/api/me', { credentials: 'include' })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => setUser(data))
       .catch(() => setUser(null));
@@ -46,7 +47,7 @@ export function ReplySection({
   const handleSubmitReply = async () => {
     if (!user) {
       // Redirect to login
-      window.location.href = `${EXPRESS_URL}/api/login`;
+      window.location.href = '/api/login';
       return;
     }
 
@@ -58,7 +59,7 @@ export function ReplySection({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${EXPRESS_URL}/api/threads/${threadId}/replies`, {
+      const response = await fetch(`/api/threads/${threadId}/replies`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -84,12 +85,12 @@ export function ReplySection({
 
   const handleMarkHelpful = async (replyId: string) => {
     if (!user) {
-      window.location.href = `${EXPRESS_URL}/api/login`;
+      window.location.href = '/api/login';
       return;
     }
 
     try {
-      const response = await fetch(`${EXPRESS_URL}/api/replies/${replyId}/helpful`, {
+      const response = await fetch(`/api/replies/${replyId}/helpful`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -104,12 +105,12 @@ export function ReplySection({
 
   const handleMarkAccepted = async (replyId: string) => {
     if (!user) {
-      window.location.href = `${EXPRESS_URL}/api/login`;
+      window.location.href = '/api/login';
       return;
     }
 
     try {
-      const response = await fetch(`${EXPRESS_URL}/api/replies/${replyId}/accept`, {
+      const response = await fetch(`/api/replies/${replyId}/accept`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -269,7 +270,7 @@ export function ReplySection({
             </Button>
             {!user && (
               <p className="text-sm text-muted-foreground mt-2">
-                <Link href={`${EXPRESS_URL}/api/login`} className="text-primary hover:underline">
+                <Link href="/api/login" className="text-primary hover:underline">
                   Log in
                 </Link>{' '}
                 to participate in the discussion
