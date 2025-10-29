@@ -2075,6 +2075,12 @@ export class MemStorage implements IStorage {
       lastReputationUpdate: null,
       lastJournalPost: null,
       level: 2,
+      role: "member",
+      status: "active",
+      suspendedUntil: null,
+      bannedAt: null,
+      bannedBy: null,
+      lastActive: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
