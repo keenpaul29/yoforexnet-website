@@ -8,6 +8,21 @@ YoForex is a comprehensive trading community platform built with Next.js, featur
 - User reputation and badge system
 - Coin-based economy
 
+### Database: Neon PostgreSQL
+**Status:** ✅ **PRODUCTION-READY**  
+**Connection:** Secure connection string stored in `DATABASE_URL` secret  
+**Provider:** Neon (PostgreSQL-compatible, serverless)  
+**Region:** US East (AWS c-3.us-east-1)  
+**Database Name:** yoforexnet_db
+
+**Current Data:**
+- 15 Users (realistic reputation scores & coin balances)
+- 15 Forum Threads (varied topics & engagement)
+- 57 Forum Replies (active discussions)
+- 59 Hierarchical Categories (optimized for SEO)
+- 10 Marketplace Items (5 EAs, 3 Indicators, 2 Templates)
+- 7 Broker Listings (IC Markets, Pepperstone, XM, FBS, Exness, FXTM, Tickmill)
+
 ## Recent Changes Log
 
 ### October 29, 2025 - API Backend-Frontend Connection Verification
