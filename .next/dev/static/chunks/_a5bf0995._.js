@@ -3422,13 +3422,7 @@ function MessagesClient({ initialConversations = [] }) {
     const sendMessageMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "MessagesClient.useMutation[sendMessageMutation]": async (data)=>{
-                return await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/messages", {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+                return await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("POST", "/api/messages", data);
             }
         }["MessagesClient.useMutation[sendMessageMutation]"],
         onSuccess: {
@@ -3460,14 +3454,8 @@ function MessagesClient({ initialConversations = [] }) {
     const addReactionMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "MessagesClient.useMutation[addReactionMutation]": async ({ messageId, emoji })=>{
-                return await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/api/messages/${messageId}/reactions`, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        emoji
-                    }),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
+                return await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("POST", `/api/messages/${messageId}/reactions`, {
+                    emoji
                 });
             }
         }["MessagesClient.useMutation[addReactionMutation]"],
@@ -3667,7 +3655,7 @@ function MessagesClient({ initialConversations = [] }) {
                                         className: "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 322,
+                                        lineNumber: 312,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -3679,18 +3667,18 @@ function MessagesClient({ initialConversations = [] }) {
                                         "data-testid": "input-search-conversations"
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 323,
+                                        lineNumber: 313,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 321,
+                                lineNumber: 311,
                                 columnNumber: 11
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                            lineNumber: 320,
+                            lineNumber: 310,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3704,7 +3692,7 @@ function MessagesClient({ initialConversations = [] }) {
                                     children: "Unread Only"
                                 }, void 0, false, {
                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                    lineNumber: 334,
+                                    lineNumber: 324,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -3717,7 +3705,7 @@ function MessagesClient({ initialConversations = [] }) {
                                             children: "Newest First"
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 347,
+                                            lineNumber: 337,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3725,7 +3713,7 @@ function MessagesClient({ initialConversations = [] }) {
                                             children: "Oldest First"
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 348,
+                                            lineNumber: 338,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -3733,19 +3721,19 @@ function MessagesClient({ initialConversations = [] }) {
                                             children: "Most Active"
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 349,
+                                            lineNumber: 339,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                    lineNumber: 342,
+                                    lineNumber: 332,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                            lineNumber: 333,
+                            lineNumber: 323,
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -3762,14 +3750,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                 className: "w-4 h-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                lineNumber: 355,
+                                                lineNumber: 345,
                                                 columnNumber: 15
                                             }, this),
                                             "Inbox"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 354,
+                                        lineNumber: 344,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -3780,31 +3768,31 @@ function MessagesClient({ initialConversations = [] }) {
                                                 className: "w-4 h-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                lineNumber: 359,
+                                                lineNumber: 349,
                                                 columnNumber: 15
                                             }, this),
                                             "Sent"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 358,
+                                        lineNumber: 348,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 353,
+                                lineNumber: 343,
                                 columnNumber: 11
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                            lineNumber: 352,
+                            lineNumber: 342,
                             columnNumber: 9
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                    lineNumber: 319,
+                    lineNumber: 309,
                     columnNumber: 7
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3814,7 +3802,7 @@ function MessagesClient({ initialConversations = [] }) {
                         children: "Loading conversations..."
                     }, void 0, false, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 367,
+                        lineNumber: 357,
                         columnNumber: 11
                     }, this) : filteredConversations.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "p-8 text-center text-muted-foreground",
@@ -3823,7 +3811,7 @@ function MessagesClient({ initialConversations = [] }) {
                                 className: "w-12 h-12 mx-auto mb-4 opacity-50"
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 372,
+                                lineNumber: 362,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3831,7 +3819,7 @@ function MessagesClient({ initialConversations = [] }) {
                                 children: "No conversations yet"
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 373,
+                                lineNumber: 363,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3839,13 +3827,13 @@ function MessagesClient({ initialConversations = [] }) {
                                 children: "Start a conversation with other traders"
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 374,
+                                lineNumber: 364,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 371,
+                        lineNumber: 361,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "divide-y",
@@ -3867,12 +3855,12 @@ function MessagesClient({ initialConversations = [] }) {
                                                         children: conv.participant.username[0]
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                        lineNumber: 393,
+                                                        lineNumber: 383,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 392,
+                                                    lineNumber: 382,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3880,13 +3868,13 @@ function MessagesClient({ initialConversations = [] }) {
                                                     "data-testid": `status-online-${conv.id}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 395,
+                                                    lineNumber: 385,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 391,
+                                            lineNumber: 381,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3900,7 +3888,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                             children: conv.participant.username
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 402,
+                                                            lineNumber: 392,
                                                             columnNumber: 23
                                                         }, this),
                                                         conv.unreadCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3910,13 +3898,13 @@ function MessagesClient({ initialConversations = [] }) {
                                                             children: conv.unreadCount
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 404,
+                                                            lineNumber: 394,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 401,
+                                                    lineNumber: 391,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3927,7 +3915,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 409,
+                                                    lineNumber: 399,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3938,40 +3926,40 @@ function MessagesClient({ initialConversations = [] }) {
                                                     })
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 413,
+                                                    lineNumber: 403,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 400,
+                                            lineNumber: 390,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                    lineNumber: 390,
+                                    lineNumber: 380,
                                     columnNumber: 17
                                 }, this)
                             }, conv.id, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 379,
+                                lineNumber: 369,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 377,
+                        lineNumber: 367,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                    lineNumber: 365,
+                    lineNumber: 355,
                     columnNumber: 7
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/messages/MessagesClient.tsx",
-            lineNumber: 318,
+            lineNumber: 308,
             columnNumber: 5
         }, this);
     const renderMessageView = ()=>{
@@ -3985,7 +3973,7 @@ function MessagesClient({ initialConversations = [] }) {
                             className: "w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50"
                         }, void 0, false, {
                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                            lineNumber: 431,
+                            lineNumber: 421,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3993,18 +3981,18 @@ function MessagesClient({ initialConversations = [] }) {
                             children: "Select a conversation to view messages"
                         }, void 0, false, {
                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                            lineNumber: 432,
+                            lineNumber: 422,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                    lineNumber: 430,
+                    lineNumber: 420,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                lineNumber: 429,
+                lineNumber: 419,
                 columnNumber: 9
             }, this);
         }
@@ -4027,12 +4015,12 @@ function MessagesClient({ initialConversations = [] }) {
                                     className: "h-5 w-5"
                                 }, void 0, false, {
                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                    lineNumber: 454,
+                                    lineNumber: 444,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 448,
+                                lineNumber: 438,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4043,25 +4031,25 @@ function MessagesClient({ initialConversations = [] }) {
                                             children: conversation.participant.username[0]
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 459,
+                                            lineNumber: 449,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 458,
+                                        lineNumber: 448,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background"
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 461,
+                                        lineNumber: 451,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 457,
+                                lineNumber: 447,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4072,7 +4060,7 @@ function MessagesClient({ initialConversations = [] }) {
                                         children: conversation.participant.username
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 464,
+                                        lineNumber: 454,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4080,13 +4068,13 @@ function MessagesClient({ initialConversations = [] }) {
                                         children: "Online"
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 465,
+                                        lineNumber: 455,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 463,
+                                lineNumber: 453,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4103,17 +4091,17 @@ function MessagesClient({ initialConversations = [] }) {
                                                     className: "h-5 w-5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 475,
+                                                    lineNumber: 465,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                lineNumber: 470,
+                                                lineNumber: 460,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 469,
+                                            lineNumber: 459,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -4126,14 +4114,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 480,
+                                                            lineNumber: 470,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Pin Conversation"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 479,
+                                                    lineNumber: 469,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4143,14 +4131,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 484,
+                                                            lineNumber: 474,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Archive"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 483,
+                                                    lineNumber: 473,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4160,19 +4148,19 @@ function MessagesClient({ initialConversations = [] }) {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 488,
+                                                            lineNumber: 478,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Mute Notifications"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 487,
+                                                    lineNumber: 477,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 491,
+                                                    lineNumber: 481,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4183,14 +4171,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 496,
+                                                            lineNumber: 486,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Block User"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 492,
+                                                    lineNumber: 482,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4201,42 +4189,42 @@ function MessagesClient({ initialConversations = [] }) {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 503,
+                                                            lineNumber: 493,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Delete Conversation"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                    lineNumber: 499,
+                                                    lineNumber: 489,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 478,
+                                            lineNumber: 468,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                    lineNumber: 468,
+                                    lineNumber: 458,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 467,
+                                lineNumber: 457,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 446,
+                        lineNumber: 436,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                    lineNumber: 445,
+                    lineNumber: 435,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4252,14 +4240,14 @@ function MessagesClient({ initialConversations = [] }) {
                                         children: "Loading messages..."
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 515,
+                                        lineNumber: 505,
                                         columnNumber: 17
                                     }, this) : messages.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "text-center text-muted-foreground",
                                         children: "No messages yet"
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 517,
+                                        lineNumber: 507,
                                         columnNumber: 17
                                     }, this) : messages.map((message)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: `flex ${message.senderId === currentUser?.id ? "justify-end" : "justify-start"}`,
@@ -4276,7 +4264,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                                     children: message.text
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                    lineNumber: 536,
+                                                                    lineNumber: 526,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4290,7 +4278,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                                             })
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                            lineNumber: 538,
+                                                                            lineNumber: 528,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         message.senderId === currentUser?.id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -4298,26 +4286,26 @@ function MessagesClient({ initialConversations = [] }) {
                                                                                 className: "h-3 w-3 text-blue-300"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                                lineNumber: 551,
+                                                                                lineNumber: 541,
                                                                                 columnNumber: 35
                                                                             }, this) : message.deliveredAt ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCheck$3e$__["CheckCheck"], {
                                                                                 className: "h-3 w-3 text-primary-foreground/70"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                                lineNumber: 553,
+                                                                                lineNumber: 543,
                                                                                 columnNumber: 35
                                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
                                                                                 className: "h-3 w-3 text-primary-foreground/70"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                                lineNumber: 555,
+                                                                                lineNumber: 545,
                                                                                 columnNumber: 35
                                                                             }, this)
                                                                         }, void 0, false)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                    lineNumber: 537,
+                                                                    lineNumber: 527,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4334,7 +4322,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                                             children: "👍"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                            lineNumber: 561,
+                                                                            lineNumber: 551,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -4348,7 +4336,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                                             children: "❤️"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                            lineNumber: 572,
+                                                                            lineNumber: 562,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -4362,24 +4350,24 @@ function MessagesClient({ initialConversations = [] }) {
                                                                             children: "😂"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                            lineNumber: 583,
+                                                                            lineNumber: 573,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                    lineNumber: 560,
+                                                                    lineNumber: 550,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                            lineNumber: 529,
+                                                            lineNumber: 519,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                        lineNumber: 528,
+                                                        lineNumber: 518,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -4391,14 +4379,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                                         className: "mr-2 h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                        lineNumber: 599,
+                                                                        lineNumber: 589,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     "Copy Text"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                lineNumber: 598,
+                                                                lineNumber: 588,
                                                                 columnNumber: 25
                                                             }, this),
                                                             message.senderId === currentUser?.id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -4410,19 +4398,19 @@ function MessagesClient({ initialConversations = [] }) {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                                lineNumber: 605,
+                                                                                lineNumber: 595,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             "Edit Message"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                        lineNumber: 604,
+                                                                        lineNumber: 594,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                        lineNumber: 608,
+                                                                        lineNumber: 598,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4433,14 +4421,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                                lineNumber: 613,
+                                                                                lineNumber: 603,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             "Delete for Me"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                        lineNumber: 609,
+                                                                        lineNumber: 599,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4451,14 +4439,14 @@ function MessagesClient({ initialConversations = [] }) {
                                                                                 className: "mr-2 h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                                lineNumber: 620,
+                                                                                lineNumber: 610,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             "Delete for Everyone"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                        lineNumber: 616,
+                                                                        lineNumber: 606,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
@@ -4470,31 +4458,31 @@ function MessagesClient({ initialConversations = [] }) {
                                                                         className: "mr-2 h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                        lineNumber: 626,
+                                                                        lineNumber: 616,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     "Forward Message"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                lineNumber: 625,
+                                                                lineNumber: 615,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                        lineNumber: 597,
+                                                        lineNumber: 587,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                lineNumber: 527,
+                                                lineNumber: 517,
                                                 columnNumber: 21
                                             }, this)
                                         }, message.id, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 520,
+                                            lineNumber: 510,
                                             columnNumber: 19
                                         }, this)),
                                     isOtherUserTyping && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4514,7 +4502,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                lineNumber: 639,
+                                                                lineNumber: 629,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4524,7 +4512,7 @@ function MessagesClient({ initialConversations = [] }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                lineNumber: 640,
+                                                                lineNumber: 630,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4534,13 +4522,13 @@ function MessagesClient({ initialConversations = [] }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                                lineNumber: 641,
+                                                                lineNumber: 631,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                        lineNumber: 638,
+                                                        lineNumber: 628,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4548,36 +4536,36 @@ function MessagesClient({ initialConversations = [] }) {
                                                         children: "typing..."
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                        lineNumber: 643,
+                                                        lineNumber: 633,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                lineNumber: 637,
+                                                lineNumber: 627,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 636,
+                                            lineNumber: 626,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 635,
+                                        lineNumber: 625,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         ref: messagesEndRef
                                     }, void 0, false, {
                                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                                        lineNumber: 648,
+                                        lineNumber: 638,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 513,
+                                lineNumber: 503,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4594,7 +4582,7 @@ function MessagesClient({ initialConversations = [] }) {
                                             "data-testid": "input-message-text"
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 653,
+                                            lineNumber: 643,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -4606,51 +4594,49 @@ function MessagesClient({ initialConversations = [] }) {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                                lineNumber: 667,
+                                                lineNumber: 657,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/messages/MessagesClient.tsx",
-                                            lineNumber: 661,
+                                            lineNumber: 651,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                                    lineNumber: 652,
+                                    lineNumber: 642,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 651,
+                                lineNumber: 641,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 512,
+                        lineNumber: 502,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/messages/MessagesClient.tsx",
-                    lineNumber: 511,
+                    lineNumber: 501,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/messages/MessagesClient.tsx",
-            lineNumber: 444,
+            lineNumber: 434,
             columnNumber: 7
         }, this);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen bg-background",
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                userCoins: currentUser?.totalCoins || 0
-            }, void 0, false, {
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                lineNumber: 679,
+                lineNumber: 669,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -4665,7 +4651,7 @@ function MessagesClient({ initialConversations = [] }) {
                                 children: "Messages"
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 683,
+                                lineNumber: 673,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4673,13 +4659,13 @@ function MessagesClient({ initialConversations = [] }) {
                                 children: "Connect with other traders privately"
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 684,
+                                lineNumber: 674,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 682,
+                        lineNumber: 672,
                         columnNumber: 9
                     }, this),
                     isMobile ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4690,7 +4676,7 @@ function MessagesClient({ initialConversations = [] }) {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 690,
+                        lineNumber: 680,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-1 lg:grid-cols-3 gap-6",
@@ -4700,7 +4686,7 @@ function MessagesClient({ initialConversations = [] }) {
                                 children: renderConversationList()
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 696,
+                                lineNumber: 686,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4708,30 +4694,30 @@ function MessagesClient({ initialConversations = [] }) {
                                 children: renderMessageView()
                             }, void 0, false, {
                                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                                lineNumber: 697,
+                                lineNumber: 687,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/messages/MessagesClient.tsx",
-                        lineNumber: 695,
+                        lineNumber: 685,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                lineNumber: 681,
+                lineNumber: 671,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$EnhancedFooter$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/messages/MessagesClient.tsx",
-                lineNumber: 702,
+                lineNumber: 692,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/messages/MessagesClient.tsx",
-        lineNumber: 678,
+        lineNumber: 668,
         columnNumber: 5
     }, this);
 }

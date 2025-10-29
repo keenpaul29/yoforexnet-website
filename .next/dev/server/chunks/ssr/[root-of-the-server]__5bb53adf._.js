@@ -95,11 +95,12 @@ async function getUser() {
             return null;
         }
         if (!res.ok) {
-            throw new Error('Failed to fetch user');
+            // Return null for any error status - redirect will handle it
+            return null;
         }
         return await res.json();
     } catch (error) {
-        console.error('Error fetching user:', error);
+        // Silently return null - redirect logic handles unauthenticated users
         return null;
     }
 }
@@ -135,7 +136,7 @@ async function NotificationsPage() {
         initialNotifications: initialNotifications
     }, void 0, false, {
         fileName: "[project]/app/notifications/page.tsx",
-        lineNumber: 92,
+        lineNumber: 93,
         columnNumber: 10
     }, this);
 }

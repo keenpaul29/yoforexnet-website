@@ -100,11 +100,12 @@ async function getUser() {
             return null;
         }
         if (!res.ok) {
-            throw new Error('Failed to fetch user');
+            // Return null for any error status - redirect will handle it
+            return null;
         }
         return await res.json();
     } catch (error) {
-        console.error('Error fetching user:', error);
+        // Silently return null - redirect logic handles unauthenticated users
         return null;
     }
 }
@@ -142,7 +143,7 @@ async function MessagesPage() {
         initialConversations: initialConversations
     }, void 0, false, {
         fileName: "[project]/app/messages/page.tsx",
-        lineNumber: 95,
+        lineNumber: 96,
         columnNumber: 10
     }, this);
 }

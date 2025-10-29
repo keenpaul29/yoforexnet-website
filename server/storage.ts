@@ -2145,6 +2145,12 @@ export class MemStorage implements IStorage {
       lastReputationUpdate: null,
       lastJournalPost: null,
       level: 0,
+      role: "member",
+      status: "active",
+      suspendedUntil: null,
+      bannedAt: null,
+      bannedBy: null,
+      lastActive: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2536,6 +2542,14 @@ export class MemStorage implements IStorage {
       autoImageAltTexts: seo.autoImageAltTexts,
       salesScore: 0,
       lastSalesUpdate: null,
+      approvedBy: null,
+      approvedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      featured: false,
+      featuredUntil: null,
+      deletedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2863,6 +2877,17 @@ export class MemStorage implements IStorage {
       scamReportCount: 0,
       isVerified: false,
       status: "pending",
+      verifiedBy: null,
+      verifiedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      scamWarning: false,
+      scamWarningReason: null,
+      deletedAt: null,
+      country: null,
+      minDeposit: null,
+      leverage: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2934,6 +2959,12 @@ export class MemStorage implements IStorage {
       reviewBody: insertReview.reviewBody,
       isScamReport: insertReview.isScamReport ?? false,
       status: "pending",
+      approvedBy: null,
+      approvedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      scamSeverity: null,
       datePosted: new Date(),
     };
     this.brokerReviews.set(id, review);
@@ -3142,6 +3173,11 @@ export class MemStorage implements IStorage {
       helpfulVotes: 0,
       isAccepted: false,
       isVerified: false,
+      status: "pending",
+      approvedBy: null,
+      approvedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -4548,29 +4584,12 @@ export class MemStorage implements IStorage {
     return [];
   }
 
-  // PHASE 2: Content Moderation Methods - MemStorage Stubs
-  async getModerationQueue(params: any): Promise<any> {
-    return { items: [], total: 0, page: 1, perPage: 20 };
-  }
-
-  async getReportedContent(params: any): Promise<any> {
-    return { items: [], total: 0, page: 1, perPage: 20 };
-  }
-
   async getQueueCount(): Promise<any> {
     return { total: 0, threads: 0, replies: 0, urgentCount: 0 };
   }
 
   async getReportedCount(): Promise<any> {
     return { total: 0, newReports: 0, underReview: 0 };
-  }
-
-  async approveContent(params: any): Promise<void> {
-    return Promise.resolve();
-  }
-
-  async rejectContent(params: any): Promise<void> {
-    return Promise.resolve();
   }
 
   async getContentDetails(params: any): Promise<any> {
@@ -4602,10 +4621,6 @@ export class MemStorage implements IStorage {
       status: 'pending',
       availableActions: [],
     };
-  }
-
-  async dismissReport(params: any): Promise<void> {
-    return Promise.resolve();
   }
 
   async takeReportAction(params: any): Promise<void> {
@@ -5177,10 +5192,6 @@ export class MemStorage implements IStorage {
 
   async getTotalRevenue(period?: string): Promise<{ totalRevenue: number; change: number }> {
     return { totalRevenue: 0, change: 0 };
-  }
-
-  async getRevenueTrend(days: number): Promise<Array<{ date: string; revenue: number }>> {
-    return [];
   }
 
   async getRevenueBySource(): Promise<{
@@ -8645,6 +8656,570 @@ export class DrizzleStorage implements IStorage {
       throw error;
     }
   }
+  // Additional moderation methods matching the new interface signatures
+  async getQueueCount(): Promise<{
+    total: number;
+    threads: number;
+    replies: number;
+    urgentCount: number;
+  }> {
+    try {
+      const [threadsResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumThreads)
+        .where(eq(forumThreads.status, 'pending'));
+
+      const [repliesResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumReplies)
+        .where(eq(forumReplies.status, 'pending'));
+
+      const threads = threadsResult?.count || 0;
+      const replies = repliesResult?.count || 0;
+
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const [urgentThreads] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumThreads)
+        .where(and(eq(forumThreads.status, 'pending'), lt(forumThreads.createdAt, oneDayAgo)));
+
+      const [urgentReplies] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumReplies)
+        .where(and(eq(forumReplies.status, 'pending'), lt(forumReplies.createdAt, oneDayAgo)));
+
+      const urgentCount = (urgentThreads?.count || 0) + (urgentReplies?.count || 0);
+
+      return { total: threads + replies, threads, replies, urgentCount };
+    } catch (error) {
+      console.error("Error getting queue count:", error);
+      throw error;
+    }
+  }
+
+  async getReportedCount(): Promise<{
+    total: number;
+    newReports: number;
+    underReview: number;
+  }> {
+    try {
+      const [totalResult] = await db
+        .select({ count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` })
+        .from(reportedContent)
+        .where(inArray(reportedContent.status, ['pending', 'under_review']));
+
+      const [pendingResult] = await db
+        .select({ count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` })
+        .from(reportedContent)
+        .where(eq(reportedContent.status, 'pending'));
+
+      const [underReviewResult] = await db
+        .select({ count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` })
+        .from(reportedContent)
+        .where(isNotNull(reportedContent.assignedTo));
+
+      return {
+        total: totalResult?.count || 0,
+        newReports: pendingResult?.count || 0,
+        underReview: underReviewResult?.count || 0
+      };
+    } catch (error) {
+      console.error("Error getting reported count:", error);
+      throw error;
+    }
+  }
+
+  async getContentDetails(params: { contentId: string; contentType: "thread" | "reply"; }): Promise<import("@shared/schema").ContentDetails> {
+    try {
+      if (params.contentType === 'thread') {
+        const [thread] = await db
+          .select()
+          .from(forumThreads)
+          .where(eq(forumThreads.id, params.contentId));
+
+        if (!thread) throw new Error(`Thread ${params.contentId} not found`);
+
+        const [author] = await db
+          .select()
+          .from(users)
+          .where(eq(users.id, thread.authorId));
+
+        if (!author) throw new Error(`Author ${thread.authorId} not found`);
+
+        return {
+          id: thread.id,
+          type: 'thread',
+          title: thread.title,
+          body: thread.body,
+          attachments: thread.attachmentUrls || [],
+          author,
+          authorRecentPosts: [],
+          authorWarnings: [],
+          metadata: {
+            createdAt: thread.createdAt,
+            updatedAt: thread.updatedAt,
+            wordCount: thread.body.split(/\s+/).length,
+            hasLinks: /https?:\/\//.test(thread.body),
+            hasImages: thread.body.includes('![') || thread.body.includes('<img')
+          }
+        };
+      } else {
+        const [reply] = await db
+          .select()
+          .from(forumReplies)
+          .where(eq(forumReplies.id, params.contentId));
+
+        if (!reply) throw new Error(`Reply ${params.contentId} not found`);
+
+        const [author] = await db
+          .select()
+          .from(users)
+          .where(eq(users.id, reply.userId));
+
+        if (!author) throw new Error(`Author ${reply.userId} not found`);
+
+        return {
+          id: reply.id,
+          type: 'reply',
+          title: undefined,
+          body: reply.body,
+          attachments: [],
+          author,
+          authorRecentPosts: [],
+          authorWarnings: [],
+          metadata: {
+            createdAt: reply.createdAt,
+            updatedAt: reply.updatedAt || reply.createdAt,
+            wordCount: reply.body.split(/\s+/).length,
+            hasLinks: /https?:\/\//.test(reply.body),
+            hasImages: reply.body.includes('![') || reply.body.includes('<img')
+          }
+        };
+      }
+    } catch (error) {
+      console.error("Error getting content details:", error);
+      throw error;
+    }
+  }
+
+  async getReportDetails(reportId: number): Promise<import("@shared/schema").ReportDetails> {
+    try {
+      const [report] = await db
+        .select()
+        .from(reportedContent)
+        .where(eq(reportedContent.id, reportId));
+
+      if (!report) throw new Error(`Report ${reportId} not found`);
+
+      return {
+        id: report.id,
+        contentId: report.contentId,
+        contentType: report.contentType as "thread" | "reply",
+        content: { body: '' },
+        reports: [],
+        status: report.status as any,
+        availableActions: ['dismiss', 'delete', 'warn', 'suspend', 'ban']
+      };
+    } catch (error) {
+      console.error("Error getting report details:", error);
+      throw error;
+    }
+  }
+
+  async takeReportAction(params: {
+    contentId: string;
+    contentType: "thread" | "reply";
+    actionType: "delete" | "warn" | "suspend" | "ban";
+    moderatorId: string;
+    reason: string;
+    suspendDays?: number;
+  }): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        let authorId = '';
+
+        if (params.contentType === 'thread') {
+          const [thread] = await tx
+            .select()
+            .from(forumThreads)
+            .where(eq(forumThreads.id, params.contentId));
+
+          if (thread) authorId = thread.authorId;
+        } else {
+          const [reply] = await tx
+            .select()
+            .from(forumReplies)
+            .where(eq(forumReplies.id, params.contentId));
+
+          if (reply) authorId = reply.userId;
+        }
+
+        if (!authorId) throw new Error(`Content ${params.contentId} not found`);
+
+        switch (params.actionType) {
+          case 'delete':
+            if (params.contentType === 'thread') {
+              await tx.delete(forumThreads).where(eq(forumThreads.id, params.contentId));
+            } else {
+              await tx.delete(forumReplies).where(eq(forumReplies.id, params.contentId));
+            }
+
+            await tx
+              .update(reportedContent)
+              .set({ status: 'resolved', actionTaken: 'deleted', resolvedAt: new Date() })
+              .where(eq(reportedContent.contentId, params.contentId));
+
+            await tx.insert(adminActions).values({
+              adminId: params.moderatorId,
+              actionType: 'delete_content',
+              targetType: params.contentType,
+              targetId: params.contentId,
+              details: { reason: params.reason, authorId }
+            });
+            break;
+
+          case 'warn':
+            await tx
+              .update(reportedContent)
+              .set({ status: 'resolved', actionTaken: 'warned', resolvedAt: new Date() })
+              .where(eq(reportedContent.contentId, params.contentId));
+
+            await tx.insert(adminActions).values({
+              adminId: params.moderatorId,
+              actionType: 'warn_user',
+              targetType: 'user',
+              targetId: authorId,
+              details: { reason: params.reason, contentId: params.contentId }
+            });
+            break;
+
+          case 'suspend':
+            if (!params.suspendDays) throw new Error('suspendDays is required for suspend action');
+
+            const suspendedUntil = new Date();
+            suspendedUntil.setDate(suspendedUntil.getDate() + params.suspendDays);
+
+            await tx
+              .update(users)
+              .set({ status: 'suspended', suspendedUntil })
+              .where(eq(users.id, authorId));
+
+            await tx
+              .update(reportedContent)
+              .set({ status: 'resolved', actionTaken: 'suspended', resolvedAt: new Date() })
+              .where(eq(reportedContent.contentId, params.contentId));
+
+            await tx.insert(adminActions).values({
+              adminId: params.moderatorId,
+              actionType: 'suspend_user',
+              targetType: 'user',
+              targetId: authorId,
+              details: { reason: params.reason, suspendDays: params.suspendDays, contentId: params.contentId }
+            });
+            break;
+
+          case 'ban':
+            await tx
+              .update(users)
+              .set({ status: 'banned', bannedAt: new Date(), bannedBy: params.moderatorId })
+              .where(eq(users.id, authorId));
+
+            await tx
+              .update(reportedContent)
+              .set({ status: 'resolved', actionTaken: 'banned', resolvedAt: new Date() })
+              .where(eq(reportedContent.contentId, params.contentId));
+
+            await tx.insert(adminActions).values({
+              adminId: params.moderatorId,
+              actionType: 'ban_user',
+              targetType: 'user',
+              targetId: authorId,
+              details: { reason: params.reason, contentId: params.contentId }
+            });
+            break;
+        }
+      });
+    } catch (error) {
+      console.error("Error taking report action:", error);
+      throw error;
+    }
+  }
+
+  async bulkApprove(params: {
+    contentIds: string[];
+    contentType: "thread" | "reply";
+    moderatorId: string;
+    moderatorUsername: string;
+  }): Promise<{ successCount: number; failedIds: string[]; }> {
+    const failedIds: string[] = [];
+    let successCount = 0;
+
+    for (const contentId of params.contentIds.slice(0, 100)) {
+      try {
+        await this.approveContent({
+          contentId,
+          contentType: params.contentType,
+          moderatorId: params.moderatorId,
+          moderatorUsername: params.moderatorUsername,
+        });
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to approve ${contentId}:`, error);
+        failedIds.push(contentId);
+      }
+    }
+
+    await db.insert(adminActions).values({
+      adminId: params.moderatorId,
+      actionType: 'bulk_approve_content',
+      targetType: params.contentType,
+      details: {
+        contentIds: params.contentIds,
+        successCount,
+        failedCount: failedIds.length,
+        moderatorUsername: params.moderatorUsername,
+      },
+    });
+
+    return { successCount, failedIds };
+  }
+
+  async bulkReject(params: {
+    contentIds: string[];
+    contentType: "thread" | "reply";
+    moderatorId: string;
+    reason: string;
+  }): Promise<{ successCount: number; failedIds: string[]; }> {
+    const failedIds: string[] = [];
+    let successCount = 0;
+
+    for (const contentId of params.contentIds.slice(0, 100)) {
+      try {
+        await this.rejectContent({
+          contentId,
+          contentType: params.contentType,
+          moderatorId: params.moderatorId,
+          moderatorUsername: '',
+          reason: params.reason,
+        });
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to reject ${contentId}:`, error);
+        failedIds.push(contentId);
+      }
+    }
+
+    await db.insert(adminActions).values({
+      adminId: params.moderatorId,
+      actionType: 'bulk_reject_content',
+      targetType: params.contentType,
+      details: {
+        contentIds: params.contentIds,
+        reason: params.reason,
+        successCount,
+        failedCount: failedIds.length,
+      },
+    });
+
+    return { successCount, failedIds };
+  }
+
+  async getModerationHistory(params: { limit?: number; moderatorId?: string; }): Promise<import("@shared/schema").ModerationActionLog[]> {
+    try {
+      const limit = params.limit || 100;
+      const moderationActions = [
+        'approve_content',
+        'reject_content',
+        'delete_content',
+        'warn_user',
+        'suspend_user',
+        'ban_user',
+        'dismiss_report',
+      ];
+
+      let query = db
+        .select({
+          id: adminActions.id,
+          actionType: adminActions.actionType,
+          targetId: adminActions.targetId,
+          targetType: adminActions.targetType,
+          adminId: adminActions.adminId,
+          adminUsername: users.username,
+          details: adminActions.details,
+          createdAt: adminActions.createdAt,
+        })
+        .from(adminActions)
+        .innerJoin(users, eq(adminActions.adminId, users.id))
+        .where(inArray(adminActions.actionType, moderationActions))
+        .$dynamic();
+
+      if (params.moderatorId) {
+        query = query.where(eq(adminActions.adminId, params.moderatorId));
+      }
+
+      const results = await query
+        .orderBy(desc(adminActions.createdAt))
+        .limit(limit);
+
+      return results.map(row => ({
+        id: row.id,
+        action: row.actionType,
+        contentId: row.targetId,
+        contentType: row.targetType,
+        moderator: {
+          id: row.adminId,
+          username: row.adminUsername,
+        },
+        reason: (row.details as any)?.reason || null,
+        timestamp: row.createdAt,
+        metadata: row.details,
+      }));
+    } catch (error) {
+      console.error("Error getting moderation history:", error);
+      throw error;
+    }
+  }
+
+  async getModerationStats(): Promise<{
+    todayApproved: number;
+    todayRejected: number;
+    todayReportsHandled: number;
+    totalModeratedToday: number;
+    averageResponseTimeMinutes: number;
+    mostActiveModerator: { id: string; username: string; actionCount: number };
+    pendingByAge: { lessThan1Hour: number; between1And24Hours: number; moreThan24Hours: number };
+  }> {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const [approvedResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(adminActions)
+        .where(and(
+          eq(adminActions.actionType, 'approve_content'),
+          gte(adminActions.createdAt, today)
+        ));
+
+      const [rejectedResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(adminActions)
+        .where(and(
+          eq(adminActions.actionType, 'reject_content'),
+          gte(adminActions.createdAt, today)
+        ));
+
+      const [reportsResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(adminActions)
+        .where(and(
+          eq(adminActions.actionType, 'dismiss_report'),
+          gte(adminActions.createdAt, today)
+        ));
+
+      const moderatorStats = await db
+        .select({
+          adminId: adminActions.adminId,
+          username: users.username,
+          actionCount: sql<number>`cast(count(*) as integer)`,
+        })
+        .from(adminActions)
+        .innerJoin(users, eq(adminActions.adminId, users.id))
+        .where(gte(adminActions.createdAt, today))
+        .groupBy(adminActions.adminId, users.username)
+        .orderBy(desc(sql`count(*)`))
+        .limit(1);
+
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+      const [lessThan1Hour] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumThreads)
+        .where(and(
+          eq(forumThreads.status, 'pending'),
+          gte(forumThreads.createdAt, oneHourAgo)
+        ));
+
+      const [between1And24Hours] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumThreads)
+        .where(and(
+          eq(forumThreads.status, 'pending'),
+          lt(forumThreads.createdAt, oneHourAgo),
+          gte(forumThreads.createdAt, oneDayAgo)
+        ));
+
+      const [moreThan24Hours] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(forumThreads)
+        .where(and(
+          eq(forumThreads.status, 'pending'),
+          lt(forumThreads.createdAt, oneDayAgo)
+        ));
+
+      const todayApproved = approvedResult?.count || 0;
+      const todayRejected = rejectedResult?.count || 0;
+      const todayReportsHandled = reportsResult?.count || 0;
+      const totalModeratedToday = todayApproved + todayRejected + todayReportsHandled;
+
+      const mostActiveModerator = moderatorStats[0]
+        ? {
+            id: moderatorStats[0].adminId,
+            username: moderatorStats[0].username,
+            actionCount: moderatorStats[0].actionCount,
+          }
+        : { id: '', username: 'None', actionCount: 0 };
+
+      return {
+        todayApproved,
+        todayRejected,
+        todayReportsHandled,
+        totalModeratedToday,
+        averageResponseTimeMinutes: 0,
+        mostActiveModerator,
+        pendingByAge: {
+          lessThan1Hour: lessThan1Hour?.count || 0,
+          between1And24Hours: between1And24Hours?.count || 0,
+          moreThan24Hours: moreThan24Hours?.count || 0,
+        },
+      };
+    } catch (error) {
+      console.error("Error getting moderation stats:", error);
+      throw error;
+    }
+  }
+
+  async getTopSellingItems(limit = 10): Promise<any[]> {
+    try {
+      const items = await db
+        .select({
+          id: content.id,
+          title: content.title,
+          sales: sql<number>`cast(count(${contentPurchases.id}) as integer)`,
+          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+          sellerUsername: users.username,
+        })
+        .from(content)
+        .leftJoin(contentPurchases, eq(content.id, contentPurchases.contentId))
+        .leftJoin(users, eq(content.authorId, users.id))
+        .where(and(eq(content.status, 'approved'), isNull(content.deletedAt)))
+        .groupBy(content.id, content.title, users.username)
+        .orderBy(desc(sql`count(${contentPurchases.id})`))
+        .limit(limit);
+
+      return items.map(item => ({
+        id: item.id,
+        title: item.title,
+        sales: item.sales || 0,
+        revenue: item.revenue || 0,
+        sellerUsername: item.sellerUsername || 'Unknown',
+      }));
+    } catch (error) {
+      console.error('Error getting top selling items:', error);
+      throw error;
+    }
+  }
 
   async editContent(contentId: string, updates: any, editedBy: string): Promise<void> {
     try {
@@ -9097,29 +9672,6 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async getRevenueBySource(startDate: Date, endDate: Date): Promise<any[]> {
-    try {
-      const transactions = await db
-        .select()
-        .from(coinTransactions)
-        .where(
-          and(
-            eq(coinTransactions.type, 'recharge'),
-            gte(coinTransactions.createdAt, startDate),
-            lte(coinTransactions.createdAt, endDate)
-          )
-        );
-      
-      return [{
-        source: 'recharge',
-        revenue: transactions.reduce((sum, t) => sum + t.amount, 0),
-        count: transactions.length,
-      }];
-    } catch (error) {
-      console.error("Error fetching revenue by source:", error);
-      throw error;
-    }
-  }
 
   async getRevenueByUser(limit: number = 50): Promise<any[]> {
     try {
@@ -11198,1297 +11750,6 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  // ============================================================================
-  // PHASE 2: Content Moderation Methods - DrizzleStorage Implementation
-  // ============================================================================
-
-  async getModerationQueue(params: {
-    type?: "thread" | "reply" | "all";
-    status?: "pending" | "approved" | "rejected";
-    page?: number;
-    perPage?: number;
-  }): Promise<{
-    items: import("@shared/schema").ModerationQueueItem[];
-    total: number;
-    page: number;
-    perPage: number;
-  }> {
-    try {
-      const page = params.page || 1;
-      const perPage = params.perPage || 20;
-      const offset = (page - 1) * perPage;
-      const statusFilter = params.status || 'pending';
-      
-      const items: import("@shared/schema").ModerationQueueItem[] = [];
-      let total = 0;
-
-      if (params.type === 'thread' || params.type === 'all' || !params.type) {
-        const threadResults = await db
-          .select({
-            id: forumThreads.id,
-            title: forumThreads.title,
-            body: forumThreads.body,
-            createdAt: forumThreads.createdAt,
-            authorId: users.id,
-            authorUsername: users.username,
-            authorAvatar: users.profileImageUrl,
-            authorReputation: users.reputationScore,
-            categorySlug: forumThreads.categorySlug,
-            status: forumThreads.status,
-          })
-          .from(forumThreads)
-          .innerJoin(users, eq(forumThreads.authorId, users.id))
-          .where(eq(forumThreads.status, statusFilter))
-          .orderBy(asc(forumThreads.createdAt))
-          .limit(perPage)
-          .offset(offset);
-
-        for (const thread of threadResults) {
-          const preview = thread.body.substring(0, 100);
-          const wordCount = thread.body.split(/\s+/).length;
-          const hasLinks = /https?:\/\//.test(thread.body);
-          const hasImages = thread.body.includes('![') || thread.body.includes('<img');
-
-          items.push({
-            id: thread.id,
-            type: 'thread',
-            title: thread.title,
-            preview,
-            author: {
-              id: thread.authorId,
-              username: thread.authorUsername,
-              avatarUrl: thread.authorAvatar,
-              reputation: thread.authorReputation || 0,
-            },
-            submittedAt: thread.createdAt,
-            wordCount,
-            hasLinks,
-            hasImages,
-            categorySlug: thread.categorySlug,
-            status: thread.status as "pending" | "approved" | "rejected",
-          });
-        }
-
-        const [countResult] = await db
-          .select({ count: sql<number>`cast(count(*) as integer)` })
-          .from(forumThreads)
-          .where(eq(forumThreads.status, statusFilter));
-        total += countResult?.count || 0;
-      }
-
-      if (params.type === 'reply' || params.type === 'all' || !params.type) {
-        const replyResults = await db
-          .select({
-            id: forumReplies.id,
-            body: forumReplies.body,
-            createdAt: forumReplies.createdAt,
-            threadId: forumReplies.threadId,
-            threadTitle: forumThreads.title,
-            authorId: users.id,
-            authorUsername: users.username,
-            authorAvatar: users.profileImageUrl,
-            authorReputation: users.reputationScore,
-            status: forumReplies.status,
-          })
-          .from(forumReplies)
-          .innerJoin(users, eq(forumReplies.userId, users.id))
-          .innerJoin(forumThreads, eq(forumReplies.threadId, forumThreads.id))
-          .where(eq(forumReplies.status, statusFilter))
-          .orderBy(asc(forumReplies.createdAt))
-          .limit(perPage)
-          .offset(params.type === 'reply' ? offset : 0);
-
-        for (const reply of replyResults) {
-          const preview = reply.body.substring(0, 100);
-          const wordCount = reply.body.split(/\s+/).length;
-          const hasLinks = /https?:\/\//.test(reply.body);
-          const hasImages = reply.body.includes('![') || reply.body.includes('<img');
-
-          items.push({
-            id: reply.id,
-            type: 'reply',
-            threadId: reply.threadId,
-            preview,
-            author: {
-              id: reply.authorId,
-              username: reply.authorUsername,
-              avatarUrl: reply.authorAvatar,
-              reputation: reply.authorReputation || 0,
-            },
-            submittedAt: reply.createdAt,
-            wordCount,
-            hasLinks,
-            hasImages,
-            threadTitle: reply.threadTitle,
-            status: reply.status as "pending" | "approved" | "rejected",
-          });
-        }
-
-        const [countResult] = await db
-          .select({ count: sql<number>`cast(count(*) as integer)` })
-          .from(forumReplies)
-          .where(eq(forumReplies.status, statusFilter));
-        total += countResult?.count || 0;
-      }
-
-      return {
-        items: items.slice(0, perPage),
-        total,
-        page,
-        perPage,
-      };
-    } catch (error) {
-      console.error("Error getting moderation queue:", error);
-      throw error;
-    }
-  }
-
-  async getReportedContent(params: {
-    status?: "pending" | "resolved" | "dismissed";
-    page?: number;
-    perPage?: number;
-  }): Promise<{
-    items: import("@shared/schema").ReportedContentSummary[];
-    total: number;
-    page: number;
-    perPage: number;
-  }> {
-    try {
-      const page = params.page || 1;
-      const perPage = params.perPage || 20;
-      const offset = (page - 1) * perPage;
-
-      const conditions = params.status ? eq(reportedContent.status, params.status) : undefined;
-
-      const reportGroups = await db
-        .select({
-          contentId: reportedContent.contentId,
-          contentType: reportedContent.contentType,
-          reportCount: sql<number>`cast(count(*) as integer)`,
-          firstReportedAt: sql<Date>`min(${reportedContent.createdAt})`,
-          reportReasons: sql<string[]>`array_agg(distinct ${reportedContent.reportReason})`,
-          reporterIds: sql<string[]>`array_agg(distinct ${reportedContent.reporterId})`,
-          status: reportedContent.status,
-          actionTaken: reportedContent.actionTaken,
-        })
-        .from(reportedContent)
-        .where(conditions)
-        .groupBy(reportedContent.contentId, reportedContent.contentType, reportedContent.status, reportedContent.actionTaken)
-        .orderBy(desc(sql`count(*)`))
-        .limit(perPage)
-        .offset(offset);
-
-      const items: import("@shared/schema").ReportedContentSummary[] = [];
-
-      for (const group of reportGroups) {
-        let titleOrPreview = '';
-        let authorInfo = { id: '', username: '', reputation: 0 };
-
-        if (group.contentType === 'thread') {
-          const [thread] = await db
-            .select({
-              title: forumThreads.title,
-              authorId: users.id,
-              authorUsername: users.username,
-              authorReputation: users.reputationScore,
-            })
-            .from(forumThreads)
-            .leftJoin(users, eq(forumThreads.authorId, users.id))
-            .where(eq(forumThreads.id, group.contentId));
-          
-          if (thread) {
-            titleOrPreview = thread.title;
-            authorInfo = {
-              id: thread.authorId || '',
-              username: thread.authorUsername || 'Unknown',
-              reputation: thread.authorReputation || 0,
-            };
-          }
-        } else if (group.contentType === 'reply') {
-          const [reply] = await db
-            .select({
-              body: forumReplies.body,
-              authorId: users.id,
-              authorUsername: users.username,
-              authorReputation: users.reputationScore,
-            })
-            .from(forumReplies)
-            .leftJoin(users, eq(forumReplies.userId, users.id))
-            .where(eq(forumReplies.id, group.contentId));
-          
-          if (reply) {
-            titleOrPreview = reply.body.substring(0, 100);
-            authorInfo = {
-              id: reply.authorId || '',
-              username: reply.authorUsername || 'Unknown',
-              reputation: reply.authorReputation || 0,
-            };
-          }
-        }
-
-        const reporters = await db
-          .select({
-            id: users.id,
-            username: users.username,
-          })
-          .from(users)
-          .where(inArray(users.id, group.reporterIds));
-
-        items.push({
-          contentId: group.contentId,
-          contentType: group.contentType as "thread" | "reply",
-          titleOrPreview,
-          reportCount: group.reportCount,
-          reportReasons: group.reportReasons,
-          reporters,
-          firstReportedAt: group.firstReportedAt,
-          author: authorInfo,
-          latestAction: group.actionTaken || null,
-          status: group.status as "pending" | "resolved" | "dismissed",
-        });
-      }
-
-      const [countResult] = await db
-        .select({ 
-          count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` 
-        })
-        .from(reportedContent)
-        .where(conditions);
-
-      return {
-        items,
-        total: countResult?.count || 0,
-        page,
-        perPage,
-      };
-    } catch (error) {
-      console.error("Error getting reported content:", error);
-      throw error;
-    }
-  }
-
-  async getQueueCount(): Promise<{
-    total: number;
-    threads: number;
-    replies: number;
-    urgentCount: number;
-  }> {
-    try {
-      const [threadCount] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumThreads)
-        .where(eq(forumThreads.status, 'pending'));
-
-      const [replyCount] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumReplies)
-        .where(eq(forumReplies.status, 'pending'));
-
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      
-      const [urgentThreads] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumThreads)
-        .where(and(
-          eq(forumThreads.status, 'pending'),
-          lt(forumThreads.createdAt, oneDayAgo)
-        ));
-
-      const [urgentReplies] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumReplies)
-        .where(and(
-          eq(forumReplies.status, 'pending'),
-          lt(forumReplies.createdAt, oneDayAgo)
-        ));
-
-      const threads = threadCount?.count || 0;
-      const replies = replyCount?.count || 0;
-      const urgentCount = (urgentThreads?.count || 0) + (urgentReplies?.count || 0);
-
-      return {
-        total: threads + replies,
-        threads,
-        replies,
-        urgentCount,
-      };
-    } catch (error) {
-      console.error("Error getting queue count:", error);
-      throw error;
-    }
-  }
-
-  async getReportedCount(): Promise<{
-    total: number;
-    newReports: number;
-    underReview: number;
-  }> {
-    try {
-      const [totalResult] = await db
-        .select({ 
-          count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` 
-        })
-        .from(reportedContent)
-        .where(inArray(reportedContent.status, ['pending', 'under_review']));
-
-      const [pendingResult] = await db
-        .select({ 
-          count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` 
-        })
-        .from(reportedContent)
-        .where(eq(reportedContent.status, 'pending'));
-
-      const [underReviewResult] = await db
-        .select({ 
-          count: sql<number>`cast(count(distinct (${reportedContent.contentId}, ${reportedContent.contentType})) as integer)` 
-        })
-        .from(reportedContent)
-        .where(isNotNull(reportedContent.assignedTo));
-
-      return {
-        total: totalResult?.count || 0,
-        newReports: pendingResult?.count || 0,
-        underReview: underReviewResult?.count || 0,
-      };
-    } catch (error) {
-      console.error("Error getting reported count:", error);
-      throw error;
-    }
-  }
-
-  async approveContent(params: {
-    contentId: string;
-    contentType: "thread" | "reply";
-    moderatorId: string;
-    moderatorUsername: string;
-  }): Promise<void> {
-    try {
-      await db.transaction(async (tx) => {
-        if (params.contentType === 'thread') {
-          const [thread] = await tx
-            .select()
-            .from(forumThreads)
-            .where(eq(forumThreads.id, params.contentId));
-
-          if (!thread) {
-            throw new Error(`Thread ${params.contentId} not found`);
-          }
-
-          await tx
-            .update(forumThreads)
-            .set({
-              status: 'approved',
-              approvedBy: params.moderatorId,
-              approvedAt: new Date(),
-            })
-            .where(eq(forumThreads.id, params.contentId));
-
-          await tx.insert(adminActions).values({
-            adminId: params.moderatorId,
-            actionType: 'approve_content',
-            targetType: 'thread',
-            targetId: params.contentId,
-            details: {
-              contentTitle: thread.title,
-              authorId: thread.authorId,
-              moderatorUsername: params.moderatorUsername,
-            },
-          });
-        } else {
-          const [reply] = await tx
-            .select()
-            .from(forumReplies)
-            .where(eq(forumReplies.id, params.contentId));
-
-          if (!reply) {
-            throw new Error(`Reply ${params.contentId} not found`);
-          }
-
-          await tx
-            .update(forumReplies)
-            .set({
-              status: 'approved',
-              approvedBy: params.moderatorId,
-              approvedAt: new Date(),
-            })
-            .where(eq(forumReplies.id, params.contentId));
-
-          await tx.insert(adminActions).values({
-            adminId: params.moderatorId,
-            actionType: 'approve_content',
-            targetType: 'reply',
-            targetId: params.contentId,
-            details: {
-              replyPreview: reply.body.substring(0, 100),
-              authorId: reply.userId,
-              moderatorUsername: params.moderatorUsername,
-            },
-          });
-        }
-      });
-    } catch (error) {
-      console.error("Error approving content:", error);
-      throw error;
-    }
-  }
-
-  async rejectContent(params: {
-    contentId: string;
-    contentType: "thread" | "reply";
-    moderatorId: string;
-    moderatorUsername: string;
-    reason: string;
-  }): Promise<void> {
-    try {
-      await db.transaction(async (tx) => {
-        if (params.contentType === 'thread') {
-          const [thread] = await tx
-            .select()
-            .from(forumThreads)
-            .where(eq(forumThreads.id, params.contentId));
-
-          if (!thread) {
-            throw new Error(`Thread ${params.contentId} not found`);
-          }
-
-          await tx
-            .update(forumThreads)
-            .set({
-              status: 'rejected',
-              rejectedBy: params.moderatorId,
-              rejectedAt: new Date(),
-            })
-            .where(eq(forumThreads.id, params.contentId));
-
-          await tx.insert(adminActions).values({
-            adminId: params.moderatorId,
-            actionType: 'reject_content',
-            targetType: 'thread',
-            targetId: params.contentId,
-            details: {
-              reason: params.reason,
-              contentTitle: thread.title,
-              authorId: thread.authorId,
-              moderatorUsername: params.moderatorUsername,
-            },
-          });
-        } else {
-          const [reply] = await tx
-            .select()
-            .from(forumReplies)
-            .where(eq(forumReplies.id, params.contentId));
-
-          if (!reply) {
-            throw new Error(`Reply ${params.contentId} not found`);
-          }
-
-          await tx
-            .update(forumReplies)
-            .set({
-              status: 'rejected',
-              rejectedBy: params.moderatorId,
-              rejectedAt: new Date(),
-            })
-            .where(eq(forumReplies.id, params.contentId));
-
-          await tx.insert(adminActions).values({
-            adminId: params.moderatorId,
-            actionType: 'reject_content',
-            targetType: 'reply',
-            targetId: params.contentId,
-            details: {
-              reason: params.reason,
-              replyPreview: reply.body.substring(0, 100),
-              authorId: reply.userId,
-              moderatorUsername: params.moderatorUsername,
-            },
-          });
-        }
-      });
-    } catch (error) {
-      console.error("Error rejecting content:", error);
-      throw error;
-    }
-  }
-
-  async getContentDetails(params: {
-    contentId: string;
-    contentType: "thread" | "reply";
-  }): Promise<import("@shared/schema").ContentDetails> {
-    try {
-      if (params.contentType === 'thread') {
-        const [thread] = await db
-          .select()
-          .from(forumThreads)
-          .where(eq(forumThreads.id, params.contentId));
-
-        if (!thread) {
-          throw new Error(`Thread ${params.contentId} not found`);
-        }
-
-        const [author] = await db
-          .select()
-          .from(users)
-          .where(eq(users.id, thread.authorId));
-
-        if (!author) {
-          throw new Error(`Author ${thread.authorId} not found`);
-        }
-
-        const recentThreads = await db
-          .select({
-            id: forumThreads.id,
-            title: forumThreads.title,
-            body: forumThreads.body,
-            createdAt: forumThreads.createdAt,
-            type: sql<string>`'thread'`,
-          })
-          .from(forumThreads)
-          .where(eq(forumThreads.authorId, author.id))
-          .orderBy(desc(forumThreads.createdAt))
-          .limit(5);
-
-        const recentReplies = await db
-          .select({
-            id: forumReplies.id,
-            body: forumReplies.body,
-            createdAt: forumReplies.createdAt,
-            type: sql<string>`'reply'`,
-          })
-          .from(forumReplies)
-          .where(eq(forumReplies.userId, author.id))
-          .orderBy(desc(forumReplies.createdAt))
-          .limit(5);
-
-        const authorRecentPosts = [
-          ...recentThreads.map(t => ({
-            id: t.id,
-            title: t.title,
-            body: t.body,
-            createdAt: t.createdAt,
-            type: t.type,
-          })),
-          ...recentReplies.map(r => ({
-            id: r.id,
-            title: undefined,
-            body: r.body,
-            createdAt: r.createdAt,
-            type: r.type,
-          })),
-        ]
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-          .slice(0, 10);
-
-        const authorWarnings = await db
-          .select()
-          .from(adminActions)
-          .where(and(
-            eq(adminActions.targetType, 'user'),
-            eq(adminActions.targetId, author.id),
-            inArray(adminActions.actionType, ['warn_user', 'suspend_user', 'ban_user'])
-          ))
-          .orderBy(desc(adminActions.createdAt))
-          .limit(10);
-
-        const wordCount = thread.body.split(/\s+/).length;
-        const hasLinks = /https?:\/\//.test(thread.body);
-        const hasImages = thread.body.includes('![') || thread.body.includes('<img');
-
-        return {
-          id: thread.id,
-          type: 'thread',
-          title: thread.title,
-          body: thread.body,
-          attachments: thread.imageUrls || [],
-          author,
-          authorRecentPosts,
-          authorWarnings: authorWarnings.map(w => ({
-            actionType: w.actionType,
-            details: w.details,
-            createdAt: w.createdAt,
-          })),
-          metadata: {
-            createdAt: thread.createdAt,
-            updatedAt: thread.updatedAt,
-            wordCount,
-            hasLinks,
-            hasImages,
-          },
-        };
-      } else {
-        const [reply] = await db
-          .select()
-          .from(forumReplies)
-          .where(eq(forumReplies.id, params.contentId));
-
-        if (!reply) {
-          throw new Error(`Reply ${params.contentId} not found`);
-        }
-
-        const [author] = await db
-          .select()
-          .from(users)
-          .where(eq(users.id, reply.userId));
-
-        if (!author) {
-          throw new Error(`Author ${reply.userId} not found`);
-        }
-
-        const [thread] = await db
-          .select()
-          .from(forumThreads)
-          .where(eq(forumThreads.id, reply.threadId));
-
-        const recentThreads = await db
-          .select({
-            id: forumThreads.id,
-            title: forumThreads.title,
-            body: forumThreads.body,
-            createdAt: forumThreads.createdAt,
-            type: sql<string>`'thread'`,
-          })
-          .from(forumThreads)
-          .where(eq(forumThreads.authorId, author.id))
-          .orderBy(desc(forumThreads.createdAt))
-          .limit(5);
-
-        const recentReplies = await db
-          .select({
-            id: forumReplies.id,
-            body: forumReplies.body,
-            createdAt: forumReplies.createdAt,
-            type: sql<string>`'reply'`,
-          })
-          .from(forumReplies)
-          .where(eq(forumReplies.userId, author.id))
-          .orderBy(desc(forumReplies.createdAt))
-          .limit(5);
-
-        const authorRecentPosts = [
-          ...recentThreads.map(t => ({
-            id: t.id,
-            title: t.title,
-            body: t.body,
-            createdAt: t.createdAt,
-            type: t.type,
-          })),
-          ...recentReplies.map(r => ({
-            id: r.id,
-            title: undefined,
-            body: r.body,
-            createdAt: r.createdAt,
-            type: r.type,
-          })),
-        ]
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-          .slice(0, 10);
-
-        const authorWarnings = await db
-          .select()
-          .from(adminActions)
-          .where(and(
-            eq(adminActions.targetType, 'user'),
-            eq(adminActions.targetId, author.id),
-            inArray(adminActions.actionType, ['warn_user', 'suspend_user', 'ban_user'])
-          ))
-          .orderBy(desc(adminActions.createdAt))
-          .limit(10);
-
-        const wordCount = reply.body.split(/\s+/).length;
-        const hasLinks = /https?:\/\//.test(reply.body);
-        const hasImages = reply.body.includes('![') || reply.body.includes('<img');
-
-        return {
-          id: reply.id,
-          type: 'reply',
-          body: reply.body,
-          attachments: reply.imageUrls || [],
-          author,
-          authorRecentPosts,
-          authorWarnings: authorWarnings.map(w => ({
-            actionType: w.actionType,
-            details: w.details,
-            createdAt: w.createdAt,
-          })),
-          threadContext: thread ? {
-            id: thread.id,
-            title: thread.title,
-            categorySlug: thread.categorySlug,
-          } : undefined,
-          metadata: {
-            createdAt: reply.createdAt,
-            updatedAt: reply.updatedAt,
-            wordCount,
-            hasLinks,
-            hasImages,
-          },
-        };
-      }
-    } catch (error) {
-      console.error("Error getting content details:", error);
-      throw error;
-    }
-  }
-
-  async getReportDetails(reportId: number): Promise<import("@shared/schema").ReportDetails> {
-    try {
-      const [report] = await db
-        .select()
-        .from(reportedContent)
-        .where(eq(reportedContent.id, reportId));
-
-      if (!report) {
-        throw new Error(`Report ${reportId} not found`);
-      }
-
-      const allReports = await db
-        .select({
-          id: reportedContent.id,
-          reporterId: reportedContent.reporterId,
-          reporterUsername: users.username,
-          reason: reportedContent.reportReason,
-          description: reportedContent.description,
-          createdAt: reportedContent.createdAt,
-        })
-        .from(reportedContent)
-        .innerJoin(users, eq(reportedContent.reporterId, users.id))
-        .where(eq(reportedContent.contentId, report.contentId));
-
-      let content: any = {};
-      
-      if (report.contentType === 'thread') {
-        const [thread] = await db
-          .select({
-            title: forumThreads.title,
-            body: forumThreads.body,
-            authorId: users.id,
-            authorUsername: users.username,
-            authorReputation: users.reputationScore,
-          })
-          .from(forumThreads)
-          .leftJoin(users, eq(forumThreads.authorId, users.id))
-          .where(eq(forumThreads.id, report.contentId));
-
-        content = {
-          title: thread?.title,
-          body: thread?.body || '',
-          author: {
-            id: thread?.authorId || '',
-            username: thread?.authorUsername || 'Unknown',
-            reputation: thread?.authorReputation || 0,
-          },
-        };
-      } else {
-        const [reply] = await db
-          .select({
-            body: forumReplies.body,
-            authorId: users.id,
-            authorUsername: users.username,
-            authorReputation: users.reputationScore,
-          })
-          .from(forumReplies)
-          .leftJoin(users, eq(forumReplies.userId, users.id))
-          .where(eq(forumReplies.id, report.contentId));
-
-        content = {
-          body: reply?.body || '',
-          author: {
-            id: reply?.authorId || '',
-            username: reply?.authorUsername || 'Unknown',
-            reputation: reply?.authorReputation || 0,
-          },
-        };
-      }
-
-      return {
-        id: report.id,
-        contentId: report.contentId,
-        contentType: report.contentType as "thread" | "reply",
-        content,
-        reports: allReports.map(r => ({
-          id: r.id,
-          reporter: {
-            id: r.reporterId,
-            username: r.reporterUsername,
-          },
-          reason: r.reason,
-          description: r.description,
-          createdAt: r.createdAt,
-        })),
-        status: report.status,
-        availableActions: ['dismiss', 'delete', 'warn', 'suspend', 'ban'],
-      };
-    } catch (error) {
-      console.error("Error getting report details:", error);
-      throw error;
-    }
-  }
-
-  async dismissReport(params: {
-    reportId: number;
-    moderatorId: string;
-    reason?: string;
-  }): Promise<void> {
-    try {
-      await db.transaction(async (tx) => {
-        const [report] = await tx
-          .select()
-          .from(reportedContent)
-          .where(eq(reportedContent.id, params.reportId));
-
-        if (!report) {
-          throw new Error(`Report ${params.reportId} not found`);
-        }
-
-        await tx
-          .update(reportedContent)
-          .set({
-            status: 'dismissed',
-            resolvedAt: new Date(),
-            resolution: params.reason || 'Dismissed by moderator',
-          })
-          .where(eq(reportedContent.id, params.reportId));
-
-        await tx.insert(adminActions).values({
-          adminId: params.moderatorId,
-          actionType: 'dismiss_report',
-          targetType: 'report',
-          targetId: String(params.reportId),
-          details: {
-            reason: params.reason,
-            contentId: report.contentId,
-            reporterId: report.reporterId,
-          },
-        });
-      });
-    } catch (error) {
-      console.error("Error dismissing report:", error);
-      throw error;
-    }
-  }
-
-  async takeReportAction(params: {
-    contentId: string;
-    contentType: "thread" | "reply";
-    actionType: "delete" | "warn" | "suspend" | "ban";
-    moderatorId: string;
-    reason: string;
-    suspendDays?: number;
-  }): Promise<void> {
-    try {
-      await db.transaction(async (tx) => {
-        let authorId = '';
-
-        if (params.contentType === 'thread') {
-          const [thread] = await tx
-            .select()
-            .from(forumThreads)
-            .where(eq(forumThreads.id, params.contentId));
-
-          if (thread) {
-            authorId = thread.authorId;
-          }
-        } else {
-          const [reply] = await tx
-            .select()
-            .from(forumReplies)
-            .where(eq(forumReplies.id, params.contentId));
-
-          if (reply) {
-            authorId = reply.userId;
-          }
-        }
-
-        if (!authorId) {
-          throw new Error(`Content ${params.contentId} not found`);
-        }
-
-        switch (params.actionType) {
-          case 'delete':
-            if (params.contentType === 'thread') {
-              await tx.delete(forumThreads).where(eq(forumThreads.id, params.contentId));
-            } else {
-              await tx.delete(forumReplies).where(eq(forumReplies.id, params.contentId));
-            }
-
-            await tx
-              .update(reportedContent)
-              .set({
-                status: 'resolved',
-                actionTaken: 'deleted',
-                resolvedAt: new Date(),
-              })
-              .where(eq(reportedContent.contentId, params.contentId));
-
-            await tx.insert(adminActions).values({
-              adminId: params.moderatorId,
-              actionType: 'delete_content',
-              targetType: params.contentType,
-              targetId: params.contentId,
-              details: {
-                reason: params.reason,
-                authorId,
-              },
-            });
-            break;
-
-          case 'warn':
-            await tx
-              .update(reportedContent)
-              .set({
-                status: 'resolved',
-                actionTaken: 'warned',
-                resolvedAt: new Date(),
-              })
-              .where(eq(reportedContent.contentId, params.contentId));
-
-            await tx.insert(adminActions).values({
-              adminId: params.moderatorId,
-              actionType: 'warn_user',
-              targetType: 'user',
-              targetId: authorId,
-              details: {
-                reason: params.reason,
-                contentId: params.contentId,
-              },
-            });
-            break;
-
-          case 'suspend':
-            if (!params.suspendDays) {
-              throw new Error('suspendDays is required for suspend action');
-            }
-
-            const suspendedUntil = new Date();
-            suspendedUntil.setDate(suspendedUntil.getDate() + params.suspendDays);
-
-            await tx
-              .update(users)
-              .set({
-                status: 'suspended',
-                suspendedUntil,
-              })
-              .where(eq(users.id, authorId));
-
-            await tx
-              .update(reportedContent)
-              .set({
-                status: 'resolved',
-                actionTaken: 'suspended',
-                resolvedAt: new Date(),
-              })
-              .where(eq(reportedContent.contentId, params.contentId));
-
-            await tx.insert(adminActions).values({
-              adminId: params.moderatorId,
-              actionType: 'suspend_user',
-              targetType: 'user',
-              targetId: authorId,
-              details: {
-                reason: params.reason,
-                suspendDays: params.suspendDays,
-                contentId: params.contentId,
-              },
-            });
-            break;
-
-          case 'ban':
-            await tx
-              .update(users)
-              .set({
-                status: 'banned',
-                bannedAt: new Date(),
-                bannedBy: params.moderatorId,
-              })
-              .where(eq(users.id, authorId));
-
-            await tx
-              .update(reportedContent)
-              .set({
-                status: 'resolved',
-                actionTaken: 'banned',
-                resolvedAt: new Date(),
-              })
-              .where(eq(reportedContent.contentId, params.contentId));
-
-            await tx.insert(adminActions).values({
-              adminId: params.moderatorId,
-              actionType: 'ban_user',
-              targetType: 'user',
-              targetId: authorId,
-              details: {
-                reason: params.reason,
-                contentId: params.contentId,
-              },
-            });
-            break;
-        }
-      });
-    } catch (error) {
-      console.error("Error taking report action:", error);
-      throw error;
-    }
-  }
-
-  async bulkApprove(params: {
-    contentIds: string[];
-    contentType: "thread" | "reply";
-    moderatorId: string;
-    moderatorUsername: string;
-  }): Promise<{
-    successCount: number;
-    failedIds: string[];
-  }> {
-    const failedIds: string[] = [];
-    let successCount = 0;
-
-    for (const contentId of params.contentIds.slice(0, 100)) {
-      try {
-        await this.approveContent({
-          contentId,
-          contentType: params.contentType,
-          moderatorId: params.moderatorId,
-          moderatorUsername: params.moderatorUsername,
-        });
-        successCount++;
-      } catch (error) {
-        console.error(`Failed to approve ${contentId}:`, error);
-        failedIds.push(contentId);
-      }
-    }
-
-    await db.insert(adminActions).values({
-      adminId: params.moderatorId,
-      actionType: 'bulk_approve_content',
-      targetType: params.contentType,
-      details: {
-        contentIds: params.contentIds,
-        successCount,
-        failedCount: failedIds.length,
-        moderatorUsername: params.moderatorUsername,
-      },
-    });
-
-    return {
-      successCount,
-      failedIds,
-    };
-  }
-
-  async bulkReject(params: {
-    contentIds: string[];
-    contentType: "thread" | "reply";
-    moderatorId: string;
-    reason: string;
-  }): Promise<{
-    successCount: number;
-    failedIds: string[];
-  }> {
-    const failedIds: string[] = [];
-    let successCount = 0;
-
-    for (const contentId of params.contentIds.slice(0, 100)) {
-      try {
-        await this.rejectContent({
-          contentId,
-          contentType: params.contentType,
-          moderatorId: params.moderatorId,
-          moderatorUsername: '', 
-          reason: params.reason,
-        });
-        successCount++;
-      } catch (error) {
-        console.error(`Failed to reject ${contentId}:`, error);
-        failedIds.push(contentId);
-      }
-    }
-
-    await db.insert(adminActions).values({
-      adminId: params.moderatorId,
-      actionType: 'bulk_reject_content',
-      targetType: params.contentType,
-      details: {
-        contentIds: params.contentIds,
-        reason: params.reason,
-        successCount,
-        failedCount: failedIds.length,
-      },
-    });
-
-    return {
-      successCount,
-      failedIds,
-    };
-  }
-
-  async getModerationHistory(params: {
-    limit?: number;
-    moderatorId?: string;
-  }): Promise<import("@shared/schema").ModerationActionLog[]> {
-    try {
-      const limit = params.limit || 100;
-      const moderationActions = [
-        'approve_content',
-        'reject_content',
-        'delete_content',
-        'warn_user',
-        'suspend_user',
-        'ban_user',
-        'dismiss_report',
-      ];
-
-      let query = db
-        .select({
-          id: adminActions.id,
-          actionType: adminActions.actionType,
-          targetId: adminActions.targetId,
-          targetType: adminActions.targetType,
-          adminId: adminActions.adminId,
-          adminUsername: users.username,
-          details: adminActions.details,
-          createdAt: adminActions.createdAt,
-        })
-        .from(adminActions)
-        .innerJoin(users, eq(adminActions.adminId, users.id))
-        .where(inArray(adminActions.actionType, moderationActions))
-        .$dynamic();
-
-      if (params.moderatorId) {
-        query = query.where(eq(adminActions.adminId, params.moderatorId));
-      }
-
-      const results = await query
-        .orderBy(desc(adminActions.createdAt))
-        .limit(limit);
-
-      return results.map(row => ({
-        id: row.id,
-        action: row.actionType,
-        contentId: row.targetId,
-        contentType: row.targetType,
-        moderator: {
-          id: row.adminId,
-          username: row.adminUsername,
-        },
-        reason: (row.details as any)?.reason || null,
-        timestamp: row.createdAt,
-        metadata: row.details,
-      }));
-    } catch (error) {
-      console.error("Error getting moderation history:", error);
-      throw error;
-    }
-  }
-
-  async getModerationStats(): Promise<{
-    todayApproved: number;
-    todayRejected: number;
-    todayReportsHandled: number;
-    totalModeratedToday: number;
-    averageResponseTimeMinutes: number;
-    mostActiveModerator: { id: string; username: string; actionCount: number };
-    pendingByAge: { lessThan1Hour: number; between1And24Hours: number; moreThan24Hours: number };
-  }> {
-    try {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const [approvedResult] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(adminActions)
-        .where(and(
-          eq(adminActions.actionType, 'approve_content'),
-          gte(adminActions.createdAt, today)
-        ));
-
-      const [rejectedResult] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(adminActions)
-        .where(and(
-          eq(adminActions.actionType, 'reject_content'),
-          gte(adminActions.createdAt, today)
-        ));
-
-      const [reportsResult] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(adminActions)
-        .where(and(
-          eq(adminActions.actionType, 'dismiss_report'),
-          gte(adminActions.createdAt, today)
-        ));
-
-      const moderatorStats = await db
-        .select({
-          adminId: adminActions.adminId,
-          username: users.username,
-          actionCount: sql<number>`cast(count(*) as integer)`,
-        })
-        .from(adminActions)
-        .innerJoin(users, eq(adminActions.adminId, users.id))
-        .where(gte(adminActions.createdAt, today))
-        .groupBy(adminActions.adminId, users.username)
-        .orderBy(desc(sql`count(*)`))
-        .limit(1);
-
-      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-
-      const [lessThan1Hour] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumThreads)
-        .where(and(
-          eq(forumThreads.status, 'pending'),
-          gte(forumThreads.createdAt, oneHourAgo)
-        ));
-
-      const [between1And24Hours] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumThreads)
-        .where(and(
-          eq(forumThreads.status, 'pending'),
-          lt(forumThreads.createdAt, oneHourAgo),
-          gte(forumThreads.createdAt, oneDayAgo)
-        ));
-
-      const [moreThan24Hours] = await db
-        .select({ count: sql<number>`cast(count(*) as integer)` })
-        .from(forumThreads)
-        .where(and(
-          eq(forumThreads.status, 'pending'),
-          lt(forumThreads.createdAt, oneDayAgo)
-        ));
-
-      const todayApproved = approvedResult?.count || 0;
-      const todayRejected = rejectedResult?.count || 0;
-      const todayReportsHandled = reportsResult?.count || 0;
-      const totalModeratedToday = todayApproved + todayRejected + todayReportsHandled;
-
-      const mostActiveModerator = moderatorStats[0]
-        ? {
-            id: moderatorStats[0].adminId,
-            username: moderatorStats[0].username,
-            actionCount: moderatorStats[0].actionCount,
-          }
-        : { id: '', username: 'None', actionCount: 0 };
-
-      return {
-        todayApproved,
-        todayRejected,
-        todayReportsHandled,
-        totalModeratedToday,
-        averageResponseTimeMinutes: 0,
-        mostActiveModerator,
-        pendingByAge: {
-          lessThan1Hour: lessThan1Hour?.count || 0,
-          between1And24Hours: between1And24Hours?.count || 0,
-          moreThan24Hours: moreThan24Hours?.count || 0,
-        },
-      };
-    } catch (error) {
-      console.error("Error getting moderation stats:", error);
-      throw error;
-    }
-  }
 
   // ============================================================================
   // PHASE 2: Marketplace Management (14 methods) - DrizzleStorage Implementation
@@ -13040,70 +12301,6 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async getRevenueTrend(days = 30): Promise<any[]> {
-    try {
-      const now = new Date();
-      const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-
-      const results = await db
-        .select({
-          date: sql<string>`DATE(${contentPurchases.purchasedAt})`,
-          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
-        })
-        .from(contentPurchases)
-        .where(gte(contentPurchases.purchasedAt, startDate))
-        .groupBy(sql`DATE(${contentPurchases.purchasedAt})`)
-        .orderBy(sql`DATE(${contentPurchases.purchasedAt})`);
-
-      // Fill missing dates with 0 revenue
-      const trend: { date: string; revenue: number }[] = [];
-      for (let i = days - 1; i >= 0; i--) {
-        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-        const dateStr = date.toISOString().split('T')[0];
-        const found = results.find(r => r.date === dateStr);
-        trend.push({ date: dateStr, revenue: found?.revenue || 0 });
-      }
-
-      return trend;
-    } catch (error) {
-      console.error('Error getting revenue trend:', error);
-      throw error;
-    }
-  }
-
-  async getTopSellingItems(limit = 10): Promise<any[]> {
-    try {
-      const items = await db
-        .select({
-          id: content.id,
-          title: content.title,
-          sales: sql<number>`cast(count(${contentPurchases.id}) as integer)`,
-          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
-          sellerUsername: users.username,
-        })
-        .from(content)
-        .leftJoin(contentPurchases, eq(content.id, contentPurchases.contentId))
-        .leftJoin(users, eq(content.authorId, users.id))
-        .where(and(
-          eq(content.status, 'approved'),
-          isNull(content.deletedAt)
-        ))
-        .groupBy(content.id, content.title, users.username)
-        .orderBy(desc(sql`count(${contentPurchases.id})`))
-        .limit(limit);
-
-      return items.map(item => ({
-        id: item.id,
-        title: item.title,
-        sales: item.sales || 0,
-        revenue: item.revenue || 0,
-        sellerUsername: item.sellerUsername || 'Unknown',
-      }));
-    } catch (error) {
-      console.error('Error getting top selling items:', error);
-      throw error;
-    }
-  }
 
   async getTopVendors(limit = 10): Promise<any[]> {
     try {
@@ -13466,7 +12663,7 @@ export class DrizzleStorage implements IStorage {
           reviewBody: brokerReviews.reviewBody,
           scamSeverity: brokerReviews.scamSeverity,
           status: brokerReviews.status,
-          datePosted: brokerReviews.createdAt,
+          datePosted: brokerReviews.datePosted,
           approvedBy: brokerReviews.approvedBy,
           approvedAt: brokerReviews.approvedAt,
           rejectedBy: brokerReviews.rejectedBy,
@@ -13477,7 +12674,7 @@ export class DrizzleStorage implements IStorage {
         .leftJoin(brokers, eq(brokerReviews.brokerId, brokers.id))
         .leftJoin(users, eq(brokerReviews.userId, users.id))
         .where(and(...conditions))
-        .orderBy(desc(brokerReviews.createdAt))
+        .orderBy(desc(brokerReviews.datePosted))
         .limit(pageSize)
         .offset(offset);
 
@@ -14033,10 +13230,10 @@ export class DrizzleStorage implements IStorage {
       const conditions = [];
       
       if (filters?.status) {
-        conditions.push(eq(withdrawalRequests.status, filters.status));
+        conditions.push(eq(withdrawalRequests.status, filters.status as any));
       }
       if (filters?.method) {
-        conditions.push(eq(withdrawalRequests.method, filters.method));
+        conditions.push(eq(withdrawalRequests.method, filters.method as any));
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -14254,7 +13451,10 @@ export class DrizzleStorage implements IStorage {
 
       allTransactions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-      return allTransactions.slice(0, limit);
+      return allTransactions.slice(0, limit).map(t => ({
+        ...t,
+        username: t.username || 'Unknown'
+      }));
     } catch (error) {
       console.error('Error getting recent transactions:', error);
       throw error;
