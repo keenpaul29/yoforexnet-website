@@ -13,6 +13,9 @@ import { notFound } from 'next/navigation';
 import { getInternalApiUrl } from '@/lib/api-config';
 import { getCategoryByPath } from '@/lib/category-path';
 import BreadcrumbSchema from '@/components/BreadcrumbSchema';
+import { SchemaScript } from '@/components/SchemaGenerator';
+import { generateDiscussionForumPostingSchema, generateProductSchema, generateFAQPageSchema, generateNewsArticleSchema, generateBlogPostingSchema, generateVideoObjectSchema } from '@/lib/schema-generator';
+import { detectSchemaType } from '@/lib/schema-detector';
 import { db } from '@/lib/db';
 import { forumCategories } from '@shared/schema';
 import { eq } from 'drizzle-orm';
@@ -114,15 +117,19 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   let replies = [];
   try {
     const apiUrl = getInternalApiUrl();
-    const [threadRes, repliesRes] = await Promise.all([
-      fetch(`${apiUrl}/api/threads/slug/${lastSlug}`),
-      fetch(`${apiUrl}/api/threads/slug/${lastSlug}/replies`).catch(() => null),
-    ]);
+    const threadRes = await fetch(`${apiUrl}/api/threads/by-slug/${lastSlug}`);
     
     if (threadRes.ok) {
       thread = await threadRes.json();
-      if (repliesRes && repliesRes.ok) {
-        replies = await repliesRes.json();
+      // Fetch replies using thread ID
+      try {
+        const repliesRes = await fetch(`${apiUrl}/api/threads/${thread.id}/replies`);
+        if (repliesRes.ok) {
+          replies = await repliesRes.json();
+        }
+      } catch (e) {
+        // Replies fetch failed, continue with empty replies
+        console.warn('Failed to fetch thread replies');
       }
     }
   } catch (error) {
@@ -130,9 +137,142 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   }
   
   if (thread) {
+    // Detect schema type
+    const schemaAnalysis = detectSchemaType({ thread, pathname: `/category/${pathSegments.join('/')}` });
+    
+    // Fetch author data with graceful fallback
+    const apiUrl = getInternalApiUrl();
+    let author = null;
+    try {
+      const authorRes = await fetch(`${apiUrl}/api/users/${thread.authorId}`);
+      if (authorRes.ok) author = await authorRes.json();
+    } catch (e) {
+      // Fallback to anonymous author if fetch fails
+      console.warn('Author fetch failed, using anonymous author');
+    }
+    
+    // Always provide fallback author to prevent schema generation failure
+    if (!author) {
+      author = {
+        id: 'anonymous',
+        username: 'Anonymous',
+        profileImageUrl: null
+      };
+    }
+    
+    // Generate schema based on detected type
+    let schema = null;
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoforex.com';
+    
+    switch (schemaAnalysis.schemaType) {
+      case 'FAQPage':
+        // FAQ schema for Q&A threads
+        const faqQuestions = [{
+          question: thread.title,
+          answer: thread.body || 'See discussion for details',
+          id: thread.id
+        }];
+        // Add top replies as additional Q&A pairs
+        if (replies && replies.length > 0) {
+          replies.slice(0, 3).forEach((reply: any) => {
+            if (reply.body) {
+              faqQuestions.push({
+                question: `Reply: ${thread.title}`,
+                answer: reply.body,
+                id: reply.id
+              });
+            }
+          });
+        }
+        schema = generateFAQPageSchema({
+          questions: faqQuestions,
+          baseUrl,
+          pageUrl: `/category/${pathSegments.join('/')}`
+        });
+        break;
+        
+      case 'NewsArticle':
+        // News article schema for recent news threads
+        schema = generateNewsArticleSchema({
+          headline: thread.title,
+          description: thread.body?.substring(0, 160),
+          content: thread.body || '',
+          author,
+          publishDate: new Date(thread.createdAt),
+          modifiedDate: thread.updatedAt ? new Date(thread.updatedAt) : undefined,
+          baseUrl,
+          url: `/category/${pathSegments.join('/')}`,
+          imageUrl: undefined, // Add if available
+          location: undefined
+        });
+        break;
+        
+      case 'BlogPosting':
+        // Blog posting schema for tutorials/guides
+        schema = generateBlogPostingSchema({
+          title: thread.title,
+          description: thread.body?.substring(0, 160),
+          content: thread.body || '',
+          author,
+          publishDate: new Date(thread.createdAt),
+          modifiedDate: thread.updatedAt ? new Date(thread.updatedAt) : undefined,
+          baseUrl,
+          url: `/category/${pathSegments.join('/')}`,
+          imageUrl: undefined,
+          category: pathSegments[0] // First segment as category
+        });
+        break;
+        
+      case 'VideoObject':
+        // Video object schema for threads with video links
+        // Extract video URL from thread body
+        const youtubeMatch = thread.body?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+        const videoId = youtubeMatch ? youtubeMatch[1] : null;
+        const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : undefined;
+        
+        schema = generateVideoObjectSchema({
+          title: thread.title,
+          description: thread.body?.substring(0, 160) || thread.title,
+          thumbnailUrl: videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : `${baseUrl}/default-video-thumbnail.jpg`,
+          uploadDate: new Date(thread.createdAt),
+          videoUrl: undefined,
+          embedUrl,
+          durationSeconds: undefined, // Unknown for embedded videos
+          viewCount: thread.viewCount || 0,
+          baseUrl,
+          author
+        });
+        break;
+        
+      case 'DiscussionForumPosting':
+      default:
+        // Standard forum discussion schema
+        schema = generateDiscussionForumPostingSchema({
+          thread,
+          author,
+          baseUrl,
+          viewCount: thread.viewCount || 0,
+          replyCount: replies?.length || 0,
+          upvoteCount: thread.upvoteCount || 0,
+          replies: replies?.slice(0, 10).map((r: any) => ({
+            id: r.id,
+            content: r.body,
+            author: r.author || { username: 'Anonymous' },
+            createdAt: new Date(r.createdAt),
+            upvotes: r.helpfulCount || 0
+          })) || []
+        });
+        break;
+    }
+    
     // Render thread detail page with hierarchical breadcrumbs
     const { default: ThreadDetailClient } = await loadThreadClient();
-    return <ThreadDetailClient initialThread={thread} initialReplies={replies} />;
+    return (
+      <>
+        {schema && <SchemaScript schema={schema} />}
+        <ThreadDetailClient initialThread={thread} initialReplies={replies} />
+      </>
+    );
   }
   
   // Try to find marketplace content
@@ -167,17 +307,38 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   }
   
   if (content) {
+    // Generate Product schema for marketplace items
+    let schema = null;
+    if (author) {
+      schema = generateProductSchema({
+        product: content,
+        baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://yoforex.com',
+        author,
+        averageRating: content.averageRating || 0,
+        reviewCount: reviews?.length || 0,
+        reviews: reviews?.slice(0, 5).map((r: any) => ({
+          author: r.author || { username: 'Anonymous' },
+          rating: r.rating || 5,
+          comment: r.comment || '',
+          createdAt: new Date(r.createdAt)
+        })) || []
+      });
+    }
+    
     // Render content detail page with all required data
     const { default: ContentDetailClient } = await loadContentClient();
     return (
-      <ContentDetailClient 
-        slug={lastSlug}
-        initialContent={content}
-        initialAuthor={author}
-        initialReviews={reviews}
-        initialSimilarContent={similarContent}
-        initialAuthorReleases={authorReleases}
-      />
+      <>
+        {schema && <SchemaScript schema={schema} />}
+        <ContentDetailClient 
+          slug={lastSlug}
+          initialContent={content}
+          initialAuthor={author}
+          initialReviews={reviews}
+          initialSimilarContent={similarContent}
+          initialAuthorReleases={authorReleases}
+        />
+      </>
     );
   }
   

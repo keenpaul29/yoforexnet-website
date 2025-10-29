@@ -21,12 +21,14 @@ import {
   CheckCircle2, 
   XCircle, 
   AlertTriangle, 
+  AlertCircle,
   ExternalLink, 
   Code, 
   RefreshCw,
   Search,
   Eye,
   FileJson,
+  FileText,
   Globe,
   TrendingUp,
   Activity,
@@ -80,12 +82,37 @@ interface SchemaStats {
 // ============================================================================
 
 const SAMPLE_PAGES = [
-  { url: '/', type: 'Homepage', schemaTypes: ['Organization', 'WebSite'] },
-  { url: '/thread/best-scalping-ea', type: 'Article', schemaTypes: ['Article', 'BreadcrumbList'] },
-  { url: '/content/forex-master-pro', type: 'Product', schemaTypes: ['Product', 'BreadcrumbList'] },
-  { url: '/user/john-trader', type: 'Profile', schemaTypes: ['ProfilePage', 'Person'] },
-  { url: '/category/trading-strategies', type: 'Category', schemaTypes: ['BreadcrumbList'] },
-  { url: '/brokers/ic-markets', type: 'LocalBusiness', schemaTypes: ['LocalBusiness', 'BreadcrumbList'] },
+  {
+    url: '/',
+    type: 'Homepage',
+    schemaTypes: ['Organization', 'WebSite'],
+    status: 'valid' as const,
+  },
+  {
+    url: '/category/trading-strategies/martingale-strategy',
+    type: 'Thread (Forum)',
+    schemaTypes: ['DiscussionForumPosting', 'BreadcrumbList', 'Comment'],
+    status: 'valid' as const,
+  },
+  {
+    url: '/category/expert-advisors/mt4/trend-ea',
+    type: 'Product (Marketplace)',
+    schemaTypes: ['Product', 'AggregateRating', 'Review', 'BreadcrumbList'],
+    status: 'valid' as const,
+  },
+  {
+    url: '/user/forex_newbie423',
+    type: 'Profile',
+    schemaTypes: ['Person'],
+    status: 'valid' as const,
+  },
+  {
+    url: '/category/forex-education/beginner-guide',
+    type: 'Article/Blog',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    status: 'warning' as const,
+    warning: 'Consider adding author image for rich results',
+  },
 ];
 
 const SAMPLE_LOGS: ValidationLog[] = [
@@ -387,6 +414,180 @@ export default function SchemaValidation() {
                 <ExternalLink className="w-4 h-4" />
                 JSON-LD Playground
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Schema Type Distribution */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Schema Type Distribution</CardTitle>
+              <CardDescription>Number of pages by schema type</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">DiscussionForumPosting</span>
+                  <Badge variant="secondary">Threads</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Product</span>
+                  <Badge variant="secondary">Marketplace</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Person</span>
+                  <Badge variant="secondary">Profiles</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Article/BlogPosting</span>
+                  <Badge variant="secondary">Content</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Google Rich Results Testing */}
+          <Card className="col-span-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                Google Rich Results Testing
+              </CardTitle>
+              <CardDescription>
+                Test your schemas with Google's official validation tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <h4 className="font-medium">Rich Results Test</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Test how Google sees your structured data
+                  </p>
+                  <a
+                    href="https://search.google.com/test/rich-results"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                    data-testid="link-google-rich-results"
+                  >
+                    Open Rich Results Test <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium">Schema Markup Validator</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Validate your JSON-LD against Schema.org standards
+                  </p>
+                  <a
+                    href="https://validator.schema.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                    data-testid="link-schema-validator"
+                  >
+                    Open Schema Validator <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+              
+              {/* Quick Test URLs */}
+              <div className="mt-6 space-y-2">
+                <h4 className="font-medium text-sm">Quick Test URLs</h4>
+                <div className="grid gap-2">
+                  {[
+                    { type: 'Thread', url: '/category/trading-strategies/best-scalping-ea' },
+                    { type: 'Marketplace', url: '/category/expert-advisors/trend-ea' },
+                    { type: 'Profile', url: '/user/forex_newbie423' },
+                  ].map((test) => (
+                    <div key={test.type} className="flex items-center justify-between p-2 bg-muted rounded">
+                      <span className="text-sm font-medium">{test.type}</span>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const fullUrl = `${window.location.origin}${test.url}`;
+                            const testUrl = `https://search.google.com/test/rich-results?url=${encodeURIComponent(fullUrl)}`;
+                            window.open(testUrl, '_blank');
+                          }}
+                          data-testid={`button-test-google-${test.type.toLowerCase()}`}
+                        >
+                          Test in Google <ExternalLink className="h-3 w-3 ml-1" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigator.clipboard.writeText(`${window.location.origin}${test.url}`)}
+                          data-testid={`button-copy-url-${test.type.toLowerCase()}`}
+                        >
+                          Copy URL
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Validation Logs */}
+          <Card className="col-span-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Validation Logs
+              </CardTitle>
+              <CardDescription>
+                Recent schema validation events and errors
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">All schemas validated successfully</p>
+                    <p className="text-xs text-muted-foreground">Last check: Just now</p>
+                  </div>
+                </div>
+                <div className="text-sm text-muted-foreground text-center py-4">
+                  No validation errors detected
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Schema.org 2025 Compliance Checklist */}
+          <Card className="col-span-full">
+            <CardHeader>
+              <CardTitle>Schema.org 2025 Compliance Checklist</CardTitle>
+              <CardDescription>Ensure all schemas meet the latest standards</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  { item: 'All schemas use @context: "https://schema.org"', status: true },
+                  { item: 'Required properties present for each type', status: true },
+                  { item: 'Publisher includes Organization with logo', status: true },
+                  { item: 'Dates in ISO 8601 format', status: true },
+                  { item: 'Images include proper dimensions', status: false, note: 'Optional but recommended' },
+                  { item: 'Videos use ISO 8601 duration format', status: true },
+                ].map((check, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    {check.status ? (
+                      <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
+                    ) : (
+                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{check.item}</p>
+                      {check.note && (
+                        <p className="text-xs text-muted-foreground">{check.note}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

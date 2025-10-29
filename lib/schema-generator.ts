@@ -126,35 +126,68 @@ export interface InteractionCounter {
   userInteractionCount: number;
 }
 
+// ============================================================================
+// DISCUSSION FORUM POSTING SCHEMA (Schema.org 2025)
+// ============================================================================
+
+export interface DiscussionForumPostingSchema extends BaseSchema {
+  '@type': 'DiscussionForumPosting';
+  '@id': string;
+  headline: string;
+  articleBody: string;
+  author: Person | Organization;
+  datePublished: string;
+  dateModified?: string;
+  url: string;
+  mainEntityOfPage?: { '@id': string };
+  interactionStatistic?: InteractionCounter[];
+  comment?: CommentSchema[];
+  commentCount?: number;
+  publisher?: Organization;
+}
+
+export interface CommentSchema extends BaseSchema {
+  '@type': 'Comment';
+  '@id'?: string;
+  text: string;
+  author: Person | Organization;
+  datePublished: string;
+  upvoteCount?: number;
+  parentItem?: { '@id': string };
+}
+
+// ============================================================================
+// PRODUCT SCHEMA (Schema.org 2025 - Enhanced)
+// ============================================================================
+
 export interface ProductSchema extends BaseSchema {
   '@type': 'Product';
+  '@id': string;
   name: string;
-  description?: string;
+  description: string;
   image?: string | string[];
-  brand?: Brand;
-  offers?: Offer;
-  aggregateRating?: AggregateRating;
-  review?: Review[];
+  brand?: Organization | { '@type': 'Brand'; name: string };
+  offers: OfferSchema;
+  aggregateRating?: AggregateRatingSchema;
+  review?: ReviewSchema[];
   sku?: string;
   gtin?: string;
+  mpn?: string;
+  additionalType?: string;
+  category?: string;
 }
 
-export interface Brand {
-  '@type': 'Brand';
-  name: string;
-}
-
-export interface Offer {
+export interface OfferSchema {
   '@type': 'Offer';
-  url?: string;
+  price: string;
   priceCurrency: string;
-  price: string | number;
-  priceValidUntil?: string;
-  availability?: string;
+  availability: string;
+  url?: string;
   seller?: Organization;
+  priceValidUntil?: string;
 }
 
-export interface AggregateRating {
+export interface AggregateRatingSchema {
   '@type': 'AggregateRating';
   ratingValue: number;
   reviewCount: number;
@@ -162,13 +195,27 @@ export interface AggregateRating {
   worstRating?: number;
 }
 
-export interface Review {
+export interface ReviewSchema {
   '@type': 'Review';
-  reviewRating: Rating;
   author: Person;
-  datePublished?: string;
+  datePublished: string;
+  reviewRating: {
+    '@type': 'Rating';
+    ratingValue: number;
+    bestRating?: number;
+  };
   reviewBody?: string;
 }
+
+// Legacy type aliases for backward compatibility
+export interface Brand {
+  '@type': 'Brand';
+  name: string;
+}
+
+export interface Offer extends OfferSchema {}
+export interface AggregateRating extends AggregateRatingSchema {}
+export interface Review extends ReviewSchema {}
 
 export interface Rating {
   '@type': 'Rating';
@@ -177,32 +224,93 @@ export interface Rating {
   worstRating?: number;
 }
 
+// ============================================================================
+// FAQ PAGE SCHEMA (Schema.org 2025 - Enhanced)
+// ============================================================================
+
 export interface FAQPageSchema extends BaseSchema {
   '@type': 'FAQPage';
-  mainEntity: Question[];
+  '@id': string;
+  mainEntity: QuestionSchema[];
 }
 
-export interface Question {
+export interface QuestionSchema {
   '@type': 'Question';
+  '@id'?: string;
   name: string;
-  acceptedAnswer: Answer;
+  acceptedAnswer: AnswerSchema;
 }
 
-export interface Answer {
+export interface AnswerSchema {
   '@type': 'Answer';
+  '@id'?: string;
   text: string;
+  dateCreated?: string;
+  upvoteCount?: number;
+  url?: string;
+  author?: Person;
 }
+
+// Legacy type aliases for backward compatibility
+export interface Question extends QuestionSchema {}
+export interface Answer extends AnswerSchema {}
+
+// ============================================================================
+// VIDEO OBJECT SCHEMA (Schema.org 2025 - Enhanced)
+// ============================================================================
 
 export interface VideoObjectSchema extends BaseSchema {
   '@type': 'VideoObject';
+  '@id': string;
   name: string;
-  description?: string;
-  thumbnailUrl?: string | string[];
-  uploadDate?: string;
-  duration?: string;
+  description: string;
+  thumbnailUrl: string | string[];
+  uploadDate: string;
   contentUrl?: string;
   embedUrl?: string;
+  duration?: string;
   interactionStatistic?: InteractionCounter;
+  author?: Person | Organization;
+}
+
+// ============================================================================
+// NEWS ARTICLE SCHEMA (Schema.org 2025)
+// ============================================================================
+
+export interface NewsArticleSchema extends BaseSchema {
+  '@type': 'NewsArticle';
+  '@id': string;
+  headline: string;
+  description?: string;
+  image?: string | string[];
+  datePublished: string;
+  dateModified?: string;
+  author: Person | Organization;
+  publisher: Organization;
+  articleBody?: string;
+  dateline?: string;
+  url: string;
+}
+
+// ============================================================================
+// BLOG POSTING SCHEMA (Schema.org 2025)
+// ============================================================================
+
+export interface BlogPostingSchema extends BaseSchema {
+  '@type': 'BlogPosting';
+  '@id': string;
+  headline: string;
+  description?: string;
+  image?: string | string[];
+  datePublished: string;
+  dateModified?: string;
+  author: Person | Organization;
+  publisher: Organization;
+  articleBody?: string;
+  wordCount?: number;
+  articleSection?: string;
+  url: string;
+  mainEntityOfPage?: { '@id': string };
 }
 
 export interface ProfilePageSchema extends BaseSchema {
@@ -387,56 +495,86 @@ export function generateArticleSchema(params: {
 }
 
 /**
- * Generate Product schema for marketplace items
- * Includes offers and ratings if available
+ * Generate Product schema for marketplace items (Schema.org 2025 Enhanced)
+ * Includes offers, ratings, and reviews
+ * Supports digital products (SoftwareApplication for EAs/Indicators)
  */
 export function generateProductSchema(params: {
-  content: Content;
-  author?: User;
-  canonicalUrl: string;
+  product: Content;
+  baseUrl: string;
+  author: User;
   averageRating?: number;
   reviewCount?: number;
+  reviews?: Array<{ author: User; rating: number; comment: string; createdAt: Date }>;
 }): ProductSchema {
-  const { content, author, canonicalUrl, averageRating, reviewCount } = params;
+  const { product, baseUrl, author, averageRating, reviewCount, reviews } = params;
 
-  const images = content.images || [];
+  const images = product.images || [];
   const coverImage = images.find((img) => img.isCover) || images[0];
+  const imageUrls = images.length > 0 ? images.map((img) => img.url) : undefined;
+
+  // Determine additional type based on content type
+  let additionalType: string | undefined;
+  if (product.type === 'ea' || product.type === 'indicator') {
+    additionalType = 'https://schema.org/SoftwareApplication';
+  }
+
+  // Build reviews array if provided
+  const reviewSchemas: ReviewSchema[] | undefined = reviews?.map((review) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    author: {
+      '@type': 'Person',
+      name: review.author.username,
+      url: `${baseUrl}/user/${review.author.username}`,
+    },
+    datePublished: new Date(review.createdAt).toISOString(),
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: review.rating,
+      bestRating: 5,
+    },
+    reviewBody: review.comment,
+  }));
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    '@id': canonicalUrl,
-    name: content.title,
-    description: content.description || '',
-    image: coverImage?.url || SITE_CONFIG.logo,
+    '@id': `${baseUrl}/content/${product.slug}`,
+    name: product.title,
+    description: product.description || '',
+    image: imageUrls || coverImage?.url || `${baseUrl}/logo.png`,
     brand: {
       '@type': 'Brand',
       name: SITE_CONFIG.name,
     },
     offers: {
       '@type': 'Offer',
-      url: canonicalUrl,
+      price: (product.priceCoins || 0).toString(),
       priceCurrency: 'USD',
-      price: (content as any).price?.toString() || (content as any).coins?.toString() || '0', // Price or coins
-      availability: content.status === 'approved' 
+      availability: product.status === 'approved' 
         ? 'https://schema.org/InStock' 
         : 'https://schema.org/OutOfStock',
+      url: `${baseUrl}/content/${product.slug}`,
       seller: {
         '@type': 'Organization',
         '@id': SITE_CONFIG.organizationId,
         name: SITE_CONFIG.name,
       },
     },
-    aggregateRating:
-      averageRating && reviewCount
-        ? {
-            '@type': 'AggregateRating',
-            ratingValue: averageRating,
-            reviewCount: reviewCount,
-            bestRating: 5,
-            worstRating: 1,
-          }
-        : undefined,
+    ...(averageRating && reviewCount && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: averageRating,
+        reviewCount: reviewCount,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+    ...(reviewSchemas && reviewSchemas.length > 0 && { review: reviewSchemas }),
+    ...(additionalType && { additionalType }),
+    ...(product.category && { category: product.category }),
+    sku: product.id,
   };
 }
 
@@ -567,19 +705,26 @@ export function generateProfilePageSchema(params: {
 }
 
 /**
- * Generate FAQPage schema from Q&A content
+ * Generate FAQPage schema from Q&A content (Schema.org 2025 Enhanced)
  */
-export function generateFAQSchema(
-  questions: Array<{ question: string; answer: string }>
-): FAQPageSchema {
+export function generateFAQPageSchema(params: {
+  questions: Array<{ question: string; answer: string; id?: string }>;
+  baseUrl: string;
+  pageUrl: string;
+}): FAQPageSchema {
+  const { questions, baseUrl, pageUrl } = params;
+  
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: questions.map((q) => ({
+    '@id': pageUrl,
+    mainEntity: questions.map((q, index) => ({
       '@type': 'Question',
+      '@id': q.id || `${pageUrl}#question-${index + 1}`,
       name: q.question,
       acceptedAnswer: {
         '@type': 'Answer',
+        '@id': q.id ? `${pageUrl}#answer-${q.id}` : `${pageUrl}#answer-${index + 1}`,
         text: q.answer,
       },
     })),
@@ -587,7 +732,66 @@ export function generateFAQSchema(
 }
 
 /**
- * Generate VideoObject schema
+ * Legacy alias for backward compatibility
+ */
+export function generateFAQSchema(
+  questions: Array<{ question: string; answer: string }>
+): FAQPageSchema {
+  return generateFAQPageSchema({
+    questions,
+    baseUrl: SITE_CONFIG.url,
+    pageUrl: `${SITE_CONFIG.url}/faq`,
+  });
+}
+
+/**
+ * Generate VideoObject schema (Schema.org 2025 Enhanced)
+ * Supports duration conversion and interaction statistics
+ */
+export function generateVideoObjectSchema(params: {
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  uploadDate: Date;
+  videoUrl?: string;
+  embedUrl?: string;
+  durationSeconds?: number;
+  viewCount?: number;
+  baseUrl: string;
+  author?: User;
+}): VideoObjectSchema {
+  const { title, description, thumbnailUrl, uploadDate, videoUrl, embedUrl, durationSeconds, viewCount, baseUrl, author } = params;
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    '@id': videoUrl || embedUrl || `${baseUrl}/video/${title.toLowerCase().replace(/\s+/g, '-')}`,
+    name: title,
+    description,
+    thumbnailUrl,
+    uploadDate: new Date(uploadDate).toISOString(),
+    ...(videoUrl && { contentUrl: videoUrl }),
+    ...(embedUrl && { embedUrl }),
+    ...(durationSeconds && { duration: secondsToISO8601Duration(durationSeconds) }),
+    ...(viewCount && {
+      interactionStatistic: {
+        '@type': 'InteractionCounter',
+        interactionType: 'https://schema.org/WatchAction',
+        userInteractionCount: viewCount,
+      },
+    }),
+    ...(author && {
+      author: {
+        '@type': 'Person',
+        name: author.username,
+        url: `${baseUrl}/user/${author.username}`,
+      },
+    }),
+  };
+}
+
+/**
+ * Legacy alias for backward compatibility
  */
 export function generateVideoSchema(params: {
   title: string;
@@ -601,11 +805,12 @@ export function generateVideoSchema(params: {
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
+    '@id': params.embedUrl || `${SITE_CONFIG.url}/video/${params.title.toLowerCase().replace(/\s+/g, '-')}`,
     name: params.title,
-    description: params.description,
-    thumbnailUrl: params.thumbnailUrl,
-    uploadDate: params.uploadDate,
-    duration: params.duration, // Format: PT#M#S (e.g., PT2M30S)
+    description: params.description || '',
+    thumbnailUrl: params.thumbnailUrl || '',
+    uploadDate: params.uploadDate || new Date().toISOString(),
+    duration: params.duration,
     embedUrl: params.embedUrl,
     interactionStatistic: params.views
       ? {
@@ -614,6 +819,195 @@ export function generateVideoSchema(params: {
           userInteractionCount: params.views,
         }
       : undefined,
+  };
+}
+
+/**
+ * Generate DiscussionForumPosting schema for forum threads (Schema.org 2025)
+ * Includes interaction statistics, comments, and nested replies
+ */
+export function generateDiscussionForumPostingSchema(params: {
+  thread: ForumThread;
+  author: User;
+  baseUrl: string;
+  viewCount?: number;
+  replyCount?: number;
+  upvoteCount?: number;
+  replies?: Array<{ id: string; content: string; author: User; createdAt: Date; upvotes?: number }>;
+}): DiscussionForumPostingSchema {
+  const { thread, author, baseUrl, viewCount, replyCount, upvoteCount, replies } = params;
+  
+  const threadUrl = `${baseUrl}/thread/${thread.slug}`;
+  
+  // Build interaction statistics array
+  const interactionStatistic: InteractionCounter[] = [];
+  
+  if (viewCount !== undefined) {
+    interactionStatistic.push({
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/ViewAction',
+      userInteractionCount: viewCount,
+    });
+  }
+  
+  if (replyCount !== undefined) {
+    interactionStatistic.push({
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/CommentAction',
+      userInteractionCount: replyCount,
+    });
+  }
+  
+  if (upvoteCount !== undefined) {
+    interactionStatistic.push({
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/LikeAction',
+      userInteractionCount: upvoteCount,
+    });
+  }
+  
+  // Build comment schemas if replies are provided
+  const comments: CommentSchema[] | undefined = replies?.map((reply) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Comment',
+    '@id': `${threadUrl}#comment-${reply.id}`,
+    text: reply.content,
+    author: {
+      '@type': 'Person',
+      name: reply.author.username,
+      url: `${baseUrl}/user/${reply.author.username}`,
+    },
+    datePublished: new Date(reply.createdAt).toISOString(),
+    ...(reply.upvotes !== undefined && { upvoteCount: reply.upvotes }),
+    parentItem: { '@id': threadUrl },
+  }));
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    '@id': threadUrl,
+    headline: thread.title,
+    articleBody: thread.body || '',
+    author: {
+      '@type': 'Person',
+      name: author.username,
+      url: `${baseUrl}/user/${author.username}`,
+    },
+    datePublished: new Date(thread.createdAt).toISOString(),
+    dateModified: new Date(thread.updatedAt).toISOString(),
+    url: threadUrl,
+    mainEntityOfPage: { '@id': threadUrl },
+    ...(interactionStatistic.length > 0 && { interactionStatistic }),
+    ...(comments && comments.length > 0 && { comment: comments }),
+    ...(replyCount !== undefined && { commentCount: replyCount }),
+    publisher: {
+      '@type': 'Organization',
+      '@id': SITE_CONFIG.organizationId,
+      name: SITE_CONFIG.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: SITE_CONFIG.logo,
+      },
+    },
+  };
+}
+
+/**
+ * Generate NewsArticle schema (Schema.org 2025)
+ * For news articles with dateline and news-specific metadata
+ */
+export function generateNewsArticleSchema(params: {
+  headline: string;
+  description?: string;
+  content: string;
+  author: User;
+  publishDate: Date;
+  modifiedDate?: Date;
+  baseUrl: string;
+  url: string;
+  imageUrl?: string;
+  location?: string;
+}): NewsArticleSchema {
+  const { headline, description, content, author, publishDate, modifiedDate, baseUrl, url, imageUrl, location } = params;
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    '@id': url,
+    headline,
+    ...(description && { description }),
+    ...(imageUrl && { image: imageUrl }),
+    datePublished: new Date(publishDate).toISOString(),
+    ...(modifiedDate && { dateModified: new Date(modifiedDate).toISOString() }),
+    author: {
+      '@type': 'Person',
+      name: author.username,
+      url: `${baseUrl}/user/${author.username}`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      '@id': SITE_CONFIG.organizationId,
+      name: SITE_CONFIG.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: SITE_CONFIG.logo,
+      },
+    },
+    articleBody: content,
+    ...(location && { dateline: location }),
+    url,
+  };
+}
+
+/**
+ * Generate BlogPosting schema (Schema.org 2025)
+ * For blog posts with word count and article sections
+ */
+export function generateBlogPostingSchema(params: {
+  title: string;
+  description?: string;
+  content: string;
+  author: User;
+  publishDate: Date;
+  modifiedDate?: Date;
+  baseUrl: string;
+  url: string;
+  imageUrl?: string;
+  category?: string;
+}): BlogPostingSchema {
+  const { title, description, content, author, publishDate, modifiedDate, baseUrl, url, imageUrl, category } = params;
+  
+  // Calculate word count from content
+  const wordCount = content.trim().split(/\s+/).length;
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': url,
+    headline: title,
+    ...(description && { description }),
+    ...(imageUrl && { image: imageUrl }),
+    datePublished: new Date(publishDate).toISOString(),
+    ...(modifiedDate && { dateModified: new Date(modifiedDate).toISOString() }),
+    author: {
+      '@type': 'Person',
+      name: author.username,
+      url: `${baseUrl}/user/${author.username}`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      '@id': SITE_CONFIG.organizationId,
+      name: SITE_CONFIG.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: SITE_CONFIG.logo,
+      },
+    },
+    articleBody: content,
+    wordCount,
+    ...(category && { articleSection: category }),
+    url,
+    mainEntityOfPage: { '@id': url },
   };
 }
 
@@ -687,6 +1081,23 @@ export function detectContentType(pathname: string): ContentType {
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
+
+/**
+ * Convert seconds to ISO 8601 duration format (e.g., PT2M30S)
+ * Used for VideoObject duration property
+ */
+export function secondsToISO8601Duration(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  
+  let duration = 'PT';
+  if (hours > 0) duration += `${hours}H`;
+  if (minutes > 0) duration += `${minutes}M`;
+  if (secs > 0 || duration === 'PT') duration += `${secs}S`;
+  
+  return duration;
+}
 
 /**
  * Convert schema object to JSON-LD script tag

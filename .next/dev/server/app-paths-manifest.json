@@ -1,5 +1,4 @@
 {
   "/admin/[...section]/page": "app/admin/[...section]/page.js",
-  "/page": "app/page.js",
-  "/user/[username]/page": "app/user/[username]/page.js"
+  "/page": "app/page.js"
 }
