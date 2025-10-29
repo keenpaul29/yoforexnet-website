@@ -1,22 +1,130 @@
-[00:00:00.951] Server  LOG      ✓ Ready in 645ms
-[00:00:01.044] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.416] Server  LOG      ✓ Ready in 998ms
+[00:00:01.428] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:04.335] Server  LOG      ○ Compiling / ...
-[00:00:08.323] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.345] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.345] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:08.348] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.349] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:08.350] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.350] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:08.384] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.385] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:08.386] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.386] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:08.387] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:08.387] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:08.447] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.243] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:04.768] Server  LOG      ○ Compiling / ...
+[00:00:14.460] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.484] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.485] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:14.489] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.489] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:14.491] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.491] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:14.606] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.689] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.689] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:14.690] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.698] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:14.699] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:14.700] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:16.090] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:16.091] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:16.092] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:16.092] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:16.094] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:16.094] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:17.079] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:17.136] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:19.096] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                      <header className="sticky top...">
+                        <div className="container ...">
+                          <div>
+                          <div className="flex items...">
+                            <div className="relative f...">
+                              <Search>
+                              <_c type="search" placeholder="Search dis..." className="pl-9 pr-4" value="" ...>
+                                <input
+                                  type="search"
+                                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 te..."
+                                  ref={null}
+                                  placeholder="Search discussions..."
+                                  value=""
+                                  onChange={function onChange}
+                                  data-testid="input-search"
+-                                 style={{caret-color:"transparent"}}
+                                >
+                          ...
+                    <StatsBar initialStats={{...}}>
+                      <div className="border-y b...">
+                        <div className="container ...">
+                          <div>
+                          <div className="grid grid-...">
+                            <div>
+                            <div className="flex items...">
+                              <div>
+                              <div>
+                                <div className="text-2xl font-bold" data-testid="text-stat-members">
++                                 16
+-                                 15
+                                ...
+                            ...
+                    ...
+            ...
+          ...
+
+[00:00:19.547] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:19.547] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761739743504
+-                               1761739782822
+            ...
+          ...
+
+[00:00:20.757] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -343,107 +451,50 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761739540202
--                               1761739581126
++                               1761739743524
+-                               1761739783320
             ...
           ...
 
-[00:00:12.975] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:12.975] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
-      <RedirectBoundary>
-        <RedirectErrorBoundary router={{...}}>
-          <InnerLayoutRouter url="/#importan..." tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} ...>
-            <SegmentViewNode type="page" pagePath="page.tsx">
-              <SegmentTrieNode>
-              <HomePage>
-                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
-                  <div className="min-h-scre...">
-                    <Header>
-                    <StatsBar>
-                    <main>
-                    <EnhancedFooter>
-                      <footer className="border-t m...">
-                        <div className="container ...">
-                          <div>
-                          <div className="border-t p...">
-                            <p>
-                            <div className="flex flex-...">
-                              <p>
-                              <p>
-+                               1761739540835
--                               1761739581260
-            ...
-          ...
-
-[00:00:15.609] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:15.610] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:15.611] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:15.611] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:15.612] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:15.612] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:16.130] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:16.160] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:16.761] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
-      <RedirectBoundary>
-        <RedirectErrorBoundary router={{...}}>
-          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
-            <SegmentViewNode type="page" pagePath="page.tsx">
-              <SegmentTrieNode>
-              <HomePage>
-                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
-                  <div className="min-h-scre...">
-                    <Header>
-                    <StatsBar>
-                    <main>
-                    <EnhancedFooter>
-                      <footer className="border-t m...">
-                        <div className="container ...">
-                          <div>
-                          <div className="border-t p...">
-                            <p>
-                            <div className="flex flex-...">
-                              <p>
-                              <p>
-+                               1761739588762
--                               1761739588065
-            ...
-          ...
-
-[00:00:28.226] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:28.226] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:28.228] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:28.228] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:28.229] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:28.229] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:31.104] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:31.104] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:20.941] Browser LOG     [Activity Tracker] User active for 0 seconds
+[00:00:21.943] Browser LOG     [Activity Tracker] User active for 1 seconds
+[00:00:22.953] Browser LOG     [Activity Tracker] User active for 2 seconds
+[00:00:23.949] Browser LOG     [Activity Tracker] User active for 3 seconds
+[00:00:24.946] Browser LOG     [Activity Tracker] User active for 4 seconds
+[00:00:25.969] Browser LOG     [Activity Tracker] User active for 5 seconds
+[00:00:26.942] Browser LOG     [Activity Tracker] User active for 6 seconds
+[00:00:27.934] Browser LOG     [Activity Tracker] User active for 7 seconds
+[00:00:28.953] Browser LOG     [Activity Tracker] User active for 8 seconds
+[00:00:29.949] Browser LOG     [Activity Tracker] User active for 9 seconds
+[00:00:30.952] Browser LOG     [Activity Tracker] User active for 10 seconds
+[00:00:31.943] Browser LOG     [Activity Tracker] User active for 11 seconds
+[00:00:32.947] Browser LOG     [Activity Tracker] User active for 12 seconds
+[00:00:33.944] Browser LOG     [Activity Tracker] User active for 13 seconds
+[00:00:34.948] Browser LOG     [Activity Tracker] User active for 14 seconds
+[00:00:35.973] Browser LOG     [Activity Tracker] User active for 15 seconds
+[00:00:36.985] Browser LOG     [Activity Tracker] User active for 16 seconds
+[00:00:37.948] Browser LOG     [Activity Tracker] User active for 17 seconds
+[00:00:38.956] Browser LOG     [Activity Tracker] User active for 18 seconds
+[00:00:39.944] Browser LOG     [Activity Tracker] User active for 19 seconds
+[00:00:40.949] Browser LOG     [Activity Tracker] User active for 20 seconds
+[00:00:41.942] Browser LOG     [Activity Tracker] User active for 21 seconds
+[00:00:42.950] Browser LOG     [Activity Tracker] User active for 22 seconds
+[00:00:43.956] Browser LOG     [Activity Tracker] User active for 23 seconds
+[00:00:44.944] Browser LOG     [Activity Tracker] User active for 24 seconds
+[00:00:45.948] Browser LOG     [Activity Tracker] User active for 25 seconds
+[00:00:46.952] Browser LOG     [Activity Tracker] User active for 26 seconds
+[00:00:47.943] Browser LOG     [Activity Tracker] User active for 27 seconds
+[00:00:48.947] Browser LOG     [Activity Tracker] User active for 28 seconds
+[00:00:49.418] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:49.419] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:49.423] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:49.424] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:49.427] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:49.427] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:49.967] Browser LOG     [Activity Tracker] User active for 29 seconds
+[00:00:50.344] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:50.962] Browser LOG     [Activity Tracker] User active for 30 seconds
+[00:00:51.142] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -466,45 +517,51 @@ https://react.dev/link/hydration-mismatch
                 <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
                   <div className="min-h-scre...">
                     <Header>
-                    <StatsBar>
-                    <main>
-                    <EnhancedFooter>
-                      <footer className="border-t m...">
+                    <StatsBar initialStats={{...}}>
+                      <div className="border-y b...">
                         <div className="container ...">
                           <div>
-                          <div className="border-t p...">
-                            <p>
-                            <div className="flex flex-...">
-                              <p>
-                              <p>
-+                               1761739559101
--                               1761739600673
+                          <div className="grid grid-...">
+                            <div>
+                            <div className="flex items...">
+                              <div>
+                              <div>
+                                <div className="text-2xl font-bold" data-testid="text-stat-members">
++                                 16
+-                                 15
+                                ...
+                            ...
+                    ...
             ...
           ...
 
-[00:00:48.609] Browser LOG     [Activity Tracker] User active for 0 seconds
-[00:00:49.620] Browser LOG     [Activity Tracker] User active for 1 seconds
-[00:00:50.626] Browser LOG     [Activity Tracker] User active for 2 seconds
-[00:00:53.230] Browser LOG     [Activity Tracker] User active for 3 seconds
-[00:00:54.225] Browser LOG     [Activity Tracker] User active for 4 seconds
-[00:00:55.238] Browser LOG     [Activity Tracker] User active for 5 seconds
-[00:00:56.232] Browser LOG     [Activity Tracker] User active for 6 seconds
-[00:00:57.228] Browser LOG     [Activity Tracker] User active for 7 seconds
-[00:00:58.226] Browser LOG     [Activity Tracker] User active for 8 seconds
-[00:00:59.235] Browser LOG     [Activity Tracker] User active for 9 seconds
-[00:01:00.236] Browser LOG     [Activity Tracker] User active for 10 seconds
-[00:01:01.230] Browser LOG     [Activity Tracker] User active for 11 seconds
-[00:01:01.866] Browser LOG     [Activity Tracker] User active for 12 seconds
-[00:01:01.982] Browser LOG     [Activity Tracker] User active for 13 seconds
-[00:01:02.611] Browser LOG     [Activity Tracker] User active for 14 seconds
-[00:01:03.629] Browser LOG     [Activity Tracker] User active for 15 seconds
-[00:01:04.619] Browser LOG     [Activity Tracker] User active for 16 seconds
-[00:01:05.616] Browser LOG     [Activity Tracker] User active for 17 seconds
-[00:01:06.634] Browser LOG     [Activity Tracker] User active for 18 seconds
-[00:01:07.630] Browser LOG     [Activity Tracker] User active for 19 seconds
-[00:01:08.627] Browser LOG     [Activity Tracker] User active for 20 seconds
-[00:01:09.620] Browser LOG     [Activity Tracker] User active for 21 seconds
-[00:01:10.633] Browser LOG     [Activity Tracker] User active for 22 seconds
-[00:01:11.627] Browser LOG     [Activity Tracker] User active for 23 seconds
-[00:01:12.622] Browser LOG     [Activity Tracker] User active for 24 seconds
-[00:01:13.634] Browser LOG     [Activity Tracker] User active for 25 seconds
+[00:00:51.941] Browser LOG     [Activity Tracker] User active for 31 seconds
+[00:00:52.946] Browser LOG     [Activity Tracker] User active for 32 seconds
+[00:00:53.947] Browser LOG     [Activity Tracker] User active for 33 seconds
+[00:00:54.947] Browser LOG     [Activity Tracker] User active for 34 seconds
+[00:00:55.942] Browser LOG     [Activity Tracker] User active for 35 seconds
+[00:00:56.955] Browser LOG     [Activity Tracker] User active for 36 seconds
+[00:00:57.950] Browser LOG     [Activity Tracker] User active for 37 seconds
+[00:00:58.948] Browser LOG     [Activity Tracker] User active for 38 seconds
+[00:00:59.946] Browser LOG     [Activity Tracker] User active for 39 seconds
+[00:01:00.957] Browser LOG     [Activity Tracker] User active for 40 seconds
+[00:01:01.948] Browser LOG     [Activity Tracker] User active for 41 seconds
+[00:01:02.942] Browser LOG     [Activity Tracker] User active for 42 seconds
+[00:01:03.941] Browser LOG     [Activity Tracker] User active for 43 seconds
+[00:01:04.950] Browser LOG     [Activity Tracker] User active for 44 seconds
+[00:01:05.947] Browser LOG     [Activity Tracker] User active for 45 seconds
+[00:01:06.943] Browser LOG     [Activity Tracker] User active for 46 seconds
+[00:01:07.942] Browser LOG     [Activity Tracker] User active for 47 seconds
+[00:01:08.954] Browser LOG     [Activity Tracker] User active for 48 seconds
+[00:01:09.952] Browser LOG     [Activity Tracker] User active for 49 seconds
+[00:01:10.954] Browser LOG     [Activity Tracker] User active for 50 seconds
+[00:01:11.948] Browser LOG     [Activity Tracker] User active for 51 seconds
+[00:01:12.933] Browser LOG     [Activity Tracker] User active for 52 seconds
+[00:01:13.934] Browser LOG     [Activity Tracker] User active for 53 seconds
+[00:01:14.939] Browser LOG     [Activity Tracker] User active for 54 seconds
+[00:01:15.941] Browser LOG     [Activity Tracker] User active for 55 seconds
+[00:01:16.941] Browser LOG     [Activity Tracker] User active for 56 seconds
+[00:01:17.952] Browser LOG     [Activity Tracker] User active for 57 seconds
+[00:01:18.949] Browser LOG     [Activity Tracker] User active for 58 seconds
+[00:01:19.945] Browser LOG     [Activity Tracker] User active for 59 seconds
+[00:01:20.956] Browser LOG     [Activity Tracker] User active for 60 seconds
