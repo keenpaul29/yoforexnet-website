@@ -71,20 +71,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'article',
       url: `https://yoforex.com/thread/${slug}`,
       siteName: 'YoForex',
-      images: thread.thumbnailUrl ? [
-        {
-          url: thread.thumbnailUrl,
-          width: 1200,
-          height: 630,
-          alt: thread.title,
-        },
-      ] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: thread.thumbnailUrl ? [thread.thumbnailUrl] : undefined,
     },
   };
 }
