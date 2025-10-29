@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { User as UserType, Badge as BadgeType, Content, ForumThread } from '@shared/schema';
+import type { User as UserType, Content, ForumThread } from '@shared/schema';
 import { useToast } from "@/hooks/use-toast";
 
 interface UserProfileClientProps {

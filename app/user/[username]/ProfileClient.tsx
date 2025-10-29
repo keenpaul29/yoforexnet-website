@@ -24,7 +24,7 @@ import {
   ReviewsSection
 } from './components';
 
-import type { User as UserType, Badge as BadgeType, Content } from '@shared/schema';
+import type { User as UserType, Content } from '@shared/schema';
 
 interface ProfileData {
   user: UserType;
