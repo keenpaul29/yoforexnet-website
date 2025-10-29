@@ -581,59 +581,7 @@ export interface IStorage {
   // ============================================================================
   // ADMIN OPERATIONS - GROUP 2: Content Moderation (25 methods)
   // ============================================================================
-  
-  /**
-   * Get moderation queue
-   */
-  getModerationQueue(filters: {
-    contentType?: string;
-    status?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<{items: any[]; total: number}>;
-  
-  /**
-   * Add item to moderation queue
-   */
-  addToModerationQueue(item: {
-    contentType: string;
-    contentId: string;
-    authorId: string;
-    priorityScore?: number;
-    spamScore?: number;
-    sentimentScore?: number;
-    flaggedReasons?: string[];
-  }): Promise<any>;
-  
-  /**
-   * Approve content from moderation queue
-   */
-  approveContent(queueId: number, reviewedBy: string, notes?: string): Promise<void>;
-  
-  /**
-   * Reject content from moderation queue
-   */
-  rejectContent(queueId: number, reviewedBy: string, reason: string): Promise<void>;
-  
-  /**
-   * Bulk approve content
-   */
-  bulkApproveContent(queueIds: number[], reviewedBy: string): Promise<void>;
-  
-  /**
-   * Bulk reject content
-   */
-  bulkRejectContent(queueIds: number[], reviewedBy: string, reason: string): Promise<void>;
-  
-  /**
-   * Get reported content
-   */
-  getReportedContent(filters: {
-    status?: string;
-    contentType?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<{reports: any[]; total: number}>;
+  // NOTE: Duplicate definitions removed - using PHASE 2 definitions below
   
   /**
    * Create content report
@@ -656,10 +604,7 @@ export interface IStorage {
    */
   resolveReport(reportId: number, resolution: string, actionTaken: string, resolvedBy: string): Promise<void>;
   
-  /**
-   * Dismiss a report
-   */
-  dismissReport(reportId: number, reason: string, dismissedBy: string): Promise<void>;
+  // NOTE: dismissReport definition moved to PHASE 2 section below
   
   /**
    * Delete content (threads, replies, marketplace content)
@@ -4026,19 +3971,42 @@ export class MemStorage implements IStorage {
   // ADMIN OPERATIONS - GROUP 2: Content Moderation (Stubs)
   // ============================================================================
 
-  async getModerationQueue(filters: any): Promise<{items: any[]; total: number}> {
-    return { items: [], total: 0 };
+  async getModerationQueue(params: {
+    type?: "thread" | "reply" | "all";
+    status?: "pending" | "approved" | "rejected";
+    page?: number;
+    perPage?: number;
+  }): Promise<{
+    items: any[];
+    total: number;
+    page: number;
+    perPage: number;
+  }> {
+    const page = params.page || 1;
+    const perPage = params.perPage || 10;
+    return { items: [], total: 0, page, perPage };
   }
 
   async addToModerationQueue(item: any): Promise<any> {
     return { id: 1, ...item, status: 'pending' };
   }
 
-  async approveContent(queueId: number, reviewedBy: string, notes?: string): Promise<void> {
+  async approveContent(params: {
+    contentId: string;
+    contentType: "thread" | "reply";
+    moderatorId: string;
+    moderatorUsername: string;
+  }): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async rejectContent(queueId: number, reviewedBy: string, reason: string): Promise<void> {
+  async rejectContent(params: {
+    contentId: string;
+    contentType: "thread" | "reply";
+    moderatorId: string;
+    moderatorUsername: string;
+    reason: string;
+  }): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
@@ -4050,8 +4018,19 @@ export class MemStorage implements IStorage {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async getReportedContent(filters: any): Promise<{reports: any[]; total: number}> {
-    return { reports: [], total: 0 };
+  async getReportedContent(params: {
+    status?: "pending" | "resolved" | "dismissed";
+    page?: number;
+    perPage?: number;
+  }): Promise<{
+    items: any[];
+    total: number;
+    page: number;
+    perPage: number;
+  }> {
+    const page = params.page || 1;
+    const perPage = params.perPage || 10;
+    return { items: [], total: 0, page, perPage };
   }
 
   async createReport(report: any): Promise<any> {
@@ -4066,7 +4045,11 @@ export class MemStorage implements IStorage {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async dismissReport(reportId: number, reason: string, dismissedBy: string): Promise<void> {
+  async dismissReport(params: {
+    reportId: number;
+    moderatorId: string;
+    reason?: string;
+  }): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
@@ -6026,7 +6009,13 @@ export class DrizzleStorage implements IStorage {
     const user = await this.getUser(insertReview.userId);
     if (!user) throw new Error("User not found");
 
-    const [review] = await db.insert(brokerReviews).values(insertReview).returning();
+    const reviewData: any = {
+      ...insertReview,
+      status: 'pending',
+      datePosted: new Date()
+    };
+
+    const [review] = await db.insert(brokerReviews).values(reviewData).returning();
     return review;
   }
 
@@ -8274,19 +8263,27 @@ export class DrizzleStorage implements IStorage {
   // ADMIN OPERATIONS - GROUP 2: Content Moderation (25 methods)
   // ============================================================================
 
-  async getModerationQueue(filters: {
-    contentType?: string;
-    status?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<{items: any[]; total: number}> {
+  async getModerationQueue(params: {
+    type?: "thread" | "reply" | "all";
+    status?: "pending" | "approved" | "rejected";
+    page?: number;
+    perPage?: number;
+  }): Promise<{
+    items: any[];
+    total: number;
+    page: number;
+    perPage: number;
+  }> {
     try {
-      const { contentType, status, limit = 50, offset = 0 } = filters;
+      const page = params.page || 1;
+      const perPage = params.perPage || 10;
+      const offset = (page - 1) * perPage;
+      const { type, status } = params;
       
       const conditions = [];
       
-      if (contentType) {
-        conditions.push(eq(moderationQueue.contentType, contentType));
+      if (type) {
+        conditions.push(eq(moderationQueue.contentType, type));
       }
       
       if (status) {
@@ -8299,7 +8296,7 @@ export class DrizzleStorage implements IStorage {
         .select()
         .from(moderationQueue)
         .where(whereClause)
-        .limit(limit)
+        .limit(perPage)
         .offset(offset)
         .orderBy(desc(moderationQueue.priorityScore), desc(moderationQueue.createdAt));
       
@@ -8310,7 +8307,9 @@ export class DrizzleStorage implements IStorage {
       
       return {
         items,
-        total: Number(count)
+        total: Number(count),
+        page,
+        perPage
       };
     } catch (error) {
       console.error("Error fetching moderation queue:", error);
@@ -8356,44 +8355,39 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async approveContent(queueId: number, reviewedBy: string, notes?: string): Promise<void> {
+  async approveContent(params: {
+    contentId: string;
+    contentType: "thread" | "reply";
+    moderatorId: string;
+    moderatorUsername: string;
+  }): Promise<void> {
     try {
       await db.transaction(async (tx) => {
-        const [item] = await tx.select().from(moderationQueue).where(eq(moderationQueue.id, queueId));
-        
-        if (item) {
+        if (params.contentType === 'thread') {
           await tx
-            .update(moderationQueue)
+            .update(forumThreads)
+            .set({ status: 'approved' })
+            .where(eq(forumThreads.id, params.contentId));
+        } else if (params.contentType === 'reply') {
+          await tx
+            .update(forumReplies)
             .set({ 
               status: 'approved',
-              reviewedBy,
-              reviewedAt: new Date(),
-              reviewNotes: notes || null,
+              approvedBy: params.moderatorId,
+              approvedAt: new Date()
             })
-            .where(eq(moderationQueue.id, queueId));
-          
-          if (item.contentType === 'content') {
-            await tx
-              .update(content)
-              .set({ status: 'approved' })
-              .where(eq(content.id, item.contentId));
-          } else if (item.contentType === 'thread') {
-            await tx
-              .update(forumThreads)
-              .set({ status: 'approved' })
-              .where(eq(forumThreads.id, item.contentId));
-          }
-          
-          await tx.insert(adminActions).values({
-            adminId: reviewedBy,
-            actionType: 'content_approve',
-            targetType: item.contentType,
-            targetId: item.contentId,
-            details: { notes },
-            ipAddress: '0.0.0.0',
-            userAgent: 'admin-dashboard',
-          });
+            .where(eq(forumReplies.id, params.contentId));
         }
+        
+        await tx.insert(adminActions).values({
+          adminId: params.moderatorId,
+          actionType: 'content_approve',
+          targetType: params.contentType,
+          targetId: params.contentId,
+          details: { approvedBy: params.moderatorUsername },
+          ipAddress: '0.0.0.0',
+          userAgent: 'admin-dashboard',
+        });
       });
     } catch (error) {
       console.error("Error approving content:", error);
@@ -8401,44 +8395,40 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async rejectContent(queueId: number, reviewedBy: string, reason: string): Promise<void> {
+  async rejectContent(params: {
+    contentId: string;
+    contentType: "thread" | "reply";
+    moderatorId: string;
+    moderatorUsername: string;
+    reason: string;
+  }): Promise<void> {
     try {
       await db.transaction(async (tx) => {
-        const [item] = await tx.select().from(moderationQueue).where(eq(moderationQueue.id, queueId));
-        
-        if (item) {
+        if (params.contentType === 'thread') {
           await tx
-            .update(moderationQueue)
+            .update(forumThreads)
+            .set({ status: 'rejected' })
+            .where(eq(forumThreads.id, params.contentId));
+        } else if (params.contentType === 'reply') {
+          await tx
+            .update(forumReplies)
             .set({ 
               status: 'rejected',
-              reviewedBy,
-              reviewedAt: new Date(),
-              reviewNotes: reason,
+              rejectedBy: params.moderatorId,
+              rejectedAt: new Date()
             })
-            .where(eq(moderationQueue.id, queueId));
-          
-          if (item.contentType === 'content') {
-            await tx
-              .update(content)
-              .set({ status: 'rejected' })
-              .where(eq(content.id, item.contentId));
-          } else if (item.contentType === 'thread') {
-            await tx
-              .update(forumThreads)
-              .set({ status: 'pending' })
-              .where(eq(forumThreads.id, item.contentId));
-          }
-          
-          await tx.insert(adminActions).values({
-            adminId: reviewedBy,
-            actionType: 'content_reject',
-            targetType: item.contentType,
-            targetId: item.contentId,
-            details: { reason },
-            ipAddress: '0.0.0.0',
-            userAgent: 'admin-dashboard',
-          });
+            .where(eq(forumReplies.id, params.contentId));
         }
+        
+        await tx.insert(adminActions).values({
+          adminId: params.moderatorId,
+          actionType: 'content_reject',
+          targetType: params.contentType,
+          targetId: params.contentId,
+          details: { reason: params.reason, rejectedBy: params.moderatorUsername },
+          ipAddress: '0.0.0.0',
+          userAgent: 'admin-dashboard',
+        });
       });
     } catch (error) {
       console.error("Error rejecting content:", error);
@@ -8447,35 +8437,28 @@ export class DrizzleStorage implements IStorage {
   }
 
   async bulkApproveContent(queueIds: number[], reviewedBy: string): Promise<void> {
-    try {
-      for (const id of queueIds) {
-        await this.approveContent(id, reviewedBy);
-      }
-    } catch (error) {
-      console.error("Error bulk approving content:", error);
-      throw error;
-    }
+    throw new Error("bulkApproveContent not implemented - use approveContent with new params interface");
   }
 
   async bulkRejectContent(queueIds: number[], reviewedBy: string, reason: string): Promise<void> {
-    try {
-      for (const id of queueIds) {
-        await this.rejectContent(id, reviewedBy, reason);
-      }
-    } catch (error) {
-      console.error("Error bulk rejecting content:", error);
-      throw error;
-    }
+    throw new Error("bulkRejectContent not implemented - use rejectContent with new params interface");
   }
 
-  async getReportedContent(filters: {
-    status?: string;
-    contentType?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<{reports: any[]; total: number}> {
+  async getReportedContent(params: {
+    status?: "pending" | "resolved" | "dismissed";
+    page?: number;
+    perPage?: number;
+  }): Promise<{
+    items: any[];
+    total: number;
+    page: number;
+    perPage: number;
+  }> {
     try {
-      const { status, contentType, limit = 50, offset = 0 } = filters;
+      const page = params.page || 1;
+      const perPage = params.perPage || 10;
+      const offset = (page - 1) * perPage;
+      const { status } = params;
       
       const conditions = [];
       
@@ -8483,17 +8466,13 @@ export class DrizzleStorage implements IStorage {
         conditions.push(eq(reportedContent.status, status));
       }
       
-      if (contentType) {
-        conditions.push(eq(reportedContent.contentType, contentType));
-      }
-      
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       
-      const reports = await db
+      const items = await db
         .select()
         .from(reportedContent)
         .where(whereClause)
-        .limit(limit)
+        .limit(perPage)
         .offset(offset)
         .orderBy(desc(reportedContent.createdAt));
       
@@ -8503,8 +8482,10 @@ export class DrizzleStorage implements IStorage {
         .where(whereClause);
       
       return {
-        reports,
-        total: Number(count)
+        items,
+        total: Number(count),
+        page,
+        perPage
       };
     } catch (error) {
       console.error("Error fetching reported content:", error);
@@ -8584,24 +8565,28 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async dismissReport(reportId: number, dismissedBy: string, reason: string): Promise<void> {
+  async dismissReport(params: {
+    reportId: number;
+    moderatorId: string;
+    reason?: string;
+  }): Promise<void> {
     try {
       await db.transaction(async (tx) => {
         await tx
           .update(reportedContent)
           .set({ 
             status: 'dismissed',
-            resolution: reason,
+            resolution: params.reason || null,
             resolvedAt: new Date(),
           })
-          .where(eq(reportedContent.id, reportId));
+          .where(eq(reportedContent.id, params.reportId));
         
         await tx.insert(adminActions).values({
-          adminId: dismissedBy,
+          adminId: params.moderatorId,
           actionType: 'report_dismiss',
           targetType: 'report',
-          targetId: String(reportId),
-          details: { reason },
+          targetId: String(params.reportId),
+          details: { reason: params.reason },
           ipAddress: '0.0.0.0',
           userAgent: 'admin-dashboard',
         });
@@ -8815,7 +8800,14 @@ export class DrizzleStorage implements IStorage {
         id: report.id,
         contentId: report.contentId,
         contentType: report.contentType as "thread" | "reply",
-        content: { body: '' },
+        content: { 
+          body: '',
+          author: {
+            id: '',
+            username: 'Unknown',
+            reputation: 0
+          }
+        },
         reports: [],
         status: report.status as any,
         availableActions: ['dismiss', 'delete', 'warn', 'suspend', 'ban']
@@ -12936,7 +12928,13 @@ export class DrizzleStorage implements IStorage {
         // If name changed, regenerate slug
         if (data.name && data.name !== broker.name) {
           const slugify = (await import('slugify')).default;
-          updates.slug = await generateUniqueSlug(data.name, brokers, 'slug');
+          const baseSlug = slugify(data.name, { lower: true, strict: true });
+          const existingSlugs = new Set(
+            (await tx.select({ slug: brokers.slug }).from(brokers))
+              .map(r => r.slug)
+              .filter(s => s !== broker.slug)
+          );
+          updates.slug = generateUniqueSlug(baseSlug, existingSlugs);
         }
 
         await tx
