@@ -1,36 +1,26 @@
 #!/bin/bash
 
-# YoForex Production Hybrid Startup Script
-# Builds and runs both Express and Next.js in production mode
+# YoForex Production Startup Script
+# Runs Express API (port 3001 internal) and Next.js frontend (port 5000 user-facing)
 
-echo "🏗️  Building YoForex for production..."
+echo "🚀 Starting YoForex in Production Mode..."
 
-# Build Vite frontend
-echo "📦 Building Vite frontend..."
-npm run build
-
-# Build Next.js
-echo "⚡ Building Next.js..."
-npx next build
-
-echo "🚀 Starting production servers..."
-
-# Start Express in production mode in background
-echo "📦 Starting Express server (port 5000)..."
-NODE_ENV=production node dist/index.js &
+# Start Express API server on port 3001 in background
+echo "📦 Starting Express API server (port 3001)..."
+API_PORT=3001 NODE_ENV=production node dist/index.js &
 EXPRESS_PID=$!
 
-# Wait for Express to start
-sleep 3
+# Wait for Express to initialize
+sleep 2
 
-# Start Next.js in production mode in background
-echo "⚡ Starting Next.js server (port 3000)..."
-npx next start -p 3000 &
+# Start Next.js server on port 5000 (required by Replit for webview)
+echo "⚡ Starting Next.js frontend (port 5000)..."
+npx next start -p 5000 &
 NEXTJS_PID=$!
 
-echo "✅ Production servers running:"
-echo "   - Express API: http://localhost:5000"
-echo "   - Next.js SEO: http://localhost:3000"
+echo "✅ Production servers started:"
+echo "   - Express API: http://localhost:3001/api/* (internal)"
+echo "   - Next.js App: http://localhost:5000 (user-facing)"
 echo ""
 echo "Press Ctrl+C to stop both servers"
 
