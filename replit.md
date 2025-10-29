@@ -102,11 +102,11 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 ## Recent Updates (October 29, 2025)
 
 ### Production Deployment TypeScript Fixes
-**Status**: ✅ PRODUCTION READY - 56 Files Fixed, Zero TypeScript Errors
+**Status**: ✅ PRODUCTION READY - 57 Files Fixed, Zero TypeScript Errors
 
 **Deployment Issues Fixed (Oct 29, 2025)**:
 
-All TypeScript compilation errors blocking Next.js production build have been resolved. Total files fixed: **56 files**.
+All TypeScript compilation errors blocking Next.js production build have been resolved. Total files fixed: **57 files**.
 
 **Critical Patterns Fixed**:
 
@@ -147,6 +147,16 @@ All TypeScript compilation errors blocking Next.js production build have been re
    - Pattern: Always use nullish coalescing when comparing possibly undefined values with numbers
    - Files: StatsCards.tsx, SEOMarketing.tsx
 
+8. **Schema Field Mismatches in Seed Scripts** (1 file):
+   - ❌ WRONG: Using `reputation` and `coinBalance` fields that don't exist in schema
+   - ✅ CORRECT: Use `reputationScore` and `totalCoins` to match actual database schema
+   - ❌ WRONG: `userMap: Map<string, number>` when IDs are varchar (string)
+   - ✅ CORRECT: `userMap: Map<string, string>` to match UUID string IDs
+   - ❌ WRONG: `authorId` in forumReplies (doesn't exist)
+   - ✅ CORRECT: `userId` + `slug` field (required) in forumReplies
+   - Pattern: Always verify field names match the actual schema exports
+   - Files: seed-complete-platform.ts
+
 **Deployment Configuration Fixes**:
 
 1. **Port Configuration**:
@@ -170,8 +180,10 @@ When adding new features, ALWAYS:
 3. Check schema exports before importing types
 4. Verify property existence on types before accessing
 5. Use nullish coalescing (`??`) when comparing possibly undefined values with numbers
-6. Search for ALL similar patterns when fixing one instance
-7. Run `get_latest_lsp_diagnostics` before claiming completion
+6. Verify seed data matches actual schema field names (not assumptions)
+7. Check ID types in schema (serial vs varchar/uuid) before creating maps
+8. Search for ALL similar patterns when fixing one instance
+9. Run `get_latest_lsp_diagnostics` before claiming completion
 
 **Files Fixed by Category**:
 - Dashboard Tabs: 6 files (Overview, Earnings, Sales, Analytics, Marketing, Settings)
@@ -185,6 +197,7 @@ When adding new features, ALWAYS:
 - Type Patterns: 8 files (null/undefined handling)
 - API Layer: 8 files (request signatures)
 - Utils: 3 files (hooks and helpers)
+- **Seed Scripts: 1 file (schema field alignment)**
 
 **Build Verification**:
 - ✅ Zero LSP diagnostics

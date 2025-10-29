@@ -22,21 +22,21 @@ const db = drizzle(pool);
 
 // Seed users data
 const SEED_USERS = [
-  { username: 'forex_newbie423', email: 'newbie@example.com', reputation: 150, coinBalance: 500 },
-  { username: 'grid_hunter88', email: 'grid@example.com', reputation: 450, coinBalance: 1200 },
-  { username: 'pip_trader2024', email: 'pip@example.com', reputation: 680, coinBalance: 800 },
-  { username: 'crypto_ninja77', email: 'crypto@example.com', reputation: 920, coinBalance: 2500 },
-  { username: 'dev_learner99', email: 'dev@example.com', reputation: 200, coinBalance: 300 },
-  { username: 'news_trader_x', email: 'news@example.com', reputation: 550, coinBalance: 1500 },
-  { username: 'desperate_guy21', email: 'desperate@example.com', reputation: 80, coinBalance: 100 },
-  { username: 'ea_coder123', email: 'coder@example.com', reputation: 1200, coinBalance: 3000 },
-  { username: 'angry_trader55', email: 'angry@example.com', reputation: 320, coinBalance: 600 },
-  { username: 'yen_hunter2025', email: 'yen@example.com', reputation: 410, coinBalance: 900 },
-  { username: 'generous_coder', email: 'generous@example.com', reputation: 1500, coinBalance: 5000 },
-  { username: 'hedge_master_', email: 'hedge@example.com', reputation: 780, coinBalance: 1800 },
-  { username: 'ea_runner2024', email: 'runner@example.com', reputation: 290, coinBalance: 450 },
-  { username: 'patient_trader', email: 'patient@example.com', reputation: 650, coinBalance: 1400 },
-  { username: 'indicator_guy88', email: 'indicator@example.com', reputation: 380, coinBalance: 700 },
+  { username: 'forex_newbie423', email: 'newbie@example.com', reputationScore: 150, totalCoins: 500 },
+  { username: 'grid_hunter88', email: 'grid@example.com', reputationScore: 450, totalCoins: 1200 },
+  { username: 'pip_trader2024', email: 'pip@example.com', reputationScore: 680, totalCoins: 800 },
+  { username: 'crypto_ninja77', email: 'crypto@example.com', reputationScore: 920, totalCoins: 2500 },
+  { username: 'dev_learner99', email: 'dev@example.com', reputationScore: 200, totalCoins: 300 },
+  { username: 'news_trader_x', email: 'news@example.com', reputationScore: 550, totalCoins: 1500 },
+  { username: 'desperate_guy21', email: 'desperate@example.com', reputationScore: 80, totalCoins: 100 },
+  { username: 'ea_coder123', email: 'coder@example.com', reputationScore: 1200, totalCoins: 3000 },
+  { username: 'angry_trader55', email: 'angry@example.com', reputationScore: 320, totalCoins: 600 },
+  { username: 'yen_hunter2025', email: 'yen@example.com', reputationScore: 410, totalCoins: 900 },
+  { username: 'generous_coder', email: 'generous@example.com', reputationScore: 1500, totalCoins: 5000 },
+  { username: 'hedge_master_', email: 'hedge@example.com', reputationScore: 780, totalCoins: 1800 },
+  { username: 'ea_runner2024', email: 'runner@example.com', reputationScore: 290, totalCoins: 450 },
+  { username: 'patient_trader', email: 'patient@example.com', reputationScore: 650, totalCoins: 1400 },
+  { username: 'indicator_guy88', email: 'indicator@example.com', reputationScore: 380, totalCoins: 700 },
 ];
 
 // Seed threads data (60 threads from seed-threads-data.jsonl)
@@ -67,13 +67,13 @@ async function seedUsers() {
       const [inserted] = await db.insert(users).values({
         username: user.username,
         email: user.email,
-        reputation: user.reputation,
-        coinBalance: user.coinBalance,
+        reputationScore: user.reputationScore,
+        totalCoins: user.totalCoins,
         role: 'member',
       }).returning();
       
       insertedUsers.push(inserted);
-      console.log(`  ✅ ${user.username} (${user.reputation} rep, ${user.coinBalance} coins)`);
+      console.log(`  ✅ ${user.username} (${user.reputationScore} rep, ${user.totalCoins} coins)`);
     } catch (error: any) {
       if (error.code === '23505') { // Unique constraint violation
         console.log(`  ⏭️  ${user.username} already exists`);
@@ -86,7 +86,7 @@ async function seedUsers() {
   return insertedUsers;
 }
 
-async function seedThreads(userMap: Map<string, number>) {
+async function seedThreads(userMap: Map<string, string>) {
   console.log('\n💬 Seeding forum threads...');
   const insertedThreads: any[] = [];
   
@@ -129,7 +129,7 @@ async function seedThreads(userMap: Map<string, number>) {
   return insertedThreads;
 }
 
-async function seedReplies(threads: any[], userMap: Map<string, number>) {
+async function seedReplies(threads: any[], userMap: Map<string, string>) {
   console.log('\n💭 Seeding replies...');
   
   const replyTemplates = [
@@ -164,10 +164,14 @@ async function seedReplies(threads: any[], userMap: Map<string, number>) {
           .replace('{tip}', 'adjusting your stop loss to 1.5x ATR')
           .replace('{suggestion}', 'adding a trend filter');
         
+        // Generate unique slug for reply
+        const replySlug = `${thread.slug}-reply-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+        
         await db.insert(forumReplies).values({
           threadId: thread.id,
-          authorId: userId,
+          userId: userId,
           body: replyBody,
+          slug: replySlug,
         });
         
         replyCount++;
@@ -188,7 +192,7 @@ async function main() {
     const insertedUsers = await seedUsers();
     
     // Create username -> userId map
-    const userMap = new Map<string, number>();
+    const userMap = new Map<string, string>();
     for (const user of insertedUsers) {
       userMap.set(user.username, user.id);
     }
