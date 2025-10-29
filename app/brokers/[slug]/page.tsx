@@ -91,12 +91,12 @@ export default async function BrokerProfilePage({ params }: { params: Promise<{ 
     broker = null;
   }
 
-  // If broker not found, return Client Component with null broker to show custom error card
+  // If broker not found, return Client Component with undefined broker to show custom error card
   if (!broker) {
     return (
       <BrokerProfileClient
         slug={slug}
-        initialBroker={null}
+        initialBroker={undefined}
         initialReviews={[]}
       />
     );

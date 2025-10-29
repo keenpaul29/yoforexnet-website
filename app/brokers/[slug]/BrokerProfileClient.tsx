@@ -55,7 +55,7 @@ type BrokerReview = {
 
 interface BrokerProfileClientProps {
   slug: string;
-  initialBroker: Broker | null;
+  initialBroker: Broker | undefined;
   initialReviews: BrokerReview[];
 }
 
@@ -76,7 +76,6 @@ export default function BrokerProfileClient({
   const { data: broker } = useQuery<Broker>({
     queryKey: ["/api/brokers/slug", slug],
     initialData: initialBroker,
-    enabled: !!slug,
   });
 
   // Use initial data for reviews query
