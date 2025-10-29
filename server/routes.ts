@@ -7356,17 +7356,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ error: "Admin access required" });
       }
 
-      const filters = {
-        page: req.query.page ? parseInt(req.query.page as string) : undefined,
-        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : undefined,
-        type: req.query.type as string | undefined,
-        dateRange: req.query.dateRange as string | undefined,
-        userId: req.query.userId as string | undefined,
-        status: req.query.status as string | undefined,
-        amountRange: req.query.amountRange as string | undefined,
-      };
-
-      const csvData = await storage.exportTransactionsCSV(filters);
+      const csvData = await storage.exportTransactionsCSV();
 
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', 'attachment; filename="transactions.csv"');

@@ -1,28 +1,36 @@
-[00:00:02.039] Server  LOG      ✓ Ready in 1390ms
-[00:00:02.042] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:02.924] Server  LOG      ✓ Ready in 1736ms
+[00:00:02.926] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:05.137] Server  LOG      ○ Compiling / ...
-[00:00:12.903] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.932] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.934] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:12.938] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.939] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:12.940] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.940] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:12.987] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.987] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:12.989] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.989] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:12.991] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.992] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:13.030] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.030] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:13.032] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.032] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:13.033] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.033] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:13.125] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:17.918] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:06.132] Server  LOG      ○ Compiling / ...
+[00:00:29.397] Browser LOG     [Activity Tracker] User active for 0 seconds
+[00:00:30.419] Browser LOG     [Activity Tracker] User active for 1 seconds
+[00:00:31.406] Browser LOG     [Activity Tracker] User active for 2 seconds
+[00:00:32.402] Browser LOG     [Activity Tracker] User active for 3 seconds
+[00:00:33.411] Browser LOG     [Activity Tracker] User active for 4 seconds
+[00:00:33.943] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:33.975] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:33.975] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:33.983] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:33.983] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:33.985] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:33.985] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:34.056] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.056] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:34.058] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.058] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:34.060] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.061] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:34.110] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.111] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:34.113] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.114] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:34.116] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.116] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:34.266] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:34.488] Browser LOG     [Activity Tracker] User active for 5 seconds
+[00:00:35.414] Browser LOG     [Activity Tracker] User active for 6 seconds
+[00:00:40.781] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:41.250] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -69,11 +77,13 @@ https://react.dev/link/hydration-mismatch
                               <div className="flex flex-...">
                                 <p>
                                 <p>
-+                                 1761766537688
--                                 1761766535197
++                                 1761766874992
+-                                 1761766870456
                   ...
 
-[00:00:23.512] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:41.428] Browser LOG     [Activity Tracker] User active for 0 seconds
+[00:00:43.208] Browser LOG     [Activity Tracker] User active for 1 seconds
+[00:00:44.319] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -120,7 +130,35 @@ https://react.dev/link/hydration-mismatch
                               <div className="flex flex-...">
                                 <p>
                                 <p>
-+                                 1761766542314
--                                 1761766534885
++                                 1761766877704
+-                                 1761766870344
                   ...
 
+[00:00:45.200] Browser LOG     [Activity Tracker] User active for 2 seconds
+[00:00:46.204] Browser LOG     [Activity Tracker] User active for 3 seconds
+[00:00:47.210] Browser LOG     [Activity Tracker] User active for 4 seconds
+[00:00:48.209] Browser LOG     [Activity Tracker] User active for 5 seconds
+[00:00:49.210] Browser LOG     [Activity Tracker] User active for 6 seconds
+[00:00:50.213] Browser LOG     [Activity Tracker] User active for 7 seconds
+[00:00:51.203] Browser LOG     [Activity Tracker] User active for 8 seconds
+[00:00:52.213] Browser LOG     [Activity Tracker] User active for 9 seconds
+[00:00:53.199] Browser LOG     [Activity Tracker] User active for 10 seconds
+[00:00:54.207] Browser LOG     [Activity Tracker] User active for 11 seconds
+[00:00:55.206] Browser LOG     [Activity Tracker] User active for 12 seconds
+[00:00:56.209] Browser LOG     [Activity Tracker] User active for 13 seconds
+[00:00:57.212] Browser LOG     [Activity Tracker] User active for 14 seconds
+[00:00:58.199] Browser LOG     [Activity Tracker] User active for 15 seconds
+[00:00:59.199] Browser LOG     [Activity Tracker] User active for 16 seconds
+[00:01:00.204] Browser LOG     [Activity Tracker] User active for 17 seconds
+[00:01:01.215] Browser LOG     [Activity Tracker] User active for 18 seconds
+[00:01:02.203] Browser LOG     [Activity Tracker] User active for 19 seconds
+[00:01:03.210] Browser LOG     [Activity Tracker] User active for 20 seconds
+[00:01:04.202] Browser LOG     [Activity Tracker] User active for 21 seconds
+[00:01:05.205] Browser LOG     [Activity Tracker] User active for 22 seconds
+[00:01:06.206] Browser LOG     [Activity Tracker] User active for 23 seconds
+[00:01:07.198] Browser LOG     [Activity Tracker] User active for 24 seconds
+[00:01:08.199] Browser LOG     [Activity Tracker] User active for 25 seconds
+[00:01:09.204] Browser LOG     [Activity Tracker] User active for 26 seconds
+[00:01:10.211] Browser LOG     [Activity Tracker] User active for 27 seconds
+[00:01:11.215] Browser LOG     [Activity Tracker] User active for 28 seconds
+[00:01:12.214] Browser LOG     [Activity Tracker] User active for 29 seconds

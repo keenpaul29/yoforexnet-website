@@ -781,9 +781,14 @@ export interface IStorage {
   getRevenueStats(startDate: Date, endDate: Date): Promise<any>;
   
   /**
-   * Get revenue by source
+   * Get revenue by source (Finance dashboard)
    */
-  getRevenueBySource(startDate: Date, endDate: Date): Promise<any[]>;
+  getRevenueBySource(): Promise<{
+    coinPurchases: number;
+    subscriptions: number;
+    marketplace: number;
+    other: number;
+  }>;
   
   /**
    * Get revenue by user (top earners)
@@ -4127,9 +4132,6 @@ export class MemStorage implements IStorage {
     return { totalRevenue: 0, totalTransactions: 0 };
   }
 
-  async getRevenueBySource(startDate: Date, endDate: Date): Promise<any[]> {
-    return [];
-  }
 
   async getRevenueByUser(limit?: number): Promise<any[]> {
     return [];
@@ -13973,6 +13975,44 @@ export class DrizzleStorage implements IStorage {
       };
     } catch (error) {
       console.error('Error getting revenue period:', error);
+      throw error;
+    }
+  }
+
+  async getRevenueBySource(): Promise<{
+    coinPurchases: number;
+    subscriptions: number;
+    marketplace: number;
+    other: number;
+  }> {
+    try {
+      const [coinPurchasesResult] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)`,
+        })
+        .from(rechargeOrders)
+        .where(eq(rechargeOrders.status, 'completed'));
+
+      const [subscriptionsResult] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${subscriptions.priceUsd}), 0)`,
+        })
+        .from(subscriptions);
+
+      const [marketplaceResult] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${contentPurchases.priceCoins}), 0) * 0.1`,
+        })
+        .from(contentPurchases);
+
+      return {
+        coinPurchases: Number(coinPurchasesResult?.total || 0),
+        subscriptions: Number(subscriptionsResult?.total || 0),
+        marketplace: Number(marketplaceResult?.total || 0),
+        other: 0,
+      };
+    } catch (error) {
+      console.error('Error getting revenue by source:', error);
       throw error;
     }
   }
