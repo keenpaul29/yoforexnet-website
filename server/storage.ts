@@ -162,7 +162,7 @@ import {
 import { randomUUID } from "crypto";
 import { applySEOAutomations, generateUniqueSlug, generateThreadSlug, generateReplySlug, generateMetaDescription, extractFocusKeyword } from "./seo-engine";
 import { db } from "./db";
-import { eq, and, or, desc, asc, sql, count, inArray, gt, gte, lte, ilike, lt, ne } from "drizzle-orm";
+import { eq, and, or, desc, asc, sql, count, inArray, gt, gte, lte, ilike, lt, ne, isNotNull, isNull } from "drizzle-orm";
 
 /**
  * Calculate user level based on total coins
@@ -6912,11 +6912,27 @@ export class DrizzleStorage implements IStorage {
     flaggedReasons?: string[];
   }): Promise<any> {
     try {
-      const [newItem] = await db.insert(moderationQueue).values({
-        ...item,
+      const values: any = {
+        contentType: item.contentType,
+        contentId: item.contentId,
+        authorId: item.authorId,
         status: 'pending',
         priorityScore: item.priorityScore || 0,
-      }).returning();
+      };
+      
+      if (item.spamScore !== undefined) {
+        values.spamScore = String(item.spamScore);
+      }
+      
+      if (item.sentimentScore !== undefined) {
+        values.sentimentScore = String(item.sentimentScore);
+      }
+      
+      if (item.flaggedReasons) {
+        values.flaggedReasons = item.flaggedReasons;
+      }
+      
+      const [newItem] = await db.insert(moderationQueue).values(values).returning();
       return newItem;
     } catch (error) {
       console.error("Error adding to moderation queue:", error);
@@ -6948,7 +6964,7 @@ export class DrizzleStorage implements IStorage {
           } else if (item.contentType === 'thread') {
             await tx
               .update(forumThreads)
-              .set({ status: 'published' })
+              .set({ status: 'approved' })
               .where(eq(forumThreads.id, item.contentId));
           }
           
@@ -6993,7 +7009,7 @@ export class DrizzleStorage implements IStorage {
           } else if (item.contentType === 'thread') {
             await tx
               .update(forumThreads)
-              .set({ status: 'draft' })
+              .set({ status: 'pending' })
               .where(eq(forumThreads.id, item.contentId));
           }
           
@@ -8576,7 +8592,7 @@ export class DrizzleStorage implements IStorage {
             eq(ipBans.ipAddress, ipAddress),
             eq(ipBans.isActive, true),
             or(
-              eq(ipBans.expiresAt, null),
+              isNull(ipBans.expiresAt),
               gt(ipBans.expiresAt, new Date())
             )
           )
@@ -8722,7 +8738,13 @@ export class DrizzleStorage implements IStorage {
     metadata?: any;
   }): Promise<void> {
     try {
-      await db.insert(performanceMetrics).values(metric);
+      await db.insert(performanceMetrics).values({
+        metricType: metric.metricType,
+        metricName: metric.metricName,
+        value: String(metric.value),
+        unit: metric.unit,
+        metadata: metric.metadata,
+      });
     } catch (error) {
       console.error("Error recording performance metric:", error);
       throw error;
@@ -8801,7 +8823,7 @@ export class DrizzleStorage implements IStorage {
       return await db
         .select()
         .from(performanceMetrics)
-        .where(gte(performanceMetrics.value, threshold))
+        .where(sql`CAST(${performanceMetrics.value} AS NUMERIC) >= ${threshold}`)
         .limit(50);
     } catch (error) {
       console.error("Error fetching performance alerts:", error);
