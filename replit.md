@@ -47,6 +47,19 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 - **React Query Integration**: Optimized cache invalidation with prefix matching ensuring immediate UI updates after approve/reject/feature actions. All queries properly typed with TypeScript interfaces.
 - **UI/UX Best Practices**: Follows 2025 e-commerce admin dashboard patterns with skeleton loading states, responsive design (mobile-friendly), comprehensive data-testid attributes for all interactive elements, clear error messages and toast notifications.
 
+**Admin Broker Management System** (October 2025 - Production Ready):
+- **Comprehensive Moderation Workflow**: Full broker directory management with verification system, scam warning controls, and auto-flagging logic. Admins can verify/unverify brokers, toggle scam warnings, moderate reviews, and handle scam reports. All actions logged to adminActions table with full audit trails.
+- **Auto-Flag Scam Protection**: Intelligent auto-flagging system that automatically sets scam_warning=true when a broker reaches 3+ unresolved scam reports. Scam reports stored as broker_reviews with isScamReport=true flag. Auto-flag removed when scam reports drop below threshold.
+- **Advanced Search & Filtering**: Real-time search (300ms debounce) across broker names, status filter (All, Verified, Unverified, Scam Warning), sort options (Newest, Oldest, Alphabetical, Most Reviews, Highest Rated). Clear filters button to reset all at once.
+- **Pagination System**: Full pagination with configurable page sizes (10/20/50/100 brokers), First/Previous/Next/Last navigation, "Showing X-Y of Z brokers" display. Automatically resets to page 1 when filters change.
+- **Interactive Modals**: View Broker Details (full profile, reviews, scam reports, statistics), View Scam Report Details (reporter info, evidence, timestamps), Moderate Reviews (approve/reject with reasons), Update Broker (edit profile fields with validation).
+- **Statistics Dashboard**: Real-time metrics (total brokers, verified brokers, pending brokers, brokers with scam warnings, total reviews, pending reviews) with visual stat cards and trend indicators.
+- **Database Schema**: Extended brokers table with 11 moderation fields (verified, verifiedBy, verifiedAt, scamWarning, scamWarningToggledBy, scamWarningToggledAt, featured, featuredUntil, approvedBy, approvedAt, deletedAt). Extended broker_reviews table with 6 moderation fields (isScamReport, evidenceUrls, approvedBy, approvedAt, rejectedAt, rejectionReason) plus performance indexes.
+- **Backend Implementation**: 12 storage methods in IStorage interface (getAdminBrokers with filters/pagination, verifyBroker, unverifyBroker, toggleScamWarning, getScamReports with auto-flag count checking, resolveScamReport with auto-unflag logic, approveBrokerReview, rejectBrokerReview, getBrokerStats, updateBroker, deleteBroker, getPendingBrokers) with full Drizzle ORM queries including LEFT JOINs, aggregations, and soft delete filtering.
+- **API Layer**: 14 RESTful endpoints (/api/admin/brokers/*) with isAuthenticated + isAdmin authorization, Zod validation for all POST requests, rate limiting via adminOperationLimiter, comprehensive error handling (400/403/404/500 status codes).
+- **React Query Integration**: Optimized cache invalidation with prefix matching ensuring immediate UI updates after verify/scam warning/review moderation actions. All queries properly typed with TypeScript interfaces.
+- **UI/UX Best Practices**: Follows 2025 admin dashboard patterns with skeleton loading states, responsive design (mobile-friendly), comprehensive data-testid attributes (verify-broker-{id}, toggle-scam-{id}, approve-review-{id}, etc.), clear error messages and toast notifications, 3-tab organization (Brokers, Scam Reports, Reviews).
+
 ### External Dependencies
 - **Database**: Neon (PostgreSQL-compatible, serverless)
 - **Authentication**: Replit Auth (OIDC)
