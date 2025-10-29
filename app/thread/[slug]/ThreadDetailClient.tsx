@@ -34,7 +34,7 @@ import { BadgeDisplay } from "@/components/BadgeDisplay";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import BreadcrumbSchema from "@/app/components/BreadcrumbSchema";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 interface ThreadDetailClientProps {
   initialThread: ForumThread | undefined;
@@ -299,7 +299,7 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
   const breadcrumbPath = [
     { name: 'Home', url: '/' },
     { name: thread.categorySlug || 'Discussion', url: `/category/${thread.categorySlug}` },
-    { name: thread.title, url: thread.fullUrl || `/thread/${thread.slug}` }
+    { name: thread.title, url: (thread as any).fullUrl || `/thread/${thread.slug}` }
   ];
 
   return (

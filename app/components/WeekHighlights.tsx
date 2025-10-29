@@ -229,8 +229,9 @@ export default function WeekHighlights({
   const handleThreadClick = (thread: HighlightThread) => {
     // Try to get the fullUrl or slug from the full thread data
     const fullThread = threadsWithSlug.get(thread.id);
-    if (fullThread?.fullUrl) {
-      router.push(fullThread.fullUrl);
+    const fullUrl = (fullThread as any)?.fullUrl;
+    if (fullUrl) {
+      router.push(fullUrl);
     } else if (fullThread?.slug) {
       router.push(`/thread/${fullThread.slug}`);
     } else {

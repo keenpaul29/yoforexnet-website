@@ -14,13 +14,14 @@ import { getCategoryPath } from '@/lib/category-path';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const path = await getCategoryPath(params.slug);
+    const { slug } = await params;
+    const path = await getCategoryPath(slug);
     
     return NextResponse.json({
-      slug: params.slug,
+      slug,
       path,
       success: true,
     });

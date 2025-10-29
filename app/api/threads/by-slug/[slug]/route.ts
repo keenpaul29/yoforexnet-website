@@ -6,34 +6,28 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { apiRequest } from '@/lib/api-config';
+import { getInternalApiUrl } from '@/lib/api-config';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params;
     // Forward to the backend Express API
-    const thread = await apiRequest(`/api/threads/slug/${params.slug}`, {
-      method: 'GET',
-    });
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/threads/slug/${slug}`);
     
-    if (!thread) {
+    if (!response.ok) {
       return NextResponse.json(
         { error: 'Thread not found' },
         { status: 404 }
       );
     }
     
+    const thread = await response.json();
     return NextResponse.json(thread);
   } catch (error: any) {
-    if (error.status === 404) {
-      return NextResponse.json(
-        { error: 'Thread not found' },
-        { status: 404 }
-      );
-    }
-    
     console.error('[API] Error fetching thread by slug:', error);
     return NextResponse.json(
       { error: 'Failed to fetch thread' },

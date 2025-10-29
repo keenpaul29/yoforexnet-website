@@ -30,7 +30,8 @@
         "./app/components/*"
       ],
       "@/lib/*": [
-        "./app/lib/*"
+        "./app/lib/*",
+        "./lib/*"
       ],
       "@shared/*": [
         "./shared/*"

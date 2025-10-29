@@ -6,34 +6,28 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { apiRequest } from '@/lib/api-config';
+import { getInternalApiUrl } from '@/lib/api-config';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params;
     // Forward to the backend Express API
-    const content = await apiRequest(`/api/content/slug/${params.slug}`, {
-      method: 'GET',
-    });
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/content/slug/${slug}`);
     
-    if (!content) {
+    if (!response.ok) {
       return NextResponse.json(
         { error: 'Content not found' },
         { status: 404 }
       );
     }
     
+    const content = await response.json();
     return NextResponse.json(content);
   } catch (error: any) {
-    if (error.status === 404) {
-      return NextResponse.json(
-        { error: 'Content not found' },
-        { status: 404 }
-      );
-    }
-    
     console.error('[API] Error fetching content by slug:', error);
     return NextResponse.json(
       { error: 'Failed to fetch content' },

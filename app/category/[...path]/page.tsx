@@ -10,14 +10,17 @@
 
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { apiRequest } from '@/lib/api-config';
+import { getInternalApiUrl } from '@/lib/api-config';
 import { getCategoryByPath } from '@/lib/category-path';
-import ThreadDetailClient from '@/app/thread/[slug]/ThreadDetailClient';
-import CategoryDiscussionClient from '@/app/category/[slug]/CategoryDiscussionClient';
-import BreadcrumbSchema from '@/app/components/BreadcrumbSchema';
-import { db } from '@/lib/db';
-import { forumCategories } from '@/shared/schema';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema';
+import { db } from '../../../../lib/db';
+import { forumCategories } from '../../../../shared/schema';
 import { eq } from 'drizzle-orm';
+
+// Dynamic imports for components with dynamic route segments
+const loadThreadClient = () => import('../../thread/[slug]/ThreadDetailClient');
+const loadCategoryClient = () => import('../[slug]/CategoryDiscussionClient');
+const loadContentClient = () => import('../../content/[slug]/ContentDetailClient');
 
 type Props = {
   params: { path: string[] };
@@ -31,11 +34,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   // Try to find a thread first (most specific)
   try {
-    const thread = await apiRequest(`/api/threads/by-slug/${lastSlug}`, {
-      method: 'GET',
-    });
-    
-    if (thread) {
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/threads/by-slug/${lastSlug}`);
+    if (response.ok) {
+      const thread = await response.json();
       return {
         title: thread.title,
         description: thread.body?.substring(0, 160) || `Discussion about ${thread.title}`,
@@ -59,11 +61,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   // Check if it's a marketplace content item
   try {
-    const content = await apiRequest(`/api/content/by-slug/${lastSlug}`, {
-      method: 'GET',
-    });
-    
-    if (content) {
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/content/by-slug/${lastSlug}`);
+    if (response.ok) {
+      const content = await response.json();
       return {
         title: `${content.title} | YoForex Marketplace`,
         description: content.description?.substring(0, 160) || `Download ${content.title}`,
@@ -111,24 +112,29 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   // Try to find a thread first (most specific content)
   let thread = null;
   try {
-    thread = await apiRequest(`/api/threads/by-slug/${lastSlug}`, {
-      method: 'GET',
-    });
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/threads/by-slug/${lastSlug}`);
+    if (response.ok) {
+      thread = await response.json();
+    }
   } catch (error) {
     // Not a thread
   }
   
   if (thread) {
     // Render thread detail page with hierarchical breadcrumbs
+    const { default: ThreadDetailClient } = await loadThreadClient();
     return <ThreadDetailClient slug={lastSlug} />;
   }
   
   // Try to find marketplace content
   let content = null;
   try {
-    content = await apiRequest(`/api/content/by-slug/${lastSlug}`, {
-      method: 'GET',
-    });
+    const apiUrl = getInternalApiUrl();
+    const response = await fetch(`${apiUrl}/api/content/by-slug/${lastSlug}`);
+    if (response.ok) {
+      content = await response.json();
+    }
   } catch (error) {
     // Not content either
   }
@@ -136,7 +142,7 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   if (content) {
     // Redirect to content detail page (or render inline)
     // For now, import and render the content client
-    const { default: ContentDetailClient } = await import('@/app/content/[slug]/ContentDetailClient');
+    const { default: ContentDetailClient } = await loadContentClient();
     return <ContentDetailClient slug={lastSlug} />;
   }
   
@@ -175,6 +181,7 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   }
   
   // Render category discussion page with breadcrumbs
+  const { default: CategoryDiscussionClient } = await loadCategoryClient();
   return (
     <>
       <BreadcrumbSchema path={breadcrumbPath} />

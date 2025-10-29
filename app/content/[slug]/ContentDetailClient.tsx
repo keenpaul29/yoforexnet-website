@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { Content, User as UserType, ContentReview } from "@shared/schema";
-import BreadcrumbSchema from "@/app/components/BreadcrumbSchema";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 // Review form schema
 const reviewFormSchema = z.object({
@@ -269,7 +269,7 @@ export default function ContentDetailClient({
     { name: 'Home', url: '/' },
     { name: 'Marketplace', url: '/marketplace' },
     { name: content.category || 'Content', url: `/category/${content.category}` },
-    { name: content.title, url: content.fullUrl || `/content/${content.slug}` }
+    { name: content.title, url: (content as any).fullUrl || `/content/${content.slug}` }
   ];
 
   return (

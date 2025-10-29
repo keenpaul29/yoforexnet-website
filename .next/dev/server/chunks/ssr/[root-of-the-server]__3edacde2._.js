@@ -4527,8 +4527,9 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
     const handleThreadClick = (thread)=>{
         // Try to get the fullUrl or slug from the full thread data
         const fullThread = threadsWithSlug.get(thread.id);
-        if (fullThread?.fullUrl) {
-            router.push(fullThread.fullUrl);
+        const fullUrl = fullThread?.fullUrl;
+        if (fullUrl) {
+            router.push(fullUrl);
         } else if (fullThread?.slug) {
             router.push(`/thread/${fullThread.slug}`);
         } else {
@@ -4558,7 +4559,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                 children: thread.category
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 255,
+                                                lineNumber: 256,
                                                 columnNumber: 17
                                             }, this),
                                             thread.isAnswered && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4569,26 +4570,26 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 265,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Solved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 265,
+                                                        lineNumber: 266,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 263,
+                                                lineNumber: 264,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 254,
+                                        lineNumber: 255,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -4597,7 +4598,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                         children: thread.title
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 271,
+                                        lineNumber: 272,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4605,7 +4606,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                         children: thread.id
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 279,
+                                        lineNumber: 280,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4618,7 +4619,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5 text-blue-500/70"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 286,
+                                                        lineNumber: 287,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4627,13 +4628,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         children: thread.replies
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 287,
+                                                        lineNumber: 288,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 285,
+                                                lineNumber: 286,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4643,7 +4644,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5 text-purple-500/70"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 293,
+                                                        lineNumber: 294,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4652,13 +4653,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         children: thread.views.toLocaleString()
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 294,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 292,
+                                                lineNumber: 293,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4668,7 +4669,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5 text-orange-500/70"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 300,
+                                                        lineNumber: 301,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4678,25 +4679,25 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 301,
+                                                        lineNumber: 302,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 299,
+                                                lineNumber: 300,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 284,
+                                        lineNumber: 285,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                lineNumber: 252,
+                                lineNumber: 253,
                                 columnNumber: 13
                             }, this),
                             thread.isAnswered ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4708,17 +4709,17 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                         children: "0"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 310,
+                                        lineNumber: 311,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 309,
+                                    lineNumber: 310,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                lineNumber: 308,
+                                lineNumber: 309,
                                 columnNumber: 15
                             }, this) : thread.coins && thread.coins > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
                                 variant: "secondary",
@@ -4730,23 +4731,23 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                lineNumber: 316,
+                                lineNumber: 317,
                                 columnNumber: 15
                             }, this) : null
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                        lineNumber: 251,
+                        lineNumber: 252,
                         columnNumber: 11
                     }, this)
                 }, thread.id, false, {
                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                    lineNumber: 245,
+                    lineNumber: 246,
                     columnNumber: 9
                 }, this))
         }, void 0, false, {
             fileName: "[project]/app/components/WeekHighlights.tsx",
-            lineNumber: 243,
+            lineNumber: 244,
             columnNumber: 5
         }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -4765,7 +4766,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     className: "h-5 w-5 text-primary"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 336,
+                                    lineNumber: 337,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4773,13 +4774,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "This Week's Highlights"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 337,
+                                    lineNumber: 338,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 335,
+                            lineNumber: 336,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$RefreshButton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["RefreshButton"], {
@@ -4788,13 +4789,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                             variant: "ghost"
                         }, void 0, false, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 339,
+                            lineNumber: 340,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                    lineNumber: 334,
+                    lineNumber: 335,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -4811,7 +4812,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "New"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 349,
+                                    lineNumber: 350,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -4821,7 +4822,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "Trending"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 356,
+                                    lineNumber: 357,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -4831,13 +4832,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "Solved"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 363,
+                                    lineNumber: 364,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 348,
+                            lineNumber: 349,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4849,7 +4850,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: renderThreadList(displayNewThreads)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 373,
+                                    lineNumber: 374,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -4858,7 +4859,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: renderThreadList(displayTrendingThreads)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 376,
+                                    lineNumber: 377,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -4867,30 +4868,30 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: renderThreadList(displaySolvedThreads)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 379,
+                                    lineNumber: 380,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 372,
+                            lineNumber: 373,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                    lineNumber: 347,
+                    lineNumber: 348,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/WeekHighlights.tsx",
-            lineNumber: 332,
+            lineNumber: 333,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/WeekHighlights.tsx",
-        lineNumber: 331,
+        lineNumber: 332,
         columnNumber: 5
     }, this);
 }
