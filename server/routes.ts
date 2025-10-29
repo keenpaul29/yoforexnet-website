@@ -5782,9 +5782,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: adminActions.id,
           adminId: adminActions.adminId,
           adminUsername: users.username,
-          action: adminActions.action,
+          action: adminActions.actionType,
           targetId: adminActions.targetId,
-          targetName: adminActions.targetName,
           details: adminActions.details,
           createdAt: adminActions.createdAt
         })
@@ -6638,7 +6637,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Use getScamReports without filters to find specific report
       const result = await storage.getScamReports({ page: 1, pageSize: 1000 });
-      const report = result.items.find(r => r.id === reportId);
+      const report = result.items.find((r: any) => r.id === reportId);
       
       if (!report) {
         return res.status(404).json({ error: "Scam report not found" });
@@ -6967,7 +6966,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       await storage.dismissReport({
         reportId,
-        dismissedBy: claims.sub,
+        moderatorId: claims.sub,
         reason: reason || "No reason provided",
       });
       
@@ -6993,12 +6992,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const claims = (req.user as any)?.claims;
       
       await storage.takeReportAction({
-        reportId,
         contentId: validatedData.contentId,
         contentType: validatedData.contentType,
         actionType: validatedData.actionType,
         moderatorId: claims.sub,
-        moderatorUsername: claims.username || claims.sub,
         reason: validatedData.reason,
         suspendDays: validatedData.suspendDays,
       });
@@ -7051,7 +7048,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contentIds,
         contentType,
         moderatorId: claims.sub,
-        moderatorUsername: claims.username || claims.sub,
         reason,
       });
       

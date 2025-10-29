@@ -1984,6 +1984,12 @@ export class MemStorage implements IStorage {
       lastReputationUpdate: null,
       lastJournalPost: null,
       level: 2,
+      role: 'member',
+      status: 'active',
+      suspendedUntil: null,
+      bannedAt: null,
+      bannedBy: null,
+      lastActive: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -2048,6 +2054,12 @@ export class MemStorage implements IStorage {
       lastReputationUpdate: null,
       lastJournalPost: null,
       level: 0,
+      role: 'member',
+      status: 'active',
+      suspendedUntil: null,
+      bannedAt: null,
+      bannedBy: null,
+      lastActive: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2439,6 +2451,14 @@ export class MemStorage implements IStorage {
       autoImageAltTexts: seo.autoImageAltTexts,
       salesScore: 0,
       lastSalesUpdate: null,
+      approvedBy: null,
+      approvedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      featured: false,
+      featuredUntil: null,
+      deletedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2761,11 +2781,22 @@ export class MemStorage implements IStorage {
       platform: insertBroker.platform || null,
       spreadType: insertBroker.spreadType || null,
       minSpread: insertBroker.minSpread || null,
+      minDeposit: null,
+      leverage: null,
+      country: null,
       overallRating: 0,
       reviewCount: 0,
       scamReportCount: 0,
       isVerified: false,
       status: "pending",
+      verifiedBy: null,
+      verifiedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      scamWarning: false,
+      scamWarningReason: null,
+      deletedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2837,6 +2868,12 @@ export class MemStorage implements IStorage {
       reviewBody: insertReview.reviewBody,
       isScamReport: insertReview.isScamReport ?? false,
       status: "pending",
+      approvedBy: null,
+      approvedAt: null,
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      scamSeverity: insertReview.scamSeverity ?? null,
       datePosted: new Date(),
     };
     this.brokerReviews.set(id, review);
@@ -3043,8 +3080,13 @@ export class MemStorage implements IStorage {
       imageUrls: insertReply.imageUrls || null,
       helpful: 0,
       helpfulVotes: 0,
-      isAccepted: false,
       isVerified: false,
+      isAccepted: false,
+      status: 'approved',
+      approvedBy: null,
+      rejectedBy: null,
+      approvedAt: null,
+      rejectedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -3893,49 +3935,7 @@ export class MemStorage implements IStorage {
   // ADMIN OPERATIONS - GROUP 2: Content Moderation (Stubs)
   // ============================================================================
 
-  async getModerationQueue(filters: any): Promise<{items: any[]; total: number}> {
-    return { items: [], total: 0 };
-  }
-
-  async addToModerationQueue(item: any): Promise<any> {
-    return { id: 1, ...item, status: 'pending' };
-  }
-
-  async approveContent(queueId: number, reviewedBy: string, notes?: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
-
-  async rejectContent(queueId: number, reviewedBy: string, reason: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
-
-  async bulkApproveContent(queueIds: number[], reviewedBy: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
-
-  async bulkRejectContent(queueIds: number[], reviewedBy: string, reason: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
-
-  async getReportedContent(filters: any): Promise<{reports: any[]; total: number}> {
-    return { reports: [], total: 0 };
-  }
-
-  async createReport(report: any): Promise<any> {
-    return { id: 1, ...report, status: 'pending' };
-  }
-
-  async assignReport(reportId: number, assignedTo: string, assignedBy: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
-
-  async resolveReport(reportId: number, resolution: string, actionTaken: string, resolvedBy: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
-
-  async dismissReport(reportId: number, reason: string, dismissedBy: string): Promise<void> {
-    throw new Error("Not implemented in MemStorage");
-  }
+  // Removed duplicate simple moderation stubs to avoid duplicate implementation errors
 
   async deleteContent(contentType: string, contentId: string, deletedBy: string, reason: string): Promise<void> {
     if (contentType === 'thread') {
@@ -5072,8 +5072,19 @@ export class MemStorage implements IStorage {
     reputation: number;
     coins: number;
     badges: string[];
+    posts: number;
   }>> {
-    return [];
+    const usersArr = Array.from(this.users.values())
+      .sort((a, b) => (b.reputationScore || 0) - (a.reputationScore || 0))
+      .slice(0, limit);
+    return usersArr.map(u => ({
+      id: u.id,
+      username: u.username,
+      reputation: u.reputationScore || 0,
+      coins: u.totalCoins,
+      badges: u.badges || [],
+      posts: 0,
+    }));
   }
 }
 
