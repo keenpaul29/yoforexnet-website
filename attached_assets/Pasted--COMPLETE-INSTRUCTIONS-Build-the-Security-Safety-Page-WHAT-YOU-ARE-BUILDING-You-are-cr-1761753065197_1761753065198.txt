@@ -1,0 +1,645 @@
+## COMPLETE INSTRUCTIONS: Build the Security & Safety Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating a Security & Safety page for YoForex forum admin panel. This page monitors security events, manages IP bans, tracks performance metrics, detects threats, and provides tools to protect the forum from attacks and malicious activities.
+
+***
+
+## PART 1: BACKEND (Server Side - Security Monitoring)
+
+### What the Backend Does
+The backend logs all security events, manages IP blacklists, detects suspicious activities, monitors login attempts, and provides real-time security alerts.
+
+### Create These Files:
+
+**File 1: Security Routes (routes/security.js)**
+
+Create URLs for security management:
+
+1. `/api/security/events` - Get all security events
+2. `/api/security/events/filter` - Filter events by type/severity
+3. `/api/security/ip-bans` - Get all banned IPs
+4. `/api/security/ip-bans/add` - Ban an IP address
+5. `/api/security/ip-bans/:id/remove` - Remove IP ban
+6. `/api/security/ip-bans/check` - Check if IP is banned
+7. `/api/security/threats/detect` - Run threat detection scan
+8. `/api/security/login-attempts` - Get failed login attempts
+9. `/api/security/suspicious-activity` - Get suspicious activity log
+10. `/api/security/two-factor/stats` - Get 2FA usage statistics
+11. `/api/security/metrics` - Get security performance metrics
+12. `/api/security/alerts/configure` - Configure security alerts
+13. `/api/security/export` - Export security report
+
+**File 2: Security Service (services/securityService.js)**
+
+Functions that handle security:
+
+**Function 1: Get Security Events**
+- Query `security_events` table
+- For each event include:
+  - Event ID
+  - Timestamp
+  - Event Type:
+    - Failed Login
+    - SQL Injection Attempt
+    - XSS Attempt
+    - Brute Force Attack
+    - DDoS Pattern
+    - Suspicious File Upload
+    - Account Takeover Attempt
+    - Rate Limit Exceeded
+    - Unauthorized API Access
+  - Severity Level:
+    - Info (low risk)
+    - Warning (potential threat)
+    - Critical (active threat)
+  - Description (details of event)
+  - IP Address (source)
+  - User Agent (browser/device)
+  - Affected User (if applicable)
+  - Status (New, Under Review, Resolved, False Positive)
+  - Actions Taken (auto-blocked, manual review, etc.)
+- Sort by timestamp (newest first)
+- Pagination: 50 events per page
+
+**Function 2: Filter Security Events**
+- Filter by event type
+- Filter by severity level
+- Filter by status
+- Filter by date range
+- Filter by IP address
+- Return filtered results
+
+**Function 3: Get IP Bans**
+- Query `ip_bans` table
+- For each banned IP:
+  - IP Address
+  - Ban Reason (spam, brute force, malicious activity)
+  - Banned By (admin username)
+  - Ban Date
+  - Expiration Date (permanent or temporary)
+  - Number of blocked attempts
+  - Country (if geolocation available)
+  - Notes
+- Sort by ban date
+- Return all banned IPs
+
+**Function 4: Add IP Ban**
+- Insert new IP ban record
+- Required: IP address, reason
+- Optional: Expiration date, notes
+- Set banned_by to current admin
+- Set banned_at timestamp
+- Block IP immediately (add to firewall rules)
+- Log ban action
+- Return success
+
+**Function 5: Remove IP Ban**
+- Find ban by ID
+- Remove from IP bans table
+- Update firewall rules (unblock IP)
+- Log unban action
+- Return success
+
+**Function 6: Detect Threats**
+- Run security scans:
+  - Scan for SQL injection patterns in logs
+  - Check for XSS attempts
+  - Detect brute force patterns (multiple failed logins)
+  - Identify DDoS attack patterns (rapid requests)
+  - Find suspicious file uploads
+  - Check for account takeover attempts
+- Return list of detected threats with details
+
+**Function 7: Get Failed Login Attempts**
+- Query failed login records
+- Group by IP address
+- Show:
+  - IP address
+  - Number of failed attempts
+  - Last attempt timestamp
+  - Attempted usernames
+  - Country/location
+- Flag IPs with 5+ failed attempts in 1 hour
+- Return data
+
+**Function 8: Get Suspicious Activity**
+- Query activity patterns that indicate threats:
+  - Rapid content creation (spam bots)
+  - Unusual login times/locations
+  - Mass downloads (scraping)
+  - API abuse (excessive requests)
+  - Multiple account creation from same IP
+- Return suspicious activities
+
+**Function 9: Get 2FA Statistics**
+- Count users with 2FA enabled
+- Count users without 2FA
+- Calculate 2FA adoption rate (percentage)
+- Show 2FA-enabled admin count
+- Return stats
+
+**Function 10: Get Performance Metrics**
+- Calculate security metrics:
+  - Total security events this week
+  - Critical events count
+  - Threats blocked automatically
+  - Average response time to threats
+  - IP bans active
+  - 2FA adoption rate
+  - Failed login rate
+- Return metrics summary
+
+**Function 11: Configure Security Alerts**
+- Allow admin to set alert thresholds:
+  - Alert on X failed logins
+  - Alert on critical event
+  - Alert on new IP ban
+  - Email notifications (on/off)
+  - Slack/Discord webhook URLs
+- Save alert configuration
+- Return success
+
+**Function 12: Export Security Report**
+- Generate comprehensive report:
+  - Security events summary
+  - Top threats detected
+  - IP bans list
+  - Failed login analysis
+  - Recommendations
+- Export as PDF or CSV
+- Return download link
+
+***
+
+## PART 2: FRONTEND (Display Side - Security Interface)
+
+### What the Frontend Does
+Shows security event monitoring, IP ban management, and performance metrics with real-time updates.
+
+### Create These Files:
+
+**File 1: Main Security & Safety Page (app/admin/security/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "Security & Safety"[1]
+
+**Section 2: Three Category Tabs**[1]
+
+Tab 1: **Security Events** (default active)[1]
+- Monitor all security events
+
+Tab 2: **IP Bans**[1]
+- Manage banned IP addresses
+
+Tab 3: **Performance Metrics**[1]
+- View security statistics
+
+***
+
+## SECURITY EVENTS TAB CONTENT[1]
+
+**Section 1: Filters Bar**[1]
+
+Title: "Filters"
+
+Three dropdown filters side by side:
+
+Dropdown 1: **All Types**[1]
+- Options:
+  - All Types
+  - Failed Login
+  - SQL Injection
+  - XSS Attempt
+  - Brute Force
+  - DDoS Pattern
+  - File Upload Threat
+  - API Abuse
+  - Rate Limit Exceeded
+
+Dropdown 2: **All Severities**[1]
+- Options:
+  - All Severities
+  - Info
+  - Warning
+  - Critical
+
+Dropdown 3: **All Status**[1]
+- Options:
+  - All Status
+  - New
+  - Under Review
+  - Resolved
+  - False Positive
+
+**Section 2: Security Events Table**[1]
+
+Title: "Security Events (0)"[1]
+
+Table with these columns:
+
+Column 1: **Timestamp**[1]
+- Date and time of event
+- Format: "Oct 29, 2025 9:15 PM"
+- Sortable
+
+Column 2: **Type**[1]
+- Event type badge
+- Color coded:
+  - Failed Login (gray)
+  - SQL Injection (red)
+  - Brute Force (orange)
+  - XSS (red)
+
+Column 3: **Severity**[1]
+- Severity badge
+- Color coded:
+  - Info (blue)
+  - Warning (yellow)
+  - Critical (red)
+
+Column 4: **Description**[1]
+- Brief description of event
+- Example: "Multiple failed login attempts from IP 192.168.1.1"
+- Truncate if too long
+
+Column 5: **Status**[1]
+- Status badge
+- Color coded:
+  - New (yellow)
+  - Under Review (blue)
+  - Resolved (green)
+  - False Positive (gray)
+
+Column 6: **Actions**[1]
+- Three-dot menu button
+- Dropdown with options:
+  - View Details
+  - Mark as Reviewed
+  - Mark as Resolved
+  - Mark as False Positive
+  - Ban IP
+  - Block User
+  - Export Event
+
+**Table Features:**
+- Pagination (50 events per page)
+- Sort by: Timestamp, Severity, Type
+- Empty state: "No security events found"[1]
+- Real-time updates (new events appear automatically)
+
+**Section 3: Quick Stats Cards** (Above filters)
+
+Four small cards showing:
+
+Card 1: **Events Today**
+- Count of events today
+- Red if > 100
+
+Card 2: **Critical Events**
+- Count of critical severity events
+- Always red if > 0
+
+Card 3: **Active Threats**
+- Count of unresolved critical events
+- Pulsing if > 0
+
+Card 4: **IPs Blocked**
+- Count of IPs banned today
+- Orange color
+
+***
+
+## IP BANS TAB CONTENT
+
+When "IP Bans" tab is selected:
+
+**Section 1: Tab Header**
+- Title: "IP Bans"
+- Blue button: "+ Ban IP Address"
+- Search box: "Search IP..."
+
+**Section 2: IP Bans Table**
+
+Columns:
+- **IP Address**: IPv4 or IPv6 address
+- **Reason**: Why IP was banned
+- **Banned By**: Admin username
+- **Ban Date**: When banned
+- **Expiration**: Permanent or date
+- **Blocked Attempts**: Count of blocked requests
+- **Country**: Country flag + name
+- **Actions**: Unban, Edit, View Logs
+
+**Example Rows:**
+- 192.168.1.100 | Brute Force Attack | Admin | Oct 29, 2025 | Permanent | 47 attempts | 🇺🇸 USA | Actions
+- 10.0.0.50 | Spam Bot | Moderator | Oct 28, 2025 | 7 days | 12 attempts | 🇨🇳 China | Actions
+
+**Empty state:** "No IP addresses banned"
+
+**Section 3: Ban Statistics**
+
+Cards showing:
+- Total IPs Banned: X
+- Permanent Bans: X
+- Temporary Bans: X
+- Bans This Month: X
+
+***
+
+## PERFORMANCE METRICS TAB CONTENT
+
+When "Performance Metrics" tab is selected:
+
+**Section 1: Security Health Score**
+
+Large card displaying:
+- **Security Health Score**: 95/100
+- Progress ring/circle showing score
+- Color: Green (>80), Yellow (60-80), Red (<60)
+- Breakdown:
+  - 2FA Adoption: 75%
+  - Recent Threats: Low
+  - Response Time: Excellent
+  - System Patches: Up to date
+
+**Section 2: Metrics Grid**
+
+Six metric cards:
+
+Card 1: **Events This Week**
+- Count of security events (last 7 days)
+- Trend vs previous week
+
+Card 2: **Threats Blocked**
+- Auto-blocked threats count
+- Success rate percentage
+
+Card 3: **2FA Adoption**
+- Percentage of users with 2FA enabled
+- Progress bar
+
+Card 4: **Failed Logins**
+- Count of failed login attempts
+- Red if abnormally high
+
+Card 5: **Avg Response Time**
+- Average time to resolve critical events
+- Target: < 1 hour
+
+Card 6: **Active IP Bans**
+- Count of currently banned IPs
+
+**Section 3: Threat Detection Chart**
+
+Line chart showing:
+- Threats detected over last 30 days
+- X-axis: Dates
+- Y-axis: Threat count
+- Color-coded by severity (critical, warning, info)
+
+**Section 4: Top Threat Types**
+
+Bar chart or table showing:
+- Most common threat types
+- Count of each type
+- Percentage of total
+
+***
+
+## PART 3: MODALS AND POPUPS
+
+### Create These Popup Windows:
+
+**Modal 1: View Event Details**
+
+When viewing security event:
+- Title: "Security Event Details"
+- Complete event information:
+  - Event ID
+  - Timestamp (full date/time)
+  - Event type
+  - Severity level
+  - Full description
+  - IP address (with copy button)
+  - User agent
+  - Request URL
+  - Request method
+  - Request headers
+  - Request payload (if applicable)
+  - Affected user (if applicable)
+  - Similar events (from same IP)
+- Action buttons:
+  - Mark as Resolved
+  - Mark as False Positive
+  - Ban This IP
+  - Block User
+  - Close
+
+**Modal 2: Ban IP Address**
+
+When clicking "+ Ban IP Address":
+- Title: "Ban IP Address"
+- Fields:
+  - IP Address (text input) - required
+    - Validate IP format
+  - Reason (dropdown) - required
+    - Brute Force Attack
+    - SQL Injection
+    - XSS Attempt
+    - Spam Bot
+    - DDoS Attack
+    - Malicious Activity
+    - Other
+  - Duration (radio buttons):
+    - Permanent
+    - Temporary (date picker shows)
+  - Expiration Date (if temporary)
+    - Date picker
+  - Notes (text area, optional)
+  - Block all traffic (checkbox, checked by default)
+- Red button: "Ban IP Address"
+- Cancel button
+
+**Modal 3: Unban IP Confirmation**
+
+When unbanning IP:
+- Warning: "Unban IP Address?"
+- Text: "This will allow traffic from [IP] again"
+- Show ban reason and date
+- Checkbox: "I confirm this IP is safe"
+- Button: "Unban IP"
+- Cancel button
+
+**Modal 4: Configure Security Alerts**
+
+When configuring alerts:
+- Title: "Security Alert Settings"
+- Sections:
+  
+  **Alert Triggers:**
+  - Failed login threshold (number input)
+    - Alert after X failed attempts
+  - Critical event alert (toggle on/off)
+  - New IP ban notification (toggle)
+  - Suspicious activity alert (toggle)
+  
+  **Notification Channels:**
+  - Email notifications (toggle)
+    - Email addresses (comma-separated)
+  - Slack webhook (text input for URL)
+  - Discord webhook (text input for URL)
+  - SMS alerts (toggle, phone number)
+  
+  **Alert Frequency:**
+  - Real-time (immediate)
+  - Hourly digest
+  - Daily digest
+
+- Save Settings button
+- Cancel button
+
+**Modal 5: Export Security Report**
+
+When exporting:
+- Title: "Export Security Report"
+- Date range selector (from - to)
+- Include sections (checkboxes):
+  - Security events summary
+  - IP bans list
+  - Failed login analysis
+  - Threat detection results
+  - Performance metrics
+  - Recommendations
+- Format (dropdown):
+  - PDF
+  - CSV
+  - JSON
+- Button: "Generate Report"
+- Shows progress bar during generation
+- Download link appears when ready
+
+**Modal 6: Threat Detection Scan**
+
+When running manual scan:
+- Title: "Threat Detection Scan"
+- Shows scan progress:
+  - Scanning logs... (progress bar)
+  - Analyzing patterns...
+  - Checking vulnerabilities...
+- Results display:
+  - Threats found: X
+  - List of detected threats
+  - Severity levels
+  - Recommended actions
+- Actions:
+  - Auto-ban suspicious IPs
+  - Generate detailed report
+  - Close
+
+***
+
+## PART 4: REAL-TIME MONITORING
+
+### Live Event Stream:
+
+**Real-Time Feed:**
+- WebSocket connection to backend
+- New events appear instantly at top of table
+- Sound alert for critical events (toggleable)
+- Browser notification for critical threats
+- Highlight new events (fade in animation)
+
+### Auto-Refresh:
+
+**Automatic Updates:**
+- Table refreshes every 30 seconds
+- Metrics update every 60 seconds
+- Show "Updated X seconds ago"
+- Pause button to stop auto-refresh
+
+***
+
+## PART 5: THREAT DETECTION FEATURES
+
+### Automated Threat Detection:
+
+**Pattern Recognition:**
+- Detect brute force: 5+ failed logins in 5 minutes
+- Detect SQL injection: Pattern matching in URLs/forms
+- Detect XSS: Script tags in user input
+- Detect DDoS: 100+ requests/second from single IP
+- Detect scraping: Rapid page visits
+
+**Auto-Ban System:**
+- Automatically ban IPs after X critical events
+- Configurable thresholds
+- Whitelist trusted IPs (admin IPs)
+- Log all auto-bans
+
+### Machine Learning (Optional):
+
+**Anomaly Detection:**
+- Learn normal user behavior patterns
+- Detect unusual activity
+- Flag suspicious accounts
+- Predict potential threats
+
+***
+
+## PART 6: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Tabs scroll horizontally
+- Table converts to cards
+- Each event as expandable card
+- Filters stack vertically
+- Quick stats in grid (2 columns)
+
+### On Tablets:
+- Compact table view
+- Some columns hidden
+- Stats cards 2 per row
+- Charts responsive width
+
+### On Computers:
+- Full table with all columns[1]
+- All filters visible[1]
+- Charts side by side
+- All features accessible
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See three tabs: Security Events, IP Bans, Performance Metrics[1]
+✅ View security events table[1]
+✅ See table columns: Timestamp, Type, Severity, Description, Status, Actions[1]
+✅ Filter by type dropdown[1]
+✅ Filter by severity dropdown[1]
+✅ Filter by status dropdown[1]
+✅ View empty state: "No security events found"[1]
+✅ See title "Security Events (0)"[1]
+✅ Monitor real-time security events
+✅ View detailed event information
+✅ Filter events by type, severity, status
+✅ Ban IP addresses manually
+✅ View all banned IPs with details
+✅ Unban IP addresses
+✅ See security metrics and health score
+✅ View threat detection charts
+✅ Configure security alerts
+✅ Export security reports
+✅ Run manual threat detection scans
+✅ See real-time threat updates
+✅ Get critical event notifications
+✅ Mark events as resolved/false positive
+✅ Works on phone, tablet, and computer
+
+**The admin now has enterprise-grade security monitoring and threat protection for the YoForex forum!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/dbc3d119-0522-450c-a33b-fb076810c26d/image.jpg?AWSAccessKeyId=ASIA2F3EMEYE7YRRWFZU&Signature=zwKV6gAi0Vz0mSuaMrycDrZICBo%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECAaCXVzLWVhc3QtMSJIMEYCIQCCeacEzvQ%2BjEsJHVSz6n2jxlZyK2k7c8hSwOrmbR%2FqfQIhALn%2BjqLn%2FK6HIbjsmIhkK2%2BMrrezVl0J%2BAt9ZPNzy%2BbxKvwECNj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQARoMNjk5NzUzMzA5NzA1Igz%2F0z2bQ0eBTXygAdgq0AQHjjZFa0ADbRpfgmH1BeGi6qPxbdH7XPr00QeeO3U80M8jbqT72dKS3GXnjtEhqkuaBlicgedYer%2BRLugfXok5JraV5JZ8xRtLmIsjeLZr1L4hyh%2B3ErQz9S5sz45wmdrYR2yh4p12%2BrhrbXMuUeMSePpwKaBNgQ6Ok%2Fwn6PtZn6lb9hs0xMM3r5z9IVMvgk41VMscfTmHS%2FoE0uVvmW4tERgFYGuoSVlbAC%2FvQixtLab1eJ4pfcZ6iHumAAmis4MaD4e3Sb%2F2IcOMDSbuslrSDT2CgVaCdL%2Bc2owbB%2FrRJmdvWWa0L24hGe%2FuWKnaOqeJDASYUcHB60%2BPZ3jGds058lDqWzDtuqG1JhYh8Y8pYG6lcCsm3WabONq%2Bew5B5O9QthnCgWT7gP2bPgc1zXTbvBcuK7B3XubNb7KuAuU9VZlThwQBgNMxZSG4raoKWAxnYrEDVyYC7adBE9jxeryA5JuiRcMZWHiMQXvkHj%2B60ZCo0MfS8OggZ0goLkse%2BaJJH4K5ODbfkzosvCtufDcONvjZfE2qc%2FZ5YO7EfIOGQBdsn4O2X2SWdTZ2UrOxXyduKmKdZbJx4wzq53S80vpbTy6e8ll8OnA370aCd%2FJhy%2B05%2BEyICkF6lx%2FlmMpBMakbSYn6tabidPopq9632axYHQFPYJx81YUGmYV%2BKeZyEVYG7MHaq%2BagdPKgnndhsd6P6Q5I1EDjFOHNxR7hX9i%2BBM9AF1uWqixwvpwFJWpURoTDFzVwr4FUzlQ58vkmKDXvg0iFXLULqk9EWy1MSyVYMMngiMgGOpcBmel21zxjqLY%2B6JEaoUGf1UnOieSC1aP0EhFbb%2BVqTfLb8TyuTMFv3XqCPTpdwCPL36nVwp1Fj6GiFVfw20TNqXR3TMM4rLCtXDfmsHdmpHYN3yp9rIdRW6NrBXDmQGeCCPsfiUP19M%2FA%2BNa%2FoLhrcAcTxeXQp2NENP7PnxGgDTBZEgHqrRAyeiZ22hFlO5qzT2lMEoG8FQ%3D%3D&Expires=1761753669)

@@ -1,0 +1,622 @@
+## COMPLETE INSTRUCTIONS: Build the Support & Tickets Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating a Support & Tickets page for YoForex forum admin panel. This page helps admins manage user support requests, track support tickets, respond to inquiries, monitor response times, and measure customer satisfaction.
+
+---
+
+## PART 1: BACKEND (Server Side - Support Ticket Management)
+
+### What the Backend Does
+The backend manages support tickets, tracks conversations, calculates response/resolution times, stores ticket metadata, and provides analytics on support performance.
+
+### Create These Files:
+
+**File 1: Support Tickets Routes (routes/support.js)**
+
+Create URLs for ticket management:
+
+1. `/api/support/tickets` - Get all support tickets
+2. `/api/support/tickets/:id` - Get single ticket details
+3. `/api/support/tickets/create` - Create new ticket (admin on behalf of user)
+4. `/api/support/tickets/:id/reply` - Add reply to ticket
+5. `/api/support/tickets/:id/status` - Update ticket status
+6. `/api/support/tickets/:id/priority` - Update ticket priority
+7. `/api/support/tickets/:id/assign` - Assign ticket to admin
+8. `/api/support/tickets/:id/close` - Close ticket
+9. `/api/support/tickets/:id/reopen` - Reopen closed ticket
+10. `/api/support/tickets/stats` - Get support statistics
+11. `/api/support/tickets/export` - Export tickets to CSV
+12. `/api/support/categories` - Get ticket categories
+13. `/api/support/canned-responses` - Get pre-written responses
+
+**File 2: Support Service (services/supportService.js)**
+
+Functions that handle support tickets:
+
+**Function 1: Get All Tickets**
+- Query `support_tickets` table
+- For each ticket include:
+  - Ticket ID/Number (e.g., #1001, #1002)
+  - User (username, profile picture)
+  - Subject/Title
+  - Category (Technical, Billing, Account, Feature Request)
+  - Status:
+    - Open (new ticket)
+    - In Progress (admin replied)
+    - Waiting for User (awaiting user response)
+    - Resolved (issue fixed)
+    - Closed (ticket closed)
+  - Priority:
+    - Low (can wait)
+    - Medium (normal priority)
+    - High (important)
+    - Urgent (critical issue)
+  - Created Date
+  - Last Reply Date
+  - Assigned To (admin username)
+  - Reply Count
+  - User Satisfaction Rating (if completed)
+- Sort options: Newest, Oldest, Priority, Status
+- Filter by: Status, Priority, Category, Assigned Admin
+- Pagination: 20 tickets per page
+
+**Function 2: Get Ticket Details**
+- Find ticket by ID
+- Return complete ticket data:
+  - All basic fields from Function 1
+  - Full conversation thread (all messages)
+  - Each message includes:
+    - Sender (user or admin)
+    - Message text
+    - Timestamp
+    - Attachments (if any)
+  - Ticket history (status changes, priority changes, assignments)
+  - Time tracking:
+    - Time to first response
+    - Time to resolution
+    - Total time spent
+  - User information (full profile)
+
+**Function 3: Create Ticket**
+- Insert new ticket in database
+- Required: User ID, subject, message, category
+- Optional: Priority, assigned admin
+- Set status to "Open"
+- Set created_at timestamp
+- Generate unique ticket number
+- Send notification to user
+- Send notification to assigned admin (if assigned)
+- Return new ticket
+
+**Function 4: Reply to Ticket**
+- Find ticket by ID
+- Add new message to conversation
+- Set replied_by to admin ID
+- Set replied_at timestamp
+- Update ticket status to "In Progress"
+- Send notification to ticket creator
+- Calculate response time (if first response)
+- Return updated ticket
+
+**Function 5: Update Ticket Status**
+- Find ticket by ID
+- Update status field
+- Log status change in ticket history
+- Send notification if status changed to "Resolved" or "Closed"
+- If resolved, prompt user for satisfaction rating
+- Return updated ticket
+
+**Function 6: Update Priority**
+- Find ticket by ID
+- Update priority level
+- Log priority change
+- Notify assigned admin if escalated to Urgent
+- Return updated ticket
+
+**Function 7: Assign Ticket**
+- Find ticket by ID
+- Set assigned_to field to admin ID
+- Send notification to assigned admin
+- Log assignment in ticket history
+- Return updated ticket
+
+**Function 8: Close Ticket**
+- Find ticket by ID
+- Set status to "Closed"
+- Set closed_at timestamp
+- Set closed_by to admin ID
+- Calculate total resolution time
+- Send closure notification to user
+- Request satisfaction rating
+- Return closed ticket
+
+**Function 9: Reopen Ticket**
+- Find closed ticket
+- Set status back to "Open"
+- Set reopened_at timestamp
+- Log reopen action
+- Notify assigned admin
+- Return reopened ticket
+
+**Function 10: Get Support Statistics**
+- Calculate:
+  - **Open Tickets**: Count of open tickets
+  - **Avg Response Time**: Average time to first admin response
+  - **Avg Resolution Time**: Average time to close ticket
+  - **Satisfaction Score**: Average user rating (0-100%)
+  - Tickets by status (open, in progress, resolved, closed)
+  - Tickets by priority
+  - Tickets by category
+  - Busiest support hours
+  - Top admin responders
+  - User satisfaction breakdown (5-star ratings)
+- Compare to previous period
+- Return all statistics
+
+**Function 11: Export Tickets**
+- Get all tickets (or filtered set)
+- Format as CSV with columns:
+  - Ticket #, User, Subject, Status, Priority, Created, Resolved, Resolution Time
+- Return downloadable CSV file
+
+**Function 12: Get Categories**
+- Return predefined ticket categories:
+  - Technical Issue
+  - Billing/Payment
+  - Account Problem
+  - Feature Request
+  - Bug Report
+  - General Inquiry
+  - Complaint
+  - Other
+
+**Function 13: Get Canned Responses**
+- Query `canned_responses` table
+- Pre-written response templates for common issues:
+  - "Thank you for contacting support..."
+  - "Your account has been verified..."
+  - "We're investigating this issue..."
+  - "This feature is coming soon..."
+- Return all templates for quick replies
+
+---
+
+## PART 2: FRONTEND (Display Side - Support Interface)
+
+### What the Frontend Does
+Shows support ticket dashboard with stats, ticket list, filtering, and ticket detail view for conversations.
+
+### Create These Files:
+
+**File 1: Main Support & Tickets Page (app/admin/support/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "Support & Tickets"[1]
+
+**Section 2: Four Statistics Cards at Top**[1]
+
+Card 1: **Open Tickets**[1]
+- Title: "Open Tickets"
+- Big number: "0"[1]
+- Small text below: "Awaiting response"[1]
+- Red color if > 10 tickets
+
+Card 2: **Avg Response Time**[1]
+- Title: "Avg Response Time"
+- Big number: "0h"[1]
+- Small text below: "Time to first response"[1]
+- Green if < 2 hours, yellow if 2-6 hours, red if > 6 hours
+
+Card 3: **Avg Resolution Time**[1]
+- Title: "Avg Resolution Time"
+- Big number: "0h"[1]
+- Small text below: "Time to close"[1]
+- Green if < 24 hours, yellow if 24-72 hours
+
+Card 4: **Satisfaction Score**[1]
+- Title: "Satisfaction Score"
+- Big number: "0%"[1]
+- Small text below: "User satisfaction"[1]
+- Star rating display
+- Green if > 80%, yellow if 60-80%, red if < 60%
+
+**Section 3: Filters Bar**[1]
+
+Title: "Filters"
+
+Three dropdown filters side by side:
+
+Dropdown 1: **All Status**[1]
+- Options:
+  - All Status
+  - Open
+  - In Progress
+  - Waiting for User
+  - Resolved
+  - Closed
+
+Dropdown 2: **All Priorities**[1]
+- Options:
+  - All Priorities
+  - Low
+  - Medium
+  - High
+  - Urgent
+
+Dropdown 3: **All Categories**[1]
+- Options:
+  - All Categories
+  - Technical Issue
+  - Billing/Payment
+  - Account Problem
+  - Feature Request
+  - Bug Report
+  - General Inquiry
+
+**Section 4: Support Tickets Table**[1]
+
+Title: "Support Tickets (0)"[1]
+
+Table with these columns:
+
+Column 1: **Ticket #**[1]
+- Ticket number (e.g., #1001)
+- Click to view details
+- Bold for unread/new tickets
+
+Column 2: **User**[1]
+- Username with profile picture
+- Clickable to view user profile
+
+Column 3: **Subject**[1]
+- Ticket title/subject
+- Truncate if too long
+- Click to view ticket
+
+Column 4: **Status**[1]
+- Status badge
+- Color coded:
+  - Open (yellow)
+  - In Progress (blue)
+  - Waiting for User (orange)
+  - Resolved (green)
+  - Closed (gray)
+
+Column 5: **Priority**[1]
+- Priority badge
+- Color coded:
+  - Low (gray)
+  - Medium (blue)
+  - High (orange)
+  - Urgent (red)
+
+Column 6: **Created**[1]
+- Date/time ticket created
+- Format: "Oct 29, 2025"
+- Show "X hours ago" on hover
+
+Column 7: **Actions**[1]
+- Three-dot menu button
+- Dropdown with options:
+  - View Details
+  - Reply
+  - Change Status
+  - Change Priority
+  - Assign To
+  - Close Ticket
+  - Delete
+
+**Table Features:**
+- Pagination (20 tickets per page)
+- Sort by: Date, Priority, Status
+- Empty state: "No tickets found"[1]
+- Highlight urgent tickets (red border/background)
+
+**Section 5: Quick Actions** (Above filters)
+
+Buttons:
+- "+ Create Ticket" (for admin to create on behalf of user)
+- "Export Tickets" (download CSV)
+- "Refresh" (reload tickets)
+
+***
+
+## PART 3: TICKET DETAIL VIEW
+
+### When Clicking a Ticket:
+
+**Opens Modal or Side Panel:**
+
+**Header Section:**
+- Ticket number (large): #1001
+- Status badge (current status)
+- Priority badge (current priority)
+- Created date
+- Assigned to: [Admin Name] or "Unassigned"
+- Close button (X)
+
+**User Information Card:**
+- User profile picture
+- Username
+- Email
+- Member since
+- Total tickets submitted
+- Button: "View Profile"
+
+**Ticket Details:**
+- Subject/Title (editable)
+- Category (dropdown, editable)
+- Status (dropdown, editable)
+- Priority (dropdown, editable)
+
+**Conversation Thread:**
+
+Shows all messages chronologically:
+
+**User Message (left-aligned):**
+- User avatar
+- Username
+- Message text
+- Timestamp
+- Attachments (if any)
+
+**Admin Reply (right-aligned):**
+- Admin avatar
+- Admin name
+- Message text
+- Timestamp
+- "Edited" indicator if modified
+
+**Reply Box (at bottom):**
+- Rich text editor
+- File attachment button
+- Canned responses button (quick insert templates)
+- Internal note toggle (visible only to admins)
+- Send button (blue)
+- Close ticket checkbox (close after sending)
+
+**Ticket Actions (sidebar or top):**
+- Change Status dropdown
+- Change Priority dropdown
+- Assign To dropdown (list of admins)
+- Add Internal Note button
+- Close Ticket button (red)
+- Delete Ticket button (requires confirmation)
+
+**Ticket Timeline (optional sidebar):**
+- Shows ticket history:
+  - "Ticket created by User123"
+  - "Admin replied (2 hours later)"
+  - "Status changed to In Progress"
+  - "Priority escalated to High"
+  - "Assigned to Admin2"
+  - "Ticket resolved (24 hours later)"
+
+***
+
+## PART 4: MODALS AND POPUPS
+
+### Create These Popup Windows:
+
+**Modal 1: Create New Ticket**
+
+When clicking "+ Create Ticket":
+- Title: "Create Support Ticket"
+- Fields:
+  - Select User (dropdown or search)
+  - Subject (text input) - required
+  - Category (dropdown) - required
+  - Priority (dropdown) - default: Medium
+  - Message (rich text editor) - required
+  - Attachments (file upload)
+  - Assign To (dropdown, optional)
+- Button: "Create Ticket" (blue)
+- Cancel button
+
+**Modal 2: Change Status**
+
+When changing status:
+- Title: "Update Ticket Status"
+- Current status shown
+- Radio buttons for new status:
+  - Open
+  - In Progress
+  - Waiting for User
+  - Resolved
+  - Closed
+- If changing to "Resolved" or "Closed":
+  - Text area: Resolution notes
+  - Checkbox: "Send satisfaction survey to user"
+- Update Status button
+- Cancel button
+
+**Modal 3: Assign Ticket**
+
+When assigning:
+- Title: "Assign Ticket"
+- Dropdown: Select admin from list
+- Checkbox: "Notify admin by email"
+- Text area: Assignment notes (optional)
+- Assign button
+- Cancel button
+
+**Modal 4: Close Ticket Confirmation**
+
+When closing:
+- Warning: "Close Ticket?"
+- Text: "This will mark the ticket as resolved"
+- Text area: Resolution summary (optional)
+- Checkbox: "Request user feedback"
+- Checkbox: "Send resolution email to user"
+- Button: "Close Ticket"
+- Cancel button
+
+**Modal 5: Canned Responses**
+
+When clicking canned responses:
+- Title: "Quick Responses"
+- List of pre-written templates:
+  - "Thanks for contacting us..."
+  - "We're looking into this..."
+  - "Your issue has been resolved..."
+  - "This feature is coming soon..."
+  - (each with preview)
+- Click template to insert into reply box
+- "Edit Templates" button (manage canned responses)
+- Close button
+
+**Modal 6: Satisfaction Survey (for users)**
+
+When ticket resolved, user receives:
+- Title: "How was your support experience?"
+- 5-star rating selector
+- Text area: Additional feedback (optional)
+- Submit button
+
+Admin sees results in ticket details.
+
+***
+
+## PART 5: STATISTICS & ANALYTICS
+
+### Support Analytics Dashboard:
+
+**Charts to Display:**
+
+**Chart 1: Tickets Over Time**
+- Line chart showing daily ticket count
+- Last 30 days
+- Shows trends (increasing/decreasing)
+
+**Chart 2: Tickets by Status**
+- Pie chart showing distribution:
+  - Open: 30%
+  - In Progress: 40%
+  - Resolved: 20%
+  - Closed: 10%
+
+**Chart 3: Response Time Trend**
+- Line chart showing average response time over time
+- Target line at 2 hours
+- Shows if improving or degrading
+
+**Chart 4: Tickets by Category**
+- Bar chart showing count per category
+- Identifies most common issues
+
+**Performance Metrics:**
+- First response time (average)
+- Resolution time (average)
+- Tickets resolved today
+- Tickets closed this week
+- Backlog size (open tickets)
+- SLA compliance (% resolved within target time)
+
+**Admin Performance:**
+- Table showing each admin:
+  - Admin name
+  - Tickets handled
+  - Avg response time
+  - Avg resolution time
+  - Satisfaction score
+- Leaderboard of top performers
+
+***
+
+## PART 6: AUTOMATION FEATURES
+
+### Auto-Assignment:
+
+**Round-Robin Assignment:**
+- Automatically assign new tickets to admins
+- Rotate through available admins
+- Balance workload evenly
+
+**Smart Assignment:**
+- Assign based on category expertise
+- Assign to admin with lowest workload
+- Assign urgent tickets to senior admins
+
+### Auto-Responses:
+
+**Acknowledgment Email:**
+- Auto-send when ticket created
+- "We received your ticket #1001"
+- Expected response time
+
+**Reminder Emails:**
+- Send to user if waiting for their response
+- Send to admin if ticket unanswered for X hours
+
+### SLA Management:
+
+**Service Level Agreements:**
+- Set target response time (e.g., 2 hours)
+- Set target resolution time (e.g., 24 hours)
+- Alert admin if targets exceeded
+- Track SLA compliance rate
+
+***
+
+## PART 7: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Stats cards stack vertically (one per row)
+- Filters stack vertically
+- Table converts to cards
+- Each ticket as expandable card
+- Ticket detail full screen
+
+### On Tablets:
+- Stats show 2 per row
+- Compact table view
+- Some columns hidden
+- Ticket detail modal smaller
+
+### On Computers:
+- All 4 stats in one row[1]
+- Full table with all columns[1]
+- Ticket detail side panel or large modal
+- All features visible
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See four stat cards at top[1]
+✅ View open tickets count (0)[1]
+✅ See avg response time (0h)[1]
+✅ See avg resolution time (0h)[1]
+✅ See satisfaction score (0%)[1]
+✅ Filter by status dropdown[1]
+✅ Filter by priority dropdown[1]
+✅ Filter by category dropdown[1]
+✅ View support tickets table[1]
+✅ See table columns: Ticket #, User, Subject, Status, Priority, Created, Actions[1]
+✅ View empty state: "No tickets found"[1]
+✅ See title "Support Tickets (0)"[1]
+✅ Create new support tickets
+✅ View ticket details with full conversation
+✅ Reply to tickets with rich text
+✅ Use canned responses for quick replies
+✅ Change ticket status
+✅ Change ticket priority
+✅ Assign tickets to admins
+✅ Close tickets with resolution notes
+✅ Reopen closed tickets
+✅ Track response and resolution times
+✅ View satisfaction ratings
+✅ Export tickets to CSV
+✅ See performance analytics
+✅ Auto-assign tickets
+✅ Get SLA alerts
+✅ Works on phone, tablet, and computer
+
+**The admin now has a complete support ticket management system to provide excellent customer service on YoForex forum!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/3f4822a4-e84b-49af-a4a3-8c350596b5be/image.jpg?AWSAccessKeyId=ASIA2F3EMEYEWMWNYKBW&Signature=a42daXyV0K959C5DSbOeJCO4IiI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECAaCXVzLWVhc3QtMSJIMEYCIQDqI%2FphwKzXZHCSSjhZ7B9O8mYaKUjo0LUDAzBpPovZUgIhAMmkjzpzsqSCEFkY1K5%2FHbAoafE%2FOoQkkBwCUodfakUvKvwECNn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQARoMNjk5NzUzMzA5NzA1IgxDXenqqLTHJeH2cyUq0AT%2BfH6mv0h0Y30uDF08LgH7s%2Fq6z0srrc5wV165w0aOphs1Hj4BQ0EPYc%2FWpeKLCtRmmDerDjn0iKEUdZsWaBFzUEnirvsNQpdOyHz2LhVm%2F18zvV77mUZI9IDJ2Vd4M%2BSM%2F2Xo1jUzDy5sOmVzvzJ9ZX1Y6JdFHVr%2BrKZ6Q8sHN3YXayb2ynecFYt3o6FCz%2BUogtfyWivAQJg6Re3pSujc535MGGBFaAw7Z3jHgzqj4bVSY%2FXZ8nCkXEBMMQZBZzEarPopox5XoDeWBcnVrTRCnQAidzpHE4AQhIhuxvJckFX8kgSzOylh%2BzceF5bcniy6m2jiYNPlp4Hg%2FaQbkYQkf5%2B%2FocXQ%2FAIO4RBpZIcDI%2F8L8kv2D82CBM%2Fj9KhgosjkE0Xvyv4EbCbrotS6H7ExCnocaHhlsBK9xPoivM9s9vukiD5ck7yRTTLzLz1HGlCqcZjeou1Jaenb5VFVoS0SEtVYpDjhXGjT29GQG07VBWgK%2B%2FrFoeyz6Az91kMN3Z0uMLD5xv%2BiLkbNl8jpRwAfHy0KkFn5MtGqTyesXDXO0xwxvVjGXTsjf0duMCBKftBhRHcl%2BSNQ5lMnN04UjWUaXzAd1QJ%2BTiKIzEX0lFs3p3VBbWNDYA%2BJPZaxLF1UXDy2biCa7aFyf8tYbOvf%2Bk7J403LBIpdtjiFbeZ%2BaTT%2FblOp2d7L5ROeRh0JPVwuWUxkzsccsxxWfRQo%2BUDmQPIzGTdaW7PbQBzj87ywhuHN0jbDJtXM%2BmcPpXK%2BI7XhgxhzLtzPC3Ob4W%2BSoOF0Rf2kMPDoiMgGOpcByG0js7nRTFBeItwfixZCwVq%2FyJnIj9wgg1A1XUJpRB46%2FjMcY3opZ8aDxrjcy0YW5RtdiyJmflrx6%2BptmfG9uN1qVUCDhfXC1jIdQPNAcOEa4YwKFDHV11OUb9gdzVO4M5YBziLAzSWKDN9t0JDcgHhnAW72rWThwr5WIADE0aSxN9XnEWwYonHjVWbJN3ueoEq5RppjwA%3D%3D&Expires=1761753795)
