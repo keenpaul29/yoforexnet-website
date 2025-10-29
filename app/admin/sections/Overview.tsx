@@ -49,7 +49,8 @@ interface ContentTrendDataPoint {
 
 export default function AdminOverview() {
   const { data: statsRaw, isLoading: statsLoading } = useQuery<OverviewStats>({
-    queryKey: ["/api/admin/overview/stats"]
+    queryKey: ["/api/admin/overview/stats"],
+    refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   const stats: OverviewStats = statsRaw || {
@@ -60,19 +61,22 @@ export default function AdminOverview() {
   };
 
   const { data: activityFeedRaw, isLoading: activityLoading } = useQuery<ActivityFeedItem[]>({
-    queryKey: ["/api/admin/overview/activity-feed"]
+    queryKey: ["/api/admin/overview/activity-feed"],
+    refetchInterval: 15000, // Refresh every 15 seconds (more frequent for activity)
   });
 
   const activityFeed: ActivityFeedItem[] = Array.isArray(activityFeedRaw) ? activityFeedRaw : [];
 
   const { data: userGrowthRaw, isLoading: growthLoading } = useQuery<UserGrowthDataPoint[]>({
-    queryKey: ["/api/admin/overview/user-growth"]
+    queryKey: ["/api/admin/overview/user-growth"],
+    refetchInterval: 60000, // Refresh every 60 seconds (charts less critical)
   });
 
   const userGrowth: UserGrowthDataPoint[] = Array.isArray(userGrowthRaw) ? userGrowthRaw : [];
 
   const { data: contentTrendRaw, isLoading: trendLoading } = useQuery<ContentTrendDataPoint[]>({
-    queryKey: ["/api/admin/overview/content-trend"]
+    queryKey: ["/api/admin/overview/content-trend"],
+    refetchInterval: 60000, // Refresh every 60 seconds (charts less critical)
   });
 
   const contentTrend: ContentTrendDataPoint[] = Array.isArray(contentTrendRaw) ? contentTrendRaw : [];

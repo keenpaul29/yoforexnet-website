@@ -1,381 +1,30 @@
-[00:00:01.689] Server  LOG      ✓ Ready in 1227ms
-[00:00:01.691] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:02.387] Server  LOG      ✓ Ready in 1765ms
+[00:00:02.392] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:05.008] Server  LOG      ○ Compiling /admin/[...section] ...
-[00:00:18.449] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.466] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.466] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:18.469] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.470] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:18.471] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.471] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:18.784] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.856] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.857] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:18.858] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.858] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:18.861] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.861] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:18.902] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.902] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:18.904] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.904] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:18.906] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.906] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:18.936] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.936] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:18.940] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.940] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:18.941] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.941] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:23.932] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:26.197] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.tsx">
-                      <SegmentTrieNode>
-                      <link>
-                      <script>
-                      <script>
-                      <script>
-                      <RootLayout>
-                        <html lang="en" suppressHydrationWarning={true}>
-                          <head>
-                            <script>
-                            <script
-                              dangerouslySetInnerHTML={{
-+                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
--                               __html: ""
-                              }}
--                             src="/__replco/static/devtools/injected.js"
--                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
-                            >
-                          ...
-                            <div className="min-h-scre...">
-                              ...
-                                <Primitive.button.Slot type="button" aria-haspopup="dialog" aria-expanded={false} ...>
-                                  <Primitive.button.SlotClone type="button" aria-haspopup="dialog" aria-expanded={false} ...>
-                                    <_c variant="ghost" size="icon" className="md:hidden" data-testid="button-menu" ...>
-                                      <button
-                                        className={"inline-flex items-center justify-center gap-2 whitespace-nowrap r..."}
-                                        ref={function}
-                                        data-testid="button-menu"
-                                        type="button"
-                                        aria-haspopup="dialog"
-                                        aria-expanded={false}
-+                                       aria-controls="radix-_R_j5bnalb_"
--                                       aria-controls="radix-_R_2cpbnalb_"
-                                        data-state="closed"
-                                        onClick={function handleEvent}
-                                      >
-                              <StatsBar>
-                              <main className="container ...">
-                                <div className="grid grid-...">
-                                  <aside>
-                                  ...
-                                    <div dir="ltr" data-orientation="horizontal" className="w-full" ref={null}>
-                                      ...
-                                        <div role="tablist" aria-orientation="horizontal" className="h-10 items..." ...>
-                                          ...
-                                            <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                              <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                                <Primitive.button type="button" role="tab" aria-selected={true} ...>
-                                                  <button
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={true}
-+                                                   aria-controls="radix-_R_16dbnalb_-content-new"
--                                                   aria-controls="radix-_R_4ppbnalb_-content-new"
-                                                    data-state="active"
-                                                    data-disabled={undefined}
-                                                    disabled={false}
-+                                                   id="radix-_R_16dbnalb_-trigger-new"
--                                                   id="radix-_R_4ppbnalb_-trigger-new"
-                                                    className="inline-flex items-center justify-center whitespace-nowr..."
-                                                    data-testid="tab-new"
-                                                    onMouseDown={function}
-                                                    onKeyDown={function}
-                                                    onFocus={function}
-                                                    tabIndex={-1}
-                                                    data-orientation="horizontal"
-                                                    data-radix-collection-item=""
-                                                    ref={function}
-                                                  >
-+                                                   New
-                                          ...
-                                            <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                              <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                                <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                                  <button
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={false}
-+                                                   aria-controls="radix-_R_16dbnalb_-content-trending"
--                                                   aria-controls="radix-_R_4ppbnalb_-content-trending"
-                                                    data-state="inactive"
-                                                    data-disabled={undefined}
-                                                    disabled={false}
-+                                                   id="radix-_R_16dbnalb_-trigger-trending"
--                                                   id="radix-_R_4ppbnalb_-trigger-trending"
-                                                    className="inline-flex items-center justify-center whitespace-nowr..."
-                                                    data-testid="tab-trending"
-                                                    onMouseDown={function}
-                                                    onKeyDown={function}
-                                                    onFocus={function}
-                                                    tabIndex={-1}
-                                                    data-orientation="horizontal"
-                                                    data-radix-collection-item=""
-                                                    ref={function}
-                                                  >
-+                                                   Trending
-                                          ...
-                                            <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                              <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                                <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                                  <button
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={false}
-+                                                   aria-controls="radix-_R_16dbnalb_-content-solved"
--                                                   aria-controls="radix-_R_4ppbnalb_-content-solved"
-                                                    data-state="inactive"
-                                                    data-disabled={undefined}
-                                                    disabled={false}
-+                                                   id="radix-_R_16dbnalb_-trigger-solved"
--                                                   id="radix-_R_4ppbnalb_-trigger-solved"
-                                                    className="inline-flex items-center justify-center whitespace-nowr..."
-                                                    data-testid="tab-solved"
-                                                    onMouseDown={function}
-                                                    onKeyDown={function}
-                                                    onFocus={function}
-                                                    tabIndex={-1}
-                                                    data-orientation="horizontal"
-                                                    data-radix-collection-item=""
-                                                    ref={function}
-                                                  >
-+                                                   Solved
-                                      <div className="px-5 py-1">
-                                        <_c4 value="new" className="mt-0">
-                                          <TabsContent ref={null} className="ring-offse..." value="new">
-                                            <Presence present={true}>
-                                              <Primitive.div data-state="active" data-orientation="horizontal" ...>
-                                                <div
-                                                  data-state="active"
-                                                  data-orientation="horizontal"
-                                                  role="tabpanel"
-+                                                 aria-labelledby="radix-_R_16dbnalb_-trigger-new"
--                                                 aria-labelledby="radix-_R_4ppbnalb_-trigger-new"
-                                                  hidden={false}
-+                                                 id="radix-_R_16dbnalb_-content-new"
--                                                 id="radix-_R_4ppbnalb_-content-new"
-                                                  tabIndex={0}
-                                                  className="ring-offset-background focus-visible:outline-none focus-v..."
-                                                  style={{animationDuration:"0s"}}
-                                                  ref={function}
-                                                >
-                                        <_c4 value="trending" className="mt-0">
-                                          <TabsContent ref={null} className="ring-offse..." value="trending">
-                                            <Presence present={false}>
-                                              <Primitive.div data-state="inactive" data-orientation="horizontal" ...>
-                                                <div
-                                                  data-state="inactive"
-                                                  data-orientation="horizontal"
-                                                  role="tabpanel"
-+                                                 aria-labelledby="radix-_R_16dbnalb_-trigger-trending"
--                                                 aria-labelledby="radix-_R_4ppbnalb_-trigger-trending"
-                                                  hidden={true}
-+                                                 id="radix-_R_16dbnalb_-content-trending"
--                                                 id="radix-_R_4ppbnalb_-content-trending"
-                                                  tabIndex={0}
-                                                  className="ring-offset-background focus-visible:outline-none focus-v..."
-                                                  style={{animationDuration:undefined}}
-                                                  ref={function}
-                                                >
-                                        <_c4 value="solved" className="mt-0">
-                                          <TabsContent ref={null} className="ring-offse..." value="solved">
-                                            <Presence present={false}>
-                                              <Primitive.div data-state="inactive" data-orientation="horizontal" ...>
-                                                <div
-                                                  data-state="inactive"
-                                                  data-orientation="horizontal"
-                                                  role="tabpanel"
-+                                                 aria-labelledby="radix-_R_16dbnalb_-trigger-solved"
--                                                 aria-labelledby="radix-_R_4ppbnalb_-trigger-solved"
-                                                  hidden={true}
-+                                                 id="radix-_R_16dbnalb_-content-solved"
--                                                 id="radix-_R_4ppbnalb_-content-solved"
-                                                  tabIndex={0}
-                                                  className="ring-offset-background focus-visible:outline-none focus-v..."
-                                                  style={{animationDuration:undefined}}
-                                                  ref={function}
-                                                >
-                                  ...
-                                    <div dir="ltr" data-orientation="horizontal" className="w-full" ref={null}>
-                                      ...
-                                        <div role="tablist" aria-orientation="horizontal" className="items-cent..." ...>
-                                          ...
-                                            <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                              <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                                <Primitive.button type="button" role="tab" aria-selected={true} ...>
-                                                  <button
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={true}
-+                                                   aria-controls="radix-_R_2fdbnalb_-content-contributors"
--                                                   aria-controls="radix-_R_9tpbnalb_-content-contributors"
-                                                    data-state="active"
-                                                    data-disabled={undefined}
-                                                    disabled={false}
-+                                                   id="radix-_R_2fdbnalb_-trigger-contributors"
--                                                   id="radix-_R_9tpbnalb_-trigger-contributors"
-                                                    className="inline-flex items-center justify-center whitespace-nowr..."
-                                                    data-testid="tab-contributors"
-                                                    onMouseDown={function}
-                                                    onKeyDown={function}
-                                                    onFocus={function}
-                                                    tabIndex={-1}
-                                                    data-orientation="horizontal"
-                                                    data-radix-collection-item=""
-                                                    ref={function}
-                                                  >
-+                                                   Helpful
-                                          ...
-                                            <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                              <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                                <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                                  <button
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={false}
-+                                                   aria-controls="radix-_R_2fdbnalb_-content-uploaders"
--                                                   aria-controls="radix-_R_9tpbnalb_-content-uploaders"
-                                                    data-state="inactive"
-                                                    data-disabled={undefined}
-                                                    disabled={false}
-+                                                   id="radix-_R_2fdbnalb_-trigger-uploaders"
--                                                   id="radix-_R_9tpbnalb_-trigger-uploaders"
-                                                    className="inline-flex items-center justify-center whitespace-nowr..."
-                                                    data-testid="tab-uploaders"
-                                                    onMouseDown={function}
-                                                    onKeyDown={function}
-                                                    onFocus={function}
-                                                    tabIndex={-1}
-                                                    data-orientation="horizontal"
-                                                    data-radix-collection-item=""
-                                                    ref={function}
-                                                  >
-+                                                   Uploads
-                                          ...
-                                            <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                              <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                                <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                                  <button
-                                                    type="button"
-                                                    role="tab"
-                                                    aria-selected={false}
-+                                                   aria-controls="radix-_R_2fdbnalb_-content-streaks"
--                                                   aria-controls="radix-_R_9tpbnalb_-content-streaks"
-                                                    data-state="inactive"
-                                                    data-disabled={undefined}
-                                                    disabled={false}
-+                                                   id="radix-_R_2fdbnalb_-trigger-streaks"
--                                                   id="radix-_R_9tpbnalb_-trigger-streaks"
-                                                    className="inline-flex items-center justify-center whitespace-nowr..."
-                                                    data-testid="tab-streaks"
-                                                    onMouseDown={function}
-                                                    onKeyDown={function}
-                                                    onFocus={function}
-                                                    tabIndex={-1}
-                                                    data-orientation="horizontal"
-                                                    data-radix-collection-item=""
-                                                    ref={function}
-                                                  >
-+                                                   Streaks
-                                      <_c4 value="contributors" className="mt-2">
-                                        <TabsContent ref={null} className="ring-offse..." value="contributors">
-                                          <Presence present={true}>
-                                            <Primitive.div data-state="active" data-orientation="horizontal" ...>
-                                              <div
-                                                data-state="active"
-                                                data-orientation="horizontal"
-                                                role="tabpanel"
-+                                               aria-labelledby="radix-_R_2fdbnalb_-trigger-contributors"
--                                               aria-labelledby="radix-_R_9tpbnalb_-trigger-contributors"
-                                                hidden={false}
-+                                               id="radix-_R_2fdbnalb_-content-contributors"
--                                               id="radix-_R_9tpbnalb_-content-contributors"
-                                                tabIndex={0}
-                                                className="ring-offset-background focus-visible:outline-none focus-vis..."
-                                                style={{animationDuration:"0s"}}
-                                                ref={function}
-                                              >
-                                      <_c4 value="uploaders" className="mt-2">
-                                        <TabsContent ref={null} className="ring-offse..." value="uploaders">
-                                          <Presence present={false}>
-                                            <Primitive.div data-state="inactive" data-orientation="horizontal" ...>
-                                              <div
-                                                data-state="inactive"
-                                                data-orientation="horizontal"
-                                                role="tabpanel"
-+                                               aria-labelledby="radix-_R_2fdbnalb_-trigger-uploaders"
--                                               aria-labelledby="radix-_R_9tpbnalb_-trigger-uploaders"
-                                                hidden={true}
-+                                               id="radix-_R_2fdbnalb_-content-uploaders"
--                                               id="radix-_R_9tpbnalb_-content-uploaders"
-                                                tabIndex={0}
-                                                className="ring-offset-background focus-visible:outline-none focus-vis..."
-                                                style={{animationDuration:undefined}}
-                                                ref={function}
-                                              >
-                                      <_c4 value="streaks" className="mt-2">
-                                        <TabsContent ref={null} className="ring-offse..." value="streaks">
-                                          <Presence present={false}>
-                                            <Primitive.div data-state="inactive" data-orientation="horizontal" ...>
-                                              <div
-                                                data-state="inactive"
-                                                data-orientation="horizontal"
-                                                role="tabpanel"
-+                                               aria-labelledby="radix-_R_2fdbnalb_-trigger-streaks"
--                                               aria-labelledby="radix-_R_9tpbnalb_-trigger-streaks"
-                                                hidden={true}
-+                                               id="radix-_R_2fdbnalb_-content-streaks"
--                                               id="radix-_R_9tpbnalb_-content-streaks"
-                                                tabIndex={0}
-                                                className="ring-offset-background focus-visible:outline-none focus-vis..."
-                                                style={{animationDuration:undefined}}
-                                                ref={function}
-                                              >
-                              ...
-                                <div className="border-t p...">
-                                  <p>
-                                  <div className="flex flex-...">
-                                    <p>
-                                    <p>
-+                                     1761749826641
--                                     1761749821117
-                  ...
-
-[00:00:26.869] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:05.482] Server  LOG      ○ Compiling / ...
+[00:00:27.048] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.075] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.076] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:27.081] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.082] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:27.084] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.085] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:27.200] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.269] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.269] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:27.270] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.271] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:27.272] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.272] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:27.315] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.315] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:27.317] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.317] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:27.318] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:27.318] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:32.660] Server  LOG      ○ Compiling /category/[...path] ...
+[00:00:33.303] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:34.701] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -422,11 +71,59 @@ https://react.dev/link/hydration-mismatch
                               <div className="flex flex-...">
                                 <p>
                                 <p>
-+                                 1761749784203
--                                 1761749821529
++                                 1761750646405
+-                                 1761750685225
                   ...
 
-[00:00:28.740] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:35.960] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:35.971] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:36.017] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:36.018] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:36.353] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:37.285] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:37.349] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:37.787] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <InnerLayoutRouter url="/category/..." tree={[...]} params={{path:[...]}} cacheNode={{lazyData:null, ...}} ...>
+          <SegmentViewNode type="page" pagePath="category/[...">
+            <SegmentTrieNode>
+            <HierarchicalCategoryPage>
+              <script>
+              <HierarchicalCategoryPage>
+                <CategoryDiscussionClient slug="ecn-brokers" initialCategory={{slug:"ecn-...", ...}} ...>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761750693263
+-                               1761750692314
+                    ...
+          ...
+        ...
+
+[00:00:38.736] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -478,10 +175,54 @@ https://react.dev/link/hydration-mismatch
                                 <div className="flex flex-...">
                                   <p>
                                   <p>
-+                                   1761749828886
--                                   1761749821662
++                                   1761750692127
+-                                   1761750685330
                   ...
 
-[00:08:08.688] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:08:08.786] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:39.892] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:39.898] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:39.918] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:39.919] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:40.057] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:40.795] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:41.114] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <InnerLayoutRouter url="/category/..." tree={[...]} params={{path:[...]}} cacheNode={{lazyData:null, ...}} ...>
+          <SegmentViewNode type="page" pagePath="category/[...">
+            <SegmentTrieNode>
+            <HierarchicalCategoryPage>
+              <script>
+              <HierarchicalCategoryPage>
+                <CategoryDiscussionClient slug="mql4" initialCategory={{slug:"mql4", ...}} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761750696669
+-                               1761750695876
+                    ...
+          ...
+        ...
+
+[00:00:55.324] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
