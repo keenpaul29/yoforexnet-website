@@ -62,13 +62,13 @@ export default function EnhancedFooter() {
                 </a>
               </li>
               <li>
-                <a 
-                  href="mailto:abuse@yoforex.net" 
+                <Link 
+                  href="/support" 
                   className="text-muted-foreground hover:text-foreground"
                   data-testid="footer-link-abuse"
                 >
                   Report Abuse
-                </a>
+                </Link>
               </li>
               <li>
                 <a 
