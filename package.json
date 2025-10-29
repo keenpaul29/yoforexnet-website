@@ -29,6 +29,7 @@
     "postinstall": "node scripts/auto-setup.js || true"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.17.2",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
@@ -68,6 +69,10 @@
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^7.0.3",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@uppy/aws-s3": "^4.3.2",
+    "@uppy/core": "^4.5.3",
+    "@uppy/dashboard": "^4.4.3",
+    "@uppy/react": "^4.5.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -80,6 +85,7 @@
     "express-rate-limit": "^8.1.0",
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
+    "google-auth-library": "^10.4.2",
     "helmet": "^8.1.0",
     "input-otp": "^1.4.2",
     "isomorphic-dompurify": "^2.30.0",
