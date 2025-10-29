@@ -34,6 +34,11 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 - **Marketplace**: Allows listing and selling of Expert Advisors, indicators, and templates with detailed product schemas.
 - **User Profiles**: Comprehensive profiles with reputation scores, badges, social links, and expertise areas.
 - **Coin-based Economy**: Rewards users for platform engagement.
+- **Broker Directory**: 3-column responsive layout with comprehensive features:
+    - **Left Sidebar**: Advanced filters UI (regulation, account types, min deposit, leverage, spread types, platforms, payment methods, special features), broker categories, comparison tool, and quick stats display
+    - **Main Content**: Search and filter functionality, broker cards in responsive grid, comparison selection system
+    - **Right Sidebar**: Featured broker showcase, trending brokers ranking, recent reviews display, scam alerts system, broker tools (calculators), educational resources, community recommendations, newsletter signup
+    - **Note**: Advanced filter UI is implemented but non-functional pending broker schema extension with required fields (regulation types, account types, leverage details, platform info, etc.)
 - **Admin Dashboard**: Provides comprehensive tools for content moderation, marketplace management, finance management, broker management, schema validation, and analytics monitoring.
     - **Admin Marketplace Management System**: Features a comprehensive moderation workflow (approve/reject/feature/soft-delete), advanced search and filtering, pagination, interactive modals, and sales analytics.
     - **Admin Finance Management System**: Includes multi-source revenue tracking, multi-method withdrawal workflow, unified transaction monitoring with CSV export, and detailed revenue analytics.
