@@ -28,7 +28,7 @@ const quickActions: QuickAction[] = [
     icon: PenSquare,
     label: "New Thread",
     description: "Start a discussion",
-    path: "/discussions",
+    path: "/discussions/new",
     variant: "default",
   },
   {

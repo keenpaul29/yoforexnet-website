@@ -3202,7 +3202,7 @@ function DiscussionsClient({ initialThreads }) {
         if (!isAuthenticated) {
             login();
         } else {
-            window.location.href = '/publish';
+            window.location.href = '/discussions/new';
         }
     };
     if (threadsLoading) {

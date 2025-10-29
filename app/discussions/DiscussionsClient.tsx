@@ -313,7 +313,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
     if (!isAuthenticated) {
       login();
     } else {
-      window.location.href = '/publish';
+      window.location.href = '/discussions/new';
     }
   };
 
