@@ -1,0 +1,10 @@
+[00:00:01.544] Server  LOG      ✓ Ready in 994ms
+[00:00:04.565] Server  LOG      ○ Compiling / ...
+[00:00:13.889] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.917] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.918] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:13.923] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.923] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:13.925] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:13.925] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:14.049] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001

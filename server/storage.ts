@@ -2841,22 +2841,22 @@ export class MemStorage implements IStorage {
 
     const userBadges = user.badges || [];
 
-    // Check EA Master (5+ published EAs)
+    // Check EA Expert (5+ published EAs)
     const eaCount = Array.from(this.content.values())
       .filter(c => c.authorId === userId && c.type === 'ea').length;
     
-    if (eaCount >= 5 && !userBadges.includes(BADGE_TYPES.EA_MASTER)) {
-      await this.awardBadge(userId, BADGE_TYPES.EA_MASTER);
-      newBadges.push(BADGE_TYPES.EA_MASTER);
+    if (eaCount >= 5 && !userBadges.includes(BADGE_TYPES.EA_EXPERT)) {
+      await this.awardBadge(userId, BADGE_TYPES.EA_EXPERT);
+      newBadges.push(BADGE_TYPES.EA_EXPERT);
     }
 
-    // Check Helpful (50+ helpful replies)
+    // Check Helpful Member (50+ helpful replies)
     const helpfulCount = Array.from(this.forumRepliesMap.values())
       .filter(r => r.userId === userId && r.helpful > 0).length;
     
-    if (helpfulCount >= 50 && !userBadges.includes(BADGE_TYPES.HELPFUL)) {
-      await this.awardBadge(userId, BADGE_TYPES.HELPFUL);
-      newBadges.push(BADGE_TYPES.HELPFUL);
+    if (helpfulCount >= 50 && !userBadges.includes(BADGE_TYPES.HELPFUL_MEMBER)) {
+      await this.awardBadge(userId, BADGE_TYPES.HELPFUL_MEMBER);
+      newBadges.push(BADGE_TYPES.HELPFUL_MEMBER);
     }
 
     // Check Top Contributor (top 10)
@@ -5424,29 +5424,29 @@ export class DrizzleStorage implements IStorage {
   async checkAndAwardBadges(userId: string): Promise<string[]> {
     const newBadges: string[] = [];
 
-    // Check EA Master (5+ published EAs)
+    // Check EA Expert (5+ published EAs)
     const publishedContent = await db.select({ count: sql<number>`count(*)` })
       .from(content)
       .where(and(eq(content.authorId, userId), eq(content.type, 'ea')));
     
     if (publishedContent[0].count >= 5) {
-      const hadBadge = await this.hasBadge(userId, BADGE_TYPES.EA_MASTER);
+      const hadBadge = await this.hasBadge(userId, BADGE_TYPES.EA_EXPERT);
       if (!hadBadge) {
-        await this.awardBadge(userId, BADGE_TYPES.EA_MASTER);
-        newBadges.push(BADGE_TYPES.EA_MASTER);
+        await this.awardBadge(userId, BADGE_TYPES.EA_EXPERT);
+        newBadges.push(BADGE_TYPES.EA_EXPERT);
       }
     }
 
-    // Check Helpful (50+ helpful replies)
+    // Check Helpful Member (50+ helpful replies)
     const helpfulReplies = await db.select({ count: sql<number>`count(*)` })
       .from(forumReplies)
       .where(and(eq(forumReplies.userId, userId), gt(forumReplies.helpful, 0)));
     
     if (helpfulReplies[0].count >= 50) {
-      const hadBadge = await this.hasBadge(userId, BADGE_TYPES.HELPFUL);
+      const hadBadge = await this.hasBadge(userId, BADGE_TYPES.HELPFUL_MEMBER);
       if (!hadBadge) {
-        await this.awardBadge(userId, BADGE_TYPES.HELPFUL);
-        newBadges.push(BADGE_TYPES.HELPFUL);
+        await this.awardBadge(userId, BADGE_TYPES.HELPFUL_MEMBER);
+        newBadges.push(BADGE_TYPES.HELPFUL_MEMBER);
       }
     }
 
