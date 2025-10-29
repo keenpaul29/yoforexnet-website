@@ -479,11 +479,19 @@ export const forumReplies = pgTable("forum_replies", {
   isVerified: boolean("is_verified").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  
+  // Moderation fields
+  status: text("status").notNull().$type<"pending" | "approved" | "rejected">().default("approved"),
+  approvedBy: varchar("approved_by").references(() => users.id),
+  rejectedBy: varchar("rejected_by").references(() => users.id),
+  approvedAt: timestamp("approved_at"),
+  rejectedAt: timestamp("rejected_at"),
 }, (table) => ({
   threadIdIdx: index("idx_forum_replies_thread_id").on(table.threadId),
   createdAtIdx: index("idx_forum_replies_created_at").on(table.createdAt),
   slugIdx: index("idx_forum_replies_slug").on(table.slug),
   helpfulVotesIdx: index("idx_forum_replies_helpful_votes").on(table.helpfulVotes),
+  statusIdx: index("idx_forum_replies_status").on(table.status),
 }));
 
 // Forum Categories with dynamic stats and hierarchical support
