@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage.js";
 import { setupAuth, isAuthenticated } from "./replitAuth.js";
@@ -92,6 +92,25 @@ function isAdmin(user: any): boolean {
   // Check if user has admin role
   return claims.role === 'admin' || claims.role === 'moderator' || claims.role === 'superadmin';
 }
+
+// Middleware to check if user is moderator or admin
+const isModOrAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+  
+  const claims = (req.user as any)?.claims;
+  if (!claims) {
+    return res.status(401).json({ error: "Invalid session" });
+  }
+  
+  const userRole = claims.role;
+  if (userRole !== "moderator" && userRole !== "admin" && userRole !== "superadmin") {
+    return res.status(403).json({ error: "Insufficient permissions. Moderators or admins only." });
+  }
+  
+  next();
+};
 
 // System metric helpers
 async function getServerCpu(): Promise<number> {
@@ -6143,6 +6162,344 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('[Sitemap Logs] Error:', error);
       res.status(500).json({ error: 'Failed to fetch sitemap logs' });
+    }
+  });
+
+  // ============================================
+  // CONTENT MODERATION API ROUTES (Phase 3)
+  // ============================================
+
+  // Zod validation schemas for moderation endpoints
+  const queueQuerySchema = z.object({
+    type: z.enum(["thread", "reply", "all"]).optional().default("all"),
+    status: z.enum(["pending", "approved", "rejected"]).optional().default("pending"),
+    page: z.coerce.number().int().positive().optional().default(1),
+    perPage: z.coerce.number().int().positive().max(100).optional().default(20),
+  });
+
+  const reportedQuerySchema = z.object({
+    status: z.enum(["pending", "resolved", "dismissed"]).optional().default("pending"),
+    page: z.coerce.number().int().positive().optional().default(1),
+    perPage: z.coerce.number().int().positive().max(100).optional().default(20),
+  });
+
+  const approveSchema = z.object({
+    contentType: z.enum(["thread", "reply"]),
+  });
+
+  const rejectSchema = z.object({
+    contentType: z.enum(["thread", "reply"]),
+    reason: z.string().min(10).max(500),
+  });
+
+  const detailsQuerySchema = z.object({
+    contentType: z.enum(["thread", "reply"]),
+  });
+
+  const dismissSchema = z.object({
+    reason: z.string().max(500).optional(),
+  });
+
+  const reportActionSchema = z.object({
+    contentId: z.string(),
+    contentType: z.enum(["thread", "reply"]),
+    actionType: z.enum(["delete", "warn", "suspend", "ban"]),
+    reason: z.string().min(10).max(500),
+    suspendDays: z.number().int().positive().max(365).optional(),
+  }).refine(
+    (data) => data.actionType !== "suspend" || data.suspendDays !== undefined,
+    { message: "suspendDays is required when actionType is 'suspend'" }
+  );
+
+  const bulkApproveSchema = z.object({
+    contentIds: z.array(z.string()).min(1).max(100),
+    contentType: z.enum(["thread", "reply"]),
+  });
+
+  const bulkRejectSchema = z.object({
+    contentIds: z.array(z.string()).min(1).max(100),
+    contentType: z.enum(["thread", "reply"]),
+    reason: z.string().min(10).max(500),
+  });
+
+  const historyQuerySchema = z.object({
+    limit: z.coerce.number().int().positive().max(500).optional().default(100),
+    moderatorId: z.string().optional(),
+  });
+
+  // 1. GET /api/moderation/queue - Get paginated moderation queue
+  app.get("/api/moderation/queue", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const params = queueQuerySchema.parse(req.query);
+      const result = await storage.getModerationQueue(params);
+      res.json(result);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid parameters", details: error.errors });
+      }
+      console.error("Error fetching moderation queue:", error);
+      res.status(500).json({ error: "Failed to fetch moderation queue" });
+    }
+  });
+
+  // 2. GET /api/moderation/reported - Get paginated reported content
+  app.get("/api/moderation/reported", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const params = reportedQuerySchema.parse(req.query);
+      const result = await storage.getReportedContent(params);
+      res.json(result);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid parameters", details: error.errors });
+      }
+      console.error("Error fetching reported content:", error);
+      res.status(500).json({ error: "Failed to fetch reported content" });
+    }
+  });
+
+  // 3. GET /api/moderation/queue/count - Get queue counts
+  app.get("/api/moderation/queue/count", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const counts = await storage.getQueueCount();
+      res.json(counts);
+    } catch (error) {
+      console.error("Error fetching queue count:", error);
+      res.status(500).json({ error: "Failed to fetch queue count" });
+    }
+  });
+
+  // 4. GET /api/moderation/reported/count - Get reported content counts
+  app.get("/api/moderation/reported/count", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const counts = await storage.getReportedCount();
+      res.json(counts);
+    } catch (error) {
+      console.error("Error fetching reported content count:", error);
+      res.status(500).json({ error: "Failed to fetch reported content count" });
+    }
+  });
+
+  // 5. POST /api/moderation/:id/approve - Approve content
+  app.post("/api/moderation/:id/approve", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { contentType } = approveSchema.parse(req.body);
+      const claims = (req.user as any)?.claims;
+      
+      await storage.approveContent({
+        contentId: id,
+        contentType,
+        moderatorId: claims.sub,
+        moderatorUsername: claims.username || claims.sub,
+      });
+      
+      res.json({ success: true, message: "Content approved successfully" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request", details: error.errors });
+      }
+      console.error("Error approving content:", error);
+      res.status(500).json({ error: "Failed to approve content" });
+    }
+  });
+
+  // 6. POST /api/moderation/:id/reject - Reject content
+  app.post("/api/moderation/:id/reject", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { contentType, reason } = rejectSchema.parse(req.body);
+      const claims = (req.user as any)?.claims;
+      
+      await storage.rejectContent({
+        contentId: id,
+        contentType,
+        moderatorId: claims.sub,
+        moderatorUsername: claims.username || claims.sub,
+        reason,
+      });
+      
+      res.json({ success: true, message: "Content rejected successfully" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request", details: error.errors });
+      }
+      console.error("Error rejecting content:", error);
+      res.status(500).json({ error: "Failed to reject content" });
+    }
+  });
+
+  // 7. GET /api/moderation/:id/details - Get content details for review
+  app.get("/api/moderation/:id/details", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { contentType } = detailsQuerySchema.parse(req.query);
+      
+      const details = await storage.getContentDetails({ contentId: id, contentType });
+      res.json(details);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid parameters", details: error.errors });
+      }
+      console.error("Error fetching content details:", error);
+      res.status(500).json({ error: "Failed to fetch content details" });
+    }
+  });
+
+  // 8. GET /api/moderation/report/:id - Get report details
+  app.get("/api/moderation/report/:id", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const reportId = parseInt(req.params.id);
+      if (isNaN(reportId)) {
+        return res.status(400).json({ error: "Invalid report ID" });
+      }
+      
+      const reportDetails = await storage.getReportDetails(reportId);
+      res.json(reportDetails);
+    } catch (error) {
+      console.error("Error fetching report details:", error);
+      res.status(500).json({ error: "Failed to fetch report details" });
+    }
+  });
+
+  // 9. POST /api/moderation/report/:id/dismiss - Dismiss a report
+  app.post("/api/moderation/report/:id/dismiss", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const reportId = parseInt(req.params.id);
+      if (isNaN(reportId)) {
+        return res.status(400).json({ error: "Invalid report ID" });
+      }
+      
+      const { reason } = dismissSchema.parse(req.body);
+      const claims = (req.user as any)?.claims;
+      
+      await storage.dismissReport({
+        reportId,
+        dismissedBy: claims.sub,
+        reason: reason || "No reason provided",
+      });
+      
+      res.json({ success: true, message: "Report dismissed successfully" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request", details: error.errors });
+      }
+      console.error("Error dismissing report:", error);
+      res.status(500).json({ error: "Failed to dismiss report" });
+    }
+  });
+
+  // 10. POST /api/moderation/report/:id/action - Take action on reported content
+  app.post("/api/moderation/report/:id/action", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const reportId = parseInt(req.params.id);
+      if (isNaN(reportId)) {
+        return res.status(400).json({ error: "Invalid report ID" });
+      }
+      
+      const validatedData = reportActionSchema.parse(req.body);
+      const claims = (req.user as any)?.claims;
+      
+      await storage.takeReportAction({
+        reportId,
+        contentId: validatedData.contentId,
+        contentType: validatedData.contentType,
+        actionType: validatedData.actionType,
+        moderatorId: claims.sub,
+        moderatorUsername: claims.username || claims.sub,
+        reason: validatedData.reason,
+        suspendDays: validatedData.suspendDays,
+      });
+      
+      res.json({ success: true, message: `Action '${validatedData.actionType}' taken successfully` });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request", details: error.errors });
+      }
+      console.error("Error taking report action:", error);
+      res.status(500).json({ error: "Failed to take action on report" });
+    }
+  });
+
+  // 11. POST /api/moderation/bulk-approve - Bulk approve content
+  app.post("/api/moderation/bulk-approve", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const { contentIds, contentType } = bulkApproveSchema.parse(req.body);
+      const claims = (req.user as any)?.claims;
+      
+      const result = await storage.bulkApprove({
+        contentIds,
+        contentType,
+        moderatorId: claims.sub,
+        moderatorUsername: claims.username || claims.sub,
+      });
+      
+      res.json({
+        success: true,
+        successCount: result.successCount,
+        failedIds: result.failedIds,
+        message: `Approved ${result.successCount} of ${contentIds.length} items successfully`,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request", details: error.errors });
+      }
+      console.error("Error bulk approving content:", error);
+      res.status(500).json({ error: "Failed to bulk approve content" });
+    }
+  });
+
+  // 12. POST /api/moderation/bulk-reject - Bulk reject content
+  app.post("/api/moderation/bulk-reject", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const { contentIds, contentType, reason } = bulkRejectSchema.parse(req.body);
+      const claims = (req.user as any)?.claims;
+      
+      const result = await storage.bulkReject({
+        contentIds,
+        contentType,
+        moderatorId: claims.sub,
+        moderatorUsername: claims.username || claims.sub,
+        reason,
+      });
+      
+      res.json({
+        success: true,
+        successCount: result.successCount,
+        failedIds: result.failedIds,
+        message: `Rejected ${result.successCount} of ${contentIds.length} items successfully`,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request", details: error.errors });
+      }
+      console.error("Error bulk rejecting content:", error);
+      res.status(500).json({ error: "Failed to bulk reject content" });
+    }
+  });
+
+  // 13. GET /api/moderation/history - Get moderation action history
+  app.get("/api/moderation/history", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const params = historyQuerySchema.parse(req.query);
+      const history = await storage.getModerationHistory(params);
+      res.json(history);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid parameters", details: error.errors });
+      }
+      console.error("Error fetching moderation history:", error);
+      res.status(500).json({ error: "Failed to fetch moderation history" });
+    }
+  });
+
+  // 14. GET /api/moderation/stats - Get moderation statistics
+  app.get("/api/moderation/stats", isAuthenticated, isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const stats = await storage.getModerationStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching moderation stats:", error);
+      res.status(500).json({ error: "Failed to fetch moderation stats" });
     }
   });
 
