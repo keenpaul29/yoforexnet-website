@@ -476,8 +476,8 @@ export default function SEOMarketing() {
                             <Badge variant="secondary">#{ranking.position}</Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={ranking.change > 0 ? 'default' : 'destructive'}>
-                              {ranking.change > 0 ? '+' : ''}{ranking.change}
+                            <Badge variant={(ranking.change ?? 0) > 0 ? 'default' : 'destructive'}>
+                              {(ranking.change ?? 0) > 0 ? '+' : ''}{ranking.change ?? 0}
                             </Badge>
                           </TableCell>
                         </TableRow>

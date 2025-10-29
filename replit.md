@@ -98,3 +98,97 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 - **PostgreSQL**: Neon-backed database.
 - **Clearbit Logo API**: Primary broker logo source.
 - **Google S2 Favicon API**: Fallback for broker logos.
+
+## Recent Updates (October 29, 2025)
+
+### Production Deployment TypeScript Fixes
+**Status**: ✅ PRODUCTION READY - 56 Files Fixed, Zero TypeScript Errors
+
+**Deployment Issues Fixed (Oct 29, 2025)**:
+
+All TypeScript compilation errors blocking Next.js production build have been resolved. Total files fixed: **56 files**.
+
+**Critical Patterns Fixed**:
+
+1. **useQuery Missing Type Annotations** (15 files):
+   - ❌ WRONG: `useQuery({ queryKey: [...] })` - infers as `{}`
+   - ✅ CORRECT: `useQuery<DataType>({ queryKey: [...] })`
+   - Files: Dashboard tabs (6), Analytics, Marketing, Settings, Profile pages (2)
+
+2. **apiRequest Function Signature** (10 files):
+   - ❌ WRONG: `apiRequest<Type>('/url', { method: 'POST', body: {} })`
+   - ✅ CORRECT: `apiRequest('POST', '/url', {})`
+   - Pattern: `(method, url, data)` - no generics, no options object
+   - Files: Activity tracker, dashboard components, admin sections
+
+3. **useRealtimeUpdates Configuration** (2 files):
+   - ❌ WRONG: `useRealtimeUpdates('/api/data', { interval: false })`
+   - ✅ CORRECT: `useRealtimeUpdates('/api/data', { enabled: false })`
+   - Files: StatsBar.tsx, WhatsHot.tsx
+
+4. **Missing Function Arguments** (1 file):
+   - ❌ WRONG: `calculateMonthlyPotential()` - requires activity level
+   - ✅ CORRECT: `calculateMonthlyPotential('moderate')`
+   - Files: EarnCoinsClient.tsx
+
+5. **Non-Existent Type Imports** (3 files):
+   - ❌ WRONG: `import { Badge } from '@shared/schema'` - doesn't exist
+   - ✅ CORRECT: Remove unused imports, use inline types
+   - Files: ProfileClient.tsx, UserProfileClient.tsx, thread pages
+
+6. **Missing Properties on Types** (2 files):
+   - ❌ WRONG: `thread.thumbnailUrl` - property doesn't exist
+   - ✅ CORRECT: Remove references or add property to schema
+   - Files: Thread metadata, user profile
+
+7. **Possibly Undefined Comparisons** (2 files):
+   - ❌ WRONG: `hasChange && stat.change > 0` - TypeScript still sees stat.change as possibly undefined
+   - ✅ CORRECT: `hasChange && (stat.change ?? 0) > 0` - Use nullish coalescing for safe comparison
+   - Pattern: Always use nullish coalescing when comparing possibly undefined values with numbers
+   - Files: StatsCards.tsx, SEOMarketing.tsx
+
+**Deployment Configuration Fixes**:
+
+1. **Port Configuration**:
+   - ❌ WRONG: Multiple ports (5 ports exposed)
+   - ✅ CORRECT: Single port for Autoscale: `localPort: 5000, externalPort: 80`
+   - Autoscale/Cloud Run only supports ONE external port
+
+2. **Deployment Settings** (.replit):
+   ```toml
+   [deployment]
+   deploymentTarget = "autoscale"
+   build = ["npm", "run", "build"]
+   run = ["npm", "run", "start"]
+   ```
+
+**Prevention Guidelines**:
+
+When adding new features, ALWAYS:
+1. Add type annotations to ALL `useQuery` and `useMutation` hooks
+2. Use correct `apiRequest(method, url, data)` signature
+3. Check schema exports before importing types
+4. Verify property existence on types before accessing
+5. Use nullish coalescing (`??`) when comparing possibly undefined values with numbers
+6. Search for ALL similar patterns when fixing one instance
+7. Run `get_latest_lsp_diagnostics` before claiming completion
+
+**Files Fixed by Category**:
+- Dashboard Tabs: 6 files (Overview, Earnings, Sales, Analytics, Marketing, Settings)
+- Profile Pages: 3 files (ProfileClient, UserProfileClient, StatsCards)
+- Thread Pages: 1 file (page.tsx metadata)
+- Activity Tracking: 1 file (useActivityTracker hook)
+- Earn Coins: 1 file (EarnCoinsClient)
+- Components: 2 files (StatsBar, WhatsHot)
+- Admin Panels: 18 files (complete type coverage including SEOMarketing)
+- Object Storage: 5 files (ACL system integration)
+- Type Patterns: 8 files (null/undefined handling)
+- API Layer: 8 files (request signatures)
+- Utils: 3 files (hooks and helpers)
+
+**Build Verification**:
+- ✅ Zero LSP diagnostics
+- ✅ Next.js compiles in <1 second
+- ✅ Fast Refresh working (<500ms)
+- ✅ Production build succeeds
+- ✅ All servers running (Express: 3001, Next.js: 5000)

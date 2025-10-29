@@ -107,8 +107,8 @@ export function StatsCards({ stats, isLoading = false }: StatsCardsProps) {
           : stat.value.toLocaleString();
         
         const hasChange = stat.change !== undefined && stat.change !== null;
-        const isPositive = hasChange && stat.change > 0;
-        const isNegative = hasChange && stat.change < 0;
+        const isPositive = hasChange && (stat.change ?? 0) > 0;
+        const isNegative = hasChange && (stat.change ?? 0) < 0;
 
         return (
           <Card key={stat.title} data-testid={stat.testId}>
