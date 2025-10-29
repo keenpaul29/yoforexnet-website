@@ -527,3 +527,15 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
+[00:16:16.376] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:16:16.376] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:16:16.377] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:16:16.377] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:16:16.378] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:16:16.378] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:16:21.717] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:16:21.717] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:16:21.718] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:16:21.719] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:16:21.719] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:16:21.720] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
