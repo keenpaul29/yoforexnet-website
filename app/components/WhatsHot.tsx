@@ -41,7 +41,7 @@ interface HotItemsData {
 
 export default function WhatsHot() {
   // No auto-refresh for performance - limit to 5 items - UNIFIED CONTENT
-  const { data, isLoading, refetch } = useRealtimeUpdates<HotItemsData>('/api/hot?limit=5', { interval: false });
+  const { data, isLoading, refetch } = useRealtimeUpdates<HotItemsData>('/api/hot?limit=5', { enabled: false });
 
   // Hide component when loading or no items
   if (isLoading && !data) {

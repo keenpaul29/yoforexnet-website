@@ -2669,7 +2669,7 @@ function StatsBar() {
     _s();
     // No auto-refresh for performance
     const { data, isLoading, refetch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useRealtimeUpdates$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRealtimeUpdates"])('/api/stats', {
-        interval: false
+        enabled: false
     });
     const stats = [
         {
@@ -5704,7 +5704,7 @@ function WhatsHot() {
     _s();
     // No auto-refresh for performance - limit to 5 items - UNIFIED CONTENT
     const { data, isLoading, refetch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useRealtimeUpdates$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRealtimeUpdates"])('/api/hot?limit=5', {
-        interval: false
+        enabled: false
     });
     // Hide component when loading or no items
     if (isLoading && !data) {

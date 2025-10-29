@@ -16,7 +16,7 @@ interface StatsData {
 
 export default function StatsBar() {
   // No auto-refresh for performance
-  const { data, isLoading, refetch } = useRealtimeUpdates<StatsData>('/api/stats', { interval: false });
+  const { data, isLoading, refetch } = useRealtimeUpdates<StatsData>('/api/stats', { enabled: false });
 
   const stats = [
     { 
