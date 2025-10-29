@@ -33,7 +33,19 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 - **Marketplace**: Allows listing and selling of Expert Advisors, indicators, and templates with detailed product schemas including offers and reviews.
 - **User Profiles**: Comprehensive profiles with reputation scores, badges, social links, and expertise areas.
 - **Coin-based Economy**: Rewards users for platform engagement.
-- **Admin Dashboard**: Provides tools for content moderation, schema validation, and analytics monitoring.
+- **Admin Dashboard**: Provides comprehensive tools for content moderation, marketplace management, schema validation, and analytics monitoring.
+
+**Admin Marketplace Management System** (October 2025 - Production Ready):
+- **Comprehensive Moderation Workflow**: Full approval/rejection system with audit trails. Admins can approve, reject (with custom reasons), feature, and soft-delete marketplace items. All actions logged to adminActions table with timestamps and admin IDs.
+- **Advanced Search & Filtering**: Real-time search with 300ms debounce, category filter (Expert Advisors, Indicators, Scripts, Templates), status filter (Pending, Approved, Rejected), price range filter (Free, Low, Medium, High). Clear filters button to reset all at once.
+- **Pagination System**: Full pagination with configurable page sizes (10/20/50/100 items), First/Previous/Next/Last navigation, "Showing X-Y of Z items" display. Automatically resets to page 1 when filters change.
+- **Interactive Modals**: View Item Details (full product info, recent purchases, sales metrics), Reject with Reason (dropdown + custom textarea with Zod validation), Feature Item (duration 1-365 days with expiry tracking).
+- **Sales Analytics Dashboard**: Real-time statistics (total items, pending items, total sales, sales this week, total revenue, revenue this week), 30-day revenue trend chart, top-selling items leaderboard, top vendors by earnings with item counts.
+- **Database Schema**: Extended content table with 8 moderation fields (approvedBy, approvedAt, rejectedBy, rejectedAt, rejectionReason, featured, featuredUntil, deletedAt) and 2 performance indexes (featured, deletedAt).
+- **Backend Implementation**: 14 storage methods in IStorage interface (getMarketplaceItems with filters/pagination, approveMarketplaceItem, rejectMarketplaceItem, featureMarketplaceItem, deleteMarketplaceItem, getMarketplaceSales, getMarketplaceRevenue, getRevenueTrend, getTopSellingItems, getTopVendors, getMarketplaceStats, etc.) with full Drizzle ORM queries including LEFT JOINs, aggregations, and soft delete filtering.
+- **API Layer**: 16 RESTful endpoints (/api/admin/marketplace/*) with isAuthenticated + isAdmin authorization, Zod validation for all POST requests, rate limiting via adminOperationLimiter, comprehensive error handling (400/403/404/500 status codes).
+- **React Query Integration**: Optimized cache invalidation with prefix matching ensuring immediate UI updates after approve/reject/feature actions. All queries properly typed with TypeScript interfaces.
+- **UI/UX Best Practices**: Follows 2025 e-commerce admin dashboard patterns with skeleton loading states, responsive design (mobile-friendly), comprehensive data-testid attributes for all interactive elements, clear error messages and toast notifications.
 
 ### External Dependencies
 - **Database**: Neon (PostgreSQL-compatible, serverless)
