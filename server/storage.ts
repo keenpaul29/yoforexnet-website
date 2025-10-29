@@ -975,7 +975,7 @@ export interface IStorage {
   /**
    * Update admin permissions
    */
-  updateAdminPermissions(userId: string, permissions: any): Promise<void>;
+  updateAdminPermissions(userId: string, permissions: any, updatedBy: string): Promise<void>;
   
   /**
    * Revoke admin role
@@ -3554,7 +3554,7 @@ export class MemStorage implements IStorage {
     return { id: 1, userId, role, permissions };
   }
 
-  async updateAdminPermissions(userId: string, permissions: any): Promise<void> {
+  async updateAdminPermissions(userId: string, permissions: any, updatedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
