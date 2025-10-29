@@ -3,6 +3,12 @@
 ## Overview
 YoForex is a comprehensive trading community platform built with Next.js, designed to foster a vibrant community for traders. It features forum discussions, trading journals, an Expert Advisor (EA) marketplace, broker reviews, and a user reputation and badge system, all underpinned by a coin-based economy. The platform aims to provide a rich, interactive environment for traders to share knowledge, access tools, and grow their skills, with robust SEO optimizations for global search visibility.
 
+## Recent Changes (Oct 29, 2025)
+- **Footer Navigation Audit**: Completed comprehensive audit of all 18 footer links (Legal, Support, Community, Opportunities sections) - all routes verified working with HTTP 200 status
+- **Footer Link Fix**: Changed "Report Abuse" from mailto:abuse@yoforex.net to proper routing via /support page
+- **Hydration Error Fix**: Resolved React hydration mismatch by changing dynamic `Date.now()` to static build number in footer version display
+- **Route Testing**: All static pages and dynamic guide routes tested and confirmed functional (/terms, /privacy, /support, /feedback, /brokers, /marketplace, /partnerships, /careers, /earn, /guides/*)
+
 ## User Preferences
 - Prefer clear, concise code
 - Minimize file count where possible
