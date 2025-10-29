@@ -7,16 +7,37 @@ import { DataTable } from "../shared/DataTable";
 import { DollarSign, ShoppingCart, TrendingUp, Users } from "lucide-react";
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
+interface SalesDashboardData {
+  totalRevenue: number;
+  totalSales: number;
+  avgSale: number;
+}
+
+interface Goal {
+  id: string;
+  goalType: string;
+  targetValue: number;
+  currentValue: number;
+  status: string;
+}
+
+interface EarningsBreakdown {
+  total: number;
+  thisMonth: number;
+  currentBalance: number;
+  pendingWithdrawal: number;
+}
+
 export function OverviewTab() {
-  const { data: salesData, isLoading: salesLoading } = useQuery({
+  const { data: salesData, isLoading: salesLoading } = useQuery<SalesDashboardData>({
     queryKey: ["/api/me/sales-dashboard"],
   });
 
-  const { data: earningsData, isLoading: earningsLoading } = useQuery({
+  const { data: earningsData, isLoading: earningsLoading } = useQuery<EarningsBreakdown>({
     queryKey: ["/api/me/earnings-breakdown"],
   });
 
-  const { data: goalsData, isLoading: goalsLoading } = useQuery({
+  const { data: goalsData, isLoading: goalsLoading } = useQuery<Goal[]>({
     queryKey: ["/api/me/goals"],
   });
 
