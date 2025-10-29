@@ -5161,6 +5161,74 @@ export class MemStorage implements IStorage {
   }>> {
     return [];
   }
+
+  // ============================================================================
+  // PHASE 3: Finance Management (9 methods) - MemStorage Stubs
+  // ============================================================================
+
+  async getTotalRevenue(period?: string): Promise<{ total: number; change: number; trend: 'up' | 'down' }> {
+    return { total: 0, change: 0, trend: 'up' };
+  }
+
+  async getRevenueTrend(days: number): Promise<Array<{ date: string; revenue: number }>> {
+    return [];
+  }
+
+  async getRevenueBySource(): Promise<{
+    coinPurchases: number;
+    subscriptions: number;
+    marketplace: number;
+    other: number;
+  }> {
+    return {
+      coinPurchases: 0,
+      subscriptions: 0,
+      marketplace: 0,
+      other: 0
+    };
+  }
+
+  async getRevenuePeriod(period: string): Promise<number> {
+    return 0;
+  }
+
+  async getAllWithdrawals(filters?: any): Promise<{ items: any[]; total: number }> {
+    return { items: [], total: 0 };
+  }
+
+  async completeWithdrawal(id: string, adminId: string, transactionId: string, notes?: string): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async getRecentTransactions(limit?: number, period?: string): Promise<any[]> {
+    return [];
+  }
+
+  async getAllTransactions(filters?: any): Promise<{ items: any[]; total: number }> {
+    return { items: [], total: 0 };
+  }
+
+  async exportTransactionsCSV(filters?: any): Promise<string> {
+    return "";
+  }
+
+  async getFinancialStats(): Promise<{
+    totalRevenue: number;
+    totalWithdrawals: number;
+    pendingWithdrawals: number;
+    completedWithdrawals: number;
+    totalTransactions: number;
+    activeSubscriptions: number;
+  }> {
+    return {
+      totalRevenue: 0,
+      totalWithdrawals: 0,
+      pendingWithdrawals: 0,
+      completedWithdrawals: 0,
+      totalTransactions: 0,
+      activeSubscriptions: 0
+    };
+  }
 }
 
 export class DrizzleStorage implements IStorage {
