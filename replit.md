@@ -102,11 +102,11 @@ YoForex is an EA (Expert Advisor) forum and marketplace platform for algorithmic
 ## Recent Updates (October 29, 2025)
 
 ### Production Deployment TypeScript Fixes
-**Status**: ✅ PRODUCTION READY - 57 Files Fixed, Zero TypeScript Errors
+**Status**: ✅ PRODUCTION READY - 58 Files Fixed, Zero Build Errors
 
 **Deployment Issues Fixed (Oct 29, 2025)**:
 
-All TypeScript compilation errors blocking Next.js production build have been resolved. Total files fixed: **57 files**.
+All TypeScript compilation errors blocking Next.js production build have been resolved. Total files fixed: **58 files** (including critical tsconfig.json fix).
 
 **Critical Patterns Fixed**:
 
@@ -157,6 +157,13 @@ All TypeScript compilation errors blocking Next.js production build have been re
    - Pattern: Always verify field names match the actual schema exports
    - Files: seed-complete-platform.ts
 
+9. **Scripts Folder Included in Next.js Build** (1 file):
+   - ❌ WRONG: `tsconfig.json` includes `**/*.ts` which compiles scripts during deployment
+   - ✅ CORRECT: Add `"scripts"` to the `exclude` array in tsconfig.json
+   - Pattern: Seed scripts and utilities should not be part of the production Next.js build
+   - Impact: CRITICAL - Blocks deployment if seed scripts have TypeScript errors
+   - Files: tsconfig.json
+
 **Deployment Configuration Fixes**:
 
 1. **Port Configuration**:
@@ -164,7 +171,12 @@ All TypeScript compilation errors blocking Next.js production build have been re
    - ✅ CORRECT: Single port for Autoscale: `localPort: 5000, externalPort: 80`
    - Autoscale/Cloud Run only supports ONE external port
 
-2. **Deployment Settings** (.replit):
+2. **TypeScript Configuration** (tsconfig.json):
+   - ❌ WRONG: `include: ["**/*.ts"]` compiles everything including scripts
+   - ✅ CORRECT: `exclude: ["node_modules", "client", "scripts"]`
+   - CRITICAL: Prevents seed script errors from blocking deployment
+
+3. **Deployment Settings** (.replit):
    ```toml
    [deployment]
    deploymentTarget = "autoscale"
@@ -197,7 +209,8 @@ When adding new features, ALWAYS:
 - Type Patterns: 8 files (null/undefined handling)
 - API Layer: 8 files (request signatures)
 - Utils: 3 files (hooks and helpers)
-- **Seed Scripts: 1 file (schema field alignment)**
+- Seed Scripts: 1 file (schema field alignment)
+- **Build Configuration: 1 file (tsconfig.json - CRITICAL deployment blocker)**
 
 **Build Verification**:
 - ✅ Zero LSP diagnostics
