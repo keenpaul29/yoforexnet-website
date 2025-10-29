@@ -5790,9 +5790,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: adminActions.id,
           adminId: adminActions.adminId,
           adminUsername: users.username,
-          action: adminActions.action,
+          actionType: adminActions.actionType,
+          targetType: adminActions.targetType,
           targetId: adminActions.targetId,
-          targetName: adminActions.targetName,
           details: adminActions.details,
           createdAt: adminActions.createdAt
         })
