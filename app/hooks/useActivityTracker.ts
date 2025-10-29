@@ -18,13 +18,11 @@ export function useActivityTracker(enabled = true) {
   // Server calculates elapsed time from session timestamps to prevent coin farming
   const trackMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest<{success: boolean, coinsEarned: number, totalMinutes: number}>('/api/activity/track', {
-        method: 'POST',
-        body: {} // Empty body - server uses session timestamps to calculate elapsed time
-      });
+      const response = await apiRequest('POST', '/api/activity/track', {});
+      return response.json();
     },
-    onSuccess: (data: any) => {
-      if (data.coinsEarned > 0) {
+    onSuccess: (data: { success?: boolean; coinsEarned?: number; totalMinutes?: number; dailyLimit?: boolean }) => {
+      if (data.coinsEarned && data.coinsEarned > 0) {
         toast({
           title: '🪙 Coins Earned!',
           description: `You earned ${data.coinsEarned} coins for being active!`,

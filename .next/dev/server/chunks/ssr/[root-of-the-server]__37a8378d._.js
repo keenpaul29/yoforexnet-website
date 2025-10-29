@@ -739,13 +739,11 @@ function useActivityTracker(enabled = true) {
     // Server calculates elapsed time from session timestamps to prevent coin farming
     const trackMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: async ()=>{
-            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiRequest"])('/api/activity/track', {
-                method: 'POST',
-                body: {} // Empty body - server uses session timestamps to calculate elapsed time
-            });
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiRequest"])('POST', '/api/activity/track', {});
+            return response.json();
         },
         onSuccess: (data)=>{
-            if (data.coinsEarned > 0) {
+            if (data.coinsEarned && data.coinsEarned > 0) {
                 toast({
                     title: '🪙 Coins Earned!',
                     description: `You earned ${data.coinsEarned} coins for being active!`
