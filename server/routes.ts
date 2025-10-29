@@ -42,7 +42,7 @@ import {
   ObjectStorageService, 
   ObjectNotFoundError 
 } from "./objectStorage.js";
-import { ObjectPermission } from "./objectAcl.js";
+import { ObjectPermission, ObjectAccessGroupType } from "./objectAcl.js";
 import {
   coinOperationLimiter,
   contentCreationLimiter,
@@ -217,8 +217,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { fileURL, visibility, contentId } = req.body;
       
+      // Validate required parameters
       if (!fileURL) {
         return res.status(400).json({ error: "fileURL is required" });
+      }
+      
+      if (!visibility || !["public", "private"].includes(visibility)) {
+        return res.status(400).json({ error: "visibility must be either 'public' or 'private'" });
+      }
+      
+      if (visibility === "private" && !contentId) {
+        return res.status(400).json({ error: "contentId is required for private files" });
       }
 
       const userId = (req.user as any)?.claims?.sub;
@@ -236,10 +245,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         {
           owner: userId,
           visibility: visibility === "public" ? "public" : "private",
-          // For private files, we'll later add ACL rules for purchasers
+          // For private files, add ACL rules for purchasers
           aclRules: contentId && visibility === "private" ? [{
             group: {
-              type: 1, // ObjectAccessGroupType.PURCHASERS
+              type: ObjectAccessGroupType.PURCHASERS,
               id: contentId
             },
             permission: ObjectPermission.READ

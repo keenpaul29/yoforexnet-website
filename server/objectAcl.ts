@@ -6,6 +6,9 @@
 // - Screenshots: Public (anyone can view on product pages)
 // - User uploads: Protected (owner + buyers)
 import { File } from "@google-cloud/storage";
+import { db } from "./db.js";
+import { contentPurchases } from "../shared/schema.js";
+import { eq, and } from "drizzle-orm";
 
 const ACL_POLICY_METADATA_KEY = "custom:aclPolicy";
 
@@ -73,9 +76,24 @@ class PurchasersAccessGroup extends BaseObjectAccessGroup {
   }
 
   async hasMember(userId: string): Promise<boolean> {
-    // TODO: Check if user has purchased this content from database
-    // For now, return false (will be implemented with purchase system)
-    return false;
+    try {
+      // Check if user has purchased this content from database
+      const purchase = await db
+        .select()
+        .from(contentPurchases)
+        .where(
+          and(
+            eq(contentPurchases.contentId, this.id),
+            eq(contentPurchases.buyerId, userId)
+          )
+        )
+        .limit(1);
+      
+      return purchase.length > 0;
+    } catch (error) {
+      console.error(`[ACL] Error checking purchase for user ${userId} and content ${this.id}:`, error);
+      return false;
+    }
   }
 }
 
@@ -170,12 +188,18 @@ export async function canAccessObject({
 
   // Go through the ACL rules to check if the user has the required permission.
   for (const rule of aclPolicy.aclRules || []) {
-    const accessGroup = createObjectAccessGroup(rule.group);
-    if (
-      (await accessGroup.hasMember(userId)) &&
-      isPermissionAllowed(requestedPermission, rule.permission)
-    ) {
-      return true;
+    try {
+      const accessGroup = createObjectAccessGroup(rule.group);
+      if (
+        (await accessGroup.hasMember(userId)) &&
+        isPermissionAllowed(requestedPermission, rule.permission)
+      ) {
+        return true;
+      }
+    } catch (error) {
+      console.error(`[ACL] Error processing ACL rule for group ${rule.group.type}:`, error);
+      // Continue to next rule instead of failing entirely
+      continue;
     }
   }
 
