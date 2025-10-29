@@ -20,7 +20,7 @@ module.exports = {
       name: 'yoforex-nextjs',
       script: 'node_modules/.bin/next',
       args: 'start -p 3000',
-      cwd: '/var/www/yoforex',
+      cwd: '/',
       instances: 2,
       exec_mode: 'cluster',
       
@@ -64,7 +64,7 @@ module.exports = {
     {
       name: 'yoforex-express',
       script: 'dist/index.js',
-      cwd: '/var/www/yoforex',
+      cwd: '/',
       instances: 2,
       exec_mode: 'cluster',
       
