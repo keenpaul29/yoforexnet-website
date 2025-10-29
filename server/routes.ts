@@ -1377,7 +1377,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Update the last ping timestamp
-      req.session[sessionKey] = now;
+      (req.session as any)[sessionKey] = now;
 
       // Record activity with SERVER-CALCULATED minutes (not client-supplied)
       const result = await storage.recordActivity(userId, minutesToAward);
@@ -1389,7 +1389,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           type: "coin_earned",
           title: "Activity Reward!",
           message: `You earned ${result.coinsEarned} coins for being active!`,
-          read: false,
         });
 
         res.json({
@@ -4973,7 +4972,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
     try {
       const activeOnly = req.query.activeOnly === 'true';
-      const bans = await storage.getIpBans(activeOnly);
+      const bans = await storage.getIpBans({ isActive: activeOnly });
       res.json(bans);
     } catch (error) {
       console.error('Error fetching IP bans:', error);
@@ -5019,7 +5018,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const metricType = req.query.metricType as string;
       const startDate = new Date(req.query.startDate as string);
       const endDate = new Date(req.query.endDate as string);
-      const metrics = await storage.getPerformanceMetrics(metricType, startDate, endDate);
+      const metrics = await storage.getPerformanceMetrics({ metricType, startDate, endDate });
       res.json(metrics);
     } catch (error) {
       console.error('Error fetching performance metrics:', error);
@@ -5157,7 +5156,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
     try {
       const userId = req.query.userId as string | undefined;
-      const keys = await storage.getApiKeys(userId);
+      const keys = await storage.getApiKeys({ userId });
       res.json(keys);
     } catch (error) {
       console.error('Error fetching API keys:', error);
@@ -5191,7 +5190,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
     try {
       const activeOnly = req.query.activeOnly === 'true';
-      const webhooks = await storage.getWebhooks(activeOnly);
+      const webhooks = await storage.getWebhooks({ isActive: activeOnly });
       res.json(webhooks);
     } catch (error) {
       console.error('Error fetching webhooks:', error);
