@@ -32,7 +32,9 @@ import {
   content,
   rechargeOrders,
   adminActions,
-  forumThreads
+  forumThreads,
+  campaigns,
+  sitemapLogs
 } from "../shared/schema.js";
 import { z } from "zod";
 import { db } from "./db.js";
@@ -74,6 +76,8 @@ import {
   deduplicateTags,
   countWords,
 } from '../shared/threadUtils.js';
+import { SitemapGenerator } from './services/sitemap-generator.js';
+import { SitemapSubmissionService } from './services/sitemap-submission.js';
 
 // Helper function to get authenticated user ID from session
 function getAuthenticatedUserId(req: any): string {
@@ -7397,6 +7401,530 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error fetching financial stats:", error);
       res.status(500).json({ error: "Failed to fetch financial stats" });
+    }
+  });
+
+  // ============================================================================
+  // SEO & MARKETING ADMIN ENDPOINTS
+  // ============================================================================
+
+  // 1. GET /api/admin/seo/content - Get all content with meta tags (support search query parameter)
+  app.get("/api/admin/seo/content", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const searchQuery = req.query.search as string | undefined;
+      
+      // Build content query with optional search filter
+      const contentItems = searchQuery
+        ? await db
+            .select({
+              id: content.id,
+              title: content.title,
+              slug: content.slug,
+              type: content.type,
+              category: content.category,
+              status: content.status,
+              focusKeyword: content.focusKeyword,
+              autoMetaDescription: content.autoMetaDescription,
+              views: content.views,
+              downloads: content.downloads,
+              createdAt: content.createdAt,
+            })
+            .from(content)
+            .where(
+              or(
+                sql`${content.title} ILIKE ${'%' + searchQuery + '%'}`,
+                sql`${content.slug} ILIKE ${'%' + searchQuery + '%'}`
+              )
+            )
+            .orderBy(desc(content.createdAt))
+            .limit(100)
+        : await db
+            .select({
+              id: content.id,
+              title: content.title,
+              slug: content.slug,
+              type: content.type,
+              category: content.category,
+              status: content.status,
+              focusKeyword: content.focusKeyword,
+              autoMetaDescription: content.autoMetaDescription,
+              views: content.views,
+              downloads: content.downloads,
+              createdAt: content.createdAt,
+            })
+            .from(content)
+            .orderBy(desc(content.createdAt))
+            .limit(100);
+
+      // Build threads query with optional search filter
+      const threads = searchQuery
+        ? await db
+            .select({
+              id: forumThreads.id,
+              title: forumThreads.title,
+              slug: forumThreads.slug,
+              type: sql<string>`'thread'`.as('type'),
+              category: forumThreads.categorySlug,
+              status: forumThreads.status,
+              focusKeyword: forumThreads.focusKeyword,
+              autoMetaDescription: forumThreads.metaDescription,
+              views: forumThreads.views,
+              downloads: sql<number>`0`.as('downloads'),
+              createdAt: forumThreads.createdAt,
+            })
+            .from(forumThreads)
+            .where(
+              or(
+                sql`${forumThreads.title} ILIKE ${'%' + searchQuery + '%'}`,
+                sql`${forumThreads.slug} ILIKE ${'%' + searchQuery + '%'}`
+              )
+            )
+            .orderBy(desc(forumThreads.createdAt))
+            .limit(100)
+        : await db
+            .select({
+              id: forumThreads.id,
+              title: forumThreads.title,
+              slug: forumThreads.slug,
+              type: sql<string>`'thread'`.as('type'),
+              category: forumThreads.categorySlug,
+              status: forumThreads.status,
+              focusKeyword: forumThreads.focusKeyword,
+              autoMetaDescription: forumThreads.metaDescription,
+              views: forumThreads.views,
+              downloads: sql<number>`0`.as('downloads'),
+              createdAt: forumThreads.createdAt,
+            })
+            .from(forumThreads)
+            .orderBy(desc(forumThreads.createdAt))
+            .limit(100);
+
+      // Combine and return
+      const allContent = [...contentItems, ...threads];
+      
+      res.json({
+        content: allContent,
+        total: allContent.length,
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching content:", error);
+      res.status(500).json({ error: "Failed to fetch content" });
+    }
+  });
+
+  // 2. PATCH /api/admin/seo/meta/:id - Update meta tags for content
+  app.patch("/api/admin/seo/meta/:id", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const contentId = req.params.id;
+      const { focusKeyword, metaDescription, contentType } = req.body;
+
+      // Validate input
+      const updateSchema = z.object({
+        focusKeyword: z.string().optional(),
+        metaDescription: z.string().max(160).optional(),
+        contentType: z.enum(['content', 'thread']).default('content'),
+      });
+
+      const validated = updateSchema.parse({ focusKeyword, metaDescription, contentType: contentType || 'content' });
+
+      if (validated.contentType === 'thread') {
+        // Update forum thread meta tags
+        await db
+          .update(forumThreads)
+          .set({
+            focusKeyword: validated.focusKeyword,
+            metaDescription: validated.metaDescription,
+          })
+          .where(eq(forumThreads.id, contentId));
+      } else {
+        // Update content meta tags
+        await db
+          .update(content)
+          .set({
+            focusKeyword: validated.focusKeyword,
+            autoMetaDescription: validated.metaDescription,
+          })
+          .where(eq(content.id, contentId));
+      }
+
+      // Log admin action
+      const adminId = getAuthenticatedUserId(req);
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'seo_meta_updated',
+        targetType: validated.contentType,
+        targetId: contentId,
+        details: { focusKeyword: validated.focusKeyword, metaDescription: validated.metaDescription },
+      });
+
+      res.json({ success: true, message: "Meta tags updated successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("[SEO Admin] Error updating meta tags:", error);
+      res.status(500).json({ error: "Failed to update meta tags" });
+    }
+  });
+
+  // 3. POST /api/admin/seo/campaigns - Create marketing campaign
+  app.post("/api/admin/seo/campaigns", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      
+      // Validate campaign data
+      const campaignSchema = z.object({
+        name: z.string().min(1).max(200),
+        type: z.string().max(50),
+        status: z.enum(['active', 'paused', 'completed', 'draft']).default('draft'),
+        discountPercent: z.number().int().min(0).max(100).optional(),
+        discountCode: z.string().max(50).optional(),
+        startDate: z.string().transform(str => new Date(str)),
+        endDate: z.string().transform(str => new Date(str)),
+      });
+
+      const validated = campaignSchema.parse(req.body);
+
+      // Create campaign
+      const [campaign] = await db.insert(campaigns).values({
+        userId: adminId,
+        name: validated.name,
+        type: validated.type,
+        status: validated.status,
+        discountPercent: validated.discountPercent || null,
+        discountCode: validated.discountCode || null,
+        startDate: validated.startDate,
+        endDate: validated.endDate,
+        uses: 0,
+        revenue: 0,
+      }).returning();
+
+      // Log admin action
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'campaign_created',
+        targetType: 'campaign',
+        targetId: campaign.id.toString(),
+        details: { name: campaign.name, type: campaign.type },
+      });
+
+      res.json({ success: true, campaign });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("[SEO Admin] Error creating campaign:", error);
+      res.status(500).json({ error: "Failed to create campaign" });
+    }
+  });
+
+  // 4. GET /api/admin/seo/campaigns - Get all campaigns
+  app.get("/api/admin/seo/campaigns", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const allCampaigns = await db
+        .select()
+        .from(campaigns)
+        .orderBy(desc(campaigns.createdAt));
+
+      res.json({ campaigns: allCampaigns });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching campaigns:", error);
+      res.status(500).json({ error: "Failed to fetch campaigns" });
+    }
+  });
+
+  // 5. GET /api/admin/seo/campaign-stats - Get aggregate campaign statistics
+  app.get("/api/admin/seo/campaign-stats", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Get real campaign stats from database
+      const [stats] = await db
+        .select({
+          totalCampaigns: count(),
+          totalRevenue: sql<number>`COALESCE(SUM(${campaigns.revenue}), 0)`,
+          totalUses: sql<number>`COALESCE(SUM(${campaigns.uses}), 0)`,
+          activeCampaigns: sql<number>`COUNT(CASE WHEN ${campaigns.status} = 'active' THEN 1 END)`,
+        })
+        .from(campaigns);
+
+      // Calculate additional metrics
+      const reach = stats.totalUses * 10; // Estimated reach multiplier
+      const conversions = stats.totalUses;
+      const roi = stats.totalRevenue > 0 ? ((stats.totalRevenue - 1000) / 1000) * 100 : 0; // Simplified ROI calculation
+
+      res.json({
+        totalCampaigns: stats.totalCampaigns,
+        activeCampaigns: stats.activeCampaigns,
+        totalReach: reach,
+        totalConversions: conversions,
+        totalRevenue: stats.totalRevenue,
+        averageROI: Math.round(roi * 100) / 100,
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching campaign stats:", error);
+      res.status(500).json({ error: "Failed to fetch campaign stats" });
+    }
+  });
+
+  // 6. GET /api/admin/seo/search-rankings - Get search ranking data (mock data)
+  app.get("/api/admin/seo/search-rankings", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Return mock search ranking data
+      const mockRankings = [
+        {
+          keyword: "forex trading EA",
+          position: 12,
+          previousPosition: 15,
+          searchVolume: 2400,
+          trend: "up",
+          url: "/marketplace",
+        },
+        {
+          keyword: "MT4 indicators",
+          position: 8,
+          previousPosition: 10,
+          searchVolume: 1800,
+          trend: "up",
+          url: "/marketplace",
+        },
+        {
+          keyword: "forex broker reviews",
+          position: 24,
+          previousPosition: 28,
+          searchVolume: 3200,
+          trend: "up",
+          url: "/brokers",
+        },
+        {
+          keyword: "algorithmic trading strategies",
+          position: 18,
+          previousPosition: 16,
+          searchVolume: 1200,
+          trend: "down",
+          url: "/discussions",
+        },
+        {
+          keyword: "gold trading EA",
+          position: 6,
+          previousPosition: 7,
+          searchVolume: 890,
+          trend: "up",
+          url: "/marketplace",
+        },
+      ];
+
+      res.json({
+        rankings: mockRankings,
+        averagePosition: 13.6,
+        totalKeywords: mockRankings.length,
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching search rankings:", error);
+      res.status(500).json({ error: "Failed to fetch search rankings" });
+    }
+  });
+
+  // 7. GET /api/admin/seo/top-queries - Get top search queries (mock data)
+  app.get("/api/admin/seo/top-queries", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Return mock top search queries data
+      const mockQueries = [
+        {
+          query: "best forex EA 2025",
+          impressions: 4520,
+          clicks: 342,
+          ctr: 7.57,
+          averagePosition: 8.2,
+        },
+        {
+          query: "MT5 scalping robot",
+          impressions: 3180,
+          clicks: 289,
+          ctr: 9.09,
+          averagePosition: 6.5,
+        },
+        {
+          query: "forex broker comparison",
+          impressions: 5640,
+          clicks: 198,
+          ctr: 3.51,
+          averagePosition: 14.3,
+        },
+        {
+          query: "free MT4 indicators",
+          impressions: 2890,
+          clicks: 176,
+          ctr: 6.09,
+          averagePosition: 11.2,
+        },
+        {
+          query: "gold trading strategy",
+          impressions: 2340,
+          clicks: 165,
+          ctr: 7.05,
+          averagePosition: 9.8,
+        },
+        {
+          query: "automated trading bot",
+          impressions: 1980,
+          clicks: 142,
+          ctr: 7.17,
+          averagePosition: 7.4,
+        },
+        {
+          query: "forex signal provider",
+          impressions: 3450,
+          clicks: 128,
+          ctr: 3.71,
+          averagePosition: 16.7,
+        },
+        {
+          query: "cryptocurrency trading EA",
+          impressions: 1560,
+          clicks: 115,
+          ctr: 7.37,
+          averagePosition: 10.1,
+        },
+      ];
+
+      res.json({
+        queries: mockQueries,
+        totalImpressions: mockQueries.reduce((sum, q) => sum + q.impressions, 0),
+        totalClicks: mockQueries.reduce((sum, q) => sum + q.clicks, 0),
+        averageCTR: (mockQueries.reduce((sum, q) => sum + q.ctr, 0) / mockQueries.length).toFixed(2),
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching top queries:", error);
+      res.status(500).json({ error: "Failed to fetch top queries" });
+    }
+  });
+
+  // 8. GET /api/admin/seo/sitemap-status - Get sitemap generation status
+  app.get("/api/admin/seo/sitemap-status", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Get recent sitemap logs
+      const recentLogs = await db
+        .select()
+        .from(sitemapLogs)
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(10);
+
+      // Get last successful generation
+      const [lastGeneration] = await db
+        .select()
+        .from(sitemapLogs)
+        .where(and(
+          eq(sitemapLogs.action, 'generate'),
+          eq(sitemapLogs.status, 'success')
+        ))
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(1);
+
+      // Get last submission attempts
+      const [lastGoogleSubmit] = await db
+        .select()
+        .from(sitemapLogs)
+        .where(eq(sitemapLogs.action, 'submit_google'))
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(1);
+
+      const [lastIndexNowSubmit] = await db
+        .select()
+        .from(sitemapLogs)
+        .where(eq(sitemapLogs.action, 'submit_indexnow'))
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(1);
+
+      res.json({
+        lastGeneration: lastGeneration || null,
+        lastGoogleSubmit: lastGoogleSubmit || null,
+        lastIndexNowSubmit: lastIndexNowSubmit || null,
+        recentLogs,
+        sitemapUrl: `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/sitemap.xml`,
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching sitemap status:", error);
+      res.status(500).json({ error: "Failed to fetch sitemap status" });
+    }
+  });
+
+  // 9. POST /api/admin/seo/sitemap/generate - Trigger sitemap generation
+  app.post("/api/admin/seo/sitemap/generate", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      const baseUrl = process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000';
+      
+      // Log generation start
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'pending',
+        urlCount: null,
+        submittedTo: null,
+        errorMessage: null,
+      });
+
+      // Generate sitemap
+      const generator = new SitemapGenerator(baseUrl);
+      const { xml, urlCount } = await generator.generateSitemap();
+
+      // Log successful generation
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'success',
+        urlCount,
+        submittedTo: null,
+        errorMessage: null,
+      });
+
+      // Submit to search engines
+      const submissionService = new SitemapSubmissionService(baseUrl);
+      const sitemapUrl = `${baseUrl}/sitemap.xml`;
+
+      // Submit to Google (best effort)
+      try {
+        await submissionService.pingGoogle(sitemapUrl);
+      } catch (err) {
+        console.error('[SEO Admin] Google submission failed:', err);
+      }
+
+      // Submit to IndexNow if API key is configured (best effort)
+      if (process.env.INDEXNOW_API_KEY) {
+        try {
+          // For IndexNow, we'll submit the sitemap URL itself
+          await submissionService.submitToIndexNow([sitemapUrl]);
+        } catch (err) {
+          console.error('[SEO Admin] IndexNow submission failed:', err);
+        }
+      }
+
+      // Log admin action
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'sitemap_generated',
+        targetType: 'sitemap',
+        targetId: null,
+        details: { urlCount, sitemapUrl },
+      });
+
+      res.json({
+        success: true,
+        message: "Sitemap generated successfully",
+        urlCount,
+        sitemapUrl,
+      });
+    } catch (error: any) {
+      // Log generation error
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'error',
+        urlCount: null,
+        submittedTo: null,
+        errorMessage: error.message,
+      });
+
+      console.error("[SEO Admin] Error generating sitemap:", error);
+      res.status(500).json({ error: "Failed to generate sitemap" });
     }
   });
 
