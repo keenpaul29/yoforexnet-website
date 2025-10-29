@@ -47,8 +47,8 @@ type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
 interface ContentDetailClientProps {
   slug: string;
-  initialContent: Content | null;
-  initialAuthor: UserType | null;
+  initialContent: Content | undefined;
+  initialAuthor: UserType | undefined;
   initialReviews: Array<ContentReview & { user: UserType }>;
   initialSimilarContent: Content[];
   initialAuthorReleases: Content[];

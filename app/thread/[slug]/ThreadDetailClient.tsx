@@ -36,7 +36,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 
 interface ThreadDetailClientProps {
-  initialThread: ForumThread | null;
+  initialThread: ForumThread | undefined;
   initialReplies: ForumReply[];
 }
 
@@ -144,7 +144,7 @@ export default function ThreadDetailClient({ initialThread, initialReplies }: Th
   const { data: thread, isLoading: threadLoading } = useQuery<ForumThread>({
     queryKey: ["/api/threads/slug", slug],
     enabled: !!slug,
-    initialData: initialThread || undefined,
+    initialData: initialThread,
   });
 
   const { data: replies = [], isLoading: repliesLoading } = useQuery<ForumReply[]>({

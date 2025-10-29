@@ -35,7 +35,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface UserProfileClientProps {
   username: string;
-  initialUser: UserType | null;
+  initialUser: UserType | undefined;
   initialBadges: Array<{ id: string; name: string; description: string }>;
   initialContent: Content[];
   initialThreads: ForumThread[];

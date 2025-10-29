@@ -72,7 +72,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     : `${EXPRESS_URL}/api/content/slug/${slug}`;
 
   // Fetch content with error handling that doesn't trigger Next.js 404
-  let content: Content | null = null;
+  let content: Content | undefined = undefined;
   try {
     const contentRes = await fetch(contentEndpoint, { 
       cache: 'no-store',
@@ -83,16 +83,16 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   } catch (error) {
     // Swallow error - we'll show custom error card
-    content = null;
+    content = undefined;
   }
 
-  // If content not found, return Client Component with null content to show custom error card
+  // If content not found, return Client Component with undefined content to show custom error card
   if (!content) {
     return (
       <ContentDetailClient
         slug={slug}
-        initialContent={null}
-        initialAuthor={null}
+        initialContent={undefined}
+        initialAuthor={undefined}
         initialReviews={[]}
         initialSimilarContent={[]}
         initialAuthorReleases={[]}
@@ -124,7 +124,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   ]);
 
   // Parse responses
-  const author = authorRes?.ok ? await authorRes.json() : null;
+  const author = authorRes?.ok ? await authorRes.json() : undefined;
   const reviews = reviewsRes?.ok ? await reviewsRes.json() : [];
   const similarContent = similarContentRes?.ok ? await similarContentRes.json() : [];
   const authorReleases = authorReleasesRes?.ok ? await authorReleasesRes.json() : [];

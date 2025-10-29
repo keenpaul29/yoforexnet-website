@@ -34,7 +34,7 @@ import {
 
 interface CategoryDiscussionClientProps {
   slug: string;
-  initialCategory: ForumCategory | null;
+  initialCategory: ForumCategory | undefined;
   initialThreads: ForumThread[];
 }
 

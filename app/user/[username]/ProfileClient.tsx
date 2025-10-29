@@ -81,12 +81,12 @@ interface ProfileData {
 
 interface ProfileClientProps {
   username: string;
-  initialData?: ProfileData | null;
+  initialData?: ProfileData | undefined;
 }
 
 export default function ProfileClient({
   username,
-  initialData = null,
+  initialData = undefined,
 }: ProfileClientProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -102,7 +102,7 @@ export default function ProfileClient({
     error 
   } = useQuery<ProfileData>({
     queryKey: ['/api/user', username, 'profile'],
-    initialData: initialData || undefined,
+    initialData: initialData,
     enabled: !!username,
     retry: 1,
     staleTime: 5 * 60 * 1000, // 5 minutes

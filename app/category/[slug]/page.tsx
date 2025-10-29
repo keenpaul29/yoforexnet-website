@@ -85,7 +85,7 @@ export default async function CategoryDiscussionPage({ params }: { params: Promi
   ]);
 
   // Parse responses
-  let category: ForumCategory | null = null;
+  let category: ForumCategory | undefined = undefined;
   let threads: ForumThread[] = [];
 
   if (categoryRes && categoryRes.ok) {

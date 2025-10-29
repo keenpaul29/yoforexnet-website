@@ -51,7 +51,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
   const { username } = await params;
   
   // Fetch profile data from the comprehensive profile endpoint
-  let profileData = null;
+  let profileData = undefined;
   try {
     const profileRes = await fetch(`${EXPRESS_URL}/api/user/${username}/profile`, { 
       cache: 'no-store',
@@ -61,7 +61,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
     }
   } catch (error) {
     // Swallow error - ProfileClient will show custom error card
-    profileData = null;
+    profileData = undefined;
   }
 
   // Pass profile data to Client Component
