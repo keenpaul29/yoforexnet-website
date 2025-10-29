@@ -1,32 +1,29 @@
-[00:00:01.270] Server  LOG      ✓ Ready in 889ms
-[00:00:01.548] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.189] Server  LOG      ✓ Ready in 828ms
+[00:00:01.584] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:05.603] Server  LOG      ○ Compiling / ...
-[00:00:12.783] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.808] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.808] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:12.812] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.812] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:12.813] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.814] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:12.865] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.866] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:12.867] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.867] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:12.868] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.869] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:12.995] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.172] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.173] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:14.175] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.175] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:14.178] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.178] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:14.872] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:14.958] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:21.800] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:23.363] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:04.211] Server  LOG      ○ Compiling / ...
+[00:00:11.117] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.142] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.143] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:11.146] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.147] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:11.148] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.148] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:11.246] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.306] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.306] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:11.308] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.308] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:11.314] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.315] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:11.339] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.340] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:11.341] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.342] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:11.343] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.344] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:17.161] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:17.161] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -60,12 +57,12 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761730494829
--                               1761730529539
++                               1761730552512
+-                               1761730591478
             ...
           ...
 
-[00:00:24.777] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:18.211] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -99,8 +96,8 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761730496309
--                               1761730529782
++                               1761730552659
+-                               1761730591207
             ...
           ...
 
