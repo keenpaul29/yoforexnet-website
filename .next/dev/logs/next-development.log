@@ -196,3 +196,104 @@ https://react.dev/link/hydration-mismatch
 [00:02:05.648] Browser LOG     [Activity Tracker] User active for 7 seconds
 [00:02:06.636] Browser LOG     [Activity Tracker] User active for 8 seconds
 [00:02:07.635] Browser LOG     [Activity Tracker] User active for 9 seconds
+[00:02:08.632] Browser LOG     [Activity Tracker] User active for 10 seconds
+[00:02:09.635] Browser LOG     [Activity Tracker] User active for 11 seconds
+[00:02:10.640] Browser LOG     [Activity Tracker] User active for 12 seconds
+[00:02:11.656] Browser LOG     [Activity Tracker] User active for 13 seconds
+[00:02:12.631] Browser LOG     [Activity Tracker] User active for 14 seconds
+[00:02:13.641] Browser LOG     [Activity Tracker] User active for 15 seconds
+[00:02:14.642] Browser LOG     [Activity Tracker] User active for 16 seconds
+[00:02:15.625] Browser LOG     [Activity Tracker] User active for 17 seconds
+[00:02:16.638] Browser LOG     [Activity Tracker] User active for 18 seconds
+[00:02:17.630] Browser LOG     [Activity Tracker] User active for 19 seconds
+[00:02:18.127] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:18.127] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/me
+[00:02:18.193] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:18.194] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/publish/categories
+[00:02:18.638] Browser LOG     [Activity Tracker] User active for 20 seconds
+[00:02:22.473] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/publish" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="publish/pa...">
+              <SegmentTrieNode>
+              <PublishPage>
+                <PublishClient initialCategories={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761726704014
+-                               1761726744456
+            ...
+          ...
+
+[00:02:22.473] Browser LOG     [Activity Tracker] User active for 0 seconds
+[00:02:23.462] Browser LOG     [Activity Tracker] User active for 1 seconds
+[00:02:24.479] Browser LOG     [Activity Tracker] User active for 2 seconds
+[00:02:25.233] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:25.233] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:02:25.234] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:25.234] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:02:25.235] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:25.236] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:02:28.737] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761726710363
+-                               1761726751422
+            ...
+          ...
+
