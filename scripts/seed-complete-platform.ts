@@ -69,7 +69,6 @@ async function seedUsers() {
         email: user.email,
         reputationScore: user.reputationScore,
         totalCoins: user.totalCoins,
-        role: 'member',
       }).returning();
       
       insertedUsers.push(inserted);
@@ -112,9 +111,9 @@ async function seedThreads(userMap: Map<string, string>) {
         categorySlug: thread.categorySlug,
         authorId: authorId,
         views: Math.floor(Math.random() * 500) + 50,
-        likes: Math.floor(Math.random() * 30),
-        bookmarks: Math.floor(Math.random() * 15),
-        shares: Math.floor(Math.random() * 5),
+        likeCount: Math.floor(Math.random() * 30),
+        bookmarkCount: Math.floor(Math.random() * 15),
+        shareCount: Math.floor(Math.random() * 5),
         isPinned: false,
         isLocked: false,
       }).returning();
