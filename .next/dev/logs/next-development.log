@@ -1,22 +1,25 @@
-[00:00:02.085] Server  LOG      ✓ Ready in 1439ms
-[00:00:02.091] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:00.978] Server  LOG      ✓ Ready in 687ms
+[00:00:02.059] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:05.127] Server  LOG      ○ Compiling / ...
-[00:00:13.976] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.030] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.031] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:14.037] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.037] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:14.040] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.040] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:14.098] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.098] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:14.100] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.101] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:14.103] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.103] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:14.254] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:18.275] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:03.998] Server  LOG      ○ Compiling / ...
+[00:00:09.518] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.533] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.534] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:09.537] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.537] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:09.538] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.538] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:09.613] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.685] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.685] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:09.686] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.687] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:09.688] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.688] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:10.547] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:10.597] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:11.218] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -50,8 +53,47 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761738160499
--                               1761738201335
++                               1761738309955
+-                               1761738308986
+            ...
+          ...
+
+[00:00:13.121] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761738268099
+-                               1761738309150
             ...
           ...
 
