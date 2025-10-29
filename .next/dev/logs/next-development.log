@@ -143,3 +143,435 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
+[00:03:45.639] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:45.639] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:45.640] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:45.640] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:45.642] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:45.643] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:46.080] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:46.081] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:46.082] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:46.082] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:46.084] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:46.084] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:46.835] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:46.835] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:46.836] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:46.836] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:46.837] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:46.838] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:50.359] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:50.359] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    ...
+                      <DialogTrigger asChild={true}>
+                        <Primitive.button type="button" aria-haspopup="dialog" aria-expanded={false} ...>
+                          <Primitive.button.Slot type="button" aria-haspopup="dialog" aria-expanded={false} ...>
+                            <Primitive.button.SlotClone type="button" aria-haspopup="dialog" aria-expanded={false} ...>
+                              <_c variant="ghost" size="icon" className="md:hidden" data-testid="button-menu" ...>
+                                <button
+                                  className={"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded..."}
+                                  ref={function}
+                                  data-testid="button-menu"
+                                  type="button"
+                                  aria-haspopup="dialog"
+                                  aria-expanded={false}
++                                 aria-controls="radix-_R_16anelb_"
+-                                 aria-controls="radix-_R_4pinelb_"
+                                  data-state="closed"
+                                  onClick={function handleEvent}
+                                >
+                      ...
+                    <StatsBar>
+                    <main className="container ...">
+                      <div className="grid grid-...">
+                        <aside>
+                        ...
+                          <div dir="ltr" data-orientation="horizontal" className="w-full" ref={null}>
+                            ...
+                              <div role="tablist" aria-orientation="horizontal" className="h-10 items..." tabIndex={-1} ...>
+                                ...
+                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
+                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
+                                      <Primitive.button type="button" role="tab" aria-selected={true} ...>
+                                        <button
+                                          type="button"
+                                          role="tab"
+                                          aria-selected={true}
++                                         aria-controls="radix-_R_2cqnelb_-content-new"
+-                                         aria-controls="radix-_R_9jinelb_-content-new"
+                                          data-state="active"
+                                          data-disabled={undefined}
+                                          disabled={false}
++                                         id="radix-_R_2cqnelb_-trigger-new"
+-                                         id="radix-_R_9jinelb_-trigger-new"
+                                          className="inline-flex items-center justify-center whitespace-nowrap px-3 py..."
+                                          data-testid="tab-new"
+                                          onMouseDown={function}
+                                          onKeyDown={function}
+                                          onFocus={function}
+                                          tabIndex={-1}
+                                          data-orientation="horizontal"
+                                          data-radix-collection-item=""
+                                          ref={function}
+                                        >
++                                         New
+                                ...
+                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
+                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
+                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
+                                        <button
+                                          type="button"
+                                          role="tab"
+                                          aria-selected={false}
++                                         aria-controls="radix-_R_2cqnelb_-content-trending"
+-                                         aria-controls="radix-_R_9jinelb_-content-trending"
+                                          data-state="inactive"
+                                          data-disabled={undefined}
+                                          disabled={false}
++                                         id="radix-_R_2cqnelb_-trigger-trending"
+-                                         id="radix-_R_9jinelb_-trigger-trending"
+                                          className="inline-flex items-center justify-center whitespace-nowrap px-3 py..."
+                                          data-testid="tab-trending"
+                                          onMouseDown={function}
+                                          onKeyDown={function}
+                                          onFocus={function}
+                                          tabIndex={-1}
+                                          data-orientation="horizontal"
+                                          data-radix-collection-item=""
+                                          ref={function}
+                                        >
++                                         Trending
+                                ...
+                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
+                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
+                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
+                                        <button
+                                          type="button"
+                                          role="tab"
+                                          aria-selected={false}
++                                         aria-controls="radix-_R_2cqnelb_-content-solved"
+-                                         aria-controls="radix-_R_9jinelb_-content-solved"
+                                          data-state="inactive"
+                                          data-disabled={undefined}
+                                          disabled={false}
++                                         id="radix-_R_2cqnelb_-trigger-solved"
+-                                         id="radix-_R_9jinelb_-trigger-solved"
+                                          className="inline-flex items-center justify-center whitespace-nowrap px-3 py..."
+                                          data-testid="tab-solved"
+                                          onMouseDown={function}
+                                          onKeyDown={function}
+                                          onFocus={function}
+                                          tabIndex={-1}
+                                          data-orientation="horizontal"
+                                          data-radix-collection-item=""
+                                          ref={function}
+                                        >
++                                         Solved
+                            <div className="px-5 py-1">
+                              <_c4 value="new" className="mt-0">
+                                <TabsContent ref={null} className="ring-offse..." value="new">
+                                  <Presence present={true}>
+                                    <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
+                                      <div
+                                        data-state="active"
+                                        data-orientation="horizontal"
+                                        role="tabpanel"
++                                       aria-labelledby="radix-_R_2cqnelb_-trigger-new"
+-                                       aria-labelledby="radix-_R_9jinelb_-trigger-new"
+                                        hidden={false}
++                                       id="radix-_R_2cqnelb_-content-new"
+-                                       id="radix-_R_9jinelb_-content-new"
+                                        tabIndex={0}
+                                        className="ring-offset-background focus-visible:outline-none focus-visible:rin..."
+                                        style={{animationDuration:"0s"}}
+                                        ref={function}
+                                      >
+                              <_c4 value="trending" className="mt-0">
+                                <TabsContent ref={null} className="ring-offse..." value="trending">
+                                  <Presence present={false}>
+                                    <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
+                                      <div
+                                        data-state="inactive"
+                                        data-orientation="horizontal"
+                                        role="tabpanel"
++                                       aria-labelledby="radix-_R_2cqnelb_-trigger-trending"
+-                                       aria-labelledby="radix-_R_9jinelb_-trigger-trending"
+                                        hidden={true}
++                                       id="radix-_R_2cqnelb_-content-trending"
+-                                       id="radix-_R_9jinelb_-content-trending"
+                                        tabIndex={0}
+                                        className="ring-offset-background focus-visible:outline-none focus-visible:rin..."
+                                        style={{animationDuration:undefined}}
+                                        ref={function}
+                                      >
+                              <_c4 value="solved" className="mt-0">
+                                <TabsContent ref={null} className="ring-offse..." value="solved">
+                                  <Presence present={false}>
+                                    <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
+                                      <div
+                                        data-state="inactive"
+                                        data-orientation="horizontal"
+                                        role="tabpanel"
++                                       aria-labelledby="radix-_R_2cqnelb_-trigger-solved"
+-                                       aria-labelledby="radix-_R_9jinelb_-trigger-solved"
+                                        hidden={true}
++                                       id="radix-_R_2cqnelb_-content-solved"
+-                                       id="radix-_R_9jinelb_-content-solved"
+                                        tabIndex={0}
+                                        className="ring-offset-background focus-visible:outline-none focus-visible:rin..."
+                                        style={{animationDuration:undefined}}
+                                        ref={function}
+                                      >
+                        ...
+                          <div dir="ltr" data-orientation="horizontal" className="w-full" ref={null}>
+                            ...
+                              <div role="tablist" aria-orientation="horizontal" className="items-cent..." tabIndex={-1} ...>
+                                ...
+                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
+                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
+                                      <Primitive.button type="button" role="tab" aria-selected={true} ...>
+                                        <button
+                                          type="button"
+                                          role="tab"
+                                          aria-selected={true}
++                                         aria-controls="radix-_R_4uqnelb_-content-contributors"
+-                                         aria-controls="radix-_R_jrinelb_-content-contributors"
+                                          data-state="active"
+                                          data-disabled={undefined}
+                                          disabled={false}
++                                         id="radix-_R_4uqnelb_-trigger-contributors"
+-                                         id="radix-_R_jrinelb_-trigger-contributors"
+                                          className="inline-flex items-center justify-center whitespace-nowrap rounded..."
+                                          data-testid="tab-contributors"
+                                          onMouseDown={function}
+                                          onKeyDown={function}
+                                          onFocus={function}
+                                          tabIndex={-1}
+                                          data-orientation="horizontal"
+                                          data-radix-collection-item=""
+                                          ref={function}
+                                        >
++                                         Helpful
+                                ...
+                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
+                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
+                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
+                                        <button
+                                          type="button"
+                                          role="tab"
+                                          aria-selected={false}
++                                         aria-controls="radix-_R_4uqnelb_-content-uploaders"
+-                                         aria-controls="radix-_R_jrinelb_-content-uploaders"
+                                          data-state="inactive"
+                                          data-disabled={undefined}
+                                          disabled={false}
++                                         id="radix-_R_4uqnelb_-trigger-uploaders"
+-                                         id="radix-_R_jrinelb_-trigger-uploaders"
+                                          className="inline-flex items-center justify-center whitespace-nowrap rounded..."
+                                          data-testid="tab-uploaders"
+                                          onMouseDown={function}
+                                          onKeyDown={function}
+                                          onFocus={function}
+                                          tabIndex={-1}
+                                          data-orientation="horizontal"
+                                          data-radix-collection-item=""
+                                          ref={function}
+                                        >
++                                         Uploads
+                                ...
+                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
+                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
+                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
+                                        <button
+                                          type="button"
+                                          role="tab"
+                                          aria-selected={false}
++                                         aria-controls="radix-_R_4uqnelb_-content-streaks"
+-                                         aria-controls="radix-_R_jrinelb_-content-streaks"
+                                          data-state="inactive"
+                                          data-disabled={undefined}
+                                          disabled={false}
++                                         id="radix-_R_4uqnelb_-trigger-streaks"
+-                                         id="radix-_R_jrinelb_-trigger-streaks"
+                                          className="inline-flex items-center justify-center whitespace-nowrap rounded..."
+                                          data-testid="tab-streaks"
+                                          onMouseDown={function}
+                                          onKeyDown={function}
+                                          onFocus={function}
+                                          tabIndex={-1}
+                                          data-orientation="horizontal"
+                                          data-radix-collection-item=""
+                                          ref={function}
+                                        >
++                                         Streaks
+                            <_c4 value="contributors" className="mt-2">
+                              <TabsContent ref={null} className="ring-offse..." value="contributors">
+                                <Presence present={true}>
+                                  <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
+                                    <div
+                                      data-state="active"
+                                      data-orientation="horizontal"
+                                      role="tabpanel"
++                                     aria-labelledby="radix-_R_4uqnelb_-trigger-contributors"
+-                                     aria-labelledby="radix-_R_jrinelb_-trigger-contributors"
+                                      hidden={false}
++                                     id="radix-_R_4uqnelb_-content-contributors"
+-                                     id="radix-_R_jrinelb_-content-contributors"
+                                      tabIndex={0}
+                                      className="ring-offset-background focus-visible:outline-none focus-visible:ring-..."
+                                      style={{animationDuration:"0s"}}
+                                      ref={function}
+                                    >
+                            <_c4 value="uploaders" className="mt-2">
+                              <TabsContent ref={null} className="ring-offse..." value="uploaders">
+                                <Presence present={false}>
+                                  <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
+                                    <div
+                                      data-state="inactive"
+                                      data-orientation="horizontal"
+                                      role="tabpanel"
++                                     aria-labelledby="radix-_R_4uqnelb_-trigger-uploaders"
+-                                     aria-labelledby="radix-_R_jrinelb_-trigger-uploaders"
+                                      hidden={true}
++                                     id="radix-_R_4uqnelb_-content-uploaders"
+-                                     id="radix-_R_jrinelb_-content-uploaders"
+                                      tabIndex={0}
+                                      className="ring-offset-background focus-visible:outline-none focus-visible:ring-..."
+                                      style={{animationDuration:undefined}}
+                                      ref={function}
+                                    >
+                            <_c4 value="streaks" className="mt-2">
+                              <TabsContent ref={null} className="ring-offse..." value="streaks">
+                                <Presence present={false}>
+                                  <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
+                                    <div
+                                      data-state="inactive"
+                                      data-orientation="horizontal"
+                                      role="tabpanel"
++                                     aria-labelledby="radix-_R_4uqnelb_-trigger-streaks"
+-                                     aria-labelledby="radix-_R_jrinelb_-trigger-streaks"
+                                      hidden={true}
++                                     id="radix-_R_4uqnelb_-content-streaks"
+-                                     id="radix-_R_jrinelb_-content-streaks"
+                                      tabIndex={0}
+                                      className="ring-offset-background focus-visible:outline-none focus-visible:ring-..."
+                                      style={{animationDuration:undefined}}
+                                      ref={function}
+                                    >
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761727282938
+-                               1761727279827
+            ...
+          ...
+
+[00:03:51.217] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761727283982
+-                               1761727280533
+            ...
+          ...
+
+[00:06:08.783] Browser LOG     [Activity Tracker] User active for 0 seconds
+[00:06:09.799] Browser LOG     [Activity Tracker] User active for 1 seconds
+[00:06:10.799] Browser LOG     [Activity Tracker] User active for 2 seconds
+[00:06:11.796] Browser LOG     [Activity Tracker] User active for 3 seconds
+[00:06:12.801] Browser LOG     [Activity Tracker] User active for 4 seconds
+[00:06:13.803] Browser LOG     [Activity Tracker] User active for 5 seconds
+[00:06:14.805] Browser LOG     [Activity Tracker] User active for 6 seconds
+[00:06:15.794] Browser LOG     [Activity Tracker] User active for 7 seconds
+[00:06:16.793] Browser LOG     [Activity Tracker] User active for 8 seconds
+[00:06:17.802] Browser LOG     [Activity Tracker] User active for 9 seconds
+[00:06:18.807] Browser LOG     [Activity Tracker] User active for 10 seconds
+[00:06:19.793] Browser LOG     [Activity Tracker] User active for 11 seconds
+[00:06:20.805] Browser LOG     [Activity Tracker] User active for 12 seconds
+[00:06:21.796] Browser LOG     [Activity Tracker] User active for 13 seconds
+[00:06:22.795] Browser LOG     [Activity Tracker] User active for 14 seconds
+[00:06:23.803] Browser LOG     [Activity Tracker] User active for 15 seconds
+[00:06:24.803] Browser LOG     [Activity Tracker] User active for 16 seconds
+[00:06:25.794] Browser LOG     [Activity Tracker] User active for 17 seconds
+[00:06:26.805] Browser LOG     [Activity Tracker] User active for 18 seconds
+[00:06:27.796] Browser LOG     [Activity Tracker] User active for 19 seconds
+[00:06:28.802] Browser LOG     [Activity Tracker] User active for 20 seconds
+[00:06:29.804] Browser LOG     [Activity Tracker] User active for 21 seconds
+[00:06:30.803] Browser LOG     [Activity Tracker] User active for 22 seconds
+[00:06:31.792] Browser LOG     [Activity Tracker] User active for 23 seconds
+[00:06:32.791] Browser LOG     [Activity Tracker] User active for 24 seconds
+[00:06:33.795] Browser LOG     [Activity Tracker] User active for 25 seconds
+[00:06:34.802] Browser LOG     [Activity Tracker] User active for 26 seconds
+[00:06:35.792] Browser LOG     [Activity Tracker] User active for 27 seconds
+[00:06:36.795] Browser LOG     [Activity Tracker] User active for 28 seconds
+[00:06:37.801] Browser LOG     [Activity Tracker] User active for 29 seconds
+[00:06:38.806] Browser LOG     [Activity Tracker] User active for 30 seconds
+[00:06:39.806] Browser LOG     [Activity Tracker] User active for 31 seconds
+[00:06:40.805] Browser LOG     [Activity Tracker] User active for 32 seconds
+[00:06:41.801] Browser LOG     [Activity Tracker] User active for 33 seconds
+[00:06:42.796] Browser LOG     [Activity Tracker] User active for 34 seconds
+[00:06:43.798] Browser LOG     [Activity Tracker] User active for 35 seconds
+[00:06:44.800] Browser LOG     [Activity Tracker] User active for 36 seconds
+[00:06:45.805] Browser LOG     [Activity Tracker] User active for 37 seconds
+[00:06:46.791] Browser LOG     [Activity Tracker] User active for 38 seconds
+[00:06:47.796] Browser LOG     [Activity Tracker] User active for 39 seconds
+[00:06:48.801] Browser LOG     [Activity Tracker] User active for 40 seconds
+[00:06:49.806] Browser LOG     [Activity Tracker] User active for 41 seconds
