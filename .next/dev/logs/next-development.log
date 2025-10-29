@@ -150,3 +150,207 @@ https://react.dev/link/hydration-mismatch
             ...
       ...
 
+[00:03:00.376] Server  LOG      ✓ Compiled in 794ms
+[00:03:00.773] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.789] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.790] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:00.795] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.795] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:00.797] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.797] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:00.846] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.846] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:00.847] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.847] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:00.848] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:00.849] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:16.518] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:16.519] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:16.523] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:16.524] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:16.527] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:16.527] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:16.691] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:17.939] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:18.828] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761742795126
+-                               1761742793901
+            ...
+          ...
+
+[00:03:22.813] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:22.813] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:22.814] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:22.815] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:22.816] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:22.816] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:34.630] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:34.630] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:34.634] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:34.635] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:34.636] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:34.636] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:35.530] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:35.531] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:35.533] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:35.533] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:35.535] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:35.536] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:49.992] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:49.992] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:49.993] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:49.993] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:49.994] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:49.995] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:51.031] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:51.031] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:51.032] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:51.034] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:51.035] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:51.035] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:05:29.971] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:29.971] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:05:29.973] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:29.973] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:05:29.974] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:29.974] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:05:30.629] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:31.357] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761742927855
+-                               1761742926989
+            ...
+          ...
+
+[00:06:02.211] Server  LOG      ✓ Compiled in 688ms
+[00:06:02.654] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.666] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.667] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:02.671] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.671] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:02.672] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.672] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:02.707] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.707] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:02.708] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.708] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:02.709] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:02.709] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:20.457] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:20.458] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:20.459] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:20.459] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:20.461] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:20.461] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:20.631] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:21.465] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:22.218] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761742978688
+-                               1761742977718
+            ...
+          ...
+
+[00:06:24.347] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:24.347] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:24.349] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:24.349] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:24.350] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:24.350] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads

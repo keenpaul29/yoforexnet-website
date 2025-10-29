@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
+import { headers } from 'next/headers';
 import './globals.css';
 import { AppProviders } from './components/providers/AppProviders';
 
@@ -50,6 +51,11 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'your-google-verification-code',
+    yandex: 'e91dbe03ac0e8a86',
+    other: {
+      'msvalidate.01': 'A5F52C377150D58660B161CD33E36F94',
+      'seznam-wmt': 'aVrviVp76xjLZOqc5q0E4GHSDgofJpN6',
+    },
   },
 };
 
@@ -63,6 +69,21 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Google Analytics 4 (gtag.js) - Loaded on all public pages */}
+        {/* Admin/Dashboard routes have their own layouts that override this */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LWZ81QCJMR" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-LWZ81QCJMR');
+            `,
+          }}
+        />
+        
+        {/* Google Tag Manager (Optional - requires NEXT_PUBLIC_GTM_ID env var) */}
         {gtmId && (
           <script
             dangerouslySetInnerHTML={{
