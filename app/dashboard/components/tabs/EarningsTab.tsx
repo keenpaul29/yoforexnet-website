@@ -9,10 +9,17 @@ import { FilterPanel } from "../shared/FilterPanel";
 import { Coins, TrendingUp, Wallet, ArrowUpRight } from "lucide-react";
 import { Area, AreaChart, Pie, PieChart, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
+interface EarningsBreakdown {
+  total: number;
+  thisMonth: number;
+  currentBalance: number;
+  pendingWithdrawal: number;
+}
+
 export function EarningsTab() {
   const [filters, setFilters] = useState({});
 
-  const { data: earningsData, isLoading } = useQuery({
+  const { data: earningsData, isLoading } = useQuery<EarningsBreakdown>({
     queryKey: ["/api/me/earnings-breakdown", filters],
   });
 
