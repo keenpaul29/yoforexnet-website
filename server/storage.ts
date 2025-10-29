@@ -4565,7 +4565,14 @@ export class DrizzleStorage implements IStorage {
   }
 
   async createBroker(insertBroker: InsertBroker): Promise<Broker> {
-    const [broker] = await db.insert(brokers).values(insertBroker).returning();
+    const values: any = { ...insertBroker };
+    
+    // Convert numeric fields to strings
+    if (values.minSpread !== undefined && values.minSpread !== null) {
+      values.minSpread = String(values.minSpread);
+    }
+    
+    const [broker] = await db.insert(brokers).values(values).returning();
     return broker;
   }
 
@@ -6016,18 +6023,26 @@ export class DrizzleStorage implements IStorage {
       throw new Error('Insufficient balance');
     }
 
-    const [withdrawal] = await db.insert(withdrawalRequests).values({
+    const values: any = {
       userId,
       amount: data.amount,
       cryptoType: data.cryptoType,
       walletAddress: data.walletAddress,
       status: (data.status || 'pending') as "pending" | "processing" | "completed" | "failed" | "cancelled",
-      exchangeRate: data.exchangeRate,
-      cryptoAmount: data.cryptoAmount,
+      exchangeRate: String(data.exchangeRate),
+      cryptoAmount: String(data.cryptoAmount),
       processingFee: data.processingFee,
-      transactionHash: data.transactionHash,
-      adminNotes: data.adminNotes,
-    }).returning();
+    };
+
+    if (data.transactionHash) {
+      values.transactionHash = data.transactionHash;
+    }
+
+    if (data.adminNotes) {
+      values.adminNotes = data.adminNotes;
+    }
+
+    const [withdrawal] = await db.insert(withdrawalRequests).values(values).returning();
 
     const newTotalCoins = user.totalCoins - data.amount;
     await db
