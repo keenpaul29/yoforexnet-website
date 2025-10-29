@@ -212,6 +212,22 @@ export interface ProfilePageSchema extends BaseSchema {
   dateModified?: string;
 }
 
+export interface PersonSchema extends BaseSchema {
+  '@type': 'Person';
+  '@id': string;
+  name: string;
+  url: string;
+  image?: string;
+  jobTitle?: string;
+  description?: string;
+  alumniOf?: Organization;
+  affiliation?: Organization;
+  worksFor?: Organization;
+  sameAs?: string[];
+  knowsAbout?: string[];
+  interactionStatistic?: InteractionCounter[];
+}
+
 // ============================================================================
 // SITE CONFIGURATION
 // ============================================================================
@@ -425,9 +441,111 @@ export function generateProductSchema(params: {
 }
 
 /**
- * Generate Person schema for user profiles
+ * Generate comprehensive Person schema for user profiles
+ * Follows Schema.org 2025 Person specification
  */
 export function generatePersonSchema(params: {
+  user: User;
+  baseUrl: string;
+  reputationScore?: number;
+  threadCount?: number;
+  replyCount?: number;
+  badges?: string[];
+}): PersonSchema {
+  const { user, baseUrl, reputationScore, threadCount, replyCount, badges } = params;
+  
+  // Build name from firstName/lastName or fallback to username
+  const name = user.firstName && user.lastName 
+    ? `${user.firstName} ${user.lastName}`
+    : user.username;
+  
+  // Build sameAs array from social profiles
+  const sameAs: string[] = [];
+  if (user.youtubeUrl) sameAs.push(user.youtubeUrl);
+  if (user.instagramHandle) {
+    // Handle both full URLs and handles
+    const instaUrl = user.instagramHandle.startsWith('http') 
+      ? user.instagramHandle 
+      : `https://instagram.com/${user.instagramHandle}`;
+    sameAs.push(instaUrl);
+  }
+  if (user.telegramHandle) {
+    // Handle both full URLs and handles
+    const telegramUrl = user.telegramHandle.startsWith('http') || user.telegramHandle.startsWith('https://t.me/')
+      ? user.telegramHandle
+      : `https://t.me/${user.telegramHandle}`;
+    sameAs.push(telegramUrl);
+  }
+  if (user.myfxbookLink) sameAs.push(user.myfxbookLink);
+  
+  // Build knowsAbout from badges (expertise areas)
+  const knowsAbout: string[] = [];
+  if (badges && badges.length > 0) {
+    // Map badge types to expertise areas
+    const badgeToExpertise: Record<string, string> = {
+      'EA_EXPERT': 'Expert Advisor Development',
+      'TRADER_PRO': 'Forex Trading',
+      'HELPFUL_MEMBER': 'Community Support',
+      'TOP_CONTRIBUTOR': 'Technical Analysis',
+      'VERIFIED_TRADER': 'Live Trading',
+      'EARLY_ADOPTER': 'Trading Systems',
+      'CONTENT_CREATOR': 'Trading Education'
+    };
+    badges.forEach(badge => {
+      if (badgeToExpertise[badge]) {
+        knowsAbout.push(badgeToExpertise[badge]);
+      }
+    });
+  }
+  
+  // Add default expertise based on user level
+  if (!knowsAbout.length) {
+    knowsAbout.push('Forex Trading', 'Expert Advisors');
+  }
+  
+  // Build interaction statistics
+  const interactionStatistic: InteractionCounter[] = [];
+  if (threadCount) {
+    interactionStatistic.push({
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/CreateAction',
+      userInteractionCount: threadCount,
+    });
+  }
+  if (replyCount) {
+    interactionStatistic.push({
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/CommentAction',
+      userInteractionCount: replyCount,
+    });
+  }
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${baseUrl}/user/${user.username}#person`,
+    name,
+    url: `${baseUrl}/user/${user.username}`,
+    image: user.profileImageUrl || `${baseUrl}/default-avatar.png`,
+    description: `Forex trader and community member on YoForex with ${reputationScore || 0} reputation points`,
+    jobTitle: 'Forex Trader',
+    worksFor: {
+      '@type': 'Organization',
+      '@id': `${baseUrl}#organization`,
+      name: 'YoForex Community',
+      url: baseUrl,
+    },
+    ...(sameAs.length > 0 && { sameAs }),
+    ...(knowsAbout.length > 0 && { knowsAbout }),
+    ...(interactionStatistic.length > 0 && { interactionStatistic }),
+  };
+}
+
+/**
+ * Generate ProfilePage schema for user profiles (legacy)
+ * Use generatePersonSchema for comprehensive Person schema
+ */
+export function generateProfilePageSchema(params: {
   user: User;
   canonicalUrl: string;
 }): ProfilePageSchema {

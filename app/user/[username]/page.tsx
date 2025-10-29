@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 import ProfileClient from './ProfileClient';
+import SchemaGenerator from '@/components/SchemaGenerator';
+import { generatePersonSchema } from '@/lib/schema-generator';
 
 // Express API base URL
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoforex.com';
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
@@ -64,12 +67,28 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
     profileData = undefined;
   }
 
+  // Generate Person schema if we have profile data
+  let personSchema = null;
+  if (profileData?.user) {
+    personSchema = generatePersonSchema({
+      user: profileData.user,
+      baseUrl: BASE_URL,
+      reputationScore: profileData.user.reputationScore,
+      threadCount: profileData.stats?.threads || 0,
+      replyCount: profileData.stats?.replies || 0,
+      badges: profileData.user.badges?.map((badge: any) => badge.slug || badge) || []
+    });
+  }
+
   // Pass profile data to Client Component
   return (
-    <ProfileClient
-      username={username}
-      initialData={profileData}
-    />
+    <>
+      {personSchema && <SchemaGenerator schema={personSchema} />}
+      <ProfileClient
+        username={username}
+        initialData={profileData}
+      />
+    </>
   );
 }
 
