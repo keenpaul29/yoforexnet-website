@@ -14,26 +14,43 @@ import { useToast } from "@/hooks/use-toast";
 import { Target, TrendingUp, CheckCircle, Clock, Plus } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
+interface Goal {
+  id: string;
+  goalType: string;
+  targetValue: number;
+  currentValue: number;
+  status: "active" | "completed";
+  startDate: string;
+  endDate: string;
+}
+
+interface Achievement {
+  id: string;
+  achievement?: {
+    name: string;
+    icon?: string;
+    requirement: number;
+  };
+  progress: number;
+  unlockedAt?: string | null;
+}
+
 export function GoalsTab() {
   const [open, setOpen] = useState(false);
   const [goalType, setGoalType] = useState("");
   const [targetValue, setTargetValue] = useState("");
   const { toast } = useToast();
 
-  const { data: goals, isLoading } = useQuery({
+  const { data: goals = [], isLoading } = useQuery<Goal[]>({
     queryKey: ["/api/me/goals"],
   });
 
-  const { data: achievements, isLoading: achLoading } = useQuery({
+  const { data: achievements, isLoading: achLoading } = useQuery<Achievement[]>({
     queryKey: ["/api/me/achievements"],
   });
 
   const createGoalMutation = useMutation({
-    mutationFn: (data: any) => apiRequest("/api/me/goals", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    }),
+    mutationFn: (data: any) => apiRequest("POST", "/api/me/goals", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/me/goals"] });
       toast({ title: "Goal created!", description: "Your new goal has been set." });
@@ -56,8 +73,8 @@ export function GoalsTab() {
     });
   };
 
-  const activeGoals = goals?.filter((g: any) => g.status === "active") || [];
-  const completedGoals = goals?.filter((g: any) => g.status === "completed") || [];
+  const activeGoals = goals.filter((g) => g.status === "active");
+  const completedGoals = goals.filter((g) => g.status === "completed");
 
   return (
     <div className="space-y-6">

@@ -108,13 +108,7 @@ export default function MessagesClient({ initialConversations = [] }: MessagesCl
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { recipientId: string; body: string }) => {
-      return await apiRequest("/api/messages", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      return await apiRequest("POST", "/api/messages", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
@@ -132,11 +126,7 @@ export default function MessagesClient({ initialConversations = [] }: MessagesCl
 
   const addReactionMutation = useMutation({
     mutationFn: async ({ messageId, emoji }: { messageId: string; emoji: string }) => {
-      return await apiRequest(`/api/messages/${messageId}/reactions`, {
-        method: "POST",
-        body: JSON.stringify({ emoji }),
-        headers: { "Content-Type": "application/json" },
-      });
+      return await apiRequest("POST", `/api/messages/${messageId}/reactions`, { emoji });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", selectedConversation] });
@@ -676,7 +666,7 @@ export default function MessagesClient({ initialConversations = [] }: MessagesCl
 
   return (
     <div className="min-h-screen bg-background">
-      <Header userCoins={currentUser?.totalCoins || 0} />
+      <Header />
       
       <main className="container max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8">

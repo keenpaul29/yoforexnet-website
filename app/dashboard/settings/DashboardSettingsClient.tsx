@@ -149,10 +149,7 @@ export default function DashboardSettingsClient({ initialData }: DashboardSettin
 
   const saveMutation = useMutation({
     mutationFn: async (data: { widgetOrder: string[], enabledWidgets: string[], layoutType: LayoutType }) => {
-      return apiRequest('/api/dashboard/preferences', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return apiRequest('POST', '/api/dashboard/preferences', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/preferences'] });

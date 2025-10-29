@@ -12,20 +12,33 @@ import { useToast } from "@/hooks/use-toast";
 import { Users, DollarSign, TrendingUp, Link as LinkIcon, Copy, Check, Share2 } from "lucide-react";
 import { Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
+interface ReferralStats {
+  totalReferrals: number;
+  totalEarnings: number;
+  monthlyEarnings: number;
+}
+
+interface Referral {
+  username: string;
+  joined: string;
+  earnings: string;
+  status: string;
+}
+
 export function ReferralsTab() {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery<ReferralStats>({
     queryKey: ["/api/me/referral-stats"],
   });
 
-  const { data: referrals, isLoading: refLoading } = useQuery({
+  const { data: referrals, isLoading: refLoading } = useQuery<Referral[]>({
     queryKey: ["/api/me/referrals"],
   });
 
   const generateMutation = useMutation({
-    mutationFn: () => apiRequest("/api/me/generate-referral-code", { method: "POST" }),
+    mutationFn: () => apiRequest("POST", "/api/me/generate-referral-code"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/me/referrals"] });
       toast({ title: "Referral code generated!", description: "Share your new link to start earning." });

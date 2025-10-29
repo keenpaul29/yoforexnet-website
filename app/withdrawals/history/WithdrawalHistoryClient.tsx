@@ -60,7 +60,7 @@ interface WithdrawalHistoryClientProps {
 export default function WithdrawalHistoryClient({ initialData }: WithdrawalHistoryClientProps) {
   const router = useRouter();
   const { user } = useAuth();
-  const { promptAuth } = useAuthPrompt();
+  const { requireAuth } = useAuthPrompt();
   const { toast } = useToast();
 
   const { data: withdrawals, isLoading } = useQuery<Withdrawal[]>({
@@ -72,9 +72,7 @@ export default function WithdrawalHistoryClient({ initialData }: WithdrawalHisto
 
   const cancelMutation = useMutation({
     mutationFn: async (withdrawalId: string) => {
-      return await apiRequest(`/api/withdrawals/${withdrawalId}/cancel`, {
-        method: "POST",
-      });
+      return await apiRequest("POST", `/api/withdrawals/${withdrawalId}/cancel`);
     },
     onSuccess: () => {
       toast({
@@ -94,7 +92,7 @@ export default function WithdrawalHistoryClient({ initialData }: WithdrawalHisto
   });
 
   if (!user) {
-    promptAuth();
+    requireAuth(() => {});
     return null;
   }
 

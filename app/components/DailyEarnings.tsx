@@ -30,9 +30,8 @@ export function DailyEarnings() {
   }>({
     queryKey: ['/api/journal/check'],
     queryFn: async () => {
-      return apiRequest('/api/journal/check', {
-        method: 'POST'
-      });
+      const response = await apiRequest('POST', '/api/journal/check');
+      return response.json();
     },
     refetchInterval: 60000, // Refresh every minute
   });
@@ -55,10 +54,7 @@ export function DailyEarnings() {
   // Follow user mutation
   const followMutation = useMutation({
     mutationFn: async (userId: string) => {
-      return apiRequest('/api/user/follow', {
-        method: 'POST',
-        body: { followingId: userId }
-      });
+      return apiRequest('POST', '/api/user/follow', { followingId: userId });
     },
     onSuccess: () => {
       toast({

@@ -41,7 +41,7 @@ interface WithdrawalsClientProps {
 export default function WithdrawalsClient({ initialUserCoins }: WithdrawalsClientProps) {
   const router = useRouter();
   const { user } = useAuth();
-  const { promptAuth } = useAuthPrompt();
+  const { requireAuth } = useAuthPrompt();
   const { toast } = useToast();
   const [previewCrypto, setPreviewCrypto] = useState<number>(0);
   const [previewFee, setPreviewFee] = useState<number>(0);
@@ -80,10 +80,7 @@ export default function WithdrawalsClient({ initialUserCoins }: WithdrawalsClien
 
   const withdrawalMutation = useMutation({
     mutationFn: async (data: WithdrawalFormData) => {
-      return await apiRequest("/api/withdrawals", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return await apiRequest("POST", "/api/withdrawals", data);
     },
     onSuccess: () => {
       toast({
@@ -104,7 +101,7 @@ export default function WithdrawalsClient({ initialUserCoins }: WithdrawalsClien
 
   const onSubmit = (data: WithdrawalFormData) => {
     if (!user) {
-      promptAuth();
+      requireAuth(() => {});
       return;
     }
 
@@ -175,10 +172,6 @@ export default function WithdrawalsClient({ initialUserCoins }: WithdrawalsClien
                             placeholder="1000"
                             data-testid="input-amount"
                             {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              calculatePreview(Number(e.target.value), watchCryptoType);
-                            }}
                           />
                         </FormControl>
                         <FormDescription>
@@ -196,10 +189,7 @@ export default function WithdrawalsClient({ initialUserCoins }: WithdrawalsClien
                       <FormItem>
                         <FormLabel>Cryptocurrency</FormLabel>
                         <Select
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            calculatePreview(watchAmount, value as "BTC" | "ETH");
-                          }}
+                          onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
