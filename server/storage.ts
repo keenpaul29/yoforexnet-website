@@ -980,7 +980,7 @@ export interface IStorage {
   /**
    * Revoke admin role
    */
-  revokeAdminRole(userId: string): Promise<void>;
+  revokeAdminRole(userId: string, revokedBy: string): Promise<void>;
   
   // ============================================================================
   // ADMIN OPERATIONS - GROUP 5: Security & Logs (20 methods)
@@ -3558,7 +3558,7 @@ export class MemStorage implements IStorage {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async revokeAdminRole(userId: string): Promise<void> {
+  async revokeAdminRole(userId: string, revokedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 

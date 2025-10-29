@@ -188,3 +188,9 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
+[00:20:40.672] Browser LOG     [Activity Tracker] User active for 0 seconds
+[00:20:41.691] Browser LOG     [Activity Tracker] User active for 1 seconds
+[00:20:42.693] Browser LOG     [Activity Tracker] User active for 2 seconds
+[00:20:43.697] Browser LOG     [Activity Tracker] User active for 3 seconds
+[00:20:44.691] Browser LOG     [Activity Tracker] User active for 4 seconds
+[00:20:45.682] Browser LOG     [Activity Tracker] User active for 5 seconds
