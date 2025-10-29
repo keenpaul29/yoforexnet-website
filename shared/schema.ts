@@ -1775,3 +1775,27 @@ export type ContentRevision = typeof contentRevisions.$inferSelect;
 export const insertUserActivitySchema = createInsertSchema(userActivity).omit({ id: true, createdAt: true });
 export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
 export type UserActivity = typeof userActivity.$inferSelect;
+
+//=================================================================
+// SITEMAP LOGS
+// Tracks sitemap generation, submission to search engines, and errors
+//=================================================================
+
+export const sitemapLogs = pgTable('sitemap_logs', {
+  id: serial('id').primaryKey(),
+  action: varchar('action', { length: 50 }).notNull(), // 'generate', 'submit_google', 'submit_indexnow'
+  status: varchar('status', { length: 20 }).notNull(), // 'success', 'error', 'pending'
+  urlCount: integer('url_count'), // Number of URLs in sitemap
+  submittedTo: varchar('submitted_to', { length: 100 }), // 'google', 'bing', 'yandex', null for generation
+  errorMessage: text('error_message'),
+  metadata: jsonb('metadata'), // Additional data (API responses, etc.)
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export type SitemapLog = typeof sitemapLogs.$inferSelect;
+export type InsertSitemapLog = typeof sitemapLogs.$inferInsert;
+
+export const insertSitemapLogSchema = createInsertSchema(sitemapLogs).omit({
+  id: true,
+  createdAt: true,
+});

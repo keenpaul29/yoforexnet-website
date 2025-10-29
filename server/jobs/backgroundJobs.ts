@@ -6,7 +6,78 @@ export function startBackgroundJobs(storage: IStorage) {
   console.log('[JOBS] Background jobs DISABLED for performance optimization');
   console.log('[JOBS] No background jobs running - reducing CPU/memory usage');
   
-  // NOTE: All background jobs are disabled to improve performance
+  // Sitemap Generation Job - Runs every 24 hours (ENABLED)
+  cron.schedule('0 2 * * *', async () => { // Runs at 2 AM daily
+    try {
+      console.log('[SITEMAP JOB] Starting automated sitemap generation...');
+      
+      const { SitemapGenerator } = await import('../services/sitemap-generator.js');
+      const { SitemapSubmissionService } = await import('../services/sitemap-submission.js');
+      const { sitemapLogs } = await import('@shared/schema');
+      const { db } = await import('../db');
+      
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000';
+      const generator = new SitemapGenerator(baseUrl);
+      const submissionService = new SitemapSubmissionService(baseUrl);
+
+      // Generate sitemap
+      const { xml, urlCount } = await generator.generateSitemap();
+
+      // Save to public directory
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const publicDir = path.join(process.cwd(), 'public');
+      await fs.mkdir(publicDir, { recursive: true });
+      await fs.writeFile(path.join(publicDir, 'sitemap.xml'), xml, 'utf-8');
+
+      // Log generation
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'success',
+        urlCount,
+        submittedTo: null,
+      });
+
+      console.log(`[SITEMAP JOB] Generated sitemap with ${urlCount} URLs`);
+
+      // Submit to search engines
+      const sitemapUrl = `${baseUrl}/sitemap.xml`;
+      const allUrls = xml.match(/<loc>(.*?)<\/loc>/g)?.map(loc => 
+        loc.replace('<loc>', '').replace('</loc>', '')
+      ) || [];
+
+      // Submit to IndexNow
+      const indexNowResult = await submissionService.submitToIndexNow(allUrls);
+      console.log('[SITEMAP JOB] IndexNow submission:', indexNowResult.success ? 'Success' : indexNowResult.error);
+
+      // Ping Google
+      const googleResult = await submissionService.pingGoogle(sitemapUrl);
+      console.log('[SITEMAP JOB] Google ping:', googleResult.success ? 'Success' : googleResult.error);
+
+      console.log('[SITEMAP JOB] Completed successfully');
+    } catch (error: any) {
+      console.error('[SITEMAP JOB] Error during automated generation:', error);
+      
+      // Log error
+      try {
+        const { sitemapLogs } = await import('@shared/schema');
+        const { db } = await import('../db');
+        await db.insert(sitemapLogs).values({
+          action: 'generate',
+          status: 'error',
+          urlCount: null,
+          submittedTo: null,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        });
+      } catch (logError) {
+        console.error('[SITEMAP JOB] Failed to log error:', logError);
+      }
+    }
+  });
+
+  console.log('[JOBS] Sitemap generation scheduled (runs daily at 2 AM)');
+  
+  // NOTE: All other background jobs are disabled to improve performance
   // To re-enable, uncomment the cron schedules below:
   
   // Update thread engagement scores every 60 minutes

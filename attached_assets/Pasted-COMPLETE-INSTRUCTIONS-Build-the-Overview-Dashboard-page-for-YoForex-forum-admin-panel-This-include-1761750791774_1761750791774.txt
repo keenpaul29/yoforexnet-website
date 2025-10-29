@@ -1,0 +1,194 @@
+COMPLETE INSTRUCTIONS: Build the Overview Dashboard page for YoForex forum admin panel. This includes backend code, frontend design, and connecting them together. Everything must work without errors.
+
+WHAT YOU ARE BUILDING
+You are creating an Overview Dashboard - the first page admins see when they log into the YoForex forum. This page shows all important numbers, charts, and information about the forum in one place.
+
+PART 1: BACKEND (Server Side - Data Collection)
+What the Backend Does
+The backend collects all the numbers and data from your PostgreSQL database and sends it to the frontend when requested.
+
+Create These Files:
+File 1: Main Server File (server.js)
+
+Start an Express server on port 5000
+
+Connect to your Neon PostgreSQL database using the connection string from your environment variables
+
+Create routes (URLs) that the frontend can call to get data
+
+Handle errors if something goes wrong
+
+Enable CORS so frontend can talk to backend
+
+Add real-time updates using WebSocket (Socket.io)
+
+File 2: Database Connection (config/database.js)
+
+Connect to your existing Neon PostgreSQL database
+
+Use Prisma to make database queries easier
+
+Test the connection works when server starts
+
+Show error message if connection fails
+
+File 3: Overview Routes (routes/overview.js)
+Create URLs (endpoints) that give different types of data:
+
+/api/overview/primary-stats - Get the 8 main numbers shown at the top
+
+/api/overview/user-growth - Get user growth chart data (last 7 days)
+
+/api/overview/content-trend - Get content trend chart data (last 7 days)
+
+/api/overview/revenue - Get revenue information
+
+/api/overview/engagement - Get engagement metrics
+
+/api/overview/top-content - Get most popular threads
+
+/api/overview/top-users - Get leaderboard of best contributors
+
+/api/overview/moderation-queue - Get pending moderation items
+
+/api/overview/live-activity - Get recent activity (last 20 events)
+
+/api/overview/system-health - Get server performance metrics
+
+File 4: Data Collection Logic (services/overviewService.js)
+
+This file has functions that actually get data from your database:
+
+Function 1: Get Primary Stats
+
+Count total users in users table
+
+Compare with yesterday to show increase/decrease
+
+Count total threads in forum_threads table
+
+Count total posts in forum_replies table
+
+Add threads + posts = total content
+
+Get today's revenue from coin_transactions or payment tables
+
+Count items in moderation queue
+
+Count users online now (last_active within 10 minutes)
+
+Count new users registered today
+
+Count replies posted today
+
+Count premium members (active subscriptions)
+
+Function 2: Get User Growth Data
+
+Loop through last 7 days
+
+For each day, count:
+
+New users registered
+
+Active users (posted or viewed)
+
+Returning users
+
+Return array with date and numbers for chart
+
+Function 3: Get Content Trend Data
+
+Loop through last 7 days
+
+For each day, count:
+
+New threads created
+
+New replies posted
+
+Total posts (threads + replies)
+
+Return array with date and numbers for chart
+
+Function 4: Get Revenue Overview
+
+Calculate today's revenue
+
+Calculate yesterday's revenue
+
+Calculate this month's revenue
+
+Calculate last month's revenue
+
+Break down revenue by source (premium memberships, marketplace, ads)
+
+Calculate average revenue per user
+
+Count active subscriptions
+
+Count canceled subscriptions
+
+Function 5: Get Top Content
+
+Query forum_threads table
+
+Sort by views (highest first)
+
+Get top 10 threads
+
+Include: title, views, replies, likes, author name, date
+
+Do same for most replied threads
+
+Do same for most liked threads
+
+Function 6: Get Top Users
+
+Count posts per user
+
+Sort users by post count
+
+Get top 20 contributors
+
+Include: username, post count, likes received, member since date
+
+Get users with most coins
+
+Get users with most helpful answers
+
+Function 7: Get Moderation Queue
+
+Count pending thread approvals
+
+Count pending post approvals
+
+Count reported content items
+
+Count flagged users
+
+Get list of items waiting longest
+
+Show what action is needed for each
+
+Function 8: Get Live Activity
+
+Get last 20 events from activity_feed table
+
+Include: new users, new threads, new posts, purchases, moderator actions
+
+Show timestamp for each event
+
+Include user who did the action
+
+Function 9: Get System Health
+
+Measure database query response time
+
+Check database size
+
+Count total database records
+
+Measure API response time
+
+Show uptime percentage

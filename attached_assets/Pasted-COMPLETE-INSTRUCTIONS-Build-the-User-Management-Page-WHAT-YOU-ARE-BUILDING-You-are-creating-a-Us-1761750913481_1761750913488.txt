@@ -1,0 +1,208 @@
+COMPLETE INSTRUCTIONS: Build the User Management Page
+WHAT YOU ARE BUILDING:
+You are creating a User Management page for YoForex forum admin panel. This page lets admins see all users, search for specific users, filter them by role and status, view details, edit users, ban/suspend users, and manage their accounts
+
+PART 1: BACKEND (Server Side - User Data Collection)
+What the Backend Does
+The backend gets all user information from your PostgreSQL database, handles search and filtering, and allows admins to update user accounts.
+
+Create These Files:
+File 1: User Management Routes (routes/users.js)
+
+Create URLs that give different types of user data and actions:
+
+/api/users - Get list of all users (with pagination)
+
+/api/users/search - Search users by username or email
+
+/api/users/:id - Get single user details
+
+/api/users/:id/update - Update user information
+
+/api/users/:id/ban - Ban a user
+
+/api/users/:id/suspend - Suspend a user temporarily
+
+/api/users/:id/activate - Activate a suspended user
+
+/api/users/:id/change-role - Change user role (admin, moderator, member)
+
+/api/users/:id/reset-password - Send password reset email
+
+/api/users/:id/activity - Get user activity history
+
+/api/users/:id/posts - Get user's posts and threads
+
+/api/users/:id/coins - Get user's coin balance and history
+
+/api/users/stats - Get user statistics summary
+
+/api/users/export - Export user list to CSV
+
+File 2: User Service Logic (services/userService.js)
+
+This file has functions that manage all user operations:
+
+Function 1: Get All Users (with pagination)
+
+Get users from users table
+
+Sort by join date (newest first) or any column
+
+Show 20 users per page
+
+Include: username, email, role, status, coins, join date, last active
+
+Count total users for pagination
+
+Support filtering by role (admin, moderator, member)
+
+Support filtering by status (active, suspended, banned)
+
+Function 2: Search Users
+
+Search in users table
+
+Look for matches in username field
+
+Look for matches in email field
+
+Return matching users
+
+Show "No users found" if no matches
+
+Function 3: Get Single User Details
+
+Find user by ID in users table
+
+Get complete profile: username, email, role, status, bio, location, website, social links
+
+Count user's total posts
+
+Count user's total threads
+
+Count user's total likes received
+
+Get coin balance
+
+Get all achievements earned
+
+Get subscription status
+
+Show join date and last active time
+
+Show account creation IP and last login IP
+
+Function 4: Update User Information
+
+Find user by ID
+
+Update allowed fields: username, email, role, status, bio, location, website
+
+Validate email format
+
+Check if username is already taken
+
+Check if email is already taken
+
+Save changes to database
+
+Return updated user data
+
+Function 5: Ban User
+
+Find user by ID
+
+Set status to "banned"
+
+Record ban reason in admin_actions table
+
+Record who banned them (admin username)
+
+Record ban timestamp
+
+Optionally send email notification to user
+
+Prevent banned user from logging in
+
+Function 6: Suspend User
+
+Find user by ID
+
+Set status to "suspended"
+
+Set suspension end date (7 days, 30 days, permanent)
+
+Record suspension reason
+
+Record who suspended them
+
+Record timestamp
+
+Send email notification
+
+User cannot post during suspension
+
+Function 7: Activate User
+
+Find user by ID
+
+Set status back to "active"
+
+Clear suspension/ban flags
+
+Record activation in admin actions
+
+Send "account restored" email
+
+Function 8: Change User Role
+
+Find user by ID
+
+Change role field (member → moderator → admin)
+
+Record role change in admin actions
+
+Update permissions accordingly
+
+Send email notification about new role
+
+Function 9: Get User Activity History
+
+Query activity_feed table for this user
+
+Get last 50 activities
+
+Include: action type, timestamp, details
+
+Show: posts created, threads created, likes given, purchases made
+
+Function 10: Get User Statistics
+
+Count total registered users
+
+Count active users (last 30 days)
+
+Count inactive users (not active in 90+ days)
+
+Count banned users
+
+Count suspended users
+
+Count premium members
+
+Count users by role (admins, moderators, members)
+
+Calculate average posts per user
+
+Find most active user
+
+Find newest user
+
+Function 11: Export Users to CSV
+
+Get all users from database
+
+Format as CSV: username, email, role, status, coins, join date
+
+Return downloadable CSV file

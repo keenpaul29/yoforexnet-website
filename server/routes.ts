@@ -5392,6 +5392,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================
+  // SITEMAP ROUTES - Automated sitemap generation and submission
+  // ============================================
+
+  // Generate sitemap and save to public directory
+  app.post('/api/admin/sitemap/generate', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    
+    try {
+      const { SitemapGenerator } = await import('./services/sitemap-generator.js');
+      const { SitemapSubmissionService } = await import('./services/sitemap-submission.js');
+      const { sitemapLogs } = await import('@shared/schema');
+      
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000';
+      const generator = new SitemapGenerator(baseUrl);
+      const submissionService = new SitemapSubmissionService(baseUrl);
+
+      // Generate sitemap
+      const { xml, urlCount } = await generator.generateSitemap();
+
+      // Save to public directory
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const publicDir = path.join(process.cwd(), 'public');
+      await fs.mkdir(publicDir, { recursive: true });
+      await fs.writeFile(path.join(publicDir, 'sitemap.xml'), xml, 'utf-8');
+
+      // Log generation
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'success',
+        urlCount,
+        submittedTo: null,
+      });
+
+      // Submit to search engines
+      const sitemapUrl = `${baseUrl}/sitemap.xml`;
+      const allUrls = xml.match(/<loc>(.*?)<\/loc>/g)?.map(loc => 
+        loc.replace('<loc>', '').replace('</loc>', '')
+      ) || [];
+
+      // Submit to IndexNow (Bing, Yandex)
+      const indexNowResult = await submissionService.submitToIndexNow(allUrls);
+
+      // Ping Google
+      const googleResult = await submissionService.pingGoogle(sitemapUrl);
+
+      res.json({
+        success: true,
+        urlCount,
+        sitemapUrl,
+        submissions: {
+          indexnow: indexNowResult,
+          google: googleResult,
+        },
+      });
+    } catch (error: any) {
+      console.error('[Sitemap Generation] Error:', error);
+      
+      // Log error
+      try {
+        const { sitemapLogs } = await import('@shared/schema');
+        await db.insert(sitemapLogs).values({
+          action: 'generate',
+          status: 'error',
+          urlCount: null,
+          submittedTo: null,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        });
+      } catch (logError) {
+        console.error('[Sitemap Generation] Failed to log error:', logError);
+      }
+
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to generate sitemap',
+      });
+    }
+  });
+
+  // Get sitemap status and recent logs
+  app.get('/api/admin/sitemap/status', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    
+    try {
+      const { sitemapLogs } = await import('@shared/schema');
+      const recentLogs = await db
+        .select()
+        .from(sitemapLogs)
+        .orderBy(sql`${sitemapLogs.createdAt} DESC`)
+        .limit(20);
+
+      const lastGeneration = recentLogs.find(log => log.action === 'generate' && log.status === 'success');
+      const lastError = recentLogs.find(log => log.status === 'error');
+
+      res.json({
+        lastGeneration: lastGeneration || null,
+        lastError: lastError || null,
+        recentLogs,
+      });
+    } catch (error: any) {
+      console.error('[Sitemap Status] Error:', error);
+      res.status(500).json({ error: 'Failed to fetch sitemap status' });
+    }
+  });
+
+  // Get detailed logs
+  app.get('/api/admin/sitemap/logs', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    
+    try {
+      const { sitemapLogs } = await import('@shared/schema');
+      const limit = parseInt(req.query.limit as string) || 50;
+      const logs = await db
+        .select()
+        .from(sitemapLogs)
+        .orderBy(sql`${sitemapLogs.createdAt} DESC`)
+        .limit(limit);
+
+      res.json({ logs });
+    } catch (error: any) {
+      console.error('[Sitemap Logs] Error:', error);
+      res.status(500).json({ error: 'Failed to fetch sitemap logs' });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

@@ -1,0 +1,506 @@
+## COMPLETE INSTRUCTIONS: Build the Marketplace Management Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating a Marketplace Management page for YoForex forum admin panel. This page lets admins manage all marketplace items (Expert Advisors, Indicators, Templates, Courses, etc.) that users sell on the forum, track sales, revenue, and approve/reject listings.
+
+***
+
+## PART 1: BACKEND (Server Side - Marketplace Data)
+
+### What the Backend Does
+The backend manages all marketplace products, tracks sales transactions, calculates revenue, and handles product approvals.
+
+### Create These Files:
+
+**File 1: Marketplace Routes (routes/marketplace.js)**
+
+Create URLs for marketplace operations:
+
+1. `/api/marketplace/items` - Get all marketplace items (with pagination)
+2. `/api/marketplace/items/:id` - Get single item details
+3. `/api/marketplace/items/search` - Search items by title or seller
+4. `/api/marketplace/items/pending` - Get items pending approval
+5. `/api/marketplace/items/:id/approve` - Approve a listing
+6. `/api/marketplace/items/:id/reject` - Reject a listing
+7. `/api/marketplace/items/:id/feature` - Feature item on homepage
+8. `/api/marketplace/items/:id/delete` - Delete item
+9. `/api/marketplace/sales` - Get all sales transactions
+10. `/api/marketplace/sales/recent` - Get recent sales (last 50)
+11. `/api/marketplace/revenue` - Get revenue data (daily, weekly, monthly)
+12. `/api/marketplace/revenue/trend` - Get 30-day revenue trend
+13. `/api/marketplace/top-sellers` - Get best-selling items
+14. `/api/marketplace/top-vendors` - Get top-earning sellers
+15. `/api/marketplace/categories` - Get/manage marketplace categories
+16. `/api/marketplace/stats` - Get marketplace statistics
+
+**File 2: Marketplace Service (services/marketplaceService.js)**
+
+Functions that handle marketplace operations:
+
+**Function 1: Get All Marketplace Items**
+- Query `marketplace_items` table
+- For each item include:
+  - Item ID
+  - Title (e.g., "Gold Scalping EA", "Trend Indicator Pro")
+  - Seller username and profile picture
+  - Category (Expert Advisor, Indicator, Template, Course)
+  - Price (in dollars)
+  - Sales count (how many times sold)
+  - Revenue generated (price × sales)
+  - Status (active, pending, rejected, draft)
+  - Listed date
+  - Last updated date
+  - Rating (average star rating)
+  - Review count
+- Sort options: Newest, Oldest, Best Selling, Highest Revenue
+- Filter by: Category, Status, Price range
+- Pagination: 20 items per page
+
+**Function 2: Get Item Details**
+- Find item by ID
+- Return complete information:
+  - All basic fields from Function 1
+  - Full description
+  - All images/screenshots
+  - Download file info (filename, size)
+  - Version number
+  - Compatible platforms (MT4, MT5, TradingView)
+  - Seller full profile
+  - Purchase history (who bought it and when)
+  - Review/rating details
+  - Download statistics
+
+**Function 3: Get Pending Items**
+- Query items where status = "pending"
+- Same fields as Function 1
+- Sort by submission date (oldest first - most urgent)
+- Count how many waiting
+
+**Function 4: Approve Item**
+- Find item by ID
+- Change status from "pending" to "active"
+- Set approved_by to current admin username
+- Set approved_at timestamp
+- Make item visible in marketplace
+- Send notification to seller: "Your item has been approved"
+- Record action in admin_actions table
+
+**Function 5: Reject Item**
+- Find item by ID
+- Change status to "rejected"
+- Set rejection_reason (doesn't meet guidelines, poor quality, duplicate, etc.)
+- Set rejected_by to admin username
+- Send notification to seller with reason
+- Item stays hidden from marketplace
+- Record action
+
+**Function 6: Get Sales Transactions**
+- Query `marketplace_transactions` or `coin_transactions` table
+- For each sale include:
+  - Transaction ID
+  - Item sold (title)
+  - Buyer username
+  - Seller username
+  - Sale price
+  - Platform commission (e.g., 20% of price)
+  - Seller earnings (80% of price)
+  - Transaction date
+  - Payment method
+  - Status (completed, pending, refunded)
+- Sort by date (newest first)
+- Filter by date range, seller, item
+
+**Function 7: Calculate Revenue**
+- Calculate today's total revenue
+- Calculate this week's revenue
+- Calculate this month's revenue
+- Calculate all-time revenue
+- Break down by category (EAs, Indicators, etc.)
+- Calculate platform commission earned
+- Compare to previous periods (growth/decline percentage)
+
+**Function 8: Get Revenue Trend (30 Days)**
+- Loop through last 30 days
+- For each day calculate:
+  - Total sales made
+  - Revenue generated
+  - Number of transactions
+- Return array for chart: [{date: "Oct 1", revenue: 250}, {date: "Oct 2", revenue: 180}, ...]
+
+**Function 9: Get Top Selling Items**
+- Query all items
+- Sort by sales count (highest first)
+- Get top 10 items
+- Include: title, seller, sales count, revenue, category
+
+**Function 10: Get Top Vendors**
+- Group transactions by seller
+- Calculate total earnings per seller
+- Sort by earnings (highest first)
+- Get top 10 sellers
+- Include: username, total sales, total revenue, item count
+
+**Function 11: Get Marketplace Statistics**
+- Count total items in marketplace
+- Count active items
+- Count pending approval
+- Count total sales (all time)
+- Calculate total revenue (all time)
+- Calculate average item price
+- Calculate average sales per item
+- Count items by category
+- Find most popular category
+
+***
+
+## PART 2: FRONTEND (Display Side - Marketplace Management Interface)
+
+### What the Frontend Does
+Shows all marketplace items in organized view, displays sales analytics, revenue charts, and provides tools to manage listings.
+
+### Create These Files:
+
+**File 1: Main Marketplace Page (app/admin/marketplace/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "Marketplace Management"
+- Blue button top right: "+ Add Content"[1]
+- This button opens form to add new marketplace item
+
+**Section 2: Three Statistics Cards at Top**
+
+Card 1: **Total Items**
+- Big number: Total items in marketplace (e.g., 0)
+- Small text below: "X pending approval"[1]
+- Package icon
+- Gray/dark background
+
+Card 2: **Total Sales**
+- Big number: Total number of sales (e.g., 0)
+- Small text below: "+X this week"[1]
+- Trending up icon
+- Gray/dark background
+
+Card 3: **Total Revenue**
+- Big number: Total earnings (e.g., "$0")
+- Small text below: "+$X this week"[1]
+- Dollar sign icon
+- Gray/dark background
+
+**Section 3: Revenue Trend Chart**
+
+Large chart section:
+- Title: "Revenue Trend (Last 30 Days)"[1]
+- Line chart showing daily revenue over last 30 days
+- X-axis: Dates (Oct 1, Oct 2, Oct 3...)
+- Y-axis: Dollar amounts ($0, $50, $100, $150...)
+- Blue line connecting revenue points
+- Empty state: "No revenue data available" if no sales[1]
+
+**Section 4: Top Selling Items**
+
+Section title: "Top Selling Items"[1]
+- List or cards showing 5-10 best selling products
+- For each item show:
+  - Product image/thumbnail
+  - Product title
+  - Seller name
+  - Sales count
+  - Total revenue from this item
+  - Rating stars
+- Empty state: "No sales data available" if no sales yet[1]
+
+**Section 5: Marketplace Items Table**
+
+Section title: "Marketplace Items (0)"[1]
+
+Table with these columns:
+
+Column 1: **Title**
+- Product name (e.g., "Gold EA Pro", "Smart Indicator")
+- Product thumbnail image (small)
+- Click to view full details
+
+Column 2: **Seller**
+- Seller username
+- Seller profile picture (small)
+- Clickable to view seller profile
+
+Column 3: **Price**
+- Product price (e.g., "$49.99")
+- Format with dollar sign and 2 decimals
+
+Column 4: **Sales**
+- Number of times sold (e.g., "23 sales")
+- Show as simple number
+
+Column 5: **Status**
+- Show colored badge:
+  - Active (green badge)
+  - Pending (yellow badge)
+  - Rejected (red badge)
+  - Draft (gray badge)
+
+Column 6: **Listed**
+- Date when item was listed
+- Format: "Oct 15, 2024"
+- Show "X days ago" on hover
+
+Column 7: **Actions**
+- Three-dot menu button
+- Dropdown with options:
+  - View Details
+  - Edit Item
+  - Approve (if pending)
+  - Reject (if pending)
+  - Feature Item
+  - Delete Item
+  - View Sales History
+
+**Table Features:**
+- Pagination at bottom
+- 20 items per page
+- Sort by: Title, Price, Sales, Date
+- Filter by: Status, Category
+- Search box above table
+- Empty state: No items message[1]
+
+**Section 6: Search and Filters**
+
+Above the table:
+
+Left side: Search box
+- Placeholder: "Search by title or seller..."
+- Search icon inside
+- Real-time search as you type
+
+Right side: Filter dropdowns
+- Category filter (All Categories, Expert Advisors, Indicators, Templates, Courses)
+- Status filter (All Status, Active, Pending, Rejected)
+- Price range filter (All Prices, $0-$25, $25-$50, $50-$100, $100+)
+
+***
+
+## PART 3: MODALS AND POPUPS
+
+### Create These Popup Windows:
+
+**Modal 1: Add New Item**
+
+When admin clicks "+ Add Content" button:
+- Large form popup
+- Title: "Add Marketplace Item"
+- Fields:
+  - Title (text input) - required
+  - Description (rich text editor) - required
+  - Category (dropdown) - required
+  - Price (number input with $ symbol) - required
+  - Product images (file upload, max 5 images)
+  - Download file (file upload for EA/Indicator file)
+  - Compatible platforms (checkboxes: MT4, MT5, TradingView)
+  - Version number (text input)
+  - Seller (dropdown to select user)
+- Buttons:
+  - Save & Publish (green)
+  - Save as Draft (gray)
+  - Cancel
+
+**Modal 2: View Item Details**
+
+When admin clicks "View Details":
+- Large popup showing complete product info
+- Product images gallery at top
+- Title and description
+- Seller profile card
+- Price and sales statistics
+- All purchase history (who bought, when, amount)
+- Reviews and ratings
+- Download statistics
+- Action buttons:
+  - Edit
+  - Approve/Reject
+  - Feature
+  - Delete
+  - Close
+
+**Modal 3: Edit Item**
+
+Similar to Add New Item modal but:
+- Pre-filled with existing data
+- Can update any field
+- Save Changes button
+- Delete button (red, at bottom)
+
+**Modal 4: Approve Item**
+
+When admin clicks "Approve":
+- Simple confirmation dialog
+- Title: "Approve Marketplace Item?"
+- Text: "This will make [Item Title] visible in the marketplace"
+- Checkbox: "Feature on homepage"
+- Checkbox: "Send notification to seller"
+- Green button: "Approve"
+- Cancel button
+
+**Modal 5: Reject Item**
+
+When admin clicks "Reject":
+- Title: "Reject Marketplace Item"
+- Text area: Reason for rejection (required)
+- Common reasons dropdown:
+  - Doesn't meet quality standards
+  - Duplicate product
+  - Misleading description
+  - Copyright violation
+  - Other
+- Checkbox: "Send detailed feedback to seller"
+- Red button: "Reject"
+- Cancel button
+
+**Modal 6: Feature Item**
+
+When admin features an item:
+- Title: "Feature This Item"
+- Dropdown: Select featured section (Homepage, Category Page, New Arrivals)
+- Dropdown: Feature duration (1 day, 7 days, 30 days, Permanent)
+- Text input: Feature badge text (optional, e.g., "Hot Deal", "New")
+- Preview showing how it will look
+- Button: "Feature Item"
+- Cancel button
+
+**Modal 7: View Sales History**
+
+When admin clicks "View Sales History":
+- Table showing all sales for this item
+- Columns: Buyer, Date, Price, Payment Method, Status
+- Filter by date range
+- Export to CSV button
+- Total revenue calculation at bottom
+- Close button
+
+---
+
+## PART 4: ADDITIONAL FEATURES
+
+### Sales Analytics Section:
+
+Create separate section or tab for detailed analytics:
+
+**Revenue Dashboard:**
+- Today's revenue (big number)
+- This week's revenue
+- This month's revenue
+- Year-to-date revenue
+- Revenue by category (pie chart)
+- Revenue by seller (bar chart)
+- Growth comparison (vs previous period)
+
+**Sales Report:**
+- Total transactions
+- Average transaction value
+- Highest sale
+- Most active buyer
+- Most active seller
+- Refund rate
+- Commission earned by platform
+
+**Category Performance:**
+- Sales by category
+- Revenue by category
+- Average price by category
+- Most popular category
+- Fastest growing category
+
+### Seller Management:
+
+**Top Vendors List:**
+- Show sellers ranked by revenue
+- For each seller show:
+  - Username and profile
+  - Total items listed
+  - Total sales
+  - Total revenue
+  - Average rating
+  - Commission earned by platform
+- Click to see seller's full store
+
+**Vendor Payouts:**
+- Show pending payouts to sellers
+- Calculate seller earnings (80% of sales)
+- Track payment status
+- Generate payout reports
+
+***
+
+## PART 5: REAL-TIME FEATURES
+
+### Live Updates:
+- Sales counter updates when new purchase happens
+- Revenue updates in real-time
+- New item notifications when seller submits
+- Pending items count updates automatically
+
+### Notifications:
+- Toast notification when item sold
+- Alert when item pending approval
+- Success message after approve/reject
+- Error alerts for failed operations
+
+***
+
+## PART 6: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Stats cards stack vertically
+- Chart takes full width
+- Table converts to card view
+- Each card shows one product
+- Actions in dropdown menu
+- Filters stack vertically
+
+### On Tablets:
+- Stats cards show 2 per row
+- Table shows important columns only
+- Some columns hidden (hide "Listed" date)
+- Charts responsive width
+
+### On Computers:
+- All 3 stats cards in one row
+- Full table with all columns
+- Side-by-side layouts
+- All features visible
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See total items, sales, and revenue at a glance[1]
+✅ View revenue trend chart for last 30 days[1]
+✅ See top selling items list[1]
+✅ Browse all marketplace items in organized table[1]
+✅ Search items by title or seller
+✅ Filter by category, status, and price
+✅ Add new marketplace items manually
+✅ View complete details of any item
+✅ Edit item information (title, price, description)
+✅ Approve pending items to make them live
+✅ Reject items with reason feedback
+✅ Feature popular items on homepage
+✅ Delete items if needed
+✅ View sales history for each item
+✅ See who bought what and when
+✅ Track revenue by category and seller
+✅ Export sales data to CSV
+✅ Manage seller payouts
+✅ See empty state when no data[1]
+✅ Everything updates in real-time
+✅ Works on phone, tablet, and computer
+✅ Professional, clean design matching the screenshot
+
+**The admin now has complete control over the YoForex marketplace with powerful analytics and management tools!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/de50e889-581d-4af8-b93c-c33a836c9867/image.jpg?AWSAccessKeyId=ASIA2F3EMEYEZEJJTOZN&Signature=rQVjqe5XvVYh%2BXyz%2Bnp3Wy4%2FSIM%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEB8aCXVzLWVhc3QtMSJHMEUCID4mwiCnCv1j5T%2BXJGftzcGxNXu52CGe8afHDKS8PxoTAiEAvlyv5pf8ur7ck2OxKKjcdOwrffx5vMqMBEH7bRdrhxMq%2FAQI2P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDExfy6JWI1%2Fd2%2BeGECrQBNpPyWDAprtfVdJ6AYOy5L6TmLJq8qBMJlQ44qSggp9wb706a2PnUTbPjMokxFWTRNuLvtEJmtKp2c64QktMLwJ5S0qG%2BEGzRzoXLMpVuOhnqiD4%2BuRbTvjLxTqm7xCfLQVDHhQ%2BK0ydM8p37xhIMBOPx5QF6043YPf%2FoxE2yBSuCvWw%2FbUYscGJ398Naq6asEakvcA9B8dgQyWKzZu4zn%2FE6NYdmD0bHvI4dhw1W7lv36ouUiqHcBfZUjfabDQB%2BON3pnhUxoPtBKvQgUO%2F4GOu7Ji0GKtGmOldiDYkvbnMd%2FKJ7ncoTGRygdpXmdrmQ78nwgzGyNEINVOKt6mFGViHH78P25DXcCtIf1MjrYFMSeMwLmZHzPJPS4vg2AWrdTApLdHGYUTuoDg88LDH%2BTxzMbpaqG02CVpiuN%2BPIyACG6tmXuKF8%2Fmsw%2F8cFddxFe7YbuCkOflZE%2FCSGsTuWWkk5QwUHC3ragpZhgYS%2FAOiLR4NGGaCiabvMs8OZZbLdulIT3ieNBMgu7PEFsZK96OTKIW7FFuzknXB%2F4NTF4P4GI4Zhk8sBRd29go4ZUCqIhTOU67Y92XGW2YsTHvB39eEeEY%2F1flHwB7GzgqtV4eX1zpLXbaH7rZQl%2FC8K8Qcl4%2Fhg16g2YkdNEW413lEu7TLpB6IFzRGs4anT%2FVkiH2d0aoa8wmY2mVyPusq%2BflgCEv1kvlvwTPCFRb1ztet%2Fm0SLOPzv%2BCD4zE51abgHHk7zgZxuUHBBxdmyOBQWqQDSVv1ykUomfVQ7DrUyYC%2FU0ww9NiIyAY6mAFXEPiYV4hYSsXBWti1JE6z2BBu4SoYnPmDapSwm52Rj6qhqueI3uf25cdIvBFdejrwb72fahB0RxcqHT%2FGIpVcevcomI%2BQNRdPaIqFf4K8RhfnSLaiw7m%2BWedlFoVRlN0IUXLHqNiclzwrWl%2BUZHOr%2FZreShZKN%2BagMPEd9r0cDkpO3zcmJpuk634ki%2FUDjdOGw2ViDch9pw%3D%3D&Expires=1761751854)

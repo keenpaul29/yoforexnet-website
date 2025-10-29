@@ -1,0 +1,300 @@
+COMPLETE INSTRUCTIONS: Build the Content Moderation Page
+WHAT YOU ARE BUILDING:
+You are creating a Content Moderation page for YoForex forum admin panel. This page lets moderators and admins review pending posts/threads, handle reported content, approve or reject submissions, and take action on rule-breaking content
+
+PART 1: BACKEND (Server Side - Moderation Data)
+What the Backend Does
+The backend gets all content waiting for approval, reported content, and provides tools to approve, reject, or delete content.
+
+Create These Files:
+File 1: Moderation Routes (routes/moderation.js)
+
+Create URLs for moderation actions:
+
+/api/moderation/queue - Get all pending content (awaiting approval)
+
+/api/moderation/reported - Get all reported content
+
+/api/moderation/queue/count - Count pending items
+
+/api/moderation/reported/count - Count reported items
+
+/api/moderation/:id/approve - Approve a post/thread
+
+/api/moderation/:id/reject - Reject and delete content
+
+/api/moderation/:id/details - Get full content details
+
+/api/moderation/report/:id - Get report details and history
+
+/api/moderation/report/:id/dismiss - Dismiss a false report
+
+/api/moderation/report/:id/action - Take action on reported content
+
+/api/moderation/bulk-approve - Approve multiple items at once
+
+/api/moderation/bulk-reject - Reject multiple items at once
+
+/api/moderation/history - Get moderation action history
+
+/api/moderation/stats - Get moderation statistics
+
+File 2: Moderation Service (services/moderationService.js)
+
+Functions that handle moderation operations:
+
+Function 1: Get Pending Content Queue
+
+Query forum_threads table where status = "pending"
+
+Query forum_replies table where status = "pending"
+
+Combine both lists
+
+Sort by submission time (oldest first - most urgent)
+
+For each item include:
+
+Content ID
+
+Title (for threads) or first 100 characters (for replies)
+
+Type (thread or reply)
+
+Author username
+
+Author profile picture
+
+Submission date and time
+
+Category/thread it belongs to
+
+Word count
+
+Contains links (yes/no)
+
+Contains images (yes/no)
+
+Return paginated results (20 per page)
+
+Function 2: Get Reported Content
+
+Query content_reports table
+
+Join with forum_threads or forum_replies to get content details
+
+For each report include:
+
+Content ID
+
+Content type (thread/reply)
+
+Content title or preview
+
+Number of reports received
+
+Report reasons (spam, harassment, inappropriate, etc.)
+
+Who reported it (usernames)
+
+When first reported
+
+Content author
+
+Report status (new, under review, resolved)
+
+Sort by number of reports (most reported first)
+
+Function 3: Count Pending Items
+
+Count rows in forum_threads where status = "pending"
+
+Count rows in forum_replies where status = "pending"
+
+Add both numbers together
+
+Return total count
+
+Also return count older than 24 hours (urgent)
+
+Function 4: Count Reported Items
+
+Count rows in content_reports where status = "new" or "under review"
+
+Group by content ID (one content may have multiple reports)
+
+Return count of unique reported content items
+
+Function 5: Approve Content
+
+Find content by ID (in threads or replies table)
+
+Change status from "pending" to "approved"
+
+Set approved_by field to current admin username
+
+Set approved_at timestamp
+
+Make content visible on forum
+
+Send notification to author: "Your post has been approved"
+
+Record action in admin_actions table
+
+Return success message
+
+Function 6: Reject Content
+
+Find content by ID
+
+Change status to "rejected"
+
+Set rejected_by field to current admin username
+
+Set rejected_at timestamp
+
+Set rejection_reason (spam, inappropriate, etc.)
+
+Content remains hidden from forum
+
+Send notification to author with rejection reason
+
+Record action in admin_actions table
+
+Optionally: Delete content permanently if too severe
+
+Function 7: Get Content Full Details
+
+Find content by ID
+
+Return complete content:
+
+Full text/body
+
+All images/attachments
+
+Author full profile
+
+Author's post history (last 10 posts)
+
+Author's warning history
+
+Thread/category it belongs to
+
+All metadata (links, mentions, hashtags)
+
+Function 8: Handle Report
+
+Get report details by report ID
+
+Show all reports for this content
+
+Show who reported and why
+
+Show content in full
+
+Actions available:
+
+Dismiss report (false alarm)
+
+Delete content
+
+Edit content
+
+Warn author
+
+Suspend author
+
+Ban author
+
+Function 9: Dismiss False Report
+
+Mark report as "dismissed"
+
+Set dismissed_by to current admin
+
+Content stays visible
+
+Notify reporters (optional)
+
+Track false report rate per reporter
+
+Function 10: Take Action on Reported Content
+
+Based on action selected:
+
+Delete content: Remove from database
+
+Edit content: Allow admin to modify
+
+Warn user: Send warning notification, record in user profile
+
+Suspend user: Set suspension for 7/30/90 days
+
+Ban user: Permanently ban account
+
+Mark all reports for this content as "resolved"
+
+Record action in admin_actions table
+
+Send appropriate notifications
+
+Function 11: Bulk Approve
+
+Receive array of content IDs
+
+Loop through each ID
+
+Approve each one using Function 5
+
+Return count of approved items
+
+Send batch notification to authors
+
+Function 12: Bulk Reject
+
+Receive array of content IDs
+
+Loop through each ID
+
+Reject each one using Function 6
+
+Return count of rejected items
+
+Send batch notifications
+
+Function 13: Get Moderation History
+
+Query admin_actions table
+
+Filter by action type (approve, reject, delete, warn, suspend, ban)
+
+Show last 100 moderation actions
+
+For each action show:
+
+What was done (approved, rejected, deleted, etc.)
+
+What content (thread/reply title)
+
+Who did it (moderator username)
+
+When it happened
+
+Reason given (if any)
+
+Function 14: Get Moderation Stats
+
+Count total items moderated today
+
+Count approved today
+
+Count rejected today
+
+Count reports handled today
+
+Calculate average response time
+
+Find most active moderator
+
+Count pending items by age (< 1hr, 1-24hrs, >24hrs)
