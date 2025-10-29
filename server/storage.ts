@@ -1752,6 +1752,166 @@ export interface IStorage {
     totalRevenue: number;
     revenueThisWeek: number;
   }>;
+
+  // ============================================================================
+  // PHASE 2: Broker Admin Management (12 methods)
+  // ============================================================================
+
+  /**
+   * Get brokers with admin filters and pagination
+   */
+  getAdminBrokers(filters?: {
+    search?: string;
+    country?: string;
+    regulation?: string;
+    isVerified?: boolean;
+    scamWarning?: boolean;
+    status?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<{
+    items: Array<{
+      id: string;
+      name: string;
+      slug: string;
+      country: string | null;
+      regulation: string | null;
+      isVerified: boolean;
+      scamWarning: boolean;
+      reviewCount: number;
+      overallRating: number;
+      scamReportCount: number;
+      status: string;
+      createdAt: Date;
+      verifiedBy: string | null;
+      verifiedAt: Date | null;
+    }>;
+    total: number;
+    page: number;
+    pageSize: number;
+  }>;
+
+  /**
+   * Verify a broker
+   */
+  verifyBroker(brokerId: string, adminId: string): Promise<void>;
+
+  /**
+   * Remove verification from a broker
+   */
+  unverifyBroker(brokerId: string, adminId: string): Promise<void>;
+
+  /**
+   * Soft delete a broker
+   */
+  deleteBroker(brokerId: string, adminId: string): Promise<void>;
+
+  /**
+   * Toggle scam warning on a broker
+   */
+  toggleScamWarning(
+    brokerId: string,
+    adminId: string,
+    reason?: string,
+    enabled?: boolean
+  ): Promise<{ scamWarning: boolean }>;
+
+  /**
+   * Get scam reports with filters and pagination
+   */
+  getScamReports(filters?: {
+    brokerId?: string;
+    severity?: "low" | "medium" | "high" | "critical";
+    status?: "pending" | "approved" | "rejected";
+    page?: number;
+    pageSize?: number;
+  }): Promise<{
+    items: Array<{
+      id: string;
+      brokerId: string;
+      brokerName: string;
+      brokerLogoUrl: string | null;
+      userId: string;
+      username: string;
+      rating: number;
+      reviewTitle: string;
+      reviewBody: string;
+      scamSeverity: string | null;
+      status: string;
+      datePosted: Date;
+      approvedBy: string | null;
+      approvedAt: Date | null;
+      rejectedBy: string | null;
+      rejectedAt: Date | null;
+      rejectionReason: string | null;
+    }>;
+    total: number;
+    page: number;
+    pageSize: number;
+  }>;
+
+  /**
+   * Resolve a scam report (confirm or dismiss)
+   */
+  resolveScamReport(
+    reportId: string,
+    adminId: string,
+    resolution: "confirmed" | "dismissed"
+  ): Promise<void>;
+
+  /**
+   * Approve a broker review
+   */
+  approveBrokerReview(reviewId: string, adminId: string): Promise<void>;
+
+  /**
+   * Reject a broker review
+   */
+  rejectBrokerReview(reviewId: string, adminId: string, reason: string): Promise<void>;
+
+  /**
+   * Get broker statistics for admin dashboard
+   */
+  getBrokerStats(): Promise<{
+    totalBrokers: number;
+    verifiedBrokers: number;
+    scamWarnings: number;
+    totalReviews: number;
+    pendingReviews: number;
+    pendingScamReports: number;
+  }>;
+
+  /**
+   * Update broker details (admin)
+   */
+  updateBroker(
+    brokerId: string,
+    data: {
+      name?: string;
+      country?: string;
+      regulation?: string;
+      websiteUrl?: string;
+      minDeposit?: string;
+      leverage?: string;
+      platform?: string;
+      spreadType?: string;
+      minSpread?: string;
+    },
+    adminId: string
+  ): Promise<void>;
+
+  /**
+   * Get pending brokers awaiting approval
+   */
+  getPendingBrokers(): Promise<Array<{
+    id: string;
+    name: string;
+    slug: string;
+    country: string | null;
+    regulation: string | null;
+    createdAt: Date;
+    submittedBy?: string | null;
+  }>>;
 }
 
 export class MemStorage implements IStorage {
@@ -4828,6 +4988,92 @@ export class MemStorage implements IStorage {
       totalRevenue,
       revenueThisWeek,
     };
+  }
+
+  // ============================================================================
+  // PHASE 2: Broker Admin Management (12 methods) - MemStorage Stubs
+  // ============================================================================
+
+  async getAdminBrokers(): Promise<any> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async verifyBroker(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async unverifyBroker(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async deleteBroker(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async toggleScamWarning(): Promise<{ scamWarning: boolean }> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async getScamReports(): Promise<any> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async resolveScamReport(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async approveBrokerReview(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async rejectBrokerReview(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async getBrokerStats(): Promise<any> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async updateBroker(): Promise<void> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async getPendingBrokers(): Promise<any[]> {
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async getEngagementMetrics(): Promise<{
+    dau: number;
+    postsToday: number;
+    commentsToday: number;
+    likesToday: number;
+  }> {
+    return {
+      dau: 0,
+      postsToday: 0,
+      commentsToday: 0,
+      likesToday: 0
+    };
+  }
+
+  async getTopContentByViews(limit: number): Promise<Array<{
+    id: string;
+    title: string;
+    views: number;
+    author: string;
+    createdAt: Date;
+  }>> {
+    return [];
+  }
+
+  async getTopUsersByReputation(limit: number): Promise<Array<{
+    id: string;
+    username: string;
+    reputation: number;
+    coins: number;
+    badges: string[];
+  }>> {
+    return [];
   }
 }
 
@@ -12767,6 +13013,615 @@ export class DrizzleStorage implements IStorage {
       };
     } catch (error) {
       console.error('Error getting marketplace stats:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // PHASE 2: Broker Admin Management (12 methods) - DrizzleStorage Implementation
+  // ============================================================================
+
+  async getAdminBrokers(filters?: {
+    search?: string;
+    country?: string;
+    regulation?: string;
+    isVerified?: boolean;
+    scamWarning?: boolean;
+    status?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<any> {
+    try {
+      const page = filters?.page || 1;
+      const pageSize = Math.min(filters?.pageSize || 20, 100);
+      const offset = (page - 1) * pageSize;
+
+      // Build conditions
+      const conditions: any[] = [isNull(brokers.deletedAt)];
+      
+      if (filters?.search) {
+        conditions.push(ilike(brokers.name, `%${filters.search}%`));
+      }
+      if (filters?.country) {
+        conditions.push(eq(brokers.country, filters.country));
+      }
+      if (filters?.regulation) {
+        conditions.push(eq(brokers.regulation, filters.regulation));
+      }
+      if (filters?.isVerified !== undefined) {
+        conditions.push(eq(brokers.isVerified, filters.isVerified));
+      }
+      if (filters?.scamWarning !== undefined) {
+        conditions.push(eq(brokers.scamWarning, filters.scamWarning));
+      }
+      if (filters?.status) {
+        conditions.push(eq(brokers.status, filters.status as any));
+      }
+
+      // Count total brokers
+      const [totalResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(brokers)
+        .where(and(...conditions));
+
+      const total = totalResult?.count || 0;
+
+      // Get brokers with pagination
+      const items = await db
+        .select({
+          id: brokers.id,
+          name: brokers.name,
+          slug: brokers.slug,
+          country: brokers.country,
+          regulation: brokers.regulation,
+          isVerified: brokers.isVerified,
+          scamWarning: brokers.scamWarning,
+          reviewCount: brokers.reviewCount,
+          overallRating: brokers.overallRating,
+          scamReportCount: brokers.scamReportCount,
+          status: brokers.status,
+          createdAt: brokers.createdAt,
+          verifiedBy: brokers.verifiedBy,
+          verifiedAt: brokers.verifiedAt,
+        })
+        .from(brokers)
+        .where(and(...conditions))
+        .orderBy(desc(brokers.createdAt))
+        .limit(pageSize)
+        .offset(offset);
+
+      return {
+        items: items.map(item => ({
+          ...item,
+          reviewCount: item.reviewCount || 0,
+          overallRating: item.overallRating || 0,
+          scamReportCount: item.scamReportCount || 0,
+        })),
+        total,
+        page,
+        pageSize,
+      };
+    } catch (error) {
+      console.error('Error getting admin brokers:', error);
+      throw error;
+    }
+  }
+
+  async verifyBroker(brokerId: string, adminId: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [broker] = await tx
+          .select()
+          .from(brokers)
+          .where(and(eq(brokers.id, brokerId), isNull(brokers.deletedAt)));
+
+        if (!broker) throw new Error('Broker not found');
+
+        await tx
+          .update(brokers)
+          .set({
+            isVerified: true,
+            verifiedBy: adminId,
+            verifiedAt: new Date(),
+            rejectedBy: null,
+            rejectedAt: null,
+            rejectionReason: null,
+          })
+          .where(eq(brokers.id, brokerId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'verify_broker',
+          targetType: 'broker',
+          targetId: brokerId,
+          details: { brokerName: broker.name },
+        });
+      });
+    } catch (error) {
+      console.error('Error verifying broker:', error);
+      throw error;
+    }
+  }
+
+  async unverifyBroker(brokerId: string, adminId: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [broker] = await tx
+          .select()
+          .from(brokers)
+          .where(and(eq(brokers.id, brokerId), isNull(brokers.deletedAt)));
+
+        if (!broker) throw new Error('Broker not found');
+
+        await tx
+          .update(brokers)
+          .set({
+            isVerified: false,
+            verifiedBy: null,
+            verifiedAt: null,
+          })
+          .where(eq(brokers.id, brokerId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'unverify_broker',
+          targetType: 'broker',
+          targetId: brokerId,
+          details: { brokerName: broker.name },
+        });
+      });
+    } catch (error) {
+      console.error('Error unverifying broker:', error);
+      throw error;
+    }
+  }
+
+  async deleteBroker(brokerId: string, adminId: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [broker] = await tx
+          .select()
+          .from(brokers)
+          .where(eq(brokers.id, brokerId));
+
+        if (!broker) throw new Error('Broker not found');
+
+        await tx
+          .update(brokers)
+          .set({ deletedAt: new Date() })
+          .where(eq(brokers.id, brokerId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'delete_broker',
+          targetType: 'broker',
+          targetId: brokerId,
+          details: { brokerName: broker.name },
+        });
+      });
+    } catch (error) {
+      console.error('Error deleting broker:', error);
+      throw error;
+    }
+  }
+
+  async toggleScamWarning(
+    brokerId: string,
+    adminId: string,
+    reason?: string,
+    enabled?: boolean
+  ): Promise<{ scamWarning: boolean }> {
+    try {
+      let newScamWarning: boolean;
+
+      await db.transaction(async (tx) => {
+        const [broker] = await tx
+          .select()
+          .from(brokers)
+          .where(and(eq(brokers.id, brokerId), isNull(brokers.deletedAt)));
+
+        if (!broker) throw new Error('Broker not found');
+
+        // Determine new state
+        if (enabled !== undefined) {
+          newScamWarning = enabled;
+        } else {
+          newScamWarning = !broker.scamWarning;
+        }
+
+        await tx
+          .update(brokers)
+          .set({
+            scamWarning: newScamWarning,
+            scamWarningReason: newScamWarning ? reason || null : null,
+          })
+          .where(eq(brokers.id, brokerId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: newScamWarning ? 'enable_scam_warning' : 'disable_scam_warning',
+          targetType: 'broker',
+          targetId: brokerId,
+          details: { 
+            brokerName: broker.name,
+            reason: reason || null,
+          },
+        });
+      });
+
+      return { scamWarning: newScamWarning! };
+    } catch (error) {
+      console.error('Error toggling scam warning:', error);
+      throw error;
+    }
+  }
+
+  async getScamReports(filters?: {
+    brokerId?: string;
+    severity?: "low" | "medium" | "high" | "critical";
+    status?: "pending" | "approved" | "rejected";
+    page?: number;
+    pageSize?: number;
+  }): Promise<any> {
+    try {
+      const page = filters?.page || 1;
+      const pageSize = Math.min(filters?.pageSize || 20, 100);
+      const offset = (page - 1) * pageSize;
+
+      // Build conditions
+      const conditions: any[] = [eq(brokerReviews.isScamReport, true)];
+      
+      if (filters?.brokerId) {
+        conditions.push(eq(brokerReviews.brokerId, filters.brokerId));
+      }
+      if (filters?.severity) {
+        conditions.push(eq(brokerReviews.scamSeverity, filters.severity));
+      }
+      if (filters?.status) {
+        conditions.push(eq(brokerReviews.status, filters.status as any));
+      }
+
+      // Count total scam reports
+      const [totalResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(brokerReviews)
+        .where(and(...conditions));
+
+      const total = totalResult?.count || 0;
+
+      // Get scam reports with related data
+      const items = await db
+        .select({
+          id: brokerReviews.id,
+          brokerId: brokerReviews.brokerId,
+          brokerName: brokers.name,
+          brokerLogoUrl: brokers.logoUrl,
+          userId: brokerReviews.userId,
+          username: users.username,
+          rating: brokerReviews.rating,
+          reviewTitle: brokerReviews.reviewTitle,
+          reviewBody: brokerReviews.reviewBody,
+          scamSeverity: brokerReviews.scamSeverity,
+          status: brokerReviews.status,
+          datePosted: brokerReviews.createdAt,
+          approvedBy: brokerReviews.approvedBy,
+          approvedAt: brokerReviews.approvedAt,
+          rejectedBy: brokerReviews.rejectedBy,
+          rejectedAt: brokerReviews.rejectedAt,
+          rejectionReason: brokerReviews.rejectionReason,
+        })
+        .from(brokerReviews)
+        .leftJoin(brokers, eq(brokerReviews.brokerId, brokers.id))
+        .leftJoin(users, eq(brokerReviews.userId, users.id))
+        .where(and(...conditions))
+        .orderBy(desc(brokerReviews.createdAt))
+        .limit(pageSize)
+        .offset(offset);
+
+      return {
+        items: items.map(item => ({
+          ...item,
+          brokerName: item.brokerName || 'Unknown',
+          username: item.username || 'Unknown',
+        })),
+        total,
+        page,
+        pageSize,
+      };
+    } catch (error) {
+      console.error('Error getting scam reports:', error);
+      throw error;
+    }
+  }
+
+  async resolveScamReport(
+    reportId: string,
+    adminId: string,
+    resolution: "confirmed" | "dismissed"
+  ): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [review] = await tx
+          .select()
+          .from(brokerReviews)
+          .where(and(
+            eq(brokerReviews.id, reportId),
+            eq(brokerReviews.isScamReport, true)
+          ));
+
+        if (!review) throw new Error('Scam report not found');
+
+        if (resolution === 'confirmed') {
+          // Mark as approved
+          await tx
+            .update(brokerReviews)
+            .set({
+              status: 'approved',
+              approvedBy: adminId,
+              approvedAt: new Date(),
+              rejectedBy: null,
+              rejectedAt: null,
+              rejectionReason: null,
+            })
+            .where(eq(brokerReviews.id, reportId));
+
+          // Count total confirmed scam reports for this broker
+          const [confirmedReports] = await tx
+            .select({ count: sql<number>`cast(count(*) as integer)` })
+            .from(brokerReviews)
+            .where(and(
+              eq(brokerReviews.brokerId, review.brokerId),
+              eq(brokerReviews.isScamReport, true),
+              eq(brokerReviews.status, 'approved')
+            ));
+
+          const count = confirmedReports?.count || 0;
+
+          // Auto-flag if 3+ confirmed scam reports
+          if (count >= 3) {
+            await tx
+              .update(brokers)
+              .set({
+                scamWarning: true,
+                scamWarningReason: `Automatically flagged: ${count} confirmed scam reports`,
+              })
+              .where(eq(brokers.id, review.brokerId));
+
+            await tx.insert(adminActions).values({
+              adminId,
+              actionType: 'auto_flag_scam_warning',
+              targetType: 'broker',
+              targetId: review.brokerId,
+              details: { 
+                confirmedReports: count,
+                reason: `Automatically flagged: ${count} confirmed scam reports`,
+              },
+            });
+          }
+
+          await tx.insert(adminActions).values({
+            adminId,
+            actionType: 'confirm_scam_report',
+            targetType: 'broker_review',
+            targetId: reportId,
+            details: { brokerId: review.brokerId },
+          });
+        } else {
+          // Mark as dismissed
+          await tx
+            .update(brokerReviews)
+            .set({
+              status: 'rejected',
+              rejectedBy: adminId,
+              rejectedAt: new Date(),
+              rejectionReason: 'False report',
+              approvedBy: null,
+              approvedAt: null,
+            })
+            .where(eq(brokerReviews.id, reportId));
+
+          await tx.insert(adminActions).values({
+            adminId,
+            actionType: 'dismiss_scam_report',
+            targetType: 'broker_review',
+            targetId: reportId,
+            details: { brokerId: review.brokerId },
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error resolving scam report:', error);
+      throw error;
+    }
+  }
+
+  async approveBrokerReview(reviewId: string, adminId: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [review] = await tx
+          .select()
+          .from(brokerReviews)
+          .where(eq(brokerReviews.id, reviewId));
+
+        if (!review) throw new Error('Review not found');
+
+        await tx
+          .update(brokerReviews)
+          .set({
+            status: 'approved',
+            approvedBy: adminId,
+            approvedAt: new Date(),
+            rejectedBy: null,
+            rejectedAt: null,
+            rejectionReason: null,
+          })
+          .where(eq(brokerReviews.id, reviewId));
+
+        // If NOT a scam report, update broker rating
+        if (!review.isScamReport) {
+          await this.updateBrokerRating(review.brokerId);
+        }
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'approve_broker_review',
+          targetType: 'broker_review',
+          targetId: reviewId,
+          details: { brokerId: review.brokerId },
+        });
+      });
+    } catch (error) {
+      console.error('Error approving broker review:', error);
+      throw error;
+    }
+  }
+
+  async rejectBrokerReview(reviewId: string, adminId: string, reason: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [review] = await tx
+          .select()
+          .from(brokerReviews)
+          .where(eq(brokerReviews.id, reviewId));
+
+        if (!review) throw new Error('Review not found');
+
+        await tx
+          .update(brokerReviews)
+          .set({
+            status: 'rejected',
+            rejectedBy: adminId,
+            rejectedAt: new Date(),
+            rejectionReason: reason,
+            approvedBy: null,
+            approvedAt: null,
+          })
+          .where(eq(brokerReviews.id, reviewId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'reject_broker_review',
+          targetType: 'broker_review',
+          targetId: reviewId,
+          details: { 
+            brokerId: review.brokerId,
+            reason,
+          },
+        });
+      });
+    } catch (error) {
+      console.error('Error rejecting broker review:', error);
+      throw error;
+    }
+  }
+
+  async getBrokerStats(): Promise<any> {
+    try {
+      const [brokerStats] = await db
+        .select({
+          totalBrokers: sql<number>`cast(count(*) filter (where ${brokers.deletedAt} is null) as integer)`,
+          verifiedBrokers: sql<number>`cast(count(*) filter (where ${brokers.isVerified} = true and ${brokers.deletedAt} is null) as integer)`,
+          scamWarnings: sql<number>`cast(count(*) filter (where ${brokers.scamWarning} = true and ${brokers.deletedAt} is null) as integer)`,
+        })
+        .from(brokers);
+
+      const [reviewStats] = await db
+        .select({
+          totalReviews: sql<number>`cast(count(*) as integer)`,
+          pendingReviews: sql<number>`cast(count(*) filter (where ${brokerReviews.status} = 'pending' and ${brokerReviews.isScamReport} = false) as integer)`,
+          pendingScamReports: sql<number>`cast(count(*) filter (where ${brokerReviews.status} = 'pending' and ${brokerReviews.isScamReport} = true) as integer)`,
+        })
+        .from(brokerReviews);
+
+      return {
+        totalBrokers: brokerStats?.totalBrokers || 0,
+        verifiedBrokers: brokerStats?.verifiedBrokers || 0,
+        scamWarnings: brokerStats?.scamWarnings || 0,
+        totalReviews: reviewStats?.totalReviews || 0,
+        pendingReviews: reviewStats?.pendingReviews || 0,
+        pendingScamReports: reviewStats?.pendingScamReports || 0,
+      };
+    } catch (error) {
+      console.error('Error getting broker stats:', error);
+      throw error;
+    }
+  }
+
+  async updateBroker(
+    brokerId: string,
+    data: {
+      name?: string;
+      country?: string;
+      regulation?: string;
+      websiteUrl?: string;
+      minDeposit?: string;
+      leverage?: string;
+      platform?: string;
+      spreadType?: string;
+      minSpread?: string;
+    },
+    adminId: string
+  ): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [broker] = await tx
+          .select()
+          .from(brokers)
+          .where(and(eq(brokers.id, brokerId), isNull(brokers.deletedAt)));
+
+        if (!broker) throw new Error('Broker not found');
+
+        const updates: any = { ...data, updatedAt: new Date() };
+
+        // If name changed, regenerate slug
+        if (data.name && data.name !== broker.name) {
+          const slugify = (await import('slugify')).default;
+          updates.slug = await generateUniqueSlug(data.name, brokers, 'slug');
+        }
+
+        await tx
+          .update(brokers)
+          .set(updates)
+          .where(eq(brokers.id, brokerId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'update_broker',
+          targetType: 'broker',
+          targetId: brokerId,
+          details: { 
+            brokerName: broker.name,
+            changes: data,
+          },
+        });
+      });
+    } catch (error) {
+      console.error('Error updating broker:', error);
+      throw error;
+    }
+  }
+
+  async getPendingBrokers(): Promise<any[]> {
+    try {
+      const items = await db
+        .select({
+          id: brokers.id,
+          name: brokers.name,
+          slug: brokers.slug,
+          country: brokers.country,
+          regulation: brokers.regulation,
+          createdAt: brokers.createdAt,
+        })
+        .from(brokers)
+        .where(and(
+          eq(brokers.status, 'pending'),
+          isNull(brokers.deletedAt)
+        ))
+        .orderBy(asc(brokers.createdAt));
+
+      return items;
+    } catch (error) {
+      console.error('Error getting pending brokers:', error);
       throw error;
     }
   }

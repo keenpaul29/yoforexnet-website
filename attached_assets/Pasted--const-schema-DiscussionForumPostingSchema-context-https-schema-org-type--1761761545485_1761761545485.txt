@@ -1,0 +1,66 @@
+  const schema: DiscussionForumPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    '@id': threadUrl,
+    headline: thread.title.substring(0, 110),
+    articleBody: sanitizeForSchema(thread.body) || '',
+    author: {
+      '@type': 'Person',
+      '@id': `${baseUrl}/user/${author.username}#person`,
+      name: author.username,
+      url: `${baseUrl}/user/${author.username}`,
+    },
+    datePublished: toISO8601(thread.createdAt)!,
+    dateModified: toISO8601(thread.updatedAt)!,
+    url: threadUrl,
+    mainEntityOfPage: { '@id': threadUrl },
+    inLanguage: getLanguage(thread.body),
+    publisher: {
+  const schema: DiscussionForumPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    '@id': threadUrl,
+    headline: thread.title.substring(0, 110),
+    articleBody: sanitizeForSchema(thread.body) || '',
+    author: {
+      '@type': 'Person',
+      '@id': `${baseUrl}/user/${author.username}#person`,
+      name: author.username,
+      url: `${baseUrl}/user/${author.username}`,
+    },
+    datePublished: toISO8601(thread.createdAt)!,
+    dateModified: toISO8601(thread.updatedAt)!,
+    url: threadUrl,
+    mainEntityOfPage: { '@id': threadUrl },
+    publisher: {
+export interface DiscussionForumPostingSchema extends BaseSchema {
+  '@type': 'DiscussionForumPosting';
+  '@id': string;
+  headline: string;
+  articleBody: string;
+  author: Person | Organization;
+  datePublished: string;
+  dateModified?: string;
+  url: string;
+  mainEntityOfPage?: { '@id': string };
+  interactionStatistic?: InteractionCounter[];
+  comment?: CommentSchema[];
+  commentCount?: number;
+  publisher?: Organization;
+}
+export interface DiscussionForumPostingSchema extends BaseSchema {
+  '@type': 'DiscussionForumPosting';
+  '@id': string;
+  headline: string;
+  articleBody: string;
+  author: Person | Organization;
+  datePublished: string;
+  dateModified?: string;
+  url: string;
+  mainEntityOfPage?: { '@id': string };
+  inLanguage?: string;
+  interactionStatistic?: InteractionCounter[];
+  comment?: CommentSchema[];
+  commentCount?: number;
+  publisher?: Organization;
+}

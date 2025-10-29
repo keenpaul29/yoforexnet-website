@@ -150,6 +150,7 @@ export interface DiscussionForumPostingSchema extends BaseSchema {
   dateModified?: string;
   url: string;
   mainEntityOfPage?: { '@id': string };
+  inLanguage?: string;
   interactionStatistic?: InteractionCounter[];
   comment?: CommentSchema[];
   commentCount?: number;
@@ -193,7 +194,7 @@ export interface OfferSchema {
   priceCurrency: string;
   availability: string;
   url?: string;
-  seller?: Organization;
+  seller?: Organization | Person;
   priceValidUntil?: string;
 }
 
@@ -298,6 +299,7 @@ export interface NewsArticleSchema extends BaseSchema {
   author: Person | Organization;
   publisher: Organization;
   articleBody?: string;
+  inLanguage?: string;
   dateline?: string;
   url: string;
 }
@@ -318,6 +320,7 @@ export interface BlogPostingSchema extends BaseSchema {
   publisher: Organization;
   articleBody?: string;
   wordCount?: number;
+  inLanguage?: string;
   articleSection?: string;
   url: string;
   mainEntityOfPage?: { '@id': string };
@@ -521,7 +524,7 @@ export function generateProductSchema(params: {
 
   const images = product.images || [];
   const coverImage = images.find((img) => img.isCover) || images[0];
-  const imageUrls = images.length > 0 ? images.map((img) => img.url) : undefined;
+  const imageUrl = images.length > 0 ? images[0].url : undefined;
 
   // Determine additional type based on content type
   let additionalType: string | undefined;
@@ -554,7 +557,7 @@ export function generateProductSchema(params: {
     '@id': `${baseUrl}/content/${product.slug}#product`,
     name: product.title,
     description: sanitizeForSchema(product.description) || '',
-    image: validateImageUrl(imageUrls || coverImage?.url, baseUrl) || `${baseUrl}/logo.png`,
+    image: validateImageUrl(imageUrl || coverImage?.url, baseUrl) || `${baseUrl}/logo.png`,
     brand: {
       '@type': 'Brand',
       name: SITE_CONFIG.name,

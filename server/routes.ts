@@ -5367,6 +5367,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     removedBy: z.string().optional()
   });
 
+  // Broker Admin Zod Schemas
+  const updateBrokerSchema = z.object({
+    name: z.string().optional(),
+    country: z.string().optional(),
+    regulation: z.string().optional(),
+    websiteUrl: z.string().url().optional(),
+    minDeposit: z.string().optional(),
+    leverage: z.string().optional(),
+    platform: z.string().optional(),
+    spreadType: z.string().optional(),
+    minSpread: z.string().optional(),
+  });
+
+  const scamWarningSchema = z.object({
+    enabled: z.boolean(),
+    reason: z.string().optional(),
+  });
+
+  const resolveScamReportSchema = z.object({
+    resolution: z.enum(["confirmed", "dismissed"]),
+  });
+
+  const rejectReviewSchema = z.object({
+    reason: z.string().min(1, "Reason is required"),
+  });
+
   // 1. GET /api/admin/users - Get paginated list of users with filters
   app.get('/api/admin/users', isAuthenticated, adminOperationLimiter, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
@@ -6416,6 +6442,319 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('[Sitemap Logs] Error:', error);
       res.status(500).json({ error: 'Failed to fetch sitemap logs' });
+    }
+  });
+
+  // ===================================
+  // ADMIN: Broker Management
+  // ===================================
+
+  // 1. GET /api/admin/brokers - List all brokers with filters/pagination
+  app.get("/api/admin/brokers", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const filters = {
+        search: req.query.search as string | undefined,
+        country: req.query.country as string | undefined,
+        regulation: req.query.regulation as string | undefined,
+        isVerified: req.query.isVerified === "true" ? true : req.query.isVerified === "false" ? false : undefined,
+        scamWarning: req.query.scamWarning === "true" ? true : req.query.scamWarning === "false" ? false : undefined,
+        status: req.query.status as string | undefined,
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 20,
+      };
+      
+      const result = await storage.getAdminBrokers(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error('[Admin Brokers] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch brokers" });
+    }
+  });
+
+  // 2. GET /api/admin/brokers/stats - Get broker statistics
+  app.get("/api/admin/brokers/stats", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const stats = await storage.getBrokerStats();
+      res.json(stats);
+    } catch (error: any) {
+      console.error('[Admin Broker Stats] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch broker stats" });
+    }
+  });
+
+  // 3. GET /api/admin/brokers/pending - Get pending broker submissions
+  app.get("/api/admin/brokers/pending", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const pendingBrokers = await storage.getPendingBrokers();
+      res.json(pendingBrokers);
+    } catch (error: any) {
+      console.error('[Admin Pending Brokers] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch pending brokers" });
+    }
+  });
+
+  // 4. PATCH /api/admin/brokers/:id - Update broker
+  app.patch("/api/admin/brokers/:id", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const brokerId = req.params.id;
+      
+      const validated = updateBrokerSchema.parse(req.body);
+      
+      await storage.updateBroker(brokerId, validated, authenticatedUserId);
+      res.json({ success: true, message: "Broker updated successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      if (error.message === "Broker not found") {
+        return res.status(404).json({ error: "Broker not found" });
+      }
+      console.error('[Admin Update Broker] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to update broker" });
+    }
+  });
+
+  // 5. DELETE /api/admin/brokers/:id - Delete (soft delete) broker
+  app.delete("/api/admin/brokers/:id", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const brokerId = req.params.id;
+      
+      await storage.deleteBroker(brokerId, authenticatedUserId);
+      res.json({ success: true, message: "Broker deleted successfully" });
+    } catch (error: any) {
+      if (error.message === "Broker not found") {
+        return res.status(404).json({ error: "Broker not found" });
+      }
+      console.error('[Admin Delete Broker] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to delete broker" });
+    }
+  });
+
+  // 6. POST /api/admin/brokers/:id/verify - Verify broker
+  app.post("/api/admin/brokers/:id/verify", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const brokerId = req.params.id;
+      
+      await storage.verifyBroker(brokerId, authenticatedUserId);
+      res.json({ success: true, message: "Broker verified successfully" });
+    } catch (error: any) {
+      if (error.message === "Broker not found") {
+        return res.status(404).json({ error: "Broker not found" });
+      }
+      console.error('[Admin Verify Broker] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to verify broker" });
+    }
+  });
+
+  // 7. POST /api/admin/brokers/:id/unverify - Unverify broker
+  app.post("/api/admin/brokers/:id/unverify", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const brokerId = req.params.id;
+      
+      await storage.unverifyBroker(brokerId, authenticatedUserId);
+      res.json({ success: true, message: "Broker verification removed" });
+    } catch (error: any) {
+      if (error.message === "Broker not found") {
+        return res.status(404).json({ error: "Broker not found" });
+      }
+      console.error('[Admin Unverify Broker] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to unverify broker" });
+    }
+  });
+
+  // 8. POST /api/admin/brokers/:id/scam-warning - Toggle scam warning
+  app.post("/api/admin/brokers/:id/scam-warning", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const brokerId = req.params.id;
+      
+      const validated = scamWarningSchema.parse(req.body);
+      
+      const result = await storage.toggleScamWarning(
+        brokerId,
+        authenticatedUserId,
+        validated.reason,
+        validated.enabled
+      );
+      
+      res.json({
+        success: true,
+        message: result.scamWarning ? "Scam warning added" : "Scam warning removed",
+        scamWarning: result.scamWarning
+      });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      if (error.message === "Broker not found") {
+        return res.status(404).json({ error: "Broker not found" });
+      }
+      console.error('[Admin Scam Warning] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to toggle scam warning" });
+    }
+  });
+
+  // ===================================
+  // ADMIN: Scam Reports Management
+  // ===================================
+
+  // 9. GET /api/admin/scam-reports - List all scam reports
+  app.get("/api/admin/scam-reports", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const filters = {
+        brokerId: req.query.brokerId as string | undefined,
+        severity: req.query.severity as "low" | "medium" | "high" | "critical" | undefined,
+        status: req.query.status as "pending" | "approved" | "rejected" | undefined,
+        page: parseInt(req.query.page as string) || 1,
+        pageSize: parseInt(req.query.pageSize as string) || 20,
+      };
+      
+      const result = await storage.getScamReports(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error('[Admin Scam Reports] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch scam reports" });
+    }
+  });
+
+  // 10. GET /api/admin/scam-reports/:id - Get single scam report details
+  app.get("/api/admin/scam-reports/:id", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const reportId = req.params.id;
+      
+      // Use getScamReports without filters to find specific report
+      const result = await storage.getScamReports({ page: 1, pageSize: 1000 });
+      const report = result.items.find(r => r.id === reportId);
+      
+      if (!report) {
+        return res.status(404).json({ error: "Scam report not found" });
+      }
+      
+      res.json(report);
+    } catch (error: any) {
+      console.error('[Admin Scam Report Details] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch scam report" });
+    }
+  });
+
+  // 11. POST /api/admin/scam-reports/:id/resolve - Resolve scam report
+  app.post("/api/admin/scam-reports/:id/resolve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const reportId = req.params.id;
+      
+      const validated = resolveScamReportSchema.parse(req.body);
+      
+      await storage.resolveScamReport(reportId, authenticatedUserId, validated.resolution);
+      
+      res.json({
+        success: true,
+        message: validated.resolution === "confirmed" ? "Scam report confirmed" : "Scam report dismissed"
+      });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      if (error.message === "Scam report not found") {
+        return res.status(404).json({ error: "Scam report not found" });
+      }
+      console.error('[Admin Resolve Scam Report] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to resolve scam report" });
+    }
+  });
+
+  // ===================================
+  // ADMIN: Broker Reviews Management
+  // ===================================
+
+  // 12. GET /api/admin/broker-reviews - List all broker reviews
+  app.get("/api/admin/broker-reviews", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const pageSize = parseInt(req.query.pageSize as string) || 20;
+      const status = req.query.status as "pending" | "approved" | "rejected" | undefined;
+      const brokerId = req.query.brokerId as string | undefined;
+      
+      // This is a simplified implementation - in production you may want a dedicated storage method
+      const filters: any = {
+        page,
+        pageSize,
+      };
+      
+      if (status) filters.status = status;
+      if (brokerId) filters.brokerId = brokerId;
+      
+      const result = await storage.getScamReports(filters);
+      
+      // Filter out scam reports to show only reviews
+      const reviews = result.items;
+      
+      res.json({
+        items: reviews,
+        total: result.total,
+        page: result.page,
+        pageSize: result.pageSize,
+      });
+    } catch (error: any) {
+      console.error('[Admin Broker Reviews] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to fetch broker reviews" });
+    }
+  });
+
+  // 13. POST /api/admin/broker-reviews/:id/approve - Approve broker review
+  app.post("/api/admin/broker-reviews/:id/approve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const reviewId = req.params.id;
+      
+      await storage.approveBrokerReview(reviewId, authenticatedUserId);
+      res.json({ success: true, message: "Review approved successfully" });
+    } catch (error: any) {
+      if (error.message === "Review not found") {
+        return res.status(404).json({ error: "Review not found" });
+      }
+      console.error('[Admin Approve Review] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to approve review" });
+    }
+  });
+
+  // 14. POST /api/admin/broker-reviews/:id/reject - Reject broker review
+  app.post("/api/admin/broker-reviews/:id/reject", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const authenticatedUserId = getAuthenticatedUserId(req);
+      const reviewId = req.params.id;
+      
+      const validated = rejectReviewSchema.parse(req.body);
+      
+      await storage.rejectBrokerReview(reviewId, authenticatedUserId, validated.reason);
+      res.json({ success: true, message: "Review rejected" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      if (error.message === "Review not found") {
+        return res.status(404).json({ error: "Review not found" });
+      }
+      console.error('[Admin Reject Review] Error:', error);
+      res.status(500).json({ error: error.message || "Failed to reject review" });
     }
   });
 

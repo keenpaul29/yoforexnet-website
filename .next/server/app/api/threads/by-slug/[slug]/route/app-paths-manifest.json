@@ -1,0 +1,3 @@
+{
+  "/api/threads/by-slug/[slug]/route": "app/api/threads/by-slug/[slug]/route.js"
+}
