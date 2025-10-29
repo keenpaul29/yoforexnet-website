@@ -782,7 +782,7 @@ export interface IStorage {
   /**
    * Get revenue by source
    */
-  getRevenueBySource(period: string): Promise<any[]>;
+  getRevenueBySource(startDate: Date, endDate: Date): Promise<any[]>;
   
   /**
    * Get revenue by user (top earners)
@@ -879,12 +879,12 @@ export interface IStorage {
   /**
    * Update support ticket
    */
-  updateSupportTicket(ticketId: number, updates: any): Promise<void>;
+  updateSupportTicket(ticketId: number, updates: any, updatedBy: string): Promise<void>;
   
   /**
    * Assign ticket to support agent
    */
-  assignTicket(ticketId: number, assignedTo: string): Promise<void>;
+  assignTicket(ticketId: number, assignedTo: string, assignedBy: string): Promise<void>;
   
   /**
    * Add reply to support ticket
@@ -3422,7 +3422,7 @@ export class MemStorage implements IStorage {
     return { totalRevenue: 0, totalTransactions: 0 };
   }
 
-  async getRevenueBySource(period: string): Promise<any[]> {
+  async getRevenueBySource(startDate: Date, endDate: Date): Promise<any[]> {
     return [];
   }
 
@@ -3490,15 +3490,15 @@ export class MemStorage implements IStorage {
     return { id: 1, ...ticket, status: 'open' };
   }
 
-  async updateSupportTicket(ticketId: number, updates: any): Promise<void> {
+  async updateSupportTicket(ticketId: number, updates: any, updatedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async assignTicket(ticketId: number, assignedTo: string): Promise<void> {
+  async assignTicket(ticketId: number, assignedTo: string, assignedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async addTicketReply(ticketId: number, reply: any): Promise<void> {
+  async addTicketReply(ticketId: number, reply: {userId: string; message: string}): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
@@ -7684,37 +7684,41 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async createRefund(refund: {
-    transactionId: string;
-    userId: string;
-    amount: number;
-    reason: string;
-    createdBy: string;
-  }): Promise<any> {
+  async createRefund(purchaseId: string, amount: number, reason: string, processedBy: string): Promise<any> {
     try {
       return await db.transaction(async (tx) => {
+        const [purchase] = await tx
+          .select()
+          .from(contentPurchases)
+          .where(eq(contentPurchases.id, purchaseId))
+          .limit(1);
+        
+        if (!purchase) {
+          throw new Error('Purchase not found');
+        }
+        
         await tx
           .update(users)
           .set({ 
-            totalCoins: sql`${users.totalCoins} + ${refund.amount}`,
-            level: sql`FLOOR((${users.totalCoins} + ${refund.amount}) / 1000)`
+            totalCoins: sql`${users.totalCoins} + ${amount}`,
+            level: sql`FLOOR((${users.totalCoins} + ${amount}) / 1000)`
           })
-          .where(eq(users.id, refund.userId));
+          .where(eq(users.id, purchase.buyerId));
         
         const [transaction] = await tx.insert(coinTransactions).values({
-          userId: refund.userId,
+          userId: purchase.buyerId,
           type: 'earn',
-          amount: refund.amount,
-          description: `Refund: ${refund.reason}`,
+          amount: amount,
+          description: `Refund: ${reason}`,
           status: 'completed',
         }).returning();
         
         await tx.insert(adminActions).values({
-          adminId: refund.createdBy,
+          adminId: processedBy,
           actionType: 'refund_create',
           targetType: 'transaction',
           targetId: transaction.id,
-          details: { originalTransaction: refund.transactionId, reason: refund.reason },
+          details: { originalPurchase: purchaseId, reason: reason },
           ipAddress: '0.0.0.0',
           userAgent: 'admin-dashboard',
         });
@@ -7837,22 +7841,21 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async getTransactionVelocity(userId: string, hours: number = 24): Promise<number> {
+  async getTransactionVelocity(): Promise<any> {
     try {
       const cutoffDate = new Date();
-      cutoffDate.setHours(cutoffDate.getHours() - hours);
+      cutoffDate.setHours(cutoffDate.getHours() - 24);
       
       const transactions = await db
         .select()
         .from(coinTransactions)
-        .where(
-          and(
-            eq(coinTransactions.userId, userId),
-            gte(coinTransactions.createdAt, cutoffDate)
-          )
-        );
+        .where(gte(coinTransactions.createdAt, cutoffDate));
       
-      return transactions.length;
+      const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
+      const transactionsPerHour = transactions.length / 24;
+      const avgAmount = transactions.length > 0 ? totalAmount / transactions.length : 0;
+      
+      return { transactionsPerHour, avgAmount };
     } catch (error) {
       console.error("Error fetching transaction velocity:", error);
       throw error;
@@ -8038,7 +8041,7 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async addTicketReply(ticketId: number, reply: any, repliedBy: string): Promise<void> {
+  async addTicketReply(ticketId: number, reply: {userId: string; message: string}): Promise<void> {
     try {
       await db
         .update(supportTickets)
@@ -8053,7 +8056,7 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async closeTicket(ticketId: number, closedBy: string, resolution: string): Promise<void> {
+  async closeTicket(ticketId: number, closedBy: string): Promise<void> {
     try {
       await db.transaction(async (tx) => {
         await tx
@@ -8070,7 +8073,7 @@ export class DrizzleStorage implements IStorage {
           actionType: 'ticket_close',
           targetType: 'ticket',
           targetId: String(ticketId),
-          details: { resolution },
+          details: {},
           ipAddress: '0.0.0.0',
           userAgent: 'admin-dashboard',
         });
@@ -8183,22 +8186,18 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async getEmailTemplates(filters?: {category?: string}): Promise<any[]> {
+  async getEmailTemplates(category?: string): Promise<any[]> {
     try {
-      const { category } = filters || {};
-      
-      const conditions = [];
-      
       if (category) {
-        conditions.push(eq(emailTemplates.category, category));
+        return await db
+          .select()
+          .from(emailTemplates)
+          .where(eq(emailTemplates.category, category));
       }
-      
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       
       return await db
         .select()
-        .from(emailTemplates)
-        .where(whereClause);
+        .from(emailTemplates);
     } catch (error) {
       console.error("Error fetching email templates:", error);
       throw error;
