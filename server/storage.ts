@@ -5072,6 +5072,7 @@ export class MemStorage implements IStorage {
     reputation: number;
     coins: number;
     badges: string[];
+    posts: number;
   }>> {
     return [];
   }

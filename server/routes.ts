@@ -7096,6 +7096,315 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ===================================
+  // ADMIN: Finance Management
+  // ===================================
+
+  // Zod schemas for withdrawal operations
+  const approveWithdrawalSchema = z.object({
+    notes: z.string().optional()
+  });
+
+  const rejectWithdrawalSchema = z.object({
+    reason: z.string().min(1, "Rejection reason required"),
+    notifyUser: z.boolean().optional()
+  });
+
+  const completeWithdrawalSchema = z.object({
+    transactionId: z.string().min(1, "Transaction ID required"),
+    notes: z.string().optional()
+  });
+
+  // **Revenue Endpoints**
+
+  // 1. GET /api/finance/revenue/total
+  app.get("/api/finance/revenue/total", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const result = await storage.getTotalRevenue();
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching total revenue:", error);
+      res.status(500).json({ error: "Failed to fetch total revenue" });
+    }
+  });
+
+  // 2. GET /api/finance/revenue/trend
+  app.get("/api/finance/revenue/trend", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const days = req.query.days ? parseInt(req.query.days as string) : 30;
+      const trend = await storage.getRevenueTrend(days);
+      res.json(trend);
+    } catch (error: any) {
+      console.error("Error fetching revenue trend:", error);
+      res.status(500).json({ error: "Failed to fetch revenue trend" });
+    }
+  });
+
+  // 3. GET /api/finance/revenue/by-source
+  app.get("/api/finance/revenue/by-source", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const breakdown = await storage.getRevenueBySource();
+      res.json(breakdown);
+    } catch (error: any) {
+      console.error("Error fetching revenue by source:", error);
+      res.status(500).json({ error: "Failed to fetch revenue by source" });
+    }
+  });
+
+  // 4. GET /api/finance/revenue/period
+  app.get("/api/finance/revenue/period", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const period = req.query.period as string;
+      if (!period || !['today', 'week', 'month', 'year'].includes(period)) {
+        return res.status(400).json({ error: "Invalid period. Must be one of: today, week, month, year" });
+      }
+
+      const revenue = await storage.getRevenuePeriod(period as 'today' | 'week' | 'month' | 'year');
+      res.json(revenue);
+    } catch (error: any) {
+      console.error("Error fetching period revenue:", error);
+      res.status(500).json({ error: "Failed to fetch period revenue" });
+    }
+  });
+
+  // **Withdrawal Endpoints**
+
+  // 5. GET /api/finance/withdrawals/pending
+  app.get("/api/finance/withdrawals/pending", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const pendingWithdrawals = await storage.getPendingWithdrawals();
+      res.json(pendingWithdrawals);
+    } catch (error: any) {
+      console.error("Error fetching pending withdrawals:", error);
+      res.status(500).json({ error: "Failed to fetch pending withdrawals" });
+    }
+  });
+
+  // 6. GET /api/finance/withdrawals/all
+  app.get("/api/finance/withdrawals/all", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const filters = {
+        page: req.query.page ? parseInt(req.query.page as string) : undefined,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : undefined,
+        status: req.query.status as string | undefined,
+        method: req.query.method as string | undefined,
+        dateRange: req.query.dateRange as string | undefined,
+      };
+
+      const result = await storage.getAllWithdrawals(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching all withdrawals:", error);
+      res.status(500).json({ error: "Failed to fetch withdrawals" });
+    }
+  });
+
+  // 7. POST /api/finance/withdrawals/:id/approve
+  app.post("/api/finance/withdrawals/:id/approve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const withdrawalId = req.params.id;
+      const validatedData = approveWithdrawalSchema.parse(req.body);
+      const adminId = getAuthenticatedUserId(req);
+
+      const result = await storage.approveWithdrawal(withdrawalId, adminId, validatedData.notes);
+
+      // Log admin action
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'withdrawal_approved',
+        targetType: 'withdrawal',
+        targetId: withdrawalId,
+        details: { notes: validatedData.notes },
+      });
+
+      res.json({ success: true, message: "Withdrawal approved successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("Error approving withdrawal:", error);
+      res.status(500).json({ error: "Failed to approve withdrawal" });
+    }
+  });
+
+  // 8. POST /api/finance/withdrawals/:id/reject
+  app.post("/api/finance/withdrawals/:id/reject", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const withdrawalId = req.params.id;
+      const validatedData = rejectWithdrawalSchema.parse(req.body);
+      const adminId = getAuthenticatedUserId(req);
+
+      await storage.rejectWithdrawal(withdrawalId, adminId, validatedData.reason);
+
+      res.json({ success: true, message: "Withdrawal rejected successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("Error rejecting withdrawal:", error);
+      res.status(500).json({ error: "Failed to reject withdrawal" });
+    }
+  });
+
+  // 9. POST /api/finance/withdrawals/:id/complete
+  app.post("/api/finance/withdrawals/:id/complete", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const withdrawalId = req.params.id;
+      const validatedData = completeWithdrawalSchema.parse(req.body);
+      const adminId = getAuthenticatedUserId(req);
+
+      await storage.completeWithdrawal(withdrawalId, adminId, validatedData.transactionId);
+
+      res.json({ success: true, message: "Withdrawal completed successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("Error completing withdrawal:", error);
+      res.status(500).json({ error: "Failed to complete withdrawal" });
+    }
+  });
+
+  // **Transaction Endpoints**
+
+  // 10. GET /api/finance/transactions/recent
+  app.get("/api/finance/transactions/recent", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      const transactions = await storage.getRecentTransactions(limit);
+      res.json(transactions);
+    } catch (error: any) {
+      console.error("Error fetching recent transactions:", error);
+      res.status(500).json({ error: "Failed to fetch recent transactions" });
+    }
+  });
+
+  // 11. GET /api/finance/transactions/all
+  app.get("/api/finance/transactions/all", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const filters = {
+        page: req.query.page ? parseInt(req.query.page as string) : undefined,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : undefined,
+        type: req.query.type as string | undefined,
+        dateRange: req.query.dateRange as string | undefined,
+        userId: req.query.userId as string | undefined,
+        status: req.query.status as string | undefined,
+        amountRange: req.query.amountRange as string | undefined,
+      };
+
+      const result = await storage.getAllTransactions(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching all transactions:", error);
+      res.status(500).json({ error: "Failed to fetch transactions" });
+    }
+  });
+
+  // 12. GET /api/finance/transactions/export
+  app.get("/api/finance/transactions/export", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const filters = {
+        page: req.query.page ? parseInt(req.query.page as string) : undefined,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : undefined,
+        type: req.query.type as string | undefined,
+        dateRange: req.query.dateRange as string | undefined,
+        userId: req.query.userId as string | undefined,
+        status: req.query.status as string | undefined,
+        amountRange: req.query.amountRange as string | undefined,
+      };
+
+      const csvData = await storage.exportTransactionsCSV(filters);
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="transactions.csv"');
+      res.send(csvData);
+    } catch (error: any) {
+      console.error("Error exporting transactions:", error);
+      res.status(500).json({ error: "Failed to export transactions" });
+    }
+  });
+
+  // **Analytics Endpoints**
+
+  // 13. GET /api/finance/top-earners
+  app.get("/api/finance/top-earners", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const topEarners = await storage.getTopEarners(limit);
+      res.json(topEarners);
+    } catch (error: any) {
+      console.error("Error fetching top earners:", error);
+      res.status(500).json({ error: "Failed to fetch top earners" });
+    }
+  });
+
+  // 14. GET /api/finance/stats
+  app.get("/api/finance/stats", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const stats = await storage.getFinancialStats();
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Error fetching financial stats:", error);
+      res.status(500).json({ error: "Failed to fetch financial stats" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
