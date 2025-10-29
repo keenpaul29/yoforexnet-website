@@ -6975,7 +6975,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       await storage.dismissReport({
         reportId,
-        dismissedBy: claims.sub,
+        moderatorId: claims.sub,
         reason: reason || "No reason provided",
       });
       
