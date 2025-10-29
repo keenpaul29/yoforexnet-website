@@ -1343,11 +1343,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const now = Date.now();
       const sessionKey = `lastActivityPing_${userId}`;
-      const lastPing = req.session[sessionKey] as number | undefined;
+      const lastPing = (req.session as any)[sessionKey] as number | undefined;
 
       // First ping - just set the timestamp, don't award coins
       if (!lastPing) {
-        req.session[sessionKey] = now;
+        (req.session as any)[sessionKey] = now;
         return res.json({
           success: true,
           coinsEarned: 0,

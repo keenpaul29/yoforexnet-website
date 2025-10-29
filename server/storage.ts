@@ -1141,7 +1141,7 @@ export interface IStorage {
   /**
    * Get A/B tests
    */
-  getAbTests(filters?: {status?: string}): Promise<any[]>;
+  getAbTests(status?: string): Promise<any[]>;
   
   /**
    * Create A/B test
