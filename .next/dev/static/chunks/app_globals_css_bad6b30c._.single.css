@@ -1499,6 +1499,10 @@ body {
   order: 3;
 }
 
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
 .col-span-3 {
   grid-column: span 3 / span 3;
 }
@@ -1934,6 +1938,10 @@ body {
   max-height: 90vh;
 }
 
+.max-h-\[calc\(90vh-150px\)\] {
+  max-height: calc(90vh - 150px);
+}
+
 .max-h-\[var\(--radix-dropdown-menu-content-available-height\)\] {
   max-height: var(--radix-dropdown-menu-content-available-height);
 }
@@ -1948,6 +1956,10 @@ body {
 
 .min-h-10 {
   min-height: 2.5rem;
+}
+
+.min-h-24 {
+  min-height: 6rem;
 }
 
 .min-h-32 {
@@ -2941,6 +2953,11 @@ body {
   border-color: #fdba744d;
 }
 
+.border-orange-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(249 115 22 / var(--tw-border-opacity, 1));
+}
+
 .border-orange-500\/30 {
   border-color: #f973164d;
 }
@@ -2995,6 +3012,11 @@ body {
 
 .border-yellow-300\/30 {
   border-color: #fde0474d;
+}
+
+.border-yellow-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(234 179 8 / var(--tw-border-opacity, 1));
 }
 
 .border-yellow-500\/20 {
@@ -4855,6 +4877,11 @@ input[type="search"]::-webkit-search-cancel-button {
   background-color: hsl(var(--muted) / .5);
 }
 
+.hover\:bg-orange-50:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 247 237 / var(--tw-bg-opacity, 1));
+}
+
 .hover\:bg-primary:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--primary) / var(--tw-bg-opacity, 1));
@@ -4880,6 +4907,11 @@ input[type="search"]::-webkit-search-cancel-button {
 .hover\:bg-sidebar-accent:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--sidebar-accent) / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-yellow-50:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-accent-foreground:hover {
@@ -5949,6 +5981,10 @@ input[type="search"]::-webkit-search-cancel-button {
   background-color: rgb(67 20 7 / var(--tw-bg-opacity, 1));
 }
 
+.dark\:bg-orange-950\/20:is(.dark *) {
+  background-color: #43140733;
+}
+
 .dark\:bg-orange-950\/50:is(.dark *) {
   background-color: #43140780;
 }
@@ -6082,6 +6118,14 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .dark\:hover\:border-orange-800\/30:hover:is(.dark *) {
   border-color: #9a34124d;
+}
+
+.dark\:hover\:bg-orange-950\/20:hover:is(.dark *) {
+  background-color: #43140733;
+}
+
+.dark\:hover\:bg-yellow-950\/20:hover:is(.dark *) {
+  background-color: #42200633;
 }
 
 .group:hover .dark\:group-hover\:text-orange-400\/80:is(.dark *) {
