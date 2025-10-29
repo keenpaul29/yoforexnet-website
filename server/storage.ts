@@ -1568,6 +1568,190 @@ export interface IStorage {
     mostActiveModerator: { id: string; username: string; actionCount: number };
     pendingByAge: { lessThan1Hour: number; between1And24Hours: number; moreThan24Hours: number };
   }>;
+
+  // ============================================================================
+  // PHASE 2: Marketplace Management (14 methods)
+  // ============================================================================
+
+  /**
+   * Get paginated marketplace items with filters
+   */
+  getMarketplaceItems(params: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    status?: string;
+    category?: string;
+    priceMin?: number;
+    priceMax?: number;
+    sort?: 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'sales';
+  }): Promise<{
+    items: Array<{
+      id: string;
+      title: string;
+      type: string;
+      category: string;
+      status: string;
+      coinPrice: number;
+      sales: number;
+      revenue: number;
+      sellerUsername: string;
+      sellerId: string;
+      featured: boolean;
+      featuredUntil: string | null;
+      createdAt: string;
+      approvedAt: string | null;
+      rejectedAt: string | null;
+      rejectionReason: string | null;
+      deletedAt: string | null;
+    }>;
+    page: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+  }>;
+
+  /**
+   * Get detailed marketplace item by ID
+   */
+  getMarketplaceItemById(id: string): Promise<any | null>;
+
+  /**
+   * Get pending marketplace items awaiting approval
+   */
+  getPendingMarketplaceItems(limit?: number): Promise<Array<{
+    id: string;
+    title: string;
+    type: string;
+    category: string;
+    status: string;
+    coinPrice: number;
+    sales: number;
+    revenue: number;
+    sellerUsername: string;
+    sellerId: string;
+    featured: boolean;
+    featuredUntil: string | null;
+    createdAt: string;
+    approvedAt: string | null;
+    rejectedAt: string | null;
+    rejectionReason: string | null;
+    deletedAt: string | null;
+  }>>;
+
+  /**
+   * Approve a marketplace item
+   */
+  approveMarketplaceItem(id: string, adminId: string): Promise<void>;
+
+  /**
+   * Reject a marketplace item with reason
+   */
+  rejectMarketplaceItem(id: string, adminId: string, reason: string): Promise<void>;
+
+  /**
+   * Feature a marketplace item on homepage
+   */
+  featureMarketplaceItem(id: string, adminId: string, durationDays: number): Promise<void>;
+
+  /**
+   * Soft delete a marketplace item
+   */
+  deleteMarketplaceItem(id: string, adminId: string): Promise<void>;
+
+  /**
+   * Get paginated marketplace sales
+   */
+  getMarketplaceSales(params: {
+    page?: number;
+    pageSize?: number;
+    contentId?: string;
+    buyerId?: string;
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<{
+    sales: Array<{
+      id: string;
+      contentId: string;
+      contentTitle: string;
+      buyerUsername: string;
+      buyerId: string;
+      sellerUsername: string;
+      sellerId: string;
+      priceCoins: number;
+      purchasedAt: string;
+    }>;
+    page: number;
+    pageSize: number;
+    totalSales: number;
+    totalPages: number;
+  }>;
+
+  /**
+   * Get recent marketplace sales
+   */
+  getRecentMarketplaceSales(limit?: number): Promise<Array<{
+    id: string;
+    contentId: string;
+    contentTitle: string;
+    buyerUsername: string;
+    buyerId: string;
+    sellerUsername: string;
+    sellerId: string;
+    priceCoins: number;
+    purchasedAt: string;
+  }>>;
+
+  /**
+   * Get marketplace revenue by period
+   */
+  getMarketplaceRevenue(period: 'today' | 'week' | 'month' | 'year' | 'all'): Promise<{
+    totalCoins: number;
+    totalSales: number;
+    averageSale: number;
+  }>;
+
+  /**
+   * Get revenue trend for chart
+   */
+  getRevenueTrend(days?: number): Promise<Array<{ date: string; revenue: number }>>;
+
+  /**
+   * Get top-selling items
+   */
+  getTopSellingItems(limit?: number): Promise<Array<{
+    id: string;
+    title: string;
+    sales: number;
+    revenue: number;
+    sellerUsername: string;
+  }>>;
+
+  /**
+   * Get top-earning vendors
+   */
+  getTopVendors(limit?: number): Promise<Array<{
+    sellerId: string;
+    sellerUsername: string;
+    totalRevenue: number;
+    totalSales: number;
+    itemCount: number;
+  }>>;
+
+  /**
+   * Get marketplace dashboard statistics
+   */
+  getMarketplaceStats(): Promise<{
+    totalItems: number;
+    pendingItems: number;
+    approvedItems: number;
+    rejectedItems: number;
+    featuredItems: number;
+    totalSales: number;
+    salesThisWeek: number;
+    totalRevenue: number;
+    revenueThisWeek: number;
+  }>;
 }
 
 export class MemStorage implements IStorage {
@@ -4195,6 +4379,454 @@ export class MemStorage implements IStorage {
       averageResponseTimeMinutes: 0,
       mostActiveModerator: { id: '', username: 'None', actionCount: 0 },
       pendingByAge: { lessThan1Hour: 0, between1And24Hours: 0, moreThan24Hours: 0 },
+    };
+  }
+
+  // ============================================================================
+  // PHASE 2: Marketplace Management (14 methods) - MemStorage Implementation
+  // ============================================================================
+
+  async getMarketplaceItems(params: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    status?: string;
+    category?: string;
+    priceMin?: number;
+    priceMax?: number;
+    sort?: 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'sales';
+  }): Promise<any> {
+    const page = params.page || 1;
+    const pageSize = Math.min(params.pageSize || 20, 100);
+    
+    // Get all content items
+    let items = Array.from(this.content.values())
+      .filter(c => !c.deletedAt); // Filter soft-deleted
+    
+    // Apply filters
+    if (params.search) {
+      const search = params.search.toLowerCase();
+      items = items.filter(c => c.title.toLowerCase().includes(search));
+    }
+    if (params.status) {
+      items = items.filter(c => c.status === params.status);
+    }
+    if (params.category) {
+      items = items.filter(c => c.category === params.category);
+    }
+    if (params.priceMin !== undefined) {
+      items = items.filter(c => c.priceCoins >= params.priceMin!);
+    }
+    if (params.priceMax !== undefined) {
+      items = items.filter(c => c.priceCoins <= params.priceMax!);
+    }
+    
+    // Calculate sales and revenue for each item
+    const itemsWithStats = items.map(c => {
+      const purchases = Array.from(this.contentPurchases.values())
+        .filter(p => p.contentId === c.id);
+      const sales = purchases.length;
+      const revenue = purchases.reduce((sum, p) => sum + p.priceCoins, 0);
+      const seller = this.users.get(c.authorId);
+      
+      return {
+        id: c.id,
+        title: c.title,
+        type: c.type,
+        category: c.category,
+        status: c.status,
+        coinPrice: c.priceCoins,
+        sales,
+        revenue,
+        sellerUsername: seller?.username || 'Unknown',
+        sellerId: c.authorId,
+        featured: c.featured || false,
+        featuredUntil: c.featuredUntil?.toISOString() || null,
+        createdAt: c.createdAt.toISOString(),
+        approvedAt: c.approvedAt?.toISOString() || null,
+        rejectedAt: c.rejectedAt?.toISOString() || null,
+        rejectionReason: c.rejectionReason || null,
+        deletedAt: c.deletedAt?.toISOString() || null,
+      };
+    });
+    
+    // Sort
+    const sort = params.sort || 'newest';
+    itemsWithStats.sort((a, b) => {
+      switch (sort) {
+        case 'oldest': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case 'price_asc': return a.coinPrice - b.coinPrice;
+        case 'price_desc': return b.coinPrice - a.coinPrice;
+        case 'sales': return b.sales - a.sales;
+        default: return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+    
+    const totalItems = itemsWithStats.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const offset = (page - 1) * pageSize;
+    const paginatedItems = itemsWithStats.slice(offset, offset + pageSize);
+    
+    return { items: paginatedItems, page, pageSize, totalItems, totalPages };
+  }
+
+  async getMarketplaceItemById(id: string): Promise<any | null> {
+    const item = this.content.get(id);
+    if (!item) return null;
+    
+    const seller = this.users.get(item.authorId);
+    const purchases = Array.from(this.contentPurchases.values())
+      .filter(p => p.contentId === id)
+      .sort((a, b) => b.purchasedAt.getTime() - a.purchasedAt.getTime())
+      .slice(0, 10);
+    
+    const recentPurchases = purchases.map(p => {
+      const buyer = this.users.get(p.buyerId);
+      return {
+        buyerUsername: buyer?.username || 'Unknown',
+        coins: p.priceCoins,
+        purchasedAt: p.purchasedAt.toISOString(),
+      };
+    });
+    
+    const allPurchases = Array.from(this.contentPurchases.values())
+      .filter(p => p.contentId === id);
+    
+    return {
+      ...item,
+      sellerInfo: {
+        username: seller?.username || 'Unknown',
+        email: seller?.email || null,
+        reputation: seller?.reputationScore || 0,
+      },
+      salesMetrics: {
+        totalSales: allPurchases.length,
+        revenue: allPurchases.reduce((sum, p) => sum + p.priceCoins, 0),
+        lastPurchaseDate: allPurchases[0]?.purchasedAt?.toISOString() || null,
+      },
+      recentPurchases,
+      reviewSummary: {
+        averageRating: item.averageRating || 0,
+        totalReviews: item.reviewCount || 0,
+      },
+    };
+  }
+
+  async getPendingMarketplaceItems(limit = 50): Promise<any[]> {
+    const items = Array.from(this.content.values())
+      .filter(c => c.status === 'pending' && !c.deletedAt)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .slice(0, limit);
+    
+    return items.map(c => {
+      const purchases = Array.from(this.contentPurchases.values())
+        .filter(p => p.contentId === c.id);
+      const sales = purchases.length;
+      const revenue = purchases.reduce((sum, p) => sum + p.priceCoins, 0);
+      const seller = this.users.get(c.authorId);
+      
+      return {
+        id: c.id,
+        title: c.title,
+        type: c.type,
+        category: c.category,
+        status: c.status,
+        coinPrice: c.priceCoins,
+        sales,
+        revenue,
+        sellerUsername: seller?.username || 'Unknown',
+        sellerId: c.authorId,
+        featured: c.featured || false,
+        featuredUntil: c.featuredUntil?.toISOString() || null,
+        createdAt: c.createdAt.toISOString(),
+        approvedAt: c.approvedAt?.toISOString() || null,
+        rejectedAt: c.rejectedAt?.toISOString() || null,
+        rejectionReason: c.rejectionReason || null,
+        deletedAt: c.deletedAt?.toISOString() || null,
+      };
+    });
+  }
+
+  async approveMarketplaceItem(id: string, adminId: string): Promise<void> {
+    const item = this.content.get(id);
+    if (!item) throw new Error('Content not found');
+    
+    this.content.set(id, {
+      ...item,
+      status: 'approved',
+      approvedBy: adminId,
+      approvedAt: new Date(),
+      rejectedBy: null,
+      rejectedAt: null,
+      rejectionReason: null,
+    });
+  }
+
+  async rejectMarketplaceItem(id: string, adminId: string, reason: string): Promise<void> {
+    const item = this.content.get(id);
+    if (!item) throw new Error('Content not found');
+    
+    this.content.set(id, {
+      ...item,
+      status: 'rejected',
+      rejectedBy: adminId,
+      rejectedAt: new Date(),
+      rejectionReason: reason,
+      approvedBy: null,
+      approvedAt: null,
+    });
+  }
+
+  async featureMarketplaceItem(id: string, adminId: string, durationDays: number): Promise<void> {
+    const item = this.content.get(id);
+    if (!item) throw new Error('Content not found');
+    if (item.status !== 'approved') throw new Error('Only approved items can be featured');
+    
+    const featuredUntil = new Date();
+    featuredUntil.setDate(featuredUntil.getDate() + durationDays);
+    
+    this.content.set(id, {
+      ...item,
+      featured: true,
+      featuredUntil,
+    });
+  }
+
+  async deleteMarketplaceItem(id: string, adminId: string): Promise<void> {
+    const item = this.content.get(id);
+    if (!item) throw new Error('Content not found');
+    
+    this.content.set(id, {
+      ...item,
+      deletedAt: new Date(),
+    });
+  }
+
+  async getMarketplaceSales(params: {
+    page?: number;
+    pageSize?: number;
+    contentId?: string;
+    buyerId?: string;
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<any> {
+    const page = params.page || 1;
+    const pageSize = Math.min(params.pageSize || 20, 100);
+    
+    let sales = Array.from(this.contentPurchases.values());
+    
+    // Apply filters
+    if (params.contentId) {
+      sales = sales.filter(s => s.contentId === params.contentId);
+    }
+    if (params.buyerId) {
+      sales = sales.filter(s => s.buyerId === params.buyerId);
+    }
+    if (params.startDate) {
+      sales = sales.filter(s => s.purchasedAt >= params.startDate!);
+    }
+    if (params.endDate) {
+      sales = sales.filter(s => s.purchasedAt <= params.endDate!);
+    }
+    
+    // Map to response format
+    const salesWithDetails = sales.map(s => {
+      const item = this.content.get(s.contentId);
+      const buyer = this.users.get(s.buyerId);
+      const seller = this.users.get(s.sellerId);
+      
+      return {
+        id: s.id,
+        contentId: s.contentId,
+        contentTitle: item?.title || 'Unknown',
+        buyerUsername: buyer?.username || 'Unknown',
+        buyerId: s.buyerId,
+        sellerUsername: seller?.username || 'Unknown',
+        sellerId: s.sellerId,
+        priceCoins: s.priceCoins,
+        purchasedAt: s.purchasedAt.toISOString(),
+      };
+    }).sort((a, b) => new Date(b.purchasedAt).getTime() - new Date(a.purchasedAt).getTime());
+    
+    const totalSales = salesWithDetails.length;
+    const totalPages = Math.ceil(totalSales / pageSize);
+    const offset = (page - 1) * pageSize;
+    const paginatedSales = salesWithDetails.slice(offset, offset + pageSize);
+    
+    return { sales: paginatedSales, page, pageSize, totalSales, totalPages };
+  }
+
+  async getRecentMarketplaceSales(limit = 50): Promise<any[]> {
+    const sales = Array.from(this.contentPurchases.values())
+      .sort((a, b) => b.purchasedAt.getTime() - a.purchasedAt.getTime())
+      .slice(0, limit);
+    
+    return sales.map(s => {
+      const item = this.content.get(s.contentId);
+      const buyer = this.users.get(s.buyerId);
+      const seller = this.users.get(s.sellerId);
+      
+      return {
+        id: s.id,
+        contentId: s.contentId,
+        contentTitle: item?.title || 'Unknown',
+        buyerUsername: buyer?.username || 'Unknown',
+        buyerId: s.buyerId,
+        sellerUsername: seller?.username || 'Unknown',
+        sellerId: s.sellerId,
+        priceCoins: s.priceCoins,
+        purchasedAt: s.purchasedAt.toISOString(),
+      };
+    });
+  }
+
+  async getMarketplaceRevenue(period: 'today' | 'week' | 'month' | 'year' | 'all'): Promise<any> {
+    const now = new Date();
+    let startDate: Date;
+    
+    switch (period) {
+      case 'today':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        break;
+      case 'week':
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        break;
+      case 'month':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        break;
+      case 'year':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        break;
+      default:
+        startDate = new Date(0);
+    }
+    
+    const sales = Array.from(this.contentPurchases.values())
+      .filter(s => s.purchasedAt >= startDate);
+    
+    const totalCoins = sales.reduce((sum, s) => sum + s.priceCoins, 0);
+    const totalSales = sales.length;
+    const averageSale = totalSales > 0 ? totalCoins / totalSales : 0;
+    
+    return { totalCoins, totalSales, averageSale };
+  }
+
+  async getRevenueTrend(days = 30): Promise<any[]> {
+    const trend: { date: string; revenue: number }[] = [];
+    const now = new Date();
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = date.toISOString().split('T')[0];
+      
+      const revenue = Array.from(this.contentPurchases.values())
+        .filter(s => s.purchasedAt.toISOString().split('T')[0] === dateStr)
+        .reduce((sum, s) => sum + s.priceCoins, 0);
+      
+      trend.push({ date: dateStr, revenue });
+    }
+    
+    return trend;
+  }
+
+  async getTopSellingItems(limit = 10): Promise<any[]> {
+    const itemStats = new Map<string, { sales: number; revenue: number }>();
+    
+    Array.from(this.contentPurchases.values()).forEach(p => {
+      const stats = itemStats.get(p.contentId) || { sales: 0, revenue: 0 };
+      stats.sales++;
+      stats.revenue += p.priceCoins;
+      itemStats.set(p.contentId, stats);
+    });
+    
+    const items = Array.from(this.content.values())
+      .filter(c => c.status === 'approved' && !c.deletedAt)
+      .map(c => {
+        const stats = itemStats.get(c.id) || { sales: 0, revenue: 0 };
+        const seller = this.users.get(c.authorId);
+        
+        return {
+          id: c.id,
+          title: c.title,
+          sales: stats.sales,
+          revenue: stats.revenue,
+          sellerUsername: seller?.username || 'Unknown',
+        };
+      })
+      .sort((a, b) => b.sales - a.sales)
+      .slice(0, limit);
+    
+    return items;
+  }
+
+  async getTopVendors(limit = 10): Promise<any[]> {
+    const vendorStats = new Map<string, { revenue: number; sales: number; itemCount: number }>();
+    
+    // Calculate revenue and sales
+    Array.from(this.contentPurchases.values()).forEach(p => {
+      const stats = vendorStats.get(p.sellerId) || { revenue: 0, sales: 0, itemCount: 0 };
+      stats.revenue += p.priceCoins;
+      stats.sales++;
+      vendorStats.set(p.sellerId, stats);
+    });
+    
+    // Count items per vendor
+    Array.from(this.content.values())
+      .filter(c => c.status === 'approved' && !c.deletedAt)
+      .forEach(c => {
+        const stats = vendorStats.get(c.authorId) || { revenue: 0, sales: 0, itemCount: 0 };
+        stats.itemCount++;
+        vendorStats.set(c.authorId, stats);
+      });
+    
+    const vendors = Array.from(vendorStats.entries())
+      .map(([sellerId, stats]) => {
+        const seller = this.users.get(sellerId);
+        return {
+          sellerId,
+          sellerUsername: seller?.username || 'Unknown',
+          totalRevenue: stats.revenue,
+          totalSales: stats.sales,
+          itemCount: stats.itemCount,
+        };
+      })
+      .sort((a, b) => b.totalRevenue - a.totalRevenue)
+      .slice(0, limit);
+    
+    return vendors;
+  }
+
+  async getMarketplaceStats(): Promise<any> {
+    const items = Array.from(this.content.values());
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    const totalItems = items.filter(c => !c.deletedAt).length;
+    const pendingItems = items.filter(c => c.status === 'pending' && !c.deletedAt).length;
+    const approvedItems = items.filter(c => c.status === 'approved' && !c.deletedAt).length;
+    const rejectedItems = items.filter(c => c.status === 'rejected' && !c.deletedAt).length;
+    const featuredItems = items.filter(c => 
+      c.featured && c.featuredUntil && c.featuredUntil > now && !c.deletedAt
+    ).length;
+    
+    const allSales = Array.from(this.contentPurchases.values());
+    const totalSales = allSales.length;
+    const salesThisWeek = allSales.filter(s => s.purchasedAt >= weekAgo).length;
+    const totalRevenue = allSales.reduce((sum, s) => sum + s.priceCoins, 0);
+    const revenueThisWeek = allSales
+      .filter(s => s.purchasedAt >= weekAgo)
+      .reduce((sum, s) => sum + s.priceCoins, 0);
+    
+    return {
+      totalItems,
+      pendingItems,
+      approvedItems,
+      rejectedItems,
+      featuredItems,
+      totalSales,
+      salesThisWeek,
+      totalRevenue,
+      revenueThisWeek,
     };
   }
 }
@@ -11445,6 +12077,696 @@ export class DrizzleStorage implements IStorage {
       };
     } catch (error) {
       console.error("Error getting moderation stats:", error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // PHASE 2: Marketplace Management (14 methods) - DrizzleStorage Implementation
+  // ============================================================================
+
+  async getMarketplaceItems(params: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    status?: string;
+    category?: string;
+    priceMin?: number;
+    priceMax?: number;
+    sort?: 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'sales';
+  }): Promise<any> {
+    try {
+      const page = params.page || 1;
+      const pageSize = Math.min(params.pageSize || 20, 100);
+      const offset = (page - 1) * pageSize;
+
+      // Build conditions
+      const conditions: any[] = [isNull(content.deletedAt)];
+      
+      if (params.status) {
+        conditions.push(eq(content.status, params.status as any));
+      }
+      if (params.category) {
+        conditions.push(eq(content.category, params.category));
+      }
+      if (params.priceMin !== undefined) {
+        conditions.push(gte(content.priceCoins, params.priceMin));
+      }
+      if (params.priceMax !== undefined) {
+        conditions.push(lte(content.priceCoins, params.priceMax));
+      }
+      if (params.search) {
+        conditions.push(
+          or(
+            ilike(content.title, `%${params.search}%`),
+            ilike(users.username, `%${params.search}%`)
+          )
+        );
+      }
+
+      // Count total items
+      const [totalResult] = await db
+        .select({ count: sql<number>`cast(count(distinct ${content.id}) as integer)` })
+        .from(content)
+        .leftJoin(users, eq(content.authorId, users.id))
+        .where(and(...conditions));
+
+      const totalItems = totalResult?.count || 0;
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      // Get items with sales and revenue
+      const items = await db
+        .select({
+          id: content.id,
+          title: content.title,
+          type: content.type,
+          category: content.category,
+          status: content.status,
+          coinPrice: content.priceCoins,
+          sellerUsername: users.username,
+          sellerId: content.authorId,
+          featured: content.featured,
+          featuredUntil: content.featuredUntil,
+          createdAt: content.createdAt,
+          approvedAt: content.approvedAt,
+          rejectedAt: content.rejectedAt,
+          rejectionReason: content.rejectionReason,
+          deletedAt: content.deletedAt,
+          sales: sql<number>`cast(count(distinct ${contentPurchases.id}) as integer)`,
+          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+        })
+        .from(content)
+        .leftJoin(users, eq(content.authorId, users.id))
+        .leftJoin(contentPurchases, eq(content.id, contentPurchases.contentId))
+        .where(and(...conditions))
+        .groupBy(
+          content.id,
+          content.title,
+          content.type,
+          content.category,
+          content.status,
+          content.priceCoins,
+          content.authorId,
+          content.featured,
+          content.featuredUntil,
+          content.createdAt,
+          content.approvedAt,
+          content.rejectedAt,
+          content.rejectionReason,
+          content.deletedAt,
+          users.username
+        )
+        .orderBy(
+          params.sort === 'oldest' ? asc(content.createdAt) :
+          params.sort === 'price_asc' ? asc(content.priceCoins) :
+          params.sort === 'price_desc' ? desc(content.priceCoins) :
+          params.sort === 'sales' ? desc(sql`count(distinct ${contentPurchases.id})`) :
+          desc(content.createdAt)
+        )
+        .limit(pageSize)
+        .offset(offset);
+
+      return {
+        items: items.map(item => ({
+          id: item.id,
+          title: item.title,
+          type: item.type,
+          category: item.category,
+          status: item.status,
+          coinPrice: item.coinPrice,
+          sales: item.sales || 0,
+          revenue: item.revenue || 0,
+          sellerUsername: item.sellerUsername || 'Unknown',
+          sellerId: item.sellerId,
+          featured: item.featured || false,
+          featuredUntil: item.featuredUntil?.toISOString() || null,
+          createdAt: item.createdAt.toISOString(),
+          approvedAt: item.approvedAt?.toISOString() || null,
+          rejectedAt: item.rejectedAt?.toISOString() || null,
+          rejectionReason: item.rejectionReason || null,
+          deletedAt: item.deletedAt?.toISOString() || null,
+        })),
+        page,
+        pageSize,
+        totalItems,
+        totalPages,
+      };
+    } catch (error) {
+      console.error('Error getting marketplace items:', error);
+      throw error;
+    }
+  }
+
+  async getMarketplaceItemById(id: string): Promise<any | null> {
+    try {
+      const [item] = await db
+        .select()
+        .from(content)
+        .where(eq(content.id, id));
+
+      if (!item) return null;
+
+      const [seller] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, item.authorId));
+
+      const purchases = await db
+        .select({
+          id: contentPurchases.id,
+          buyerId: contentPurchases.buyerId,
+          buyerUsername: users.username,
+          priceCoins: contentPurchases.priceCoins,
+          purchasedAt: contentPurchases.purchasedAt,
+        })
+        .from(contentPurchases)
+        .leftJoin(users, eq(contentPurchases.buyerId, users.id))
+        .where(eq(contentPurchases.contentId, id))
+        .orderBy(desc(contentPurchases.purchasedAt))
+        .limit(10);
+
+      const [salesMetrics] = await db
+        .select({
+          totalSales: sql<number>`cast(count(*) as integer)`,
+          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+        })
+        .from(contentPurchases)
+        .where(eq(contentPurchases.contentId, id));
+
+      return {
+        ...item,
+        sellerInfo: {
+          username: seller?.username || 'Unknown',
+          email: seller?.email || null,
+          reputation: seller?.reputationScore || 0,
+        },
+        salesMetrics: {
+          totalSales: salesMetrics?.totalSales || 0,
+          revenue: salesMetrics?.revenue || 0,
+          lastPurchaseDate: purchases[0]?.purchasedAt?.toISOString() || null,
+        },
+        recentPurchases: purchases.map(p => ({
+          buyerUsername: p.buyerUsername || 'Unknown',
+          coins: p.priceCoins,
+          purchasedAt: p.purchasedAt.toISOString(),
+        })),
+        reviewSummary: {
+          averageRating: item.averageRating || 0,
+          totalReviews: item.reviewCount || 0,
+        },
+      };
+    } catch (error) {
+      console.error('Error getting marketplace item by ID:', error);
+      throw error;
+    }
+  }
+
+  async getPendingMarketplaceItems(limit = 50): Promise<any[]> {
+    try {
+      const items = await db
+        .select({
+          id: content.id,
+          title: content.title,
+          type: content.type,
+          category: content.category,
+          status: content.status,
+          coinPrice: content.priceCoins,
+          sellerUsername: users.username,
+          sellerId: content.authorId,
+          featured: content.featured,
+          featuredUntil: content.featuredUntil,
+          createdAt: content.createdAt,
+          approvedAt: content.approvedAt,
+          rejectedAt: content.rejectedAt,
+          rejectionReason: content.rejectionReason,
+          deletedAt: content.deletedAt,
+          sales: sql<number>`cast(count(distinct ${contentPurchases.id}) as integer)`,
+          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+        })
+        .from(content)
+        .leftJoin(users, eq(content.authorId, users.id))
+        .leftJoin(contentPurchases, eq(content.id, contentPurchases.contentId))
+        .where(and(
+          eq(content.status, 'pending'),
+          isNull(content.deletedAt)
+        ))
+        .groupBy(
+          content.id,
+          content.title,
+          content.type,
+          content.category,
+          content.status,
+          content.priceCoins,
+          content.authorId,
+          content.featured,
+          content.featuredUntil,
+          content.createdAt,
+          content.approvedAt,
+          content.rejectedAt,
+          content.rejectionReason,
+          content.deletedAt,
+          users.username
+        )
+        .orderBy(asc(content.createdAt))
+        .limit(limit);
+
+      return items.map(item => ({
+        id: item.id,
+        title: item.title,
+        type: item.type,
+        category: item.category,
+        status: item.status,
+        coinPrice: item.coinPrice,
+        sales: item.sales || 0,
+        revenue: item.revenue || 0,
+        sellerUsername: item.sellerUsername || 'Unknown',
+        sellerId: item.sellerId,
+        featured: item.featured || false,
+        featuredUntil: item.featuredUntil?.toISOString() || null,
+        createdAt: item.createdAt.toISOString(),
+        approvedAt: item.approvedAt?.toISOString() || null,
+        rejectedAt: item.rejectedAt?.toISOString() || null,
+        rejectionReason: item.rejectionReason || null,
+        deletedAt: item.deletedAt?.toISOString() || null,
+      }));
+    } catch (error) {
+      console.error('Error getting pending marketplace items:', error);
+      throw error;
+    }
+  }
+
+  async approveMarketplaceItem(id: string, adminId: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        await tx
+          .update(content)
+          .set({
+            status: 'approved',
+            approvedBy: adminId,
+            approvedAt: new Date(),
+            rejectedBy: null,
+            rejectedAt: null,
+            rejectionReason: null,
+          })
+          .where(eq(content.id, id));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'approve_marketplace_item',
+          targetType: 'content',
+          targetId: id,
+          details: {},
+        });
+      });
+    } catch (error) {
+      console.error('Error approving marketplace item:', error);
+      throw error;
+    }
+  }
+
+  async rejectMarketplaceItem(id: string, adminId: string, reason: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        await tx
+          .update(content)
+          .set({
+            status: 'rejected',
+            rejectedBy: adminId,
+            rejectedAt: new Date(),
+            rejectionReason: reason,
+            approvedBy: null,
+            approvedAt: null,
+          })
+          .where(eq(content.id, id));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'reject_marketplace_item',
+          targetType: 'content',
+          targetId: id,
+          details: { reason },
+        });
+      });
+    } catch (error) {
+      console.error('Error rejecting marketplace item:', error);
+      throw error;
+    }
+  }
+
+  async featureMarketplaceItem(id: string, adminId: string, durationDays: number): Promise<void> {
+    try {
+      const [item] = await db
+        .select()
+        .from(content)
+        .where(eq(content.id, id));
+
+      if (!item) throw new Error('Content not found');
+      if (item.status !== 'approved') throw new Error('Only approved items can be featured');
+
+      const featuredUntil = new Date();
+      featuredUntil.setDate(featuredUntil.getDate() + durationDays);
+
+      await db.transaction(async (tx) => {
+        await tx
+          .update(content)
+          .set({
+            featured: true,
+            featuredUntil,
+          })
+          .where(eq(content.id, id));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'feature_marketplace_item',
+          targetType: 'content',
+          targetId: id,
+          details: { durationDays },
+        });
+      });
+    } catch (error) {
+      console.error('Error featuring marketplace item:', error);
+      throw error;
+    }
+  }
+
+  async deleteMarketplaceItem(id: string, adminId: string): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        await tx
+          .update(content)
+          .set({ deletedAt: new Date() })
+          .where(eq(content.id, id));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'delete_marketplace_item',
+          targetType: 'content',
+          targetId: id,
+          details: {},
+        });
+      });
+    } catch (error) {
+      console.error('Error deleting marketplace item:', error);
+      throw error;
+    }
+  }
+
+  async getMarketplaceSales(params: {
+    page?: number;
+    pageSize?: number;
+    contentId?: string;
+    buyerId?: string;
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<any> {
+    try {
+      const page = params.page || 1;
+      const pageSize = Math.min(params.pageSize || 20, 100);
+      const offset = (page - 1) * pageSize;
+
+      const conditions: any[] = [];
+      if (params.contentId) {
+        conditions.push(eq(contentPurchases.contentId, params.contentId));
+      }
+      if (params.buyerId) {
+        conditions.push(eq(contentPurchases.buyerId, params.buyerId));
+      }
+      if (params.startDate) {
+        conditions.push(gte(contentPurchases.purchasedAt, params.startDate));
+      }
+      if (params.endDate) {
+        conditions.push(lte(contentPurchases.purchasedAt, params.endDate));
+      }
+
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+      const [totalResult] = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(contentPurchases)
+        .where(whereClause);
+
+      const totalSales = totalResult?.count || 0;
+      const totalPages = Math.ceil(totalSales / pageSize);
+
+      const sales = await db
+        .select({
+          id: contentPurchases.id,
+          contentId: contentPurchases.contentId,
+          contentTitle: content.title,
+          buyerUsername: sql<string>`${users.username}`,
+          buyerId: contentPurchases.buyerId,
+          sellerUsername: sql<string>`seller.username`,
+          sellerId: contentPurchases.sellerId,
+          priceCoins: contentPurchases.priceCoins,
+          purchasedAt: contentPurchases.purchasedAt,
+        })
+        .from(contentPurchases)
+        .leftJoin(content, eq(contentPurchases.contentId, content.id))
+        .leftJoin(users, eq(contentPurchases.buyerId, users.id))
+        .leftJoin(sql`users as seller`, sql`${contentPurchases.sellerId} = seller.id`)
+        .where(whereClause)
+        .orderBy(desc(contentPurchases.purchasedAt))
+        .limit(pageSize)
+        .offset(offset);
+
+      return {
+        sales: sales.map(s => ({
+          id: s.id,
+          contentId: s.contentId,
+          contentTitle: s.contentTitle || 'Unknown',
+          buyerUsername: s.buyerUsername || 'Unknown',
+          buyerId: s.buyerId,
+          sellerUsername: s.sellerUsername || 'Unknown',
+          sellerId: s.sellerId,
+          priceCoins: s.priceCoins,
+          purchasedAt: s.purchasedAt.toISOString(),
+        })),
+        page,
+        pageSize,
+        totalSales,
+        totalPages,
+      };
+    } catch (error) {
+      console.error('Error getting marketplace sales:', error);
+      throw error;
+    }
+  }
+
+  async getRecentMarketplaceSales(limit = 50): Promise<any[]> {
+    try {
+      const sales = await db
+        .select({
+          id: contentPurchases.id,
+          contentId: contentPurchases.contentId,
+          contentTitle: content.title,
+          buyerUsername: sql<string>`buyer.username`,
+          buyerId: contentPurchases.buyerId,
+          sellerUsername: sql<string>`seller.username`,
+          sellerId: contentPurchases.sellerId,
+          priceCoins: contentPurchases.priceCoins,
+          purchasedAt: contentPurchases.purchasedAt,
+        })
+        .from(contentPurchases)
+        .leftJoin(content, eq(contentPurchases.contentId, content.id))
+        .leftJoin(sql`users as buyer`, sql`${contentPurchases.buyerId} = buyer.id`)
+        .leftJoin(sql`users as seller`, sql`${contentPurchases.sellerId} = seller.id`)
+        .orderBy(desc(contentPurchases.purchasedAt))
+        .limit(limit);
+
+      return sales.map(s => ({
+        id: s.id,
+        contentId: s.contentId,
+        contentTitle: s.contentTitle || 'Unknown',
+        buyerUsername: s.buyerUsername || 'Unknown',
+        buyerId: s.buyerId,
+        sellerUsername: s.sellerUsername || 'Unknown',
+        sellerId: s.sellerId,
+        priceCoins: s.priceCoins,
+        purchasedAt: s.purchasedAt.toISOString(),
+      }));
+    } catch (error) {
+      console.error('Error getting recent marketplace sales:', error);
+      throw error;
+    }
+  }
+
+  async getMarketplaceRevenue(period: 'today' | 'week' | 'month' | 'year' | 'all'): Promise<any> {
+    try {
+      const now = new Date();
+      let startDate: Date;
+
+      switch (period) {
+        case 'today':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          break;
+        case 'week':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'month':
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+          break;
+        case 'year':
+          startDate = new Date(now.getFullYear(), 0, 1);
+          break;
+        default:
+          startDate = new Date(0);
+      }
+
+      const [result] = await db
+        .select({
+          totalCoins: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+          totalSales: sql<number>`cast(count(*) as integer)`,
+        })
+        .from(contentPurchases)
+        .where(gte(contentPurchases.purchasedAt, startDate));
+
+      const totalCoins = result?.totalCoins || 0;
+      const totalSales = result?.totalSales || 0;
+      const averageSale = totalSales > 0 ? totalCoins / totalSales : 0;
+
+      return { totalCoins, totalSales, averageSale };
+    } catch (error) {
+      console.error('Error getting marketplace revenue:', error);
+      throw error;
+    }
+  }
+
+  async getRevenueTrend(days = 30): Promise<any[]> {
+    try {
+      const now = new Date();
+      const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+
+      const results = await db
+        .select({
+          date: sql<string>`DATE(${contentPurchases.purchasedAt})`,
+          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+        })
+        .from(contentPurchases)
+        .where(gte(contentPurchases.purchasedAt, startDate))
+        .groupBy(sql`DATE(${contentPurchases.purchasedAt})`)
+        .orderBy(sql`DATE(${contentPurchases.purchasedAt})`);
+
+      // Fill missing dates with 0 revenue
+      const trend: { date: string; revenue: number }[] = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const dateStr = date.toISOString().split('T')[0];
+        const found = results.find(r => r.date === dateStr);
+        trend.push({ date: dateStr, revenue: found?.revenue || 0 });
+      }
+
+      return trend;
+    } catch (error) {
+      console.error('Error getting revenue trend:', error);
+      throw error;
+    }
+  }
+
+  async getTopSellingItems(limit = 10): Promise<any[]> {
+    try {
+      const items = await db
+        .select({
+          id: content.id,
+          title: content.title,
+          sales: sql<number>`cast(count(${contentPurchases.id}) as integer)`,
+          revenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+          sellerUsername: users.username,
+        })
+        .from(content)
+        .leftJoin(contentPurchases, eq(content.id, contentPurchases.contentId))
+        .leftJoin(users, eq(content.authorId, users.id))
+        .where(and(
+          eq(content.status, 'approved'),
+          isNull(content.deletedAt)
+        ))
+        .groupBy(content.id, content.title, users.username)
+        .orderBy(desc(sql`count(${contentPurchases.id})`))
+        .limit(limit);
+
+      return items.map(item => ({
+        id: item.id,
+        title: item.title,
+        sales: item.sales || 0,
+        revenue: item.revenue || 0,
+        sellerUsername: item.sellerUsername || 'Unknown',
+      }));
+    } catch (error) {
+      console.error('Error getting top selling items:', error);
+      throw error;
+    }
+  }
+
+  async getTopVendors(limit = 10): Promise<any[]> {
+    try {
+      const vendors = await db
+        .select({
+          sellerId: content.authorId,
+          sellerUsername: users.username,
+          totalRevenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+          totalSales: sql<number>`cast(count(distinct ${contentPurchases.id}) as integer)`,
+          itemCount: sql<number>`cast(count(distinct ${content.id}) as integer)`,
+        })
+        .from(content)
+        .leftJoin(contentPurchases, eq(content.id, contentPurchases.contentId))
+        .leftJoin(users, eq(content.authorId, users.id))
+        .where(and(
+          eq(content.status, 'approved'),
+          isNull(content.deletedAt)
+        ))
+        .groupBy(content.authorId, users.username)
+        .orderBy(desc(sql`coalesce(sum(${contentPurchases.priceCoins}), 0)`))
+        .limit(limit);
+
+      return vendors.map(v => ({
+        sellerId: v.sellerId,
+        sellerUsername: v.sellerUsername || 'Unknown',
+        totalRevenue: v.totalRevenue || 0,
+        totalSales: v.totalSales || 0,
+        itemCount: v.itemCount || 0,
+      }));
+    } catch (error) {
+      console.error('Error getting top vendors:', error);
+      throw error;
+    }
+  }
+
+  async getMarketplaceStats(): Promise<any> {
+    try {
+      const now = new Date();
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      const [itemStats] = await db
+        .select({
+          totalItems: sql<number>`cast(count(*) filter (where ${content.deletedAt} is null) as integer)`,
+          pendingItems: sql<number>`cast(count(*) filter (where ${content.status} = 'pending' and ${content.deletedAt} is null) as integer)`,
+          approvedItems: sql<number>`cast(count(*) filter (where ${content.status} = 'approved' and ${content.deletedAt} is null) as integer)`,
+          rejectedItems: sql<number>`cast(count(*) filter (where ${content.status} = 'rejected' and ${content.deletedAt} is null) as integer)`,
+          featuredItems: sql<number>`cast(count(*) filter (where ${content.featured} = true and ${content.featuredUntil} > now() and ${content.deletedAt} is null) as integer)`,
+        })
+        .from(content);
+
+      const [salesStats] = await db
+        .select({
+          totalSales: sql<number>`cast(count(*) as integer)`,
+          salesThisWeek: sql<number>`cast(count(*) filter (where ${contentPurchases.purchasedAt} >= ${weekAgo}) as integer)`,
+          totalRevenue: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}), 0) as integer)`,
+          revenueThisWeek: sql<number>`cast(coalesce(sum(${contentPurchases.priceCoins}) filter (where ${contentPurchases.purchasedAt} >= ${weekAgo}), 0) as integer)`,
+        })
+        .from(contentPurchases);
+
+      return {
+        totalItems: itemStats?.totalItems || 0,
+        pendingItems: itemStats?.pendingItems || 0,
+        approvedItems: itemStats?.approvedItems || 0,
+        rejectedItems: itemStats?.rejectedItems || 0,
+        featuredItems: itemStats?.featuredItems || 0,
+        totalSales: salesStats?.totalSales || 0,
+        salesThisWeek: salesStats?.salesThisWeek || 0,
+        totalRevenue: salesStats?.totalRevenue || 0,
+        revenueThisWeek: salesStats?.revenueThisWeek || 0,
+      };
+    } catch (error) {
+      console.error('Error getting marketplace stats:', error);
       throw error;
     }
   }
