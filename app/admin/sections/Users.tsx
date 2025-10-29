@@ -310,7 +310,7 @@ export default function AdminUsers() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-avg-reputation">
-              {stats.avgReputation.toFixed(0)}
+              {(stats.avgReputation || 0).toFixed(0)}
             </div>
           </CardContent>
         </Card>
@@ -322,7 +322,7 @@ export default function AdminUsers() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-avg-coins">
-              {stats.avgCoins.toFixed(0)}
+              {(stats.avgCoins || 0).toFixed(0)}
             </div>
           </CardContent>
         </Card>

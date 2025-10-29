@@ -5954,10 +5954,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ]);
 
       const stats = {
-        total: statsResult[0]?.total || 0,
-        avgReputation: Math.round(statsResult[0]?.avgReputation || 0),
-        avgCoins: Math.round(statsResult[0]?.avgCoins || 0),
-        bannedCount: bannedCountResult[0]?.count || 0
+        total: Number(statsResult[0]?.total) || 0,
+        avgReputation: Math.round(Number(statsResult[0]?.avgReputation) || 0),
+        avgCoins: Math.round(Number(statsResult[0]?.avgCoins) || 0),
+        bannedCount: Number(bannedCountResult[0]?.count) || 0
       };
 
       res.json(stats);
