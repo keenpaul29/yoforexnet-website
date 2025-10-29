@@ -3709,7 +3709,7 @@ export class MemStorage implements IStorage {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async getAbTests(filters?: {status?: string}): Promise<any[]> {
+  async getAbTests(status?: string): Promise<any[]> {
     return [];
   }
 
