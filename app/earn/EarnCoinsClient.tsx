@@ -106,7 +106,7 @@ export default function EarnCoinsClient() {
     }
   ];
 
-  const monthlyPotential = calculateMonthlyPotential();
+  const monthlyPotential = calculateMonthlyPotential('moderate');
 
   return (
     <div className="min-h-screen bg-background">
