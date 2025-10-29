@@ -46,17 +46,29 @@ function Settings() {
     const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("general");
     const [searchTemplate, setSearchTemplate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"])();
-    const { data: generalSettings, isLoading: generalLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const { data: generalSettingsRaw, isLoading: generalLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/settings/general"
         ]
     });
-    const { data: coinSettings, isLoading: coinLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const generalSettings = generalSettingsRaw || {
+        siteName: 'YoForex',
+        siteDescription: '',
+        maintenanceMode: false,
+        registrationEnabled: true
+    };
+    const { data: coinSettingsRaw, isLoading: coinLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/settings/coin-economy"
         ]
     });
-    const { data: emailTemplates, isLoading: templatesLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const coinSettings = coinSettingsRaw || {
+        usdToCoinsRate: 100,
+        packages: [],
+        minWithdrawal: 1000,
+        withdrawalFee: 5
+    };
+    const { data: emailTemplatesRaw, isLoading: templatesLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/settings/email-templates",
             {
@@ -64,16 +76,19 @@ function Settings() {
             }
         ]
     });
-    const { data: featureFlags, isLoading: flagsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const emailTemplates = Array.isArray(emailTemplatesRaw) ? emailTemplatesRaw : [];
+    const { data: featureFlagsRaw, isLoading: flagsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/settings/feature-flags"
         ]
     });
-    const { data: adminRoles, isLoading: rolesLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const featureFlags = Array.isArray(featureFlagsRaw) ? featureFlagsRaw : [];
+    const { data: adminRolesRaw, isLoading: rolesLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/settings/admin-roles"
         ]
     });
+    const adminRoles = Array.isArray(adminRolesRaw) ? adminRolesRaw : [];
     const updateGeneralMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "Settings.useMutation[updateGeneralMutation]": async (settings)=>{
@@ -195,7 +210,7 @@ function Settings() {
                 children: "System Settings"
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                lineNumber: 101,
+                lineNumber: 165,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -212,7 +227,7 @@ function Settings() {
                                 children: "General"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 105,
+                                lineNumber: 169,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -221,7 +236,7 @@ function Settings() {
                                 children: "Coin Economy"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 106,
+                                lineNumber: 170,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -230,7 +245,7 @@ function Settings() {
                                 children: "Email Templates"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 107,
+                                lineNumber: 171,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -239,7 +254,7 @@ function Settings() {
                                 children: "Feature Flags"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 108,
+                                lineNumber: 172,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -248,13 +263,13 @@ function Settings() {
                                 children: "Admin Roles"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 109,
+                                lineNumber: 173,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                        lineNumber: 104,
+                        lineNumber: 168,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -264,7 +279,7 @@ function Settings() {
                             className: "h-96"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 115,
+                            lineNumber: 179,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             "data-testid": "card-general-settings",
@@ -274,12 +289,12 @@ function Settings() {
                                         children: "General Settings"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 119,
+                                        lineNumber: 183,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 118,
+                                    lineNumber: 182,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -293,22 +308,22 @@ function Settings() {
                                                     children: "Site Name"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 123,
+                                                    lineNumber: 187,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                     id: "site-name",
-                                                    defaultValue: generalSettings?.siteName || 'YoForex',
+                                                    defaultValue: generalSettings.siteName,
                                                     "data-testid": "input-site-name"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 124,
+                                                    lineNumber: 188,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 122,
+                                            lineNumber: 186,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -319,22 +334,22 @@ function Settings() {
                                                     children: "Site Description"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 132,
+                                                    lineNumber: 196,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
                                                     id: "site-description",
-                                                    defaultValue: generalSettings?.siteDescription || '',
+                                                    defaultValue: generalSettings.siteDescription,
                                                     "data-testid": "textarea-site-description"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 133,
+                                                    lineNumber: 197,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 131,
+                                            lineNumber: 195,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -348,7 +363,7 @@ function Settings() {
                                                             children: "Maintenance Mode"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 142,
+                                                            lineNumber: 206,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -356,28 +371,28 @@ function Settings() {
                                                             children: "Enable site maintenance mode"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 143,
+                                                            lineNumber: 207,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 141,
+                                                    lineNumber: 205,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Switch"], {
                                                     id: "maintenance-mode",
-                                                    defaultChecked: generalSettings?.maintenanceMode || false,
+                                                    defaultChecked: generalSettings.maintenanceMode,
                                                     "data-testid": "switch-maintenance-mode"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 145,
+                                                    lineNumber: 209,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 140,
+                                            lineNumber: 204,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -391,7 +406,7 @@ function Settings() {
                                                             children: "Registration Enabled"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 154,
+                                                            lineNumber: 218,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -399,28 +414,28 @@ function Settings() {
                                                             children: "Allow new user registrations"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 219,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 153,
+                                                    lineNumber: 217,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Switch"], {
                                                     id: "registration-enabled",
-                                                    defaultChecked: generalSettings?.registrationEnabled !== false,
+                                                    defaultChecked: generalSettings.registrationEnabled,
                                                     "data-testid": "switch-registration-enabled"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 157,
+                                                    lineNumber: 221,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 152,
+                                            lineNumber: 216,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -430,24 +445,24 @@ function Settings() {
                                             children: "Save Changes"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 164,
+                                            lineNumber: 228,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 121,
+                                    lineNumber: 185,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 117,
+                            lineNumber: 181,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                        lineNumber: 113,
+                        lineNumber: 177,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -457,7 +472,7 @@ function Settings() {
                             className: "h-96"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 179,
+                            lineNumber: 243,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                             children: [
@@ -469,12 +484,12 @@ function Settings() {
                                                 children: "Exchange Rate"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                lineNumber: 184,
+                                                lineNumber: 248,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 183,
+                                            lineNumber: 247,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -488,17 +503,17 @@ function Settings() {
                                                             children: "USD to Coins Rate"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 188,
+                                                            lineNumber: 252,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                             id: "usd-to-coins",
                                                             type: "number",
-                                                            defaultValue: coinSettings?.usdToCoinsRate || 100,
+                                                            defaultValue: coinSettings.usdToCoinsRate,
                                                             "data-testid": "input-usd-to-coins"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 189,
+                                                            lineNumber: 253,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -506,13 +521,13 @@ function Settings() {
                                                             children: "1 USD = X coins"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 195,
+                                                            lineNumber: 259,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 187,
+                                                    lineNumber: 251,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -520,19 +535,19 @@ function Settings() {
                                                     children: "Save Exchange Rate"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 197,
+                                                    lineNumber: 261,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 186,
+                                            lineNumber: 250,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 182,
+                                    lineNumber: 246,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -543,12 +558,12 @@ function Settings() {
                                                 children: "Recharge Packages"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                lineNumber: 203,
+                                                lineNumber: 267,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 202,
+                                            lineNumber: 266,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -563,64 +578,64 @@ function Settings() {
                                                                         children: "Package"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 210,
+                                                                        lineNumber: 274,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                         children: "Coins"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 211,
+                                                                        lineNumber: 275,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                         children: "Price (USD)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 212,
+                                                                        lineNumber: 276,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                         children: "Bonus"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 213,
+                                                                        lineNumber: 277,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                         children: "Actions"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 214,
+                                                                        lineNumber: 278,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 209,
+                                                                lineNumber: 273,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 208,
+                                                            lineNumber: 272,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
-                                                            children: coinSettings?.packages && coinSettings.packages.length > 0 ? coinSettings.packages.map((pkg)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                            children: coinSettings.packages.length > 0 ? coinSettings.packages.map((pkg)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                     "data-testid": `package-${pkg.id}`,
                                                                     children: [
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: pkg.name
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 221,
+                                                                            lineNumber: 285,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: pkg.coins
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 222,
+                                                                            lineNumber: 286,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -630,17 +645,17 @@ function Settings() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 223,
+                                                                            lineNumber: 287,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: [
-                                                                                pkg.bonus || 0,
+                                                                                pkg.bonus,
                                                                                 "%"
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 224,
+                                                                            lineNumber: 288,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -651,18 +666,18 @@ function Settings() {
                                                                                 children: "Edit"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                                lineNumber: 226,
+                                                                                lineNumber: 290,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 225,
+                                                                            lineNumber: 289,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, pkg.id, true, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 220,
+                                                                    lineNumber: 284,
                                                                     columnNumber: 29
                                                                 }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -671,39 +686,39 @@ function Settings() {
                                                                     children: "No packages configured"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 234,
+                                                                    lineNumber: 298,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 233,
+                                                                lineNumber: 297,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 217,
+                                                            lineNumber: 281,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 207,
+                                                    lineNumber: 271,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                lineNumber: 206,
+                                                lineNumber: 270,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 205,
+                                            lineNumber: 269,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 201,
+                                    lineNumber: 265,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -714,12 +729,12 @@ function Settings() {
                                                 children: "Withdrawal Settings"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                lineNumber: 247,
+                                                lineNumber: 311,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 246,
+                                            lineNumber: 310,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -733,23 +748,23 @@ function Settings() {
                                                             children: "Minimum Withdrawal Amount"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 251,
+                                                            lineNumber: 315,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                             id: "min-withdrawal",
                                                             type: "number",
-                                                            defaultValue: coinSettings?.minWithdrawal || 1000,
+                                                            defaultValue: coinSettings.minWithdrawal,
                                                             "data-testid": "input-min-withdrawal"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 252,
+                                                            lineNumber: 316,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 250,
+                                                    lineNumber: 314,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -760,23 +775,23 @@ function Settings() {
                                                             children: "Withdrawal Fee (%)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 260,
+                                                            lineNumber: 324,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                             id: "withdrawal-fee",
                                                             type: "number",
-                                                            defaultValue: coinSettings?.withdrawalFee || 5,
+                                                            defaultValue: coinSettings.withdrawalFee,
                                                             "data-testid": "input-withdrawal-fee"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 261,
+                                                            lineNumber: 325,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 259,
+                                                    lineNumber: 323,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -784,26 +799,26 @@ function Settings() {
                                                     children: "Save Withdrawal Settings"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 268,
+                                                    lineNumber: 332,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 249,
+                                            lineNumber: 313,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 245,
+                                    lineNumber: 309,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                        lineNumber: 177,
+                        lineNumber: 241,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -817,12 +832,12 @@ function Settings() {
                                             children: "Search Templates"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 279,
+                                            lineNumber: 343,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 278,
+                                        lineNumber: 342,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -833,25 +848,25 @@ function Settings() {
                                             "data-testid": "input-search-templates"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 282,
+                                            lineNumber: 346,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 281,
+                                        lineNumber: 345,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 277,
+                                lineNumber: 341,
                                 columnNumber: 11
                             }, this),
                             templatesLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
                                 className: "h-96"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 292,
+                                lineNumber: 356,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                                 "data-testid": "card-email-templates",
@@ -861,12 +876,12 @@ function Settings() {
                                             children: "Email Templates"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 296,
+                                            lineNumber: 360,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 295,
+                                        lineNumber: 359,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -881,57 +896,57 @@ function Settings() {
                                                                     children: "Name"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 303,
+                                                                    lineNumber: 367,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Subject"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 304,
+                                                                    lineNumber: 368,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Type"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 305,
+                                                                    lineNumber: 369,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Actions"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 306,
+                                                                    lineNumber: 370,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 302,
+                                                            lineNumber: 366,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                        lineNumber: 301,
+                                                        lineNumber: 365,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
-                                                        children: emailTemplates && emailTemplates.length > 0 ? emailTemplates.map((template)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        children: emailTemplates.length > 0 ? emailTemplates.map((template)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 "data-testid": `template-${template.id}`,
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: template.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 313,
+                                                                        lineNumber: 377,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: template.subject
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 314,
+                                                                        lineNumber: 378,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -940,12 +955,12 @@ function Settings() {
                                                                             children: template.type
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 316,
+                                                                            lineNumber: 380,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 315,
+                                                                        lineNumber: 379,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -959,7 +974,7 @@ function Settings() {
                                                                                     children: "Edit"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                                    lineNumber: 320,
+                                                                                    lineNumber: 384,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -969,24 +984,24 @@ function Settings() {
                                                                                     children: "Preview"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                                    lineNumber: 323,
+                                                                                    lineNumber: 387,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 319,
+                                                                            lineNumber: 383,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 318,
+                                                                        lineNumber: 382,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, template.id, true, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 312,
+                                                                lineNumber: 376,
                                                                 columnNumber: 27
                                                             }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -995,45 +1010,45 @@ function Settings() {
                                                                 children: "No templates found"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 332,
+                                                                lineNumber: 396,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 331,
+                                                            lineNumber: 395,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                        lineNumber: 309,
+                                                        lineNumber: 373,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                lineNumber: 300,
+                                                lineNumber: 364,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 299,
+                                            lineNumber: 363,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 298,
+                                        lineNumber: 362,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                lineNumber: 294,
+                                lineNumber: 358,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                        lineNumber: 276,
+                        lineNumber: 340,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -1043,7 +1058,7 @@ function Settings() {
                             className: "h-96"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 348,
+                            lineNumber: 412,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             "data-testid": "card-feature-flags",
@@ -1053,12 +1068,12 @@ function Settings() {
                                         children: "Feature Flags"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 352,
+                                        lineNumber: 416,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 351,
+                                    lineNumber: 415,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1073,64 +1088,64 @@ function Settings() {
                                                                 children: "Feature"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 359,
+                                                                lineNumber: 423,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Description"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 360,
+                                                                lineNumber: 424,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Enabled"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 361,
+                                                                lineNumber: 425,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Rollout %"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 362,
+                                                                lineNumber: 426,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 363,
+                                                                lineNumber: 427,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                        lineNumber: 358,
+                                                        lineNumber: 422,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 357,
+                                                    lineNumber: 421,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
-                                                    children: featureFlags && featureFlags.length > 0 ? featureFlags.map((flag)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                    children: featureFlags.length > 0 ? featureFlags.map((flag)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             "data-testid": `flag-${flag.id}`,
                                                             children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: flag.name
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 370,
+                                                                    lineNumber: 434,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: flag.description
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 371,
+                                                                    lineNumber: 435,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1143,12 +1158,12 @@ function Settings() {
                                                                         "data-testid": `switch-flag-${flag.id}`
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 373,
+                                                                        lineNumber: 437,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 372,
+                                                                    lineNumber: 436,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1156,24 +1171,24 @@ function Settings() {
                                                                         className: "w-24",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$slider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Slider"], {
                                                                             defaultValue: [
-                                                                                flag.rolloutPercentage || 100
+                                                                                flag.rolloutPercentage
                                                                             ],
                                                                             max: 100,
                                                                             step: 1,
                                                                             "data-testid": `slider-rollout-${flag.id}`
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                            lineNumber: 383,
+                                                                            lineNumber: 447,
                                                                             columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 382,
+                                                                        lineNumber: 446,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 381,
+                                                                    lineNumber: 445,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1184,18 +1199,18 @@ function Settings() {
                                                                         children: "Configure"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 392,
+                                                                        lineNumber: 456,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 391,
+                                                                    lineNumber: 455,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, flag.id, true, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 369,
+                                                            lineNumber: 433,
                                                             columnNumber: 27
                                                         }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1204,44 +1219,44 @@ function Settings() {
                                                             children: "No feature flags configured"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 400,
+                                                            lineNumber: 464,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                        lineNumber: 399,
+                                                        lineNumber: 463,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 366,
+                                                    lineNumber: 430,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 356,
+                                            lineNumber: 420,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 355,
+                                        lineNumber: 419,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 354,
+                                    lineNumber: 418,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 350,
+                            lineNumber: 414,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                        lineNumber: 346,
+                        lineNumber: 410,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -1251,7 +1266,7 @@ function Settings() {
                             className: "h-96"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 416,
+                            lineNumber: 480,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             "data-testid": "card-admin-roles",
@@ -1261,12 +1276,12 @@ function Settings() {
                                         children: "Admin Roles & Permissions"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 420,
+                                        lineNumber: 484,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 419,
+                                    lineNumber: 483,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1281,57 +1296,57 @@ function Settings() {
                                                                 children: "User"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 427,
+                                                                lineNumber: 491,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Email"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 428,
+                                                                lineNumber: 492,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Role"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 429,
+                                                                lineNumber: 493,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                lineNumber: 430,
+                                                                lineNumber: 494,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                        lineNumber: 426,
+                                                        lineNumber: 490,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 425,
+                                                    lineNumber: 489,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
-                                                    children: adminRoles && adminRoles.length > 0 ? adminRoles.map((admin)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                    children: adminRoles.length > 0 ? adminRoles.map((admin)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             "data-testid": `admin-${admin.id}`,
                                                             children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: admin.username
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 437,
+                                                                    lineNumber: 501,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: admin.email
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 438,
+                                                                    lineNumber: 502,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1339,12 +1354,12 @@ function Settings() {
                                                                         children: admin.role
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 440,
+                                                                        lineNumber: 504,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 439,
+                                                                    lineNumber: 503,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1358,7 +1373,7 @@ function Settings() {
                                                                                 children: "Edit Permissions"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                                lineNumber: 444,
+                                                                                lineNumber: 508,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1368,24 +1383,24 @@ function Settings() {
                                                                                 children: "Revoke"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                                lineNumber: 451,
+                                                                                lineNumber: 515,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                        lineNumber: 443,
+                                                                        lineNumber: 507,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                                    lineNumber: 442,
+                                                                    lineNumber: 506,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, admin.id, true, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 436,
+                                                            lineNumber: 500,
                                                             columnNumber: 27
                                                         }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1394,60 +1409,60 @@ function Settings() {
                                                             children: "No admins found"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                            lineNumber: 464,
+                                                            lineNumber: 528,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                        lineNumber: 463,
+                                                        lineNumber: 527,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                                    lineNumber: 433,
+                                                    lineNumber: 497,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                                            lineNumber: 424,
+                                            lineNumber: 488,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                                        lineNumber: 423,
+                                        lineNumber: 487,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Settings.tsx",
-                                    lineNumber: 422,
+                                    lineNumber: 486,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Settings.tsx",
-                            lineNumber: 418,
+                            lineNumber: 482,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Settings.tsx",
-                        lineNumber: 414,
+                        lineNumber: 478,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Settings.tsx",
-                lineNumber: 103,
+                lineNumber: 167,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/sections/Settings.tsx",
-        lineNumber: 100,
+        lineNumber: 164,
         columnNumber: 5
     }, this);
 }
-_s(Settings, "gzcC7mmfUhhIhXZc+bdMCSL9Reg=", false, function() {
+_s(Settings, "AQicCjDFv3IoVF1o610xMJPi9v0=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"],

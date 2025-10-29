@@ -53,21 +53,34 @@ function Communications() {
     const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("announcements");
     const [createAnnouncementOpen, setCreateAnnouncementOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"])();
-    const { data: announcements, isLoading: announcementsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    // Add explicit type annotations to ensure TypeScript knows the structure
+    const { data: announcementsData, isLoading: announcementsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/communications/announcements"
         ]
     });
-    const { data: campaigns, isLoading: campaignsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    // Defensive programming: ensure arrays are always defined
+    const announcements = Array.isArray(announcementsData) ? announcementsData : [];
+    const { data: campaignsData, isLoading: campaignsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/communications/campaigns"
         ]
     });
-    const { data: campaignStats, isLoading: statsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const campaigns = Array.isArray(campaignsData) ? campaignsData : [];
+    const { data: campaignStatsData, isLoading: statsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/communications/campaign-stats"
         ]
     });
+    const campaignStats = campaignStatsData || {
+        sent: 0,
+        opened: 0,
+        openRate: 0,
+        clicked: 0,
+        clickRate: 0,
+        bounced: 0,
+        bounceRate: 0
+    };
     const createAnnouncementMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "Communications.useMutation[createAnnouncementMutation]": async (data)=>{
@@ -160,7 +173,7 @@ function Communications() {
                 children: "Communications"
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                lineNumber: 81,
+                lineNumber: 130,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -177,7 +190,7 @@ function Communications() {
                                 children: "Announcements"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 85,
+                                lineNumber: 134,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -186,13 +199,13 @@ function Communications() {
                                 children: "Email Campaigns"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 86,
+                                lineNumber: 135,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                        lineNumber: 84,
+                        lineNumber: 133,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -207,7 +220,7 @@ function Communications() {
                                         children: "Announcements"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 92,
+                                        lineNumber: 141,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -221,12 +234,12 @@ function Communications() {
                                                     children: "Create Announcement"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 95,
+                                                    lineNumber: 144,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 94,
+                                                lineNumber: 143,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -238,20 +251,20 @@ function Communications() {
                                                                 children: "Create Announcement"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 99,
+                                                                lineNumber: 148,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                                                 children: "Create a new announcement for your users"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 100,
+                                                                lineNumber: 149,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 98,
+                                                        lineNumber: 147,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -265,7 +278,7 @@ function Communications() {
                                                                         children: "Title"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 106,
+                                                                        lineNumber: 155,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -274,13 +287,13 @@ function Communications() {
                                                                         "data-testid": "input-announcement-title"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 107,
+                                                                        lineNumber: 156,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 105,
+                                                                lineNumber: 154,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -291,7 +304,7 @@ function Communications() {
                                                                         children: "Content"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 115,
+                                                                        lineNumber: 164,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -301,13 +314,13 @@ function Communications() {
                                                                         "data-testid": "textarea-announcement-content"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 116,
+                                                                        lineNumber: 165,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 114,
+                                                                lineNumber: 163,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -318,7 +331,7 @@ function Communications() {
                                                                         children: "Type"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 125,
+                                                                        lineNumber: 174,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -331,12 +344,12 @@ function Communications() {
                                                                                     placeholder: "Select type"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                    lineNumber: 128,
+                                                                                    lineNumber: 177,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 127,
+                                                                                lineNumber: 176,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -346,7 +359,7 @@ function Communications() {
                                                                                         children: "Info"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 131,
+                                                                                        lineNumber: 180,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -354,7 +367,7 @@ function Communications() {
                                                                                         children: "Warning"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 132,
+                                                                                        lineNumber: 181,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -362,7 +375,7 @@ function Communications() {
                                                                                         children: "Success"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 133,
+                                                                                        lineNumber: 182,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -370,25 +383,25 @@ function Communications() {
                                                                                         children: "Error"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 134,
+                                                                                        lineNumber: 183,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 130,
+                                                                                lineNumber: 179,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 126,
+                                                                        lineNumber: 175,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 124,
+                                                                lineNumber: 173,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -399,7 +412,7 @@ function Communications() {
                                                                         children: "Target Audience"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 140,
+                                                                        lineNumber: 189,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -412,12 +425,12 @@ function Communications() {
                                                                                     placeholder: "Select audience"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                    lineNumber: 143,
+                                                                                    lineNumber: 192,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 142,
+                                                                                lineNumber: 191,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -427,7 +440,7 @@ function Communications() {
                                                                                         children: "All Users"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 146,
+                                                                                        lineNumber: 195,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -435,7 +448,7 @@ function Communications() {
                                                                                         children: "Premium Users"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 147,
+                                                                                        lineNumber: 196,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -443,7 +456,7 @@ function Communications() {
                                                                                         children: "Free Users"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 148,
+                                                                                        lineNumber: 197,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -451,25 +464,25 @@ function Communications() {
                                                                                         children: "Sellers"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 149,
+                                                                                        lineNumber: 198,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 145,
+                                                                                lineNumber: 194,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 141,
+                                                                        lineNumber: 190,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 139,
+                                                                lineNumber: 188,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -480,7 +493,7 @@ function Communications() {
                                                                         children: "Display Type"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 155,
+                                                                        lineNumber: 204,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -493,12 +506,12 @@ function Communications() {
                                                                                     placeholder: "Select display type"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                    lineNumber: 158,
+                                                                                    lineNumber: 207,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 157,
+                                                                                lineNumber: 206,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -508,7 +521,7 @@ function Communications() {
                                                                                         children: "Banner"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 161,
+                                                                                        lineNumber: 210,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -516,7 +529,7 @@ function Communications() {
                                                                                         children: "Modal"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 162,
+                                                                                        lineNumber: 211,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -524,25 +537,25 @@ function Communications() {
                                                                                         children: "Toast"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                        lineNumber: 163,
+                                                                                        lineNumber: 212,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 160,
+                                                                                lineNumber: 209,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 156,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 154,
+                                                                lineNumber: 203,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -556,7 +569,7 @@ function Communications() {
                                                                                 children: "Start Date"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 170,
+                                                                                lineNumber: 219,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -565,13 +578,13 @@ function Communications() {
                                                                                 "data-testid": "input-announcement-start"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 171,
+                                                                                lineNumber: 220,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 169,
+                                                                        lineNumber: 218,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -582,7 +595,7 @@ function Communications() {
                                                                                 children: "End Date"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 179,
+                                                                                lineNumber: 228,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -591,19 +604,19 @@ function Communications() {
                                                                                 "data-testid": "input-announcement-end"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 180,
+                                                                                lineNumber: 229,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 178,
+                                                                        lineNumber: 227,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 168,
+                                                                lineNumber: 217,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -622,38 +635,38 @@ function Communications() {
                                                                 children: "Create Announcement"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 188,
+                                                                lineNumber: 237,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 104,
+                                                        lineNumber: 153,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 97,
+                                                lineNumber: 146,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 93,
+                                        lineNumber: 142,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 91,
+                                lineNumber: 140,
                                 columnNumber: 11
                             }, this),
                             announcementsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
                                 className: "h-96"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 205,
+                                lineNumber: 254,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                                 "data-testid": "card-announcements",
@@ -670,78 +683,78 @@ function Communications() {
                                                                 children: "Title"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 213,
+                                                                lineNumber: 262,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Type"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 214,
+                                                                lineNumber: 263,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Audience"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 215,
+                                                                lineNumber: 264,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 265,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Views"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 217,
+                                                                lineNumber: 266,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Clicks"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 218,
+                                                                lineNumber: 267,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Created"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 219,
+                                                                lineNumber: 268,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 220,
+                                                                lineNumber: 269,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 212,
+                                                        lineNumber: 261,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 211,
+                                                    lineNumber: 260,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
-                                                    children: announcements && announcements.length > 0 ? announcements.map((announcement)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                    children: announcements.length > 0 ? announcements.map((announcement)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             "data-testid": `announcement-${announcement.id}`,
                                                             children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: announcement.title
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 227,
+                                                                    lineNumber: 276,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -750,19 +763,19 @@ function Communications() {
                                                                         children: announcement.type
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 229,
+                                                                        lineNumber: 278,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 228,
+                                                                    lineNumber: 277,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: announcement.audience
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 231,
+                                                                    lineNumber: 280,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -775,12 +788,12 @@ function Communications() {
                                                                         "data-testid": `switch-announcement-${announcement.id}`
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 233,
+                                                                        lineNumber: 282,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 232,
+                                                                    lineNumber: 281,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -791,19 +804,19 @@ function Communications() {
                                                                                 className: "h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 243,
+                                                                                lineNumber: 292,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             announcement.views || 0
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 242,
+                                                                        lineNumber: 291,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 241,
+                                                                    lineNumber: 290,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -814,19 +827,19 @@ function Communications() {
                                                                                 className: "h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 249,
+                                                                                lineNumber: 298,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             announcement.clicks || 0
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 248,
+                                                                        lineNumber: 297,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 247,
+                                                                    lineNumber: 296,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -835,7 +848,7 @@ function Communications() {
                                                                     })
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 253,
+                                                                    lineNumber: 302,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -849,7 +862,7 @@ function Communications() {
                                                                                 children: "Edit"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 258,
+                                                                                lineNumber: 307,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -861,24 +874,24 @@ function Communications() {
                                                                                 children: "Delete"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                                lineNumber: 265,
+                                                                                lineNumber: 314,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 257,
+                                                                        lineNumber: 306,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 256,
+                                                                    lineNumber: 305,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, announcement.id, true, {
                                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                            lineNumber: 226,
+                                                            lineNumber: 275,
                                                             columnNumber: 27
                                                         }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -887,44 +900,44 @@ function Communications() {
                                                             children: "No announcements found"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                            lineNumber: 280,
+                                                            lineNumber: 329,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 279,
+                                                        lineNumber: 328,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 223,
+                                                    lineNumber: 272,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                            lineNumber: 210,
+                                            lineNumber: 259,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 209,
+                                        lineNumber: 258,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                    lineNumber: 208,
+                                    lineNumber: 257,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 207,
+                                lineNumber: 256,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                        lineNumber: 90,
+                        lineNumber: 139,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -939,7 +952,7 @@ function Communications() {
                                         children: "Email Campaigns"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 296,
+                                        lineNumber: 345,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -947,13 +960,13 @@ function Communications() {
                                         children: "Create Campaign"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 346,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 295,
+                                lineNumber: 344,
                                 columnNumber: 11
                             }, this),
                             statsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -964,12 +977,12 @@ function Communications() {
                                         className: "h-32"
                                     }, i, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 304,
+                                        lineNumber: 353,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 302,
+                                lineNumber: 351,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "grid grid-cols-1 md:grid-cols-4 gap-4",
@@ -984,12 +997,12 @@ function Communications() {
                                                     children: "Total Sent"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 311,
+                                                    lineNumber: 360,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 310,
+                                                lineNumber: 359,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -997,10 +1010,10 @@ function Communications() {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-sent",
-                                                        children: campaignStats?.sent || 0
+                                                        children: campaignStats.sent
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 314,
+                                                        lineNumber: 363,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1008,19 +1021,19 @@ function Communications() {
                                                         children: "Emails sent"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 317,
+                                                        lineNumber: 366,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 313,
+                                                lineNumber: 362,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 309,
+                                        lineNumber: 358,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1033,12 +1046,12 @@ function Communications() {
                                                     children: "Opened"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 323,
+                                                    lineNumber: 372,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 322,
+                                                lineNumber: 371,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1046,33 +1059,33 @@ function Communications() {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-opened",
-                                                        children: campaignStats?.opened || 0
+                                                        children: campaignStats.opened
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 326,
+                                                        lineNumber: 375,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "text-xs text-muted-foreground",
                                                         children: [
-                                                            campaignStats?.openRate || 0,
+                                                            campaignStats.openRate,
                                                             "% open rate"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 329,
+                                                        lineNumber: 378,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 325,
+                                                lineNumber: 374,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 321,
+                                        lineNumber: 370,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1085,12 +1098,12 @@ function Communications() {
                                                     children: "Clicked"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 337,
+                                                    lineNumber: 386,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 336,
+                                                lineNumber: 385,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1098,33 +1111,33 @@ function Communications() {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-clicked",
-                                                        children: campaignStats?.clicked || 0
+                                                        children: campaignStats.clicked
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 340,
+                                                        lineNumber: 389,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "text-xs text-muted-foreground",
                                                         children: [
-                                                            campaignStats?.clickRate || 0,
+                                                            campaignStats.clickRate,
                                                             "% click rate"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 343,
+                                                        lineNumber: 392,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 339,
+                                                lineNumber: 388,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 335,
+                                        lineNumber: 384,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1137,12 +1150,12 @@ function Communications() {
                                                     children: "Bounced"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                    lineNumber: 351,
+                                                    lineNumber: 400,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 350,
+                                                lineNumber: 399,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1150,46 +1163,46 @@ function Communications() {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-bounced",
-                                                        children: campaignStats?.bounced || 0
+                                                        children: campaignStats.bounced
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 354,
+                                                        lineNumber: 403,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "text-xs text-muted-foreground",
                                                         children: [
-                                                            campaignStats?.bounceRate || 0,
+                                                            campaignStats.bounceRate,
                                                             "% bounce rate"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 357,
+                                                        lineNumber: 406,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 353,
+                                                lineNumber: 402,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 349,
+                                        lineNumber: 398,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 308,
+                                lineNumber: 357,
                                 columnNumber: 13
                             }, this),
                             campaignsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
                                 className: "h-96"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 367,
+                                lineNumber: 416,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                                 "data-testid": "card-campaigns",
@@ -1199,12 +1212,12 @@ function Communications() {
                                             children: "Recent Campaigns"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                            lineNumber: 371,
+                                            lineNumber: 420,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 370,
+                                        lineNumber: 419,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1219,106 +1232,106 @@ function Communications() {
                                                                     children: "Name"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 378,
+                                                                    lineNumber: 427,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Subject"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 379,
+                                                                    lineNumber: 428,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Sent"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 380,
+                                                                    lineNumber: 429,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Opened"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 381,
+                                                                    lineNumber: 430,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Clicked"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 382,
+                                                                    lineNumber: 431,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Status"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 383,
+                                                                    lineNumber: 432,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Created"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 384,
+                                                                    lineNumber: 433,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Actions"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                    lineNumber: 385,
+                                                                    lineNumber: 434,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                            lineNumber: 377,
+                                                            lineNumber: 426,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 376,
+                                                        lineNumber: 425,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
-                                                        children: campaigns && campaigns.length > 0 ? campaigns.map((campaign)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        children: campaigns.length > 0 ? campaigns.map((campaign)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 "data-testid": `campaign-${campaign.id}`,
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: campaign.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 392,
+                                                                        lineNumber: 441,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: campaign.subject
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 393,
+                                                                        lineNumber: 442,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: campaign.sent || 0
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 394,
+                                                                        lineNumber: 443,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: campaign.opened || 0
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 395,
+                                                                        lineNumber: 444,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: campaign.clicked || 0
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 396,
+                                                                        lineNumber: 445,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1327,12 +1340,12 @@ function Communications() {
                                                                             children: campaign.status
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                            lineNumber: 398,
+                                                                            lineNumber: 447,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 397,
+                                                                        lineNumber: 446,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1341,7 +1354,7 @@ function Communications() {
                                                                         })
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 402,
+                                                                        lineNumber: 451,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1352,18 +1365,18 @@ function Communications() {
                                                                             children: "View Report"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                            lineNumber: 406,
+                                                                            lineNumber: 455,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                        lineNumber: 405,
+                                                                        lineNumber: 454,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, campaign.id, true, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 391,
+                                                                lineNumber: 440,
                                                                 columnNumber: 27
                                                             }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1372,61 +1385,61 @@ function Communications() {
                                                                 children: "No campaigns found"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                                lineNumber: 418,
+                                                                lineNumber: 467,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                            lineNumber: 417,
+                                                            lineNumber: 466,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                        lineNumber: 388,
+                                                        lineNumber: 437,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                                lineNumber: 375,
+                                                lineNumber: 424,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Communications.tsx",
-                                            lineNumber: 374,
+                                            lineNumber: 423,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                                        lineNumber: 373,
+                                        lineNumber: 422,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                                lineNumber: 369,
+                                lineNumber: 418,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Communications.tsx",
-                        lineNumber: 294,
+                        lineNumber: 343,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Communications.tsx",
-                lineNumber: 83,
+                lineNumber: 132,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/sections/Communications.tsx",
-        lineNumber: 80,
+        lineNumber: 129,
         columnNumber: 5
     }, this);
 }
-_s(Communications, "w5bO8d1+tgT0Tmh86meJVEwxMeY=", false, function() {
+_s(Communications, "EVghvm12J6Q1mNtzIIaRJcO66qQ=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"],

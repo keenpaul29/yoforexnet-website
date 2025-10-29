@@ -140,6 +140,8 @@ export function AdminDashboardClient() {
         return <Gamification />;
       case "/admin/seo-marketing":
         return <SEOMarketing />;
+      case "/admin/schema-validation":
+        return <SchemaValidation />;
       case "/admin/integrations":
         return <Integrations />;
       case "/admin/mobile":

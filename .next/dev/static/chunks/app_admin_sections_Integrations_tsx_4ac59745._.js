@@ -85,17 +85,19 @@ function Integrations() {
     const [filterWebhook, setFilterWebhook] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("all");
     const [filterEventType, setFilterEventType] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("all");
     const [filterStatus, setFilterStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("all");
-    const { data: apiKeys, isLoading: apiKeysLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const { data: apiKeysRaw, isLoading: apiKeysLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/integrations/api-keys"
         ]
     });
-    const { data: webhooks, isLoading: webhooksLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const apiKeys = Array.isArray(apiKeysRaw) ? apiKeysRaw : [];
+    const { data: webhooksRaw, isLoading: webhooksLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/integrations/webhooks"
         ]
     });
-    const { data: eventLogs, isLoading: eventLogsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const webhooks = Array.isArray(webhooksRaw) ? webhooksRaw : [];
+    const { data: eventLogsRaw, isLoading: eventLogsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/integrations/event-logs",
             filterWebhook,
@@ -103,6 +105,7 @@ function Integrations() {
             filterStatus
         ]
     });
+    const eventLogs = Array.isArray(eventLogsRaw) ? eventLogsRaw : [];
     const createApiKeyMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "Integrations.useMutation[createApiKeyMutation]": (data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/admin/integrations/api-keys", "POST", data)
@@ -220,7 +223,7 @@ function Integrations() {
                 children: "API & Integrations"
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                lineNumber: 124,
+                lineNumber: 158,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -235,7 +238,7 @@ function Integrations() {
                                 children: "API Keys"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 128,
+                                lineNumber: 162,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -244,7 +247,7 @@ function Integrations() {
                                 children: "Webhooks"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 129,
+                                lineNumber: 163,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -253,13 +256,13 @@ function Integrations() {
                                 children: "Event Logs"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 130,
+                                lineNumber: 164,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                        lineNumber: 127,
+                        lineNumber: 161,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -274,7 +277,7 @@ function Integrations() {
                                         children: "API Keys"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 135,
+                                        lineNumber: 169,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -290,19 +293,19 @@ function Integrations() {
                                                             className: "w-4 h-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 139,
+                                                            lineNumber: 173,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Create API Key"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 138,
+                                                    lineNumber: 172,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 137,
+                                                lineNumber: 171,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -312,12 +315,12 @@ function Integrations() {
                                                             children: "Create API Key"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 145,
+                                                            lineNumber: 179,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 144,
+                                                        lineNumber: 178,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -332,7 +335,7 @@ function Integrations() {
                                                                         children: "Name"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 149,
+                                                                        lineNumber: 183,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -342,13 +345,13 @@ function Integrations() {
                                                                         "data-testid": "input-api-key-name"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 150,
+                                                                        lineNumber: 184,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 148,
+                                                                lineNumber: 182,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -359,7 +362,7 @@ function Integrations() {
                                                                         children: "Permissions"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 153,
+                                                                        lineNumber: 187,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -372,12 +375,12 @@ function Integrations() {
                                                                                     placeholder: "Select permissions"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                    lineNumber: 156,
+                                                                                    lineNumber: 190,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                lineNumber: 155,
+                                                                                lineNumber: 189,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -387,7 +390,7 @@ function Integrations() {
                                                                                         children: "Read Only"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                        lineNumber: 159,
+                                                                                        lineNumber: 193,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -395,7 +398,7 @@ function Integrations() {
                                                                                         children: "Read & Write"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                        lineNumber: 160,
+                                                                                        lineNumber: 194,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -403,25 +406,25 @@ function Integrations() {
                                                                                         children: "Admin"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                        lineNumber: 161,
+                                                                                        lineNumber: 195,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                lineNumber: 158,
+                                                                                lineNumber: 192,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 154,
+                                                                        lineNumber: 188,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 152,
+                                                                lineNumber: 186,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -432,7 +435,7 @@ function Integrations() {
                                                                         children: "Rate Limit (requests/hour)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 166,
+                                                                        lineNumber: 200,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -444,13 +447,13 @@ function Integrations() {
                                                                         "data-testid": "input-api-key-rate-limit"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 167,
+                                                                        lineNumber: 201,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 165,
+                                                                lineNumber: 199,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -461,36 +464,36 @@ function Integrations() {
                                                                     children: createApiKeyMutation.isPending ? "Creating..." : "Create API Key"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                    lineNumber: 170,
+                                                                    lineNumber: 204,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 169,
+                                                                lineNumber: 203,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 147,
+                                                        lineNumber: 181,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 143,
+                                                lineNumber: 177,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 136,
+                                        lineNumber: 170,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 134,
+                                lineNumber: 168,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -504,12 +507,12 @@ function Integrations() {
                                                 className: "h-12"
                                             }, i, false, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 183,
+                                                lineNumber: 217,
                                                 columnNumber: 48
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 182,
+                                        lineNumber: 216,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "overflow-x-auto",
@@ -522,65 +525,65 @@ function Integrations() {
                                                                 children: "Name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 190,
+                                                                lineNumber: 224,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Key"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 191,
+                                                                lineNumber: 225,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Permissions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 192,
+                                                                lineNumber: 226,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Rate Limit"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 193,
+                                                                lineNumber: 227,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Last Used"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 194,
+                                                                lineNumber: 228,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Usage"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 195,
+                                                                lineNumber: 229,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 196,
+                                                                lineNumber: 230,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 189,
+                                                        lineNumber: 223,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 188,
+                                                    lineNumber: 222,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                     children: [
-                                                        apiKeys?.map((key)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        apiKeys.map((key)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 "data-testid": `api-key-${key.id}`,
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -589,7 +592,7 @@ function Integrations() {
                                                                         children: key.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 202,
+                                                                        lineNumber: 236,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -601,7 +604,7 @@ function Integrations() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 205,
+                                                                        lineNumber: 239,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -610,12 +613,12 @@ function Integrations() {
                                                                             children: key.permissions
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 209,
+                                                                            lineNumber: 243,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 208,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -625,7 +628,7 @@ function Integrations() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 211,
+                                                                        lineNumber: 245,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -634,7 +637,7 @@ function Integrations() {
                                                                         }) : 'Never'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 212,
+                                                                        lineNumber: 246,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -646,12 +649,12 @@ function Integrations() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 216,
+                                                                            lineNumber: 250,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 215,
+                                                                        lineNumber: 249,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -663,60 +666,60 @@ function Integrations() {
                                                                             children: "Revoke"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 219,
+                                                                            lineNumber: 253,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 218,
+                                                                        lineNumber: 252,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, key.id, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 201,
+                                                                lineNumber: 235,
                                                                 columnNumber: 25
                                                             }, this)),
-                                                        (!apiKeys || apiKeys.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        apiKeys.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                 colSpan: 7,
                                                                 className: "text-center text-muted-foreground py-8",
                                                                 children: "No API keys created"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 232,
+                                                                lineNumber: 266,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 231,
+                                                            lineNumber: 265,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 199,
+                                                    lineNumber: 233,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                            lineNumber: 187,
+                                            lineNumber: 221,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 186,
+                                        lineNumber: 220,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                    lineNumber: 180,
+                                    lineNumber: 214,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 179,
+                                lineNumber: 213,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -730,20 +733,20 @@ function Integrations() {
                                                     children: "Revoke API Key"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 247,
+                                                    lineNumber: 281,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
                                                     children: "Are you sure you want to revoke this API key? This action cannot be undone and will immediately invalidate the key."
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 248,
+                                                    lineNumber: 282,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                            lineNumber: 246,
+                                            lineNumber: 280,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -753,7 +756,7 @@ function Integrations() {
                                                     children: "Cancel"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 253,
+                                                    lineNumber: 287,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -762,30 +765,30 @@ function Integrations() {
                                                     children: "Revoke"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 254,
+                                                    lineNumber: 288,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                            lineNumber: 252,
+                                            lineNumber: 286,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                    lineNumber: 245,
+                                    lineNumber: 279,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 244,
+                                lineNumber: 278,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                        lineNumber: 133,
+                        lineNumber: 167,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -800,7 +803,7 @@ function Integrations() {
                                         children: "Webhooks"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 267,
+                                        lineNumber: 301,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -816,19 +819,19 @@ function Integrations() {
                                                             className: "w-4 h-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 271,
+                                                            lineNumber: 305,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Create Webhook"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 270,
+                                                    lineNumber: 304,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 269,
+                                                lineNumber: 303,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -839,12 +842,12 @@ function Integrations() {
                                                             children: "Create Webhook"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 277,
+                                                            lineNumber: 311,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 276,
+                                                        lineNumber: 310,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -859,7 +862,7 @@ function Integrations() {
                                                                         children: "Webhook URL"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 281,
+                                                                        lineNumber: 315,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -871,13 +874,13 @@ function Integrations() {
                                                                         "data-testid": "input-webhook-url"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 282,
+                                                                        lineNumber: 316,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 280,
+                                                                lineNumber: 314,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -887,7 +890,7 @@ function Integrations() {
                                                                         children: "Events"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 285,
+                                                                        lineNumber: 319,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -907,7 +910,7 @@ function Integrations() {
                                                                                         "data-testid": `checkbox-event-${event.id}`
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                        lineNumber: 289,
+                                                                                        lineNumber: 323,
                                                                                         columnNumber: 27
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -916,24 +919,24 @@ function Integrations() {
                                                                                         children: event.label
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                        lineNumber: 301,
+                                                                                        lineNumber: 335,
                                                                                         columnNumber: 27
                                                                                     }, this)
                                                                                 ]
                                                                             }, event.id, true, {
                                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                lineNumber: 288,
+                                                                                lineNumber: 322,
                                                                                 columnNumber: 25
                                                                             }, this))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 286,
+                                                                        lineNumber: 320,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 284,
+                                                                lineNumber: 318,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -944,7 +947,7 @@ function Integrations() {
                                                                         children: "Secret (optional)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 307,
+                                                                        lineNumber: 341,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -954,7 +957,7 @@ function Integrations() {
                                                                         "data-testid": "input-webhook-secret"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 308,
+                                                                        lineNumber: 342,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -962,13 +965,13 @@ function Integrations() {
                                                                         children: "Used to verify webhook authenticity"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 309,
+                                                                        lineNumber: 343,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 306,
+                                                                lineNumber: 340,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -979,36 +982,36 @@ function Integrations() {
                                                                     children: createWebhookMutation.isPending ? "Creating..." : "Create Webhook"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                    lineNumber: 312,
+                                                                    lineNumber: 346,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 311,
+                                                                lineNumber: 345,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 279,
+                                                        lineNumber: 313,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 275,
+                                                lineNumber: 309,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 268,
+                                        lineNumber: 302,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 266,
+                                lineNumber: 300,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1022,12 +1025,12 @@ function Integrations() {
                                                 className: "h-12"
                                             }, i, false, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 325,
+                                                lineNumber: 359,
                                                 columnNumber: 48
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 324,
+                                        lineNumber: 358,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "overflow-x-auto",
@@ -1040,58 +1043,58 @@ function Integrations() {
                                                                 children: "URL"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 332,
+                                                                lineNumber: 366,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Events"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 333,
+                                                                lineNumber: 367,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 334,
+                                                                lineNumber: 368,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Success"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 335,
+                                                                lineNumber: 369,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Failures"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 336,
+                                                                lineNumber: 370,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 337,
+                                                                lineNumber: 371,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 331,
+                                                        lineNumber: 365,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 330,
+                                                    lineNumber: 364,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                     children: [
-                                                        webhooks?.map((webhook)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        webhooks.map((webhook)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 "data-testid": `webhook-${webhook.id}`,
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1100,7 +1103,7 @@ function Integrations() {
                                                                         children: webhook.url
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 343,
+                                                                        lineNumber: 377,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1113,30 +1116,30 @@ function Integrations() {
                                                                                         children: event
                                                                                     }, event, false, {
                                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                        lineNumber: 349,
+                                                                                        lineNumber: 383,
                                                                                         columnNumber: 33
                                                                                     }, this)),
-                                                                                webhook.events?.length > 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                                                (webhook.events?.length ?? 0) > 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                                     variant: "secondary",
                                                                                     className: "text-xs",
                                                                                     children: [
                                                                                         "+",
-                                                                                        webhook.events.length - 2
+                                                                                        (webhook.events?.length ?? 0) - 2
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                    lineNumber: 354,
+                                                                                    lineNumber: 388,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 347,
+                                                                            lineNumber: 381,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 346,
+                                                                        lineNumber: 380,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1145,12 +1148,12 @@ function Integrations() {
                                                                             children: webhook.active ? 'Active' : 'Inactive'
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 361,
+                                                                            lineNumber: 395,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 360,
+                                                                        lineNumber: 394,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1159,26 +1162,26 @@ function Integrations() {
                                                                             children: webhook.successCount || 0
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 366,
+                                                                            lineNumber: 400,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 365,
+                                                                        lineNumber: 399,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
-                                                                            variant: webhook.failureCount > 0 ? 'destructive' : 'outline',
+                                                                            variant: (webhook.failureCount ?? 0) > 0 ? 'destructive' : 'outline',
                                                                             children: webhook.failureCount || 0
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 369,
+                                                                            lineNumber: 403,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 368,
+                                                                        lineNumber: 402,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1191,66 +1194,66 @@ function Integrations() {
                                                                             children: "Test"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 374,
+                                                                            lineNumber: 408,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 373,
+                                                                        lineNumber: 407,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, webhook.id, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 342,
+                                                                lineNumber: 376,
                                                                 columnNumber: 25
                                                             }, this)),
-                                                        (!webhooks || webhooks.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        webhooks.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                 colSpan: 6,
                                                                 className: "text-center text-muted-foreground py-8",
                                                                 children: "No webhooks configured"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 388,
+                                                                lineNumber: 422,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 387,
+                                                            lineNumber: 421,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 340,
+                                                    lineNumber: 374,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                            lineNumber: 329,
+                                            lineNumber: 363,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 328,
+                                        lineNumber: 362,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                    lineNumber: 322,
+                                    lineNumber: 356,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 321,
+                                lineNumber: 355,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                        lineNumber: 265,
+                        lineNumber: 299,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -1265,7 +1268,7 @@ function Integrations() {
                                         children: "Event Logs"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 403,
+                                        lineNumber: 437,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1282,12 +1285,12 @@ function Integrations() {
                                                             placeholder: "All Webhooks"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 407,
+                                                            lineNumber: 441,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 406,
+                                                        lineNumber: 440,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1297,10 +1300,10 @@ function Integrations() {
                                                                 children: "All Webhooks"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 410,
+                                                                lineNumber: 444,
                                                                 columnNumber: 19
                                                             }, this),
-                                                            webhooks?.map((webhook)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                            webhooks.map((webhook)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
                                                                     value: webhook.id,
                                                                     children: [
                                                                         webhook.url.substring(0, 30),
@@ -1308,19 +1311,19 @@ function Integrations() {
                                                                     ]
                                                                 }, webhook.id, true, {
                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                    lineNumber: 412,
+                                                                    lineNumber: 446,
                                                                     columnNumber: 21
                                                                 }, this))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 409,
+                                                        lineNumber: 443,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 405,
+                                                lineNumber: 439,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -1334,12 +1337,12 @@ function Integrations() {
                                                             placeholder: "All Events"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 420,
+                                                            lineNumber: 454,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 419,
+                                                        lineNumber: 453,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1349,7 +1352,7 @@ function Integrations() {
                                                                 children: "All Events"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 423,
+                                                                lineNumber: 457,
                                                                 columnNumber: 19
                                                             }, this),
                                                             WEBHOOK_EVENTS.map((event)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1357,19 +1360,19 @@ function Integrations() {
                                                                     children: event.label
                                                                 }, event.id, false, {
                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                    lineNumber: 425,
+                                                                    lineNumber: 459,
                                                                     columnNumber: 21
                                                                 }, this))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 422,
+                                                        lineNumber: 456,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 418,
+                                                lineNumber: 452,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -1383,12 +1386,12 @@ function Integrations() {
                                                             placeholder: "All Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 433,
+                                                            lineNumber: 467,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 432,
+                                                        lineNumber: 466,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1398,7 +1401,7 @@ function Integrations() {
                                                                 children: "All Status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 436,
+                                                                lineNumber: 470,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1406,7 +1409,7 @@ function Integrations() {
                                                                 children: "Success"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 437,
+                                                                lineNumber: 471,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1414,7 +1417,7 @@ function Integrations() {
                                                                 children: "Failed"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 438,
+                                                                lineNumber: 472,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1422,31 +1425,31 @@ function Integrations() {
                                                                 children: "Pending"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 439,
+                                                                lineNumber: 473,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 435,
+                                                        lineNumber: 469,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 431,
+                                                lineNumber: 465,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 404,
+                                        lineNumber: 438,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 402,
+                                lineNumber: 436,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1460,12 +1463,12 @@ function Integrations() {
                                                 className: "h-12"
                                             }, i, false, {
                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                lineNumber: 449,
+                                                lineNumber: 483,
                                                 columnNumber: 49
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 448,
+                                        lineNumber: 482,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "overflow-x-auto",
@@ -1478,58 +1481,58 @@ function Integrations() {
                                                                 children: "Event Type"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 456,
+                                                                lineNumber: 490,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Webhook"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 457,
+                                                                lineNumber: 491,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Status"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 458,
+                                                                lineNumber: 492,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Response"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 459,
+                                                                lineNumber: 493,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Timestamp"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 460,
+                                                                lineNumber: 494,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 461,
+                                                                lineNumber: 495,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                        lineNumber: 455,
+                                                        lineNumber: 489,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 454,
+                                                    lineNumber: 488,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                     children: [
-                                                        eventLogs?.map((log)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        eventLogs.map((log)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1537,12 +1540,12 @@ function Integrations() {
                                                                             children: log.eventType
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 468,
+                                                                            lineNumber: 502,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 467,
+                                                                        lineNumber: 501,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1550,7 +1553,7 @@ function Integrations() {
                                                                         children: log.webhookUrl
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 470,
+                                                                        lineNumber: 504,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1559,12 +1562,12 @@ function Integrations() {
                                                                             children: log.status
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 474,
+                                                                            lineNumber: 508,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 473,
+                                                                        lineNumber: 507,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1572,7 +1575,7 @@ function Integrations() {
                                                                         children: log.response || '-'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 482,
+                                                                        lineNumber: 516,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1581,7 +1584,7 @@ function Integrations() {
                                                                         })
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 483,
+                                                                        lineNumber: 517,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1596,89 +1599,89 @@ function Integrations() {
                                                                                     className: "w-3 h-3 mr-1"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                                    lineNumber: 493,
+                                                                                    lineNumber: 527,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 "Retry"
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                            lineNumber: 486,
+                                                                            lineNumber: 520,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                        lineNumber: 484,
+                                                                        lineNumber: 518,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, log.id, true, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 466,
+                                                                lineNumber: 500,
                                                                 columnNumber: 25
                                                             }, this)),
-                                                        (!eventLogs || eventLogs.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        eventLogs.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                 colSpan: 6,
                                                                 className: "text-center text-muted-foreground py-8",
                                                                 children: "No event logs found"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                                lineNumber: 502,
+                                                                lineNumber: 536,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                            lineNumber: 501,
+                                                            lineNumber: 535,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                                    lineNumber: 464,
+                                                    lineNumber: 498,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                            lineNumber: 453,
+                                            lineNumber: 487,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                        lineNumber: 452,
+                                        lineNumber: 486,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                    lineNumber: 446,
+                                    lineNumber: 480,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                                lineNumber: 445,
+                                lineNumber: 479,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Integrations.tsx",
-                        lineNumber: 401,
+                        lineNumber: 435,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Integrations.tsx",
-                lineNumber: 126,
+                lineNumber: 160,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/sections/Integrations.tsx",
-        lineNumber: 123,
+        lineNumber: 157,
         columnNumber: 5
     }, this);
 }
-_s(Integrations, "Ytx9XKVSEFJ3s+S5sCfOutKcfwY=", false, function() {
+_s(Integrations, "qTFvsxLqxTLY4TZnEv5ljipK5Jk=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"],

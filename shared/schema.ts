@@ -1374,6 +1374,7 @@ export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 
 export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   id: true,
+  authorId: true,
   createdAt: true,
   updatedAt: true,
   views: true,
@@ -1405,7 +1406,7 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   subcategorySlug: z.string().optional(),
   
   // Thread type and language
-  threadType: z.enum(["question", "discussion", "review", "journal", "guide"]).default("discussion"),
+  threadType: z.enum(["question", "discussion", "review", "journal", "guide", "program_sharing"]).default("discussion"),
   language: z.string().default("en"),
   
   // Optional SEO fields

@@ -63,45 +63,63 @@ function AIAutomation() {
     const [sensitivity, setSensitivity] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
         70
     ]);
-    const { data: automationRules, isLoading: rulesLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    // Fix: Changed endpoint from /api/admin/ai/automation-rules to /api/admin/automation/rules
+    // Add explicit type annotation to ensure TypeScript knows this returns an array
+    const { data: automationRulesData, isLoading: rulesLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
-            "/api/admin/ai/automation-rules"
+            "/api/admin/automation/rules"
         ]
     });
-    const { data: moderationStats, isLoading: moderationStatsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    // Defensive programming: ensure automationRules is always an array
+    const automationRules = Array.isArray(automationRulesData) ? automationRulesData : [];
+    const { data: moderationStatsData, isLoading: moderationStatsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/ai/moderation-stats"
         ]
     });
-    const { data: moderationDecisions, isLoading: decisionsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const moderationStats = moderationStatsData || {
+        accuracyRate: 0,
+        falsePositives: 0,
+        falseNegatives: 0,
+        timeSavedHours: 0
+    };
+    const { data: moderationDecisionsData, isLoading: decisionsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/ai/moderation-decisions"
         ]
     });
-    const { data: sentimentData, isLoading: sentimentLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const moderationDecisions = Array.isArray(moderationDecisionsData) ? moderationDecisionsData : [];
+    const { data: sentimentDataRaw, isLoading: sentimentLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/ai/sentiment-distribution"
         ]
     });
-    const { data: spamMetrics, isLoading: spamMetricsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const sentimentData = Array.isArray(sentimentDataRaw) ? sentimentDataRaw : [];
+    const { data: spamMetricsData, isLoading: spamMetricsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/ai/spam-metrics"
         ]
     });
-    const { data: flaggedContent, isLoading: flaggedLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const spamMetrics = spamMetricsData || {
+        accuracy: 0,
+        blocked: 0,
+        flagged: 0
+    };
+    const { data: flaggedContentData, isLoading: flaggedLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/ai/flagged-content"
         ]
     });
+    const flaggedContent = Array.isArray(flaggedContentData) ? flaggedContentData : [];
     const createRuleMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
-            "AIAutomation.useMutation[createRuleMutation]": (data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/admin/ai/automation-rules", "POST", data)
+            "AIAutomation.useMutation[createRuleMutation]": (data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/admin/automation/rules", "POST", data)
         }["AIAutomation.useMutation[createRuleMutation]"],
         onSuccess: {
             "AIAutomation.useMutation[createRuleMutation]": ()=>{
                 __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["queryClient"].invalidateQueries({
                     queryKey: [
-                        "/api/admin/ai/automation-rules"
+                        "/api/admin/automation/rules"
                     ]
                 });
                 toast({
@@ -113,7 +131,7 @@ function AIAutomation() {
     });
     const toggleRuleMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
-            "AIAutomation.useMutation[toggleRuleMutation]": ({ id, enabled })=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/api/admin/ai/automation-rules/${id}/toggle`, "PATCH", {
+            "AIAutomation.useMutation[toggleRuleMutation]": ({ id, enabled })=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/api/admin/automation/rules/${id}`, "PATCH", {
                     enabled
                 })
         }["AIAutomation.useMutation[toggleRuleMutation]"],
@@ -121,7 +139,7 @@ function AIAutomation() {
             "AIAutomation.useMutation[toggleRuleMutation]": ()=>{
                 __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["queryClient"].invalidateQueries({
                     queryKey: [
-                        "/api/admin/ai/automation-rules"
+                        "/api/admin/automation/rules"
                     ]
                 });
                 toast({
@@ -132,13 +150,13 @@ function AIAutomation() {
     });
     const executeRuleMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
-            "AIAutomation.useMutation[executeRuleMutation]": (id)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/api/admin/ai/automation-rules/${id}/execute`, "POST")
+            "AIAutomation.useMutation[executeRuleMutation]": (id)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/api/admin/automation/rules/${id}/execute`, "POST")
         }["AIAutomation.useMutation[executeRuleMutation]"],
         onSuccess: {
             "AIAutomation.useMutation[executeRuleMutation]": ()=>{
                 __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["queryClient"].invalidateQueries({
                     queryKey: [
-                        "/api/admin/ai/automation-rules"
+                        "/api/admin/automation/rules"
                     ]
                 });
                 toast({
@@ -214,7 +232,7 @@ function AIAutomation() {
                 children: "AI & Automation"
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                lineNumber: 122,
+                lineNumber: 192,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -229,7 +247,7 @@ function AIAutomation() {
                                 children: "Automation Rules"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 126,
+                                lineNumber: 196,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -238,7 +256,7 @@ function AIAutomation() {
                                 children: "Content Moderation AI"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 127,
+                                lineNumber: 197,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -247,13 +265,13 @@ function AIAutomation() {
                                 children: "Spam Detection"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 128,
+                                lineNumber: 198,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                        lineNumber: 125,
+                        lineNumber: 195,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -268,7 +286,7 @@ function AIAutomation() {
                                         children: "Automation Rules"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 203,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -282,12 +300,12 @@ function AIAutomation() {
                                                     children: "Create Rule"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 136,
+                                                    lineNumber: 206,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 135,
+                                                lineNumber: 205,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
@@ -298,12 +316,12 @@ function AIAutomation() {
                                                             children: "Create Automation Rule"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                            lineNumber: 140,
+                                                            lineNumber: 210,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 139,
+                                                        lineNumber: 209,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -318,7 +336,7 @@ function AIAutomation() {
                                                                         children: "Rule Name"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 144,
+                                                                        lineNumber: 214,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -328,13 +346,13 @@ function AIAutomation() {
                                                                         "data-testid": "input-rule-name"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 145,
+                                                                        lineNumber: 215,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 143,
+                                                                lineNumber: 213,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -345,7 +363,7 @@ function AIAutomation() {
                                                                         children: "Trigger Type"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 148,
+                                                                        lineNumber: 218,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -358,12 +376,12 @@ function AIAutomation() {
                                                                                     placeholder: "Select trigger type"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 151,
+                                                                                    lineNumber: 221,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                lineNumber: 150,
+                                                                                lineNumber: 220,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -373,7 +391,7 @@ function AIAutomation() {
                                                                                         children: "User Signup"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 154,
+                                                                                        lineNumber: 224,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -381,7 +399,7 @@ function AIAutomation() {
                                                                                         children: "Content Published"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 155,
+                                                                                        lineNumber: 225,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -389,7 +407,7 @@ function AIAutomation() {
                                                                                         children: "Time Based"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 156,
+                                                                                        lineNumber: 226,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -397,25 +415,25 @@ function AIAutomation() {
                                                                                         children: "Threshold Reached"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 157,
+                                                                                        lineNumber: 227,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                lineNumber: 153,
+                                                                                lineNumber: 223,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 149,
+                                                                        lineNumber: 219,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 147,
+                                                                lineNumber: 217,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -426,7 +444,7 @@ function AIAutomation() {
                                                                         children: "Trigger Configuration (JSON)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 162,
+                                                                        lineNumber: 232,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -438,13 +456,13 @@ function AIAutomation() {
                                                                         "data-testid": "textarea-trigger-config"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 163,
+                                                                        lineNumber: 233,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 161,
+                                                                lineNumber: 231,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -455,7 +473,7 @@ function AIAutomation() {
                                                                         children: "Action Type"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 173,
+                                                                        lineNumber: 243,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -468,12 +486,12 @@ function AIAutomation() {
                                                                                     placeholder: "Select action type"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 176,
+                                                                                    lineNumber: 246,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                lineNumber: 175,
+                                                                                lineNumber: 245,
                                                                                 columnNumber: 23
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -483,7 +501,7 @@ function AIAutomation() {
                                                                                         children: "Send Email"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 179,
+                                                                                        lineNumber: 249,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -491,7 +509,7 @@ function AIAutomation() {
                                                                                         children: "Create Notification"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 180,
+                                                                                        lineNumber: 250,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -499,7 +517,7 @@ function AIAutomation() {
                                                                                         children: "Award Coins"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 181,
+                                                                                        lineNumber: 251,
                                                                                         columnNumber: 25
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -507,25 +525,25 @@ function AIAutomation() {
                                                                                         children: "Assign Badge"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 182,
+                                                                                        lineNumber: 252,
                                                                                         columnNumber: 25
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                lineNumber: 178,
+                                                                                lineNumber: 248,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 174,
+                                                                        lineNumber: 244,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 172,
+                                                                lineNumber: 242,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -536,7 +554,7 @@ function AIAutomation() {
                                                                         children: "Action Configuration (JSON)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 187,
+                                                                        lineNumber: 257,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -548,13 +566,13 @@ function AIAutomation() {
                                                                         "data-testid": "textarea-action-config"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 188,
+                                                                        lineNumber: 258,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 186,
+                                                                lineNumber: 256,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -565,36 +583,36 @@ function AIAutomation() {
                                                                     children: createRuleMutation.isPending ? "Creating..." : "Create Rule"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 198,
+                                                                    lineNumber: 268,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 197,
+                                                                lineNumber: 267,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 142,
+                                                        lineNumber: 212,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 138,
+                                                lineNumber: 208,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 134,
+                                        lineNumber: 204,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 132,
+                                lineNumber: 202,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -608,12 +626,12 @@ function AIAutomation() {
                                                 className: "h-12"
                                             }, i, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 212,
+                                                lineNumber: 282,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 210,
+                                        lineNumber: 280,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "overflow-x-auto",
@@ -626,65 +644,65 @@ function AIAutomation() {
                                                                 children: "Name"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 220,
+                                                                lineNumber: 290,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Trigger"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 221,
+                                                                lineNumber: 291,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Action"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 222,
+                                                                lineNumber: 292,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Executions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 223,
+                                                                lineNumber: 293,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Last Executed"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 224,
+                                                                lineNumber: 294,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Enabled"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 225,
+                                                                lineNumber: 295,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Actions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 226,
+                                                                lineNumber: 296,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 219,
+                                                        lineNumber: 289,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 218,
+                                                    lineNumber: 288,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                     children: [
-                                                        automationRules?.map((rule)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        automationRules.map((rule)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 "data-testid": `rule-${rule.id}`,
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -692,28 +710,28 @@ function AIAutomation() {
                                                                         children: rule.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 232,
+                                                                        lineNumber: 302,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: rule.triggerType
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 233,
+                                                                        lineNumber: 303,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: rule.actionType
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 234,
+                                                                        lineNumber: 304,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                         children: rule.executionCount || 0
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 235,
+                                                                        lineNumber: 305,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -722,7 +740,7 @@ function AIAutomation() {
                                                                         }) : 'Never'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 306,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -735,12 +753,12 @@ function AIAutomation() {
                                                                             "data-testid": `switch-rule-${rule.id}`
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 240,
+                                                                            lineNumber: 310,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 239,
+                                                                        lineNumber: 309,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -755,73 +773,73 @@ function AIAutomation() {
                                                                                     className: "w-3 h-3 mr-1"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 254,
+                                                                                    lineNumber: 324,
                                                                                     columnNumber: 31
                                                                                 }, this),
                                                                                 "Execute"
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 247,
+                                                                            lineNumber: 317,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 246,
+                                                                        lineNumber: 316,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, rule.id, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 231,
+                                                                lineNumber: 301,
                                                                 columnNumber: 25
                                                             }, this)),
-                                                        (!automationRules || automationRules.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                        automationRules.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                 colSpan: 7,
                                                                 className: "text-center text-muted-foreground py-8",
                                                                 children: "No automation rules created"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 262,
+                                                                lineNumber: 332,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                            lineNumber: 261,
+                                                            lineNumber: 331,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 229,
+                                                    lineNumber: 299,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 217,
+                                            lineNumber: 287,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 216,
+                                        lineNumber: 286,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                    lineNumber: 208,
+                                    lineNumber: 278,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 207,
+                                lineNumber: 277,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                        lineNumber: 131,
+                        lineNumber: 201,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -833,7 +851,7 @@ function AIAutomation() {
                                 children: "Content Moderation AI"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 276,
+                                lineNumber: 346,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -844,7 +862,7 @@ function AIAutomation() {
                                         className: "h-32"
                                     }, i, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 280,
+                                        lineNumber: 350,
                                         columnNumber: 43
                                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                     children: [
@@ -858,12 +876,12 @@ function AIAutomation() {
                                                         children: "Accuracy Rate"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 355,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 284,
+                                                    lineNumber: 354,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -871,23 +889,23 @@ function AIAutomation() {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-accuracy-rate",
                                                         children: [
-                                                            moderationStats?.accuracyRate || 0,
+                                                            moderationStats.accuracyRate,
                                                             "%"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 288,
+                                                        lineNumber: 358,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 287,
+                                                    lineNumber: 357,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 283,
+                                            lineNumber: 353,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -900,33 +918,33 @@ function AIAutomation() {
                                                         children: "False Positives"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 365,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 294,
+                                                    lineNumber: 364,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-false-positives",
-                                                        children: moderationStats?.falsePositives || 0
+                                                        children: moderationStats.falsePositives
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 298,
+                                                        lineNumber: 368,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 297,
+                                                    lineNumber: 367,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 293,
+                                            lineNumber: 363,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -939,33 +957,33 @@ function AIAutomation() {
                                                         children: "False Negatives"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 305,
+                                                        lineNumber: 375,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 304,
+                                                    lineNumber: 374,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-false-negatives",
-                                                        children: moderationStats?.falseNegatives || 0
+                                                        children: moderationStats.falseNegatives
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 308,
+                                                        lineNumber: 378,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 307,
+                                                    lineNumber: 377,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 303,
+                                            lineNumber: 373,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -978,12 +996,12 @@ function AIAutomation() {
                                                         children: "Time Saved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 315,
+                                                        lineNumber: 385,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 314,
+                                                    lineNumber: 384,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -991,30 +1009,30 @@ function AIAutomation() {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-time-saved",
                                                         children: [
-                                                            moderationStats?.timeSavedHours || 0,
+                                                            moderationStats.timeSavedHours,
                                                             "h"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 318,
+                                                        lineNumber: 388,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 317,
+                                                    lineNumber: 387,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 313,
+                                            lineNumber: 383,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 278,
+                                lineNumber: 348,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1027,12 +1045,12 @@ function AIAutomation() {
                                                     children: "Recent AI Decisions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 330,
+                                                    lineNumber: 400,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 329,
+                                                lineNumber: 399,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1044,12 +1062,12 @@ function AIAutomation() {
                                                             className: "h-12"
                                                         }, i, false, {
                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                            lineNumber: 335,
+                                                            lineNumber: 405,
                                                             columnNumber: 50
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 334,
+                                                    lineNumber: 404,
                                                     columnNumber: 19
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "overflow-x-auto",
@@ -1062,51 +1080,51 @@ function AIAutomation() {
                                                                             children: "Content"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 342,
+                                                                            lineNumber: 412,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                             children: "Decision"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 343,
+                                                                            lineNumber: 413,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                             children: "Confidence"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 344,
+                                                                            lineNumber: 414,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                             children: "Actions"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 345,
+                                                                            lineNumber: 415,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 341,
+                                                                    lineNumber: 411,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 340,
+                                                                lineNumber: 410,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                                 children: [
-                                                                    moderationDecisions?.map((decision)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                                    moderationDecisions.map((decision)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                             children: [
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                     className: "max-w-xs truncate",
                                                                                     children: decision.contentPreview
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 351,
+                                                                                    lineNumber: 421,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1115,12 +1133,12 @@ function AIAutomation() {
                                                                                         children: decision.decision
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 353,
+                                                                                        lineNumber: 423,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 352,
+                                                                                    lineNumber: 422,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1130,7 +1148,7 @@ function AIAutomation() {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 357,
+                                                                                    lineNumber: 427,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1142,61 +1160,61 @@ function AIAutomation() {
                                                                                         children: "Override"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                        lineNumber: 359,
+                                                                                        lineNumber: 429,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                    lineNumber: 358,
+                                                                                    lineNumber: 428,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, decision.id, true, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 350,
+                                                                            lineNumber: 420,
                                                                             columnNumber: 27
                                                                         }, this)),
-                                                                    (!moderationDecisions || moderationDecisions.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                                    moderationDecisions.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             colSpan: 4,
                                                                             className: "text-center text-muted-foreground py-8",
                                                                             children: "No recent decisions"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 372,
+                                                                            lineNumber: 442,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 371,
+                                                                        lineNumber: 441,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 348,
+                                                                lineNumber: 418,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 339,
+                                                        lineNumber: 409,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 338,
+                                                    lineNumber: 408,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 332,
+                                                lineNumber: 402,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 328,
+                                        lineNumber: 398,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1206,12 +1224,12 @@ function AIAutomation() {
                                                     children: "Sentiment Distribution"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 386,
+                                                    lineNumber: 456,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 385,
+                                                lineNumber: 455,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1219,9 +1237,9 @@ function AIAutomation() {
                                                     className: "h-64"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 390,
+                                                    lineNumber: 460,
                                                     columnNumber: 19
-                                                }, this) : sentimentData && sentimentData.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
+                                                }, this) : sentimentData.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$ResponsiveContainer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResponsiveContainer"], {
                                                     width: "100%",
                                                     height: 250,
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$chart$2f$PieChart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PieChart"], {
@@ -1239,63 +1257,63 @@ function AIAutomation() {
                                                                         fill: COLORS[index % COLORS.length]
                                                                     }, `cell-${index}`, false, {
                                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                        lineNumber: 405,
+                                                                        lineNumber: 475,
                                                                         columnNumber: 27
                                                                     }, this))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 394,
+                                                                lineNumber: 464,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {}, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 408,
+                                                                lineNumber: 478,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Legend$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Legend"], {}, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 409,
+                                                                lineNumber: 479,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 393,
+                                                        lineNumber: 463,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 392,
+                                                    lineNumber: 462,
                                                     columnNumber: 19
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "h-64 flex items-center justify-center text-muted-foreground",
                                                     children: "No data available"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 413,
+                                                    lineNumber: 483,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 388,
+                                                lineNumber: 458,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 384,
+                                        lineNumber: 454,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 327,
+                                lineNumber: 397,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                        lineNumber: 275,
+                        lineNumber: 345,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -1307,7 +1325,7 @@ function AIAutomation() {
                                 children: "Spam Detection"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 423,
+                                lineNumber: 493,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1318,7 +1336,7 @@ function AIAutomation() {
                                         className: "h-32"
                                     }, i, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 427,
+                                        lineNumber: 497,
                                         columnNumber: 43
                                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                     children: [
@@ -1332,12 +1350,12 @@ function AIAutomation() {
                                                         children: "Detection Accuracy"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 432,
+                                                        lineNumber: 502,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 431,
+                                                    lineNumber: 501,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1345,23 +1363,23 @@ function AIAutomation() {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-spam-accuracy",
                                                         children: [
-                                                            spamMetrics?.accuracy || 0,
+                                                            spamMetrics.accuracy,
                                                             "%"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 435,
+                                                        lineNumber: 505,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 434,
+                                                    lineNumber: 504,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 430,
+                                            lineNumber: 500,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1374,33 +1392,33 @@ function AIAutomation() {
                                                         children: "Spam Blocked"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 442,
+                                                        lineNumber: 512,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 441,
+                                                    lineNumber: 511,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-spam-blocked",
-                                                        children: spamMetrics?.blocked || 0
+                                                        children: spamMetrics.blocked
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 445,
+                                                        lineNumber: 515,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 444,
+                                                    lineNumber: 514,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 440,
+                                            lineNumber: 510,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1413,40 +1431,40 @@ function AIAutomation() {
                                                         children: "Currently Flagged"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 452,
+                                                        lineNumber: 522,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 451,
+                                                    lineNumber: 521,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-2xl font-bold",
                                                         "data-testid": "text-spam-flagged",
-                                                        children: spamMetrics?.flagged || 0
+                                                        children: spamMetrics.flagged
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 455,
+                                                        lineNumber: 525,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 454,
+                                                    lineNumber: 524,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 450,
+                                            lineNumber: 520,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 425,
+                                lineNumber: 495,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1456,12 +1474,12 @@ function AIAutomation() {
                                             children: "Adjust Sensitivity"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 466,
+                                            lineNumber: 536,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 465,
+                                        lineNumber: 535,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1478,7 +1496,7 @@ function AIAutomation() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 470,
+                                                        lineNumber: 540,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$slider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Slider"], {
@@ -1489,7 +1507,7 @@ function AIAutomation() {
                                                         "data-testid": "slider-sensitivity"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 471,
+                                                        lineNumber: 541,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1497,13 +1515,13 @@ function AIAutomation() {
                                                         children: "Higher values will flag more content as potential spam"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 478,
+                                                        lineNumber: 548,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 469,
+                                                lineNumber: 539,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1513,19 +1531,19 @@ function AIAutomation() {
                                                 children: "Update Sensitivity"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 482,
+                                                lineNumber: 552,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 468,
+                                        lineNumber: 538,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 464,
+                                lineNumber: 534,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1535,12 +1553,12 @@ function AIAutomation() {
                                             children: "Flagged Content"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 494,
+                                            lineNumber: 564,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 493,
+                                        lineNumber: 563,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1552,12 +1570,12 @@ function AIAutomation() {
                                                     className: "h-12"
                                                 }, i, false, {
                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                    lineNumber: 499,
+                                                    lineNumber: 569,
                                                     columnNumber: 48
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 498,
+                                            lineNumber: 568,
                                             columnNumber: 17
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "overflow-x-auto",
@@ -1570,58 +1588,58 @@ function AIAutomation() {
                                                                     children: "Content"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 506,
+                                                                    lineNumber: 576,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Spam Score"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 507,
+                                                                    lineNumber: 577,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Author"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 508,
+                                                                    lineNumber: 578,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Flagged At"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 509,
+                                                                    lineNumber: 579,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Actions"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 510,
+                                                                    lineNumber: 580,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                            lineNumber: 505,
+                                                            lineNumber: 575,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 504,
+                                                        lineNumber: 574,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                         children: [
-                                                            flaggedContent?.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                            flaggedContent.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                     children: [
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             className: "max-w-xs truncate",
                                                                             children: item.contentPreview
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 516,
+                                                                            lineNumber: 586,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1633,19 +1651,19 @@ function AIAutomation() {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                lineNumber: 518,
+                                                                                lineNumber: 588,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 517,
+                                                                            lineNumber: 587,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: item.authorUsername
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 522,
+                                                                            lineNumber: 592,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1654,94 +1672,94 @@ function AIAutomation() {
                                                                             })
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 523,
+                                                                            lineNumber: 593,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                                                 size: "sm",
                                                                                 variant: "outline",
-                                                                                "data-testid": `button-review-${item.id}`,
-                                                                                children: "Review"
+                                                                                "data-testid": `button-approve-${item.id}`,
+                                                                                children: "Approve"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                                lineNumber: 525,
+                                                                                lineNumber: 595,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                            lineNumber: 524,
+                                                                            lineNumber: 594,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, item.id, true, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 515,
+                                                                    lineNumber: 585,
                                                                     columnNumber: 25
                                                                 }, this)),
-                                                            (!flaggedContent || flaggedContent.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                            flaggedContent.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     colSpan: 5,
                                                                     className: "text-center text-muted-foreground py-8",
                                                                     children: "No flagged content"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                    lineNumber: 537,
+                                                                    lineNumber: 607,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                                lineNumber: 536,
+                                                                lineNumber: 606,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                        lineNumber: 513,
+                                                        lineNumber: 583,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                                lineNumber: 503,
+                                                lineNumber: 573,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                            lineNumber: 502,
+                                            lineNumber: 572,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                        lineNumber: 496,
+                                        lineNumber: 566,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                                lineNumber: 492,
+                                lineNumber: 562,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                        lineNumber: 422,
+                        lineNumber: 492,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-                lineNumber: 124,
+                lineNumber: 194,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/sections/AIAutomation.tsx",
-        lineNumber: 121,
+        lineNumber: 191,
         columnNumber: 5
     }, this);
 }
-_s(AIAutomation, "QG3+U6pVyDD0xwvrLfhu9V2xLYg=", false, function() {
+_s(AIAutomation, "Ina4iWQ3tx1suFyO/PqpAddNKO4=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"],

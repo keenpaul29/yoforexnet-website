@@ -62,14 +62,15 @@ function ContentStudio() {
     const [contentId, setContentId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [isRestoreOpen, setIsRestoreOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [selectedRevision, setSelectedRevision] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const { data: mediaFiles, isLoading: mediaLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const { data: mediaFilesRaw, isLoading: mediaLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/content-studio/media",
             searchQuery,
             fileTypeFilter
         ]
     });
-    const { data: revisions, isLoading: revisionsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+    const mediaFiles = Array.isArray(mediaFilesRaw) ? mediaFilesRaw : [];
+    const { data: revisionsRaw, isLoading: revisionsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
             "/api/admin/content-studio/revisions",
             contentType,
@@ -77,6 +78,7 @@ function ContentStudio() {
         ],
         enabled: !!contentType && !!contentId
     });
+    const revisions = Array.isArray(revisionsRaw) ? revisionsRaw : [];
     const uploadMediaMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "ContentStudio.useMutation[uploadMediaMutation]": (data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$queryClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])("/api/admin/content-studio/media/upload", "POST", data)
@@ -161,7 +163,7 @@ function ContentStudio() {
         const formData = new FormData(e.currentTarget);
         const tags = formData.get("tags").split(",").map((t)=>t.trim()).filter(Boolean);
         updateMediaMutation.mutate({
-            id: selectedMedia.id,
+            id: selectedMedia?.id,
             altText: formData.get("altText"),
             tags
         });
@@ -171,21 +173,21 @@ function ContentStudio() {
             className: "w-4 h-4"
         }, void 0, false, {
             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-            lineNumber: 99,
+            lineNumber: 121,
             columnNumber: 43
         }, this);
         if (type.startsWith("video/")) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$video$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Video$3e$__["Video"], {
             className: "w-4 h-4"
         }, void 0, false, {
             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-            lineNumber: 100,
+            lineNumber: 122,
             columnNumber: 43
         }, this);
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__["FileText"], {
             className: "w-4 h-4"
         }, void 0, false, {
             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-            lineNumber: 101,
+            lineNumber: 123,
             columnNumber: 12
         }, this);
     };
@@ -197,7 +199,7 @@ function ContentStudio() {
                 children: "Content Studio"
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                lineNumber: 106,
+                lineNumber: 128,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -212,7 +214,7 @@ function ContentStudio() {
                                 children: "Media Library"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 110,
+                                lineNumber: 132,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -221,13 +223,13 @@ function ContentStudio() {
                                 children: "Content Revisions"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 111,
+                                lineNumber: 133,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                        lineNumber: 109,
+                        lineNumber: 131,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -242,7 +244,7 @@ function ContentStudio() {
                                         children: "Media Library"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 116,
+                                        lineNumber: 138,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -256,7 +258,7 @@ function ContentStudio() {
                                                 "data-testid": "input-search-media"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 118,
+                                                lineNumber: 140,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -268,12 +270,12 @@ function ContentStudio() {
                                                         "data-testid": "select-file-type",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 127,
+                                                            lineNumber: 149,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 126,
+                                                        lineNumber: 148,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -283,7 +285,7 @@ function ContentStudio() {
                                                                 children: "All Types"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 130,
+                                                                lineNumber: 152,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -291,7 +293,7 @@ function ContentStudio() {
                                                                 children: "Images"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 131,
+                                                                lineNumber: 153,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -299,7 +301,7 @@ function ContentStudio() {
                                                                 children: "Documents"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 132,
+                                                                lineNumber: 154,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -307,19 +309,19 @@ function ContentStudio() {
                                                                 children: "Videos"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 133,
+                                                                lineNumber: 155,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 129,
+                                                        lineNumber: 151,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 125,
+                                                lineNumber: 147,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -332,7 +334,7 @@ function ContentStudio() {
                                                             className: "w-4 h-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 138,
+                                                            lineNumber: 160,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Upload File",
@@ -343,30 +345,30 @@ function ContentStudio() {
                                                             accept: "image/*,video/*,.pdf,.doc,.docx"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 140,
+                                                            lineNumber: 162,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 137,
+                                                    lineNumber: 159,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 136,
+                                                lineNumber: 158,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 117,
+                                        lineNumber: 139,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 115,
+                                lineNumber: 137,
                                 columnNumber: 11
                             }, this),
                             mediaLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -377,17 +379,17 @@ function ContentStudio() {
                                         className: "h-64"
                                     }, i, false, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 175,
                                         columnNumber: 44
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 152,
+                                lineNumber: 174,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4",
                                 children: [
-                                    mediaFiles?.map((media)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                                    mediaFiles.map((media)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                                             "data-testid": `media-card-${media.id}`,
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
@@ -400,7 +402,7 @@ function ContentStudio() {
                                                             className: "w-full h-full object-cover"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 162,
+                                                            lineNumber: 184,
                                                             columnNumber: 25
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "flex flex-col items-center gap-2 text-muted-foreground",
@@ -411,23 +413,23 @@ function ContentStudio() {
                                                                     children: media.type
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 170,
+                                                                    lineNumber: 192,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 168,
+                                                            lineNumber: 190,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 160,
+                                                        lineNumber: 182,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 159,
+                                                    lineNumber: 181,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -439,7 +441,7 @@ function ContentStudio() {
                                                             children: media.filename
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 176,
+                                                            lineNumber: 198,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -450,12 +452,12 @@ function ContentStudio() {
                                                                     children: tag
                                                                 }, index, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 181,
+                                                                    lineNumber: 203,
                                                                     columnNumber: 25
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 179,
+                                                            lineNumber: 201,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -467,13 +469,13 @@ function ContentStudio() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 186,
+                                                            lineNumber: 208,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 175,
+                                                    lineNumber: 197,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardFooter"], {
@@ -490,7 +492,7 @@ function ContentStudio() {
                                                             children: "Edit"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 191,
+                                                            lineNumber: 213,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -502,38 +504,38 @@ function ContentStudio() {
                                                                 className: "w-3 h-3"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 208,
+                                                                lineNumber: 230,
                                                                 columnNumber: 23
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 202,
+                                                            lineNumber: 224,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 190,
+                                                    lineNumber: 212,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, media.id, true, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 158,
+                                            lineNumber: 180,
                                             columnNumber: 17
                                         }, this)),
-                                    (!mediaFiles || mediaFiles.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    mediaFiles.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "col-span-full text-center py-12 text-muted-foreground",
                                         children: "No media files found"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 214,
+                                        lineNumber: 236,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 156,
+                                lineNumber: 178,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -546,12 +548,12 @@ function ContentStudio() {
                                                 children: "Edit Media"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 224,
+                                                lineNumber: 246,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 223,
+                                            lineNumber: 245,
                                             columnNumber: 15
                                         }, this),
                                         selectedMedia && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -566,7 +568,7 @@ function ContentStudio() {
                                                             children: "Alt Text"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 229,
+                                                            lineNumber: 251,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -576,13 +578,13 @@ function ContentStudio() {
                                                             "data-testid": "input-alt-text"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 230,
+                                                            lineNumber: 252,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 228,
+                                                    lineNumber: 250,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -593,7 +595,7 @@ function ContentStudio() {
                                                             children: "Tags (comma-separated)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 238,
+                                                            lineNumber: 260,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -604,13 +606,13 @@ function ContentStudio() {
                                                             "data-testid": "input-tags"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 239,
+                                                            lineNumber: 261,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 237,
+                                                    lineNumber: 259,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -621,29 +623,29 @@ function ContentStudio() {
                                                         children: updateMediaMutation.isPending ? "Saving..." : "Save Changes"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 248,
+                                                        lineNumber: 270,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 247,
+                                                    lineNumber: 269,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 227,
+                                            lineNumber: 249,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                    lineNumber: 222,
+                                    lineNumber: 244,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 221,
+                                lineNumber: 243,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -657,20 +659,20 @@ function ContentStudio() {
                                                     children: "Delete Media"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 260,
+                                                    lineNumber: 282,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
                                                     children: "Are you sure you want to delete this media file? This action cannot be undone."
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 261,
+                                                    lineNumber: 283,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 259,
+                                            lineNumber: 281,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -680,7 +682,7 @@ function ContentStudio() {
                                                     children: "Cancel"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 266,
+                                                    lineNumber: 288,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -689,30 +691,30 @@ function ContentStudio() {
                                                     children: "Delete"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 267,
+                                                    lineNumber: 289,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 265,
+                                            lineNumber: 287,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                    lineNumber: 258,
+                                    lineNumber: 280,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 257,
+                                lineNumber: 279,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                        lineNumber: 114,
+                        lineNumber: 136,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -724,7 +726,7 @@ function ContentStudio() {
                                 children: "Content Revisions"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 279,
+                                lineNumber: 301,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -741,7 +743,7 @@ function ContentStudio() {
                                                         children: "Content Type"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 307,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -754,12 +756,12 @@ function ContentStudio() {
                                                                     placeholder: "Select type"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 288,
+                                                                    lineNumber: 310,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 287,
+                                                                lineNumber: 309,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -769,7 +771,7 @@ function ContentStudio() {
                                                                         children: "Thread"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                        lineNumber: 291,
+                                                                        lineNumber: 313,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -777,7 +779,7 @@ function ContentStudio() {
                                                                         children: "Comment"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                        lineNumber: 292,
+                                                                        lineNumber: 314,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -785,7 +787,7 @@ function ContentStudio() {
                                                                         children: "Content"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                        lineNumber: 293,
+                                                                        lineNumber: 315,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -793,25 +795,25 @@ function ContentStudio() {
                                                                         children: "User Profile"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                        lineNumber: 294,
+                                                                        lineNumber: 316,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 290,
+                                                                lineNumber: 312,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 286,
+                                                        lineNumber: 308,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 284,
+                                                lineNumber: 306,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -822,7 +824,7 @@ function ContentStudio() {
                                                         children: "Content ID"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 299,
+                                                        lineNumber: 321,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -833,29 +835,29 @@ function ContentStudio() {
                                                         "data-testid": "input-content-id"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 300,
+                                                        lineNumber: 322,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 298,
+                                                lineNumber: 320,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 283,
+                                        lineNumber: 305,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                    lineNumber: 282,
+                                    lineNumber: 304,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 281,
+                                lineNumber: 303,
                                 columnNumber: 11
                             }, this),
                             contentType && contentId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -865,12 +867,12 @@ function ContentStudio() {
                                             children: "Revision History"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 315,
+                                            lineNumber: 337,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 314,
+                                        lineNumber: 336,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -882,12 +884,12 @@ function ContentStudio() {
                                                     className: "h-12"
                                                 }, i, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 320,
+                                                    lineNumber: 342,
                                                     columnNumber: 50
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 319,
+                                            lineNumber: 341,
                                             columnNumber: 19
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "overflow-x-auto",
@@ -900,51 +902,51 @@ function ContentStudio() {
                                                                     children: "Revision #"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 327,
+                                                                    lineNumber: 349,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Changed By"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 328,
+                                                                    lineNumber: 350,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Changed Fields"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 329,
+                                                                    lineNumber: 351,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Timestamp"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 330,
+                                                                    lineNumber: 352,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                     children: "Actions"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 331,
+                                                                    lineNumber: 353,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                            lineNumber: 326,
+                                                            lineNumber: 348,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 325,
+                                                        lineNumber: 347,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
                                                         children: [
-                                                            revisions?.map((revision)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                            revisions.map((revision)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                     "data-testid": `revision-${revision.id}`,
                                                                     children: [
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -956,19 +958,19 @@ function ContentStudio() {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                lineNumber: 338,
+                                                                                lineNumber: 360,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                            lineNumber: 337,
+                                                                            lineNumber: 359,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                             children: revision.changedBy
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                            lineNumber: 340,
+                                                                            lineNumber: 362,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -980,17 +982,17 @@ function ContentStudio() {
                                                                                         children: field
                                                                                     }, index, false, {
                                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                        lineNumber: 344,
+                                                                                        lineNumber: 366,
                                                                                         columnNumber: 35
                                                                                     }, this))
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                lineNumber: 342,
+                                                                                lineNumber: 364,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                            lineNumber: 341,
+                                                                            lineNumber: 363,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -999,7 +1001,7 @@ function ContentStudio() {
                                                                             })
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                            lineNumber: 350,
+                                                                            lineNumber: 372,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1015,14 +1017,14 @@ function ContentStudio() {
                                                                                                 className: "w-3 h-3 mr-1"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                                lineNumber: 360,
+                                                                                                lineNumber: 382,
                                                                                                 columnNumber: 35
                                                                                             }, this),
                                                                                             "View Diff"
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                        lineNumber: 355,
+                                                                                        lineNumber: 377,
                                                                                         columnNumber: 33
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1036,67 +1038,67 @@ function ContentStudio() {
                                                                                         children: "Restore"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                        lineNumber: 363,
+                                                                                        lineNumber: 385,
                                                                                         columnNumber: 33
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                                lineNumber: 354,
+                                                                                lineNumber: 376,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                            lineNumber: 353,
+                                                                            lineNumber: 375,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, revision.id, true, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 336,
+                                                                    lineNumber: 358,
                                                                     columnNumber: 27
                                                                 }, this)),
-                                                            (!revisions || revisions.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
+                                                            revisions.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     colSpan: 5,
                                                                     className: "text-center text-muted-foreground py-8",
                                                                     children: "No revisions found"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                    lineNumber: 380,
+                                                                    lineNumber: 402,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                                lineNumber: 379,
+                                                                lineNumber: 401,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                        lineNumber: 334,
+                                                        lineNumber: 356,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                lineNumber: 324,
+                                                lineNumber: 346,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 323,
+                                            lineNumber: 345,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                        lineNumber: 317,
+                                        lineNumber: 339,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 313,
+                                lineNumber: 335,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -1110,7 +1112,7 @@ function ContentStudio() {
                                                     children: "Restore Revision"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 396,
+                                                    lineNumber: 418,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
@@ -1121,13 +1123,13 @@ function ContentStudio() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 397,
+                                                    lineNumber: 419,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 395,
+                                            lineNumber: 417,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -1137,7 +1139,7 @@ function ContentStudio() {
                                                     children: "Cancel"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 402,
+                                                    lineNumber: 424,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -1146,46 +1148,46 @@ function ContentStudio() {
                                                     children: "Restore"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                                    lineNumber: 403,
+                                                    lineNumber: 425,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                            lineNumber: 401,
+                                            lineNumber: 423,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                    lineNumber: 394,
+                                    lineNumber: 416,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                                lineNumber: 393,
+                                lineNumber: 415,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                        lineNumber: 278,
+                        lineNumber: 300,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-                lineNumber: 108,
+                lineNumber: 130,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/sections/ContentStudio.tsx",
-        lineNumber: 105,
+        lineNumber: 127,
         columnNumber: 5
     }, this);
 }
-_s(ContentStudio, "h357Fz5lVTxWXQOsnulHqB7Yykk=", false, function() {
+_s(ContentStudio, "lNBj7faEtRGfR7PkKJ+A2n8lDqQ=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"],

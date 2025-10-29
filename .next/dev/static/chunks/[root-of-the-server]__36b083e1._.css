@@ -1940,6 +1940,10 @@ body {
   height: 1px;
 }
 
+.h-\[400px\] {
+  height: 400px;
+}
+
 .h-\[500px\] {
   height: 500px;
 }
@@ -1970,10 +1974,6 @@ body {
 
 .h-svh {
   height: 100svh;
-}
-
-.h-\[400px\] {
-  height: 400px;
 }
 
 .max-h-80 {
@@ -2548,12 +2548,12 @@ body {
   list-style-position: inside;
 }
 
-.list-none {
-  list-style-type: none;
-}
-
 .list-disc {
   list-style-type: disc;
+}
+
+.list-none {
+  list-style-type: none;
 }
 
 .grid-cols-1 {
