@@ -316,6 +316,22 @@ export const brokers = pgTable("brokers", {
   scamReportCount: integer("scam_report_count").notNull().default(0),
   isVerified: boolean("is_verified").notNull().default(false),
   status: text("status").notNull().$type<"pending" | "approved" | "rejected">().default("pending"),
+  
+  // Admin Moderation Fields
+  verifiedBy: varchar("verified_by").references(() => users.id),
+  verifiedAt: timestamp("verified_at"),
+  rejectedBy: varchar("rejected_by").references(() => users.id),
+  rejectedAt: timestamp("rejected_at"),
+  rejectionReason: text("rejection_reason"),
+  scamWarning: boolean("scam_warning").notNull().default(false),
+  scamWarningReason: text("scam_warning_reason"),
+  deletedAt: timestamp("deleted_at"),
+  
+  // Missing Trading Info (from specification)
+  country: text("country"),
+  minDeposit: text("min_deposit"),
+  leverage: text("leverage"),
+  
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
@@ -323,6 +339,10 @@ export const brokers = pgTable("brokers", {
   statusIdx: index("idx_brokers_status").on(table.status),
   regulationIdx: index("idx_brokers_regulation").on(table.regulation),
   platformIdx: index("idx_brokers_platform").on(table.platform),
+  verifiedIdx: index("idx_brokers_verified").on(table.isVerified),
+  scamWarningIdx: index("idx_brokers_scam_warning").on(table.scamWarning),
+  deletedAtIdx: index("idx_brokers_deleted_at").on(table.deletedAt),
+  countryIdx: index("idx_brokers_country").on(table.country),
 }));
 
 export const brokerReviews = pgTable("broker_reviews", {
@@ -334,10 +354,22 @@ export const brokerReviews = pgTable("broker_reviews", {
   reviewBody: text("review_body").notNull(),
   isScamReport: boolean("is_scam_report").notNull().default(false),
   status: text("status").notNull().$type<"pending" | "approved" | "rejected">().default("pending"),
+  
+  // Admin Moderation Fields
+  approvedBy: varchar("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at"),
+  rejectedBy: varchar("rejected_by").references(() => users.id),
+  rejectedAt: timestamp("rejected_at"),
+  rejectionReason: text("rejection_reason"),
+  
+  // Scam Report Severity (only for isScamReport=true)
+  scamSeverity: text("scam_severity").$type<"low" | "medium" | "high" | "critical">(),
+  
   datePosted: timestamp("date_posted").notNull().defaultNow(),
 }, (table) => ({
   brokerIdIdx: index("idx_broker_reviews_broker_id").on(table.brokerId),
   uniqueBrokerUserReview: uniqueIndex("idx_broker_reviews_unique_broker_user").on(table.brokerId, table.userId),
+  severityIdx: index("idx_broker_reviews_severity").on(table.scamSeverity),
 }));
 
 export const userFollows = pgTable("user_follows", {
