@@ -116,6 +116,11 @@ function AdminUsers() {
             selectedUser?.id,
             "activity"
         ],
+        queryFn: {
+            "AdminUsers.useQuery": ()=>fetch(`/api/admin/users/${selectedUser?.id}/activity`).then({
+                    "AdminUsers.useQuery": (r)=>r.json()
+                }["AdminUsers.useQuery"])
+        }["AdminUsers.useQuery"],
         enabled: !!selectedUser
     });
     const userActivity = userActivityRaw || {
@@ -132,6 +137,11 @@ function AdminUsers() {
             selectedUser?.id,
             "posts"
         ],
+        queryFn: {
+            "AdminUsers.useQuery": ()=>fetch(`/api/admin/users/${selectedUser?.id}/posts`).then({
+                    "AdminUsers.useQuery": (r)=>r.json()
+                }["AdminUsers.useQuery"])
+        }["AdminUsers.useQuery"],
         enabled: !!selectedUser
     });
     const userPosts = Array.isArray(userPostsRaw) ? userPostsRaw : [];
@@ -141,6 +151,11 @@ function AdminUsers() {
             selectedUser?.id,
             "coin-history"
         ],
+        queryFn: {
+            "AdminUsers.useQuery": ()=>fetch(`/api/admin/users/${selectedUser?.id}/coin-history`).then({
+                    "AdminUsers.useQuery": (r)=>r.json()
+                }["AdminUsers.useQuery"])
+        }["AdminUsers.useQuery"],
         enabled: !!selectedUser
     });
     const coinHistory = Array.isArray(coinHistoryRaw) ? coinHistoryRaw : [];
@@ -354,20 +369,20 @@ function AdminUsers() {
                     className: "h-10 w-64"
                 }, void 0, false, {
                     fileName: "[project]/app/admin/sections/Users.tsx",
-                    lineNumber: 261,
+                    lineNumber: 264,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
                     className: "h-96"
                 }, void 0, false, {
                     fileName: "[project]/app/admin/sections/Users.tsx",
-                    lineNumber: 262,
+                    lineNumber: 265,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/admin/sections/Users.tsx",
-            lineNumber: 260,
+            lineNumber: 263,
             columnNumber: 7
         }, this);
     }
@@ -382,7 +397,7 @@ function AdminUsers() {
                         children: "User Management"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 270,
+                        lineNumber: 273,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -394,20 +409,20 @@ function AdminUsers() {
                                 className: "h-4 w-4 mr-2"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 276,
+                                lineNumber: 279,
                                 columnNumber: 11
                             }, this),
                             "Export CSV"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 271,
+                        lineNumber: 274,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 269,
+                lineNumber: 272,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -425,20 +440,20 @@ function AdminUsers() {
                                         children: "Total Users"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 285,
+                                        lineNumber: 288,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"], {
                                         className: "h-4 w-4 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 286,
+                                        lineNumber: 289,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 284,
+                                lineNumber: 287,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -448,18 +463,18 @@ function AdminUsers() {
                                     children: stats.total
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 289,
+                                    lineNumber: 292,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 288,
+                                lineNumber: 291,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 283,
+                        lineNumber: 286,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -473,20 +488,20 @@ function AdminUsers() {
                                         children: "Avg Reputation"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 300,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"], {
                                         className: "h-4 w-4 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 298,
+                                        lineNumber: 301,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 296,
+                                lineNumber: 299,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -496,18 +511,18 @@ function AdminUsers() {
                                     children: stats.avgReputation.toFixed(0)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 301,
+                                    lineNumber: 304,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 300,
+                                lineNumber: 303,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 295,
+                        lineNumber: 298,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -521,20 +536,20 @@ function AdminUsers() {
                                         children: "Avg Coins"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 309,
+                                        lineNumber: 312,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__["Coins"], {
                                         className: "h-4 w-4 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 310,
+                                        lineNumber: 313,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 308,
+                                lineNumber: 311,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -544,18 +559,18 @@ function AdminUsers() {
                                     children: stats.avgCoins.toFixed(0)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 313,
+                                    lineNumber: 316,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 312,
+                                lineNumber: 315,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 307,
+                        lineNumber: 310,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -569,20 +584,20 @@ function AdminUsers() {
                                         children: "Banned/Suspended"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 321,
+                                        lineNumber: 324,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$ban$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Ban$3e$__["Ban"], {
                                         className: "h-4 w-4 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 322,
+                                        lineNumber: 325,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 320,
+                                lineNumber: 323,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -592,24 +607,24 @@ function AdminUsers() {
                                     children: stats.bannedCount
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 325,
+                                    lineNumber: 328,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 324,
+                                lineNumber: 327,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 319,
+                        lineNumber: 322,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 282,
+                lineNumber: 285,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -619,12 +634,12 @@ function AdminUsers() {
                             children: "Search & Filters"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 335,
+                            lineNumber: 338,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 334,
+                        lineNumber: 337,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -641,7 +656,7 @@ function AdminUsers() {
                                                     className: "absolute left-3 top-3 h-4 w-4 text-muted-foreground"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 341,
+                                                    lineNumber: 344,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -652,13 +667,13 @@ function AdminUsers() {
                                                     "data-testid": "input-user-search"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 342,
+                                                    lineNumber: 345,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 340,
+                                            lineNumber: 343,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -672,12 +687,12 @@ function AdminUsers() {
                                                         placeholder: "Filter by role"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 352,
+                                                        lineNumber: 355,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 351,
+                                                    lineNumber: 354,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -687,7 +702,7 @@ function AdminUsers() {
                                                             children: "All Roles"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 355,
+                                                            lineNumber: 358,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -695,7 +710,7 @@ function AdminUsers() {
                                                             children: "Member"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 356,
+                                                            lineNumber: 359,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -703,7 +718,7 @@ function AdminUsers() {
                                                             children: "Moderator"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 357,
+                                                            lineNumber: 360,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -711,19 +726,19 @@ function AdminUsers() {
                                                             children: "Admin"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 358,
+                                                            lineNumber: 361,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 354,
+                                                    lineNumber: 357,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 350,
+                                            lineNumber: 353,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -737,12 +752,12 @@ function AdminUsers() {
                                                         placeholder: "Filter by status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 363,
+                                                        lineNumber: 366,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 362,
+                                                    lineNumber: 365,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -752,7 +767,7 @@ function AdminUsers() {
                                                             children: "All Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 366,
+                                                            lineNumber: 369,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -760,7 +775,7 @@ function AdminUsers() {
                                                             children: "Active"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 367,
+                                                            lineNumber: 370,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -768,7 +783,7 @@ function AdminUsers() {
                                                             children: "Suspended"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 368,
+                                                            lineNumber: 371,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -776,25 +791,25 @@ function AdminUsers() {
                                                             children: "Banned"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 369,
+                                                            lineNumber: 372,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 365,
+                                                    lineNumber: 368,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 361,
+                                            lineNumber: 364,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 339,
+                                    lineNumber: 342,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -811,12 +826,12 @@ function AdminUsers() {
                                                         placeholder: "Sort by"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 376,
+                                                        lineNumber: 379,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 375,
+                                                    lineNumber: 378,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -826,7 +841,7 @@ function AdminUsers() {
                                                             children: "Username"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 379,
+                                                            lineNumber: 382,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -834,7 +849,7 @@ function AdminUsers() {
                                                             children: "Email"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 380,
+                                                            lineNumber: 383,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -842,7 +857,7 @@ function AdminUsers() {
                                                             children: "Coins"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 381,
+                                                            lineNumber: 384,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -850,7 +865,7 @@ function AdminUsers() {
                                                             children: "Reputation"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 382,
+                                                            lineNumber: 385,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -858,7 +873,7 @@ function AdminUsers() {
                                                             children: "Created At"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 383,
+                                                            lineNumber: 386,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -866,19 +881,19 @@ function AdminUsers() {
                                                             children: "Last Active"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 384,
+                                                            lineNumber: 387,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 378,
+                                                    lineNumber: 381,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 374,
+                                            lineNumber: 377,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -892,12 +907,12 @@ function AdminUsers() {
                                                         placeholder: "Sort order"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 389,
+                                                        lineNumber: 392,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 388,
+                                                    lineNumber: 391,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -907,7 +922,7 @@ function AdminUsers() {
                                                             children: "Ascending"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 392,
+                                                            lineNumber: 395,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -915,42 +930,42 @@ function AdminUsers() {
                                                             children: "Descending"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 393,
+                                                            lineNumber: 396,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 391,
+                                                    lineNumber: 394,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 387,
+                                            lineNumber: 390,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 373,
+                                    lineNumber: 376,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 338,
+                            lineNumber: 341,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 337,
+                        lineNumber: 340,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 333,
+                lineNumber: 336,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -964,12 +979,12 @@ function AdminUsers() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 404,
+                            lineNumber: 407,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 403,
+                        lineNumber: 406,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -985,60 +1000,60 @@ function AdminUsers() {
                                                         children: "User"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 411,
+                                                        lineNumber: 414,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Email"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 412,
+                                                        lineNumber: 415,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Role"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 413,
+                                                        lineNumber: 416,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 414,
+                                                        lineNumber: 417,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Coins"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 415,
+                                                        lineNumber: 418,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Joined"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 416,
+                                                        lineNumber: 419,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Actions"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 417,
+                                                        lineNumber: 420,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 410,
+                                                lineNumber: 413,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 409,
+                                            lineNumber: 412,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -1050,34 +1065,20 @@ function AdminUsers() {
                                                             children: user.username
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 424,
+                                                            lineNumber: 427,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                             children: user.email
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 427,
+                                                            lineNumber: 430,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                 variant: "outline",
                                                                 children: user.role
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 429,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 428,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
-                                                                variant: user.status === 'active' ? 'default' : 'destructive',
-                                                                children: user.status
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
                                                                 lineNumber: 432,
@@ -1089,11 +1090,25 @@ function AdminUsers() {
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                                variant: user.status === 'active' ? 'default' : 'destructive',
+                                                                children: user.status
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/admin/sections/Users.tsx",
+                                                                lineNumber: 435,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/admin/sections/Users.tsx",
+                                                            lineNumber: 434,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                             "data-testid": `user-coins-${user.id}`,
                                                             children: user.coinBalance
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 436,
+                                                            lineNumber: 439,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1102,7 +1117,7 @@ function AdminUsers() {
                                                             })
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 439,
+                                                            lineNumber: 442,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1119,14 +1134,14 @@ function AdminUsers() {
                                                                                 className: "h-4 w-4 mr-1"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                                lineNumber: 450,
+                                                                                lineNumber: 453,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             "View"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                        lineNumber: 444,
+                                                                        lineNumber: 447,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     user.status === 'active' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1142,14 +1157,14 @@ function AdminUsers() {
                                                                                 className: "h-4 w-4 mr-1"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                                lineNumber: 460,
+                                                                                lineNumber: 463,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             "Ban"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                        lineNumber: 454,
+                                                                        lineNumber: 457,
                                                                         columnNumber: 29
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                                         size: "sm",
@@ -1161,31 +1176,31 @@ function AdminUsers() {
                                                                                 className: "h-4 w-4 mr-1"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                                lineNumber: 470,
+                                                                                lineNumber: 473,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             "Activate"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                        lineNumber: 464,
+                                                                        lineNumber: 467,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 443,
+                                                                lineNumber: 446,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 442,
+                                                            lineNumber: 445,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, user.id, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 423,
+                                                    lineNumber: 426,
                                                     columnNumber: 21
                                                 }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableRow"], {
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -1194,28 +1209,28 @@ function AdminUsers() {
                                                     children: "No users found"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 480,
+                                                    lineNumber: 483,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 479,
+                                                lineNumber: 482,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 420,
+                                            lineNumber: 423,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 408,
+                                    lineNumber: 411,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 407,
+                                lineNumber: 410,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1229,7 +1244,7 @@ function AdminUsers() {
                                                 children: "Items per page:"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 492,
+                                                lineNumber: 495,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -1241,12 +1256,12 @@ function AdminUsers() {
                                                         "data-testid": "select-items-per-page",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 495,
+                                                            lineNumber: 498,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 494,
+                                                        lineNumber: 497,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1256,7 +1271,7 @@ function AdminUsers() {
                                                                 children: "10"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 498,
+                                                                lineNumber: 501,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1264,7 +1279,7 @@ function AdminUsers() {
                                                                 children: "25"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 499,
+                                                                lineNumber: 502,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1272,7 +1287,7 @@ function AdminUsers() {
                                                                 children: "50"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 500,
+                                                                lineNumber: 503,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1280,25 +1295,25 @@ function AdminUsers() {
                                                                 children: "100"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 501,
+                                                                lineNumber: 504,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 497,
+                                                        lineNumber: 500,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 493,
+                                                lineNumber: 496,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 491,
+                                        lineNumber: 494,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1315,14 +1330,14 @@ function AdminUsers() {
                                                         className: "h-4 w-4 mr-1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 513,
+                                                        lineNumber: 516,
                                                         columnNumber: 17
                                                     }, this),
                                                     "Previous"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 506,
+                                                lineNumber: 509,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1336,7 +1351,7 @@ function AdminUsers() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 516,
+                                                lineNumber: 519,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1351,37 +1366,37 @@ function AdminUsers() {
                                                         className: "h-4 w-4 ml-1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 527,
+                                                        lineNumber: 530,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 519,
+                                                lineNumber: 522,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 505,
+                                        lineNumber: 508,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                lineNumber: 490,
+                                lineNumber: 493,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/sections/Users.tsx",
-                        lineNumber: 406,
+                        lineNumber: 409,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 402,
+                lineNumber: 405,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -1400,20 +1415,20 @@ function AdminUsers() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 538,
+                                    lineNumber: 541,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                     children: "Comprehensive user information and management"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 539,
+                                    lineNumber: 542,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 537,
+                            lineNumber: 540,
                             columnNumber: 11
                         }, this),
                         selectedUser && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -1429,7 +1444,7 @@ function AdminUsers() {
                                             children: "Profile"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 546,
+                                            lineNumber: 549,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -1438,7 +1453,7 @@ function AdminUsers() {
                                             children: "Activity"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 547,
+                                            lineNumber: 550,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -1447,7 +1462,7 @@ function AdminUsers() {
                                             children: "Posts"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 548,
+                                            lineNumber: 551,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -1456,13 +1471,13 @@ function AdminUsers() {
                                             children: "Coin History"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 549,
+                                            lineNumber: 552,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 545,
+                                    lineNumber: 548,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -1479,7 +1494,7 @@ function AdminUsers() {
                                                             children: "Username"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 555,
+                                                            lineNumber: 558,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1487,13 +1502,13 @@ function AdminUsers() {
                                                             children: selectedUser.username
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 556,
+                                                            lineNumber: 559,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 554,
+                                                    lineNumber: 557,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1503,7 +1518,7 @@ function AdminUsers() {
                                                             children: "Email"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 559,
+                                                            lineNumber: 562,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1511,13 +1526,13 @@ function AdminUsers() {
                                                             children: selectedUser.email
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 560,
+                                                            lineNumber: 563,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 558,
+                                                    lineNumber: 561,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1527,7 +1542,7 @@ function AdminUsers() {
                                                             children: "Role"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 563,
+                                                            lineNumber: 566,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1535,13 +1550,13 @@ function AdminUsers() {
                                                             children: selectedUser.role
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 564,
+                                                            lineNumber: 567,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 562,
+                                                    lineNumber: 565,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1551,7 +1566,7 @@ function AdminUsers() {
                                                             children: "Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 567,
+                                                            lineNumber: 570,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1559,13 +1574,13 @@ function AdminUsers() {
                                                             children: selectedUser.status
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 568,
+                                                            lineNumber: 571,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 566,
+                                                    lineNumber: 569,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1575,7 +1590,7 @@ function AdminUsers() {
                                                             children: "Coin Balance"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 573,
+                                                            lineNumber: 576,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1583,13 +1598,13 @@ function AdminUsers() {
                                                             children: selectedUser.coinBalance
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 574,
+                                                            lineNumber: 577,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 572,
+                                                    lineNumber: 575,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1599,7 +1614,7 @@ function AdminUsers() {
                                                             children: "Reputation"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 577,
+                                                            lineNumber: 580,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1607,13 +1622,13 @@ function AdminUsers() {
                                                             children: selectedUser.reputation
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 578,
+                                                            lineNumber: 581,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 576,
+                                                    lineNumber: 579,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1623,7 +1638,7 @@ function AdminUsers() {
                                                             children: "Level"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 581,
+                                                            lineNumber: 584,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1631,13 +1646,13 @@ function AdminUsers() {
                                                             children: selectedUser.level || 0
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 582,
+                                                            lineNumber: 585,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 580,
+                                                    lineNumber: 583,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1647,7 +1662,7 @@ function AdminUsers() {
                                                             children: "Created At"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 585,
+                                                            lineNumber: 588,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1657,13 +1672,13 @@ function AdminUsers() {
                                                             })
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 586,
+                                                            lineNumber: 589,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 584,
+                                                    lineNumber: 587,
                                                     columnNumber: 19
                                                 }, this),
                                                 selectedUser.lastActive && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1673,7 +1688,7 @@ function AdminUsers() {
                                                             children: "Last Active"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 590,
+                                                            lineNumber: 593,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1683,13 +1698,13 @@ function AdminUsers() {
                                                             })
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 591,
+                                                            lineNumber: 594,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 589,
+                                                    lineNumber: 592,
                                                     columnNumber: 21
                                                 }, this),
                                                 selectedUser.suspendedUntil && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1699,7 +1714,7 @@ function AdminUsers() {
                                                             children: "Suspended Until"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 596,
+                                                            lineNumber: 599,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1707,19 +1722,19 @@ function AdminUsers() {
                                                             children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(selectedUser.suspendedUntil), 'PPP')
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 597,
+                                                            lineNumber: 600,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 595,
+                                                    lineNumber: 598,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 553,
+                                            lineNumber: 556,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1736,14 +1751,14 @@ function AdminUsers() {
                                                             className: "h-4 w-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 609,
+                                                            lineNumber: 612,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Suspend"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 602,
+                                                    lineNumber: 605,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1756,14 +1771,14 @@ function AdminUsers() {
                                                             className: "h-4 w-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 618,
+                                                            lineNumber: 621,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Change Role"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 612,
+                                                    lineNumber: 615,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1780,26 +1795,26 @@ function AdminUsers() {
                                                             className: "h-4 w-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 631,
+                                                            lineNumber: 634,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Add 100 Coins"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 621,
+                                                    lineNumber: 624,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 601,
+                                            lineNumber: 604,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 552,
+                                    lineNumber: 555,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -1817,12 +1832,12 @@ function AdminUsers() {
                                                             children: "Total Threads"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 641,
+                                                            lineNumber: 644,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 640,
+                                                        lineNumber: 643,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1831,18 +1846,18 @@ function AdminUsers() {
                                                             children: userActivity.totalThreads
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 644,
+                                                            lineNumber: 647,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 643,
+                                                        lineNumber: 646,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 639,
+                                                lineNumber: 642,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1854,12 +1869,12 @@ function AdminUsers() {
                                                             children: "Total Replies"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 649,
+                                                            lineNumber: 652,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 648,
+                                                        lineNumber: 651,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1868,18 +1883,18 @@ function AdminUsers() {
                                                             children: userActivity.totalReplies
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 652,
+                                                            lineNumber: 655,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 651,
+                                                        lineNumber: 654,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 647,
+                                                lineNumber: 650,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1891,12 +1906,12 @@ function AdminUsers() {
                                                             children: "Content Published"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 657,
+                                                            lineNumber: 660,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 656,
+                                                        lineNumber: 659,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1905,18 +1920,18 @@ function AdminUsers() {
                                                             children: userActivity.totalContent
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 660,
+                                                            lineNumber: 663,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 659,
+                                                        lineNumber: 662,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 655,
+                                                lineNumber: 658,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1928,12 +1943,12 @@ function AdminUsers() {
                                                             children: "Coins Earned"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 665,
+                                                            lineNumber: 668,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 664,
+                                                        lineNumber: 667,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1942,18 +1957,18 @@ function AdminUsers() {
                                                             children: userActivity.coinsEarned
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 668,
+                                                            lineNumber: 671,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 667,
+                                                        lineNumber: 670,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 663,
+                                                lineNumber: 666,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1965,12 +1980,12 @@ function AdminUsers() {
                                                             children: "Coins Spent"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 673,
+                                                            lineNumber: 676,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 672,
+                                                        lineNumber: 675,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1979,18 +1994,18 @@ function AdminUsers() {
                                                             children: userActivity.coinsSpent
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 676,
+                                                            lineNumber: 679,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 675,
+                                                        lineNumber: 678,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 671,
+                                                lineNumber: 674,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2002,12 +2017,12 @@ function AdminUsers() {
                                                             children: "Account Age"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 681,
+                                                            lineNumber: 684,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 680,
+                                                        lineNumber: 683,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2019,29 +2034,29 @@ function AdminUsers() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 684,
+                                                            lineNumber: 687,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 683,
+                                                        lineNumber: 686,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 679,
+                                                lineNumber: 682,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 638,
+                                        lineNumber: 641,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 637,
+                                    lineNumber: 640,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -2062,7 +2077,7 @@ function AdminUsers() {
                                                                         children: post.title
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                        lineNumber: 698,
+                                                                        lineNumber: 701,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2076,13 +2091,13 @@ function AdminUsers() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                        lineNumber: 701,
+                                                                        lineNumber: 704,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 697,
+                                                                lineNumber: 700,
                                                                 columnNumber: 29
                                                             }, this),
                                                             post.views !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2093,40 +2108,40 @@ function AdminUsers() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 706,
+                                                                lineNumber: 709,
                                                                 columnNumber: 31
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 696,
+                                                        lineNumber: 699,
                                                         columnNumber: 27
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 695,
+                                                    lineNumber: 698,
                                                     columnNumber: 25
                                                 }, this)
                                             }, post.id, false, {
                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                lineNumber: 694,
+                                                lineNumber: 697,
                                                 columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 692,
+                                        lineNumber: 695,
                                         columnNumber: 19
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-muted-foreground text-center py-8",
                                         children: "No posts yet"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 716,
+                                        lineNumber: 719,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 690,
+                                    lineNumber: 693,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -2142,46 +2157,46 @@ function AdminUsers() {
                                                                 children: "Date"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 726,
+                                                                lineNumber: 729,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Type"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 727,
+                                                                lineNumber: 730,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Amount"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 728,
+                                                                lineNumber: 731,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Description"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 729,
+                                                                lineNumber: 732,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                                 children: "Balance"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 730,
+                                                                lineNumber: 733,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 725,
+                                                        lineNumber: 728,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 724,
+                                                    lineNumber: 727,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -2193,7 +2208,7 @@ function AdminUsers() {
                                                                     })
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                    lineNumber: 736,
+                                                                    lineNumber: 739,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -2202,12 +2217,12 @@ function AdminUsers() {
                                                                         children: tx.type
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                        lineNumber: 738,
+                                                                        lineNumber: 741,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                    lineNumber: 737,
+                                                                    lineNumber: 740,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
@@ -2218,72 +2233,72 @@ function AdminUsers() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                    lineNumber: 742,
+                                                                    lineNumber: 745,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: tx.description
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                    lineNumber: 745,
+                                                                    lineNumber: 748,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                     children: tx.balance
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                    lineNumber: 746,
+                                                                    lineNumber: 749,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, tx.id, true, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 735,
+                                                            lineNumber: 738,
                                                             columnNumber: 27
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 733,
+                                                    lineNumber: 736,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 723,
+                                            lineNumber: 726,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 722,
+                                        lineNumber: 725,
                                         columnNumber: 19
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-muted-foreground text-center py-8",
                                         children: "No coin history"
                                     }, void 0, false, {
                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                        lineNumber: 753,
+                                        lineNumber: 756,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 720,
+                                    lineNumber: 723,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 544,
+                            lineNumber: 547,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/admin/sections/Users.tsx",
-                    lineNumber: 536,
+                    lineNumber: 539,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 535,
+                lineNumber: 538,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -2298,7 +2313,7 @@ function AdminUsers() {
                                     children: "Suspend User"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 765,
+                                    lineNumber: 768,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -2309,13 +2324,13 @@ function AdminUsers() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 766,
+                                    lineNumber: 769,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 764,
+                            lineNumber: 767,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2328,7 +2343,7 @@ function AdminUsers() {
                                             children: "Suspended Until"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 772,
+                                            lineNumber: 775,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Popover"], {
@@ -2344,25 +2359,25 @@ function AdminUsers() {
                                                                 className: "mr-2 h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 780,
+                                                                lineNumber: 783,
                                                                 columnNumber: 21
                                                             }, this),
                                                             suspendedUntil ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(suspendedUntil, 'PPP') : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: "Pick a date"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/admin/sections/Users.tsx",
-                                                                lineNumber: 781,
+                                                                lineNumber: 784,
                                                                 columnNumber: 71
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 775,
+                                                        lineNumber: 778,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 774,
+                                                    lineNumber: 777,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
@@ -2374,24 +2389,24 @@ function AdminUsers() {
                                                         initialFocus: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 785,
+                                                        lineNumber: 788,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 784,
+                                                    lineNumber: 787,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 773,
+                                            lineNumber: 776,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 771,
+                                    lineNumber: 774,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2401,7 +2416,7 @@ function AdminUsers() {
                                             children: "Reason"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 795,
+                                            lineNumber: 798,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -2412,19 +2427,19 @@ function AdminUsers() {
                                             "data-testid": "input-suspend-reason"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 796,
+                                            lineNumber: 799,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 794,
+                                    lineNumber: 797,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 770,
+                            lineNumber: 773,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -2435,7 +2450,7 @@ function AdminUsers() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 806,
+                                    lineNumber: 809,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2445,24 +2460,24 @@ function AdminUsers() {
                                     children: suspendUserMutation.isPending ? 'Suspending...' : 'Suspend User'
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 809,
+                                    lineNumber: 812,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 805,
+                            lineNumber: 808,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/admin/sections/Users.tsx",
-                    lineNumber: 763,
+                    lineNumber: 766,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 762,
+                lineNumber: 765,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -2477,7 +2492,7 @@ function AdminUsers() {
                                     children: "Change User Role"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 824,
+                                    lineNumber: 827,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -2487,13 +2502,13 @@ function AdminUsers() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 825,
+                                    lineNumber: 828,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 823,
+                            lineNumber: 826,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2506,7 +2521,7 @@ function AdminUsers() {
                                             children: "New Role"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 831,
+                                            lineNumber: 834,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -2520,12 +2535,12 @@ function AdminUsers() {
                                                         placeholder: "Select new role"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/admin/sections/Users.tsx",
-                                                        lineNumber: 834,
+                                                        lineNumber: 837,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 833,
+                                                    lineNumber: 836,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -2535,7 +2550,7 @@ function AdminUsers() {
                                                             children: "Member"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 837,
+                                                            lineNumber: 840,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2543,7 +2558,7 @@ function AdminUsers() {
                                                             children: "Moderator"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 838,
+                                                            lineNumber: 841,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2551,25 +2566,25 @@ function AdminUsers() {
                                                             children: "Admin"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                                            lineNumber: 839,
+                                                            lineNumber: 842,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                                    lineNumber: 836,
+                                                    lineNumber: 839,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 832,
+                                            lineNumber: 835,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 830,
+                                    lineNumber: 833,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2579,7 +2594,7 @@ function AdminUsers() {
                                             children: "Reason (Optional)"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 844,
+                                            lineNumber: 847,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -2590,19 +2605,19 @@ function AdminUsers() {
                                             "data-testid": "input-role-change-reason"
                                         }, void 0, false, {
                                             fileName: "[project]/app/admin/sections/Users.tsx",
-                                            lineNumber: 845,
+                                            lineNumber: 848,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 843,
+                                    lineNumber: 846,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 829,
+                            lineNumber: 832,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -2613,7 +2628,7 @@ function AdminUsers() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 855,
+                                    lineNumber: 858,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2623,30 +2638,30 @@ function AdminUsers() {
                                     children: changeRoleMutation.isPending ? 'Changing...' : 'Change Role'
                                 }, void 0, false, {
                                     fileName: "[project]/app/admin/sections/Users.tsx",
-                                    lineNumber: 858,
+                                    lineNumber: 861,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/admin/sections/Users.tsx",
-                            lineNumber: 854,
+                            lineNumber: 857,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/admin/sections/Users.tsx",
-                    lineNumber: 822,
+                    lineNumber: 825,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/admin/sections/Users.tsx",
-                lineNumber: 821,
+                lineNumber: 824,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/sections/Users.tsx",
-        lineNumber: 268,
+        lineNumber: 271,
         columnNumber: 5
     }, this);
 }

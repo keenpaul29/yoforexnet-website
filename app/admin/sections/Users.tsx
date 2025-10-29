@@ -97,6 +97,14 @@ export default function AdminUsers() {
 
   const { data: statsRaw } = useQuery<UserStats>({
     queryKey: ["/api/admin/users/stats", { search, role: roleFilter, status: statusFilter }],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (roleFilter !== 'all') params.append('role', roleFilter);
+      if (statusFilter !== 'all') params.append('status', statusFilter);
+      const queryString = params.toString();
+      return fetch(`/api/admin/users/stats${queryString ? '?' + queryString : ''}`).then(r => r.json());
+    },
   });
 
   const stats: UserStats = statsRaw || {

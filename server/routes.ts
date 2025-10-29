@@ -27,11 +27,16 @@ import {
   type BadgeType,
   coinTransactions,
   profiles,
-  forumReplies
+  forumReplies,
+  users,
+  content,
+  rechargeOrders,
+  adminActions,
+  forumThreads
 } from "../shared/schema.js";
 import { z } from "zod";
 import { db } from "./db.js";
-import { eq, and, gt, asc } from "drizzle-orm";
+import { eq, and, gt, asc, desc, count, sql, gte, lte, or, ne } from "drizzle-orm";
 import {
   sanitizeRequestBody,
   validateCoinAmount,
@@ -5663,6 +5668,236 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error fetching top users:', error);
       res.status(500).json({ message: 'Failed to fetch top users' });
+    }
+  });
+
+  // ========== NEW ADMIN ENDPOINTS ==========
+
+  // 16. GET /api/admin/overview/stats - Primary overview statistics
+  app.get('/api/admin/overview/stats', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    try {
+      // Query all stats in parallel for efficiency
+      const [totalUsersResult, totalContentResult, totalRevenueResult, pendingModerationResult] = await Promise.all([
+        // Total users count
+        db.select({ count: count() }).from(users),
+        
+        // Total approved content count
+        db.select({ count: count() }).from(content).where(eq(content.status, 'approved')),
+        
+        // Total revenue from completed recharge orders
+        db.select({ total: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)` })
+          .from(rechargeOrders)
+          .where(eq(rechargeOrders.status, 'completed')),
+        
+        // Pending moderation count
+        db.select({ count: count() }).from(content).where(eq(content.status, 'pending'))
+      ]);
+
+      const stats = {
+        totalUsers: totalUsersResult[0]?.count || 0,
+        totalContent: totalContentResult[0]?.count || 0,
+        totalRevenue: totalRevenueResult[0]?.total || 0,
+        pendingModeration: pendingModerationResult[0]?.count || 0
+      };
+
+      res.json(stats);
+    } catch (error: any) {
+      console.error('Error fetching overview stats:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // 17. GET /api/admin/overview/activity-feed - Admin activity feed
+  app.get('/api/admin/overview/activity-feed', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    try {
+      // Query admin actions with JOIN to users table for admin username
+      const actions = await db
+        .select({
+          id: adminActions.id,
+          adminId: adminActions.adminId,
+          adminUsername: users.username,
+          action: adminActions.action,
+          targetId: adminActions.targetId,
+          targetName: adminActions.targetName,
+          details: adminActions.details,
+          createdAt: adminActions.createdAt
+        })
+        .from(adminActions)
+        .leftJoin(users, eq(adminActions.adminId, users.id))
+        .orderBy(desc(adminActions.createdAt))
+        .limit(20);
+
+      res.json(actions);
+    } catch (error: any) {
+      console.error('Error fetching activity feed:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // 18. GET /api/admin/overview/user-growth - User growth chart data
+  app.get('/api/admin/overview/user-growth', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    try {
+      // Get user registrations for last 7 days
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const growthData = await db
+        .select({
+          date: sql<string>`DATE(${users.createdAt})`,
+          count: count()
+        })
+        .from(users)
+        .where(gte(users.createdAt, sevenDaysAgo))
+        .groupBy(sql`DATE(${users.createdAt})`)
+        .orderBy(sql`DATE(${users.createdAt})`);
+
+      res.json(growthData);
+    } catch (error: any) {
+      console.error('Error fetching user growth:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // 19. GET /api/admin/overview/content-trend - Content trend chart data
+  app.get('/api/admin/overview/content-trend', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    try {
+      // Get content creation for last 7 days
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      // Query threads and replies separately, then combine
+      const [threadsData, repliesData] = await Promise.all([
+        db
+          .select({
+            date: sql<string>`DATE(${forumThreads.createdAt})`,
+            count: count()
+          })
+          .from(forumThreads)
+          .where(gte(forumThreads.createdAt, sevenDaysAgo))
+          .groupBy(sql`DATE(${forumThreads.createdAt})`)
+          .orderBy(sql`DATE(${forumThreads.createdAt})`),
+        
+        db
+          .select({
+            date: sql<string>`DATE(${forumReplies.createdAt})`,
+            count: count()
+          })
+          .from(forumReplies)
+          .where(gte(forumReplies.createdAt, sevenDaysAgo))
+          .groupBy(sql`DATE(${forumReplies.createdAt})`)
+          .orderBy(sql`DATE(${forumReplies.createdAt})`)
+      ]);
+
+      // Combine threads and replies by date
+      const dateMap = new Map<string, { threads: number; replies: number }>();
+      
+      threadsData.forEach(item => {
+        dateMap.set(item.date, { threads: item.count, replies: 0 });
+      });
+      
+      repliesData.forEach(item => {
+        const existing = dateMap.get(item.date) || { threads: 0, replies: 0 };
+        dateMap.set(item.date, { ...existing, replies: item.count });
+      });
+
+      // Convert to array and sort by date
+      const trendData = Array.from(dateMap.entries()).map(([date, counts]) => ({
+        date,
+        threads: counts.threads,
+        replies: counts.replies
+      })).sort((a, b) => a.date.localeCompare(b.date));
+
+      res.json(trendData);
+    } catch (error: any) {
+      console.error('Error fetching content trend:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // 20. GET /api/admin/users/stats - User statistics summary
+  app.get('/api/admin/users/stats', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    try {
+      const { search, role, status } = req.query;
+
+      // Build WHERE conditions based on filters
+      const conditions = [];
+      
+      if (search && typeof search === 'string') {
+        conditions.push(
+          or(
+            sql`${users.username} ILIKE ${`%${search}%`}`,
+            sql`${users.email} ILIKE ${`%${search}%`}`
+          )
+        );
+      }
+      
+      if (role && typeof role === 'string') {
+        conditions.push(eq(users.role, role));
+      }
+      
+      if (status && typeof status === 'string') {
+        conditions.push(eq(users.status, status));
+      }
+
+      // Build the WHERE clause
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+      // Query stats with filters
+      const [statsResult, bannedCountResult] = await Promise.all([
+        db
+          .select({
+            total: count(),
+            avgReputation: sql<number>`COALESCE(AVG(${users.reputationScore}), 0)`,
+            avgCoins: sql<number>`COALESCE(AVG(${users.totalCoins}), 0)`
+          })
+          .from(users)
+          .where(whereClause),
+        
+        db
+          .select({ count: count() })
+          .from(users)
+          .where(
+            and(
+              whereClause,
+              or(
+                eq(users.status, 'banned'),
+                eq(users.status, 'suspended')
+              )
+            )
+          )
+      ]);
+
+      const stats = {
+        total: statsResult[0]?.total || 0,
+        avgReputation: Math.round(statsResult[0]?.avgReputation || 0),
+        avgCoins: Math.round(statsResult[0]?.avgCoins || 0),
+        bannedCount: bannedCountResult[0]?.count || 0
+      };
+
+      res.json(stats);
+    } catch (error: any) {
+      console.error('Error fetching user stats:', error);
+      res.status(500).json({ error: error.message });
     }
   });
 
