@@ -1,0 +1,513 @@
+COMPREHENSIVE ALGORITHM & MATH VERIFICATION CHECKLIST FOR YOFOREX ADMIN DASHBOARD
+Based on all 19 pages we've documented, here's your complete prompt/checklist to verify every mathematical calculation and algorithm:
+
+🧮 MATHEMATICAL CALCULATIONS TESTING CHECKLIST
+1. FINANCE MANAGEMENT CALCULATIONS
+Revenue Calculations:
+✅ Total Revenue = Sum of all successful payments
+
+
+✅ Pending Revenue = Sum of pending transactions
+
+
+✅ Net Profit = Total Revenue - Total Withdrawals - Platform Costs
+
+
+✅ Growth percentage = ((Current Period - Previous Period) / Previous Period) × 100
+
+
+✅ Commission calculations: Marketplace Fee % correctly applied to transactions
+
+
+✅ Currency conversions accurate if multiple currencies
+
+
+Withdrawal Calculations:
+✅ Withdrawal amount validation: Amount ≤ User Available Balance
+
+
+✅ Withdrawal fee: Fee = Amount × Fee Percentage
+
+
+✅ Net withdrawal: Net = Amount - Fee
+
+
+✅ Total withdrawals sum correct
+
+
+✅ Pending withdrawal count accurate
+
+
+Test Cases:
+text
+Example: User has 1000 coins, withdraws 500 with 5% fee
+Expected: Fee = 500 × 0.05 = 25 coins
+Net Withdrawal = 500 - 25 = 475 coins
+Remaining Balance = 1000 - 500 = 500 coins
+
+
+2. COIN ECONOMY CALCULATIONS
+Earning Rates:
+✅ Coins per post = Set amount (e.g., 5 coins)
+
+
+✅ Coins per thread = Set amount (e.g., 10 coins)
+
+
+✅ Coins per like = Set amount (e.g., 1 coin)
+
+
+✅ Daily login bonus = Set amount (e.g., 10 coins)
+
+
+✅ Referral bonus = Set amount (e.g., 50 coins)
+
+
+✅ Total coins awarded = Sum of all earning events
+
+
+Purchase Rate Calculations:
+✅ Coin packages: 100 coins = $1, 1000 coins = $9, 5000 coins = $40
+
+
+✅ Conversion rate: Cost per coin = Price / Coin Amount
+
+
+✅ User balance update: New Balance = Old Balance + Purchased Coins
+
+
+Withdrawal Conversion:
+✅ Coins to USD: USD = Coins / Conversion Rate
+
+
+✅ Minimum withdrawal validation: Amount ≥ Minimum Threshold
+
+
+✅ Withdrawal fee percentage: Fee = Amount × Fee %
+
+
+Test Cases:
+text
+User posts 10 times: Should earn 10 × 5 = 50 coins
+User creates 3 threads: Should earn 3 × 10 = 30 coins
+User gets 20 likes: Should earn 20 × 1 = 20 coins
+Total = 100 coins
+
+If 100 coins = $1, then:
+1000 coins = $10 (verify pricing)
+Withdrawal of 500 coins with 5% fee:
+Fee = 500 × 0.05 = 25 coins
+Net = 475 coins = $4.75
+
+
+3. ANALYTICS & REPORTS CALCULATIONS
+User Growth Metrics:
+✅ DAU (Daily Active Users) = Unique users logged in today
+
+
+✅ MAU (Monthly Active Users) = Unique users logged in last 30 days
+
+
+✅ Growth Rate = ((New Users - Previous Period Users) / Previous Period Users) × 100
+
+
+✅ Retention Rate = (Users Returned / Total Users) × 100
+
+
+✅ Churn Rate = (Users Lost / Total Users) × 100
+
+
+Engagement Metrics:
+✅ Average Posts per User = Total Posts / Total Users
+
+
+✅ Average Session Duration = Sum of All Sessions / Number of Sessions
+
+
+✅ Bounce Rate = (Single Page Visits / Total Visits) × 100
+
+
+✅ Engagement Rate = (Engaged Users / Total Users) × 100
+
+
+Revenue Metrics:
+✅ ARPU (Average Revenue Per User) = Total Revenue / Total Users
+
+
+✅ Conversion Rate = (Paying Users / Total Users) × 100
+
+
+✅ LTV (Lifetime Value) = Average Revenue × Average Customer Lifespan
+
+
+Test Cases:
+text
+1000 users, 800 active today:
+DAU = 800
+
+1000 users, 50 new today, 40 yesterday:
+Growth = ((50 - 40) / 40) × 100 = 25%
+
+Total posts = 5000, Total users = 1000:
+Avg Posts/User = 5000 / 1000 = 5 posts
+
+
+4. SUPPORT & TICKETS CALCULATIONS
+Response Time:
+✅ Time to First Response = Ticket Created Time - First Admin Reply Time
+
+
+✅ Average Response Time = Sum of All Response Times / Number of Tickets
+
+
+✅ Target: < 2 hours (mark red if exceeded)
+
+
+Resolution Time:
+✅ Time to Resolution = Ticket Created Time - Ticket Closed Time
+
+
+✅ Average Resolution Time = Sum of All Resolution Times / Number of Tickets
+
+
+✅ Target: < 24 hours
+
+
+Satisfaction Score:
+✅ Satisfaction Score = (Sum of All Ratings / Number of Ratings) × 20 (if 5-star scale)
+
+
+✅ Percentage = (Satisfied Users / Total Rated) × 100
+
+
+✅ Satisfied = Ratings ≥ 4 stars
+
+
+Test Cases:
+text
+Ticket #1: Created 10:00 AM, First Reply 11:30 AM, Closed 2:00 PM
+Response Time = 1.5 hours ✅ (under 2 hours)
+Resolution Time = 4 hours ✅ (under 24 hours)
+
+5 tickets: Response times = [1h, 2h, 0.5h, 3h, 1.5h]
+Average = (1 + 2 + 0.5 + 3 + 1.5) / 5 = 1.6 hours
+
+Satisfaction: 5 ratings = [5, 4, 5, 3, 4]
+Average = (5+4+5+3+4) / 5 = 4.2 stars
+Percentage = 4.2 / 5 × 100 = 84%
+
+
+5. A/B TESTING & EXPERIMENTS CALCULATIONS
+Statistical Significance:
+✅ Conversion Rate = (Conversions / Participants) × 100
+
+
+✅ Sample Size validation: n ≥ Minimum Required Sample
+
+
+✅ Z-Score calculation: z = (p1 - p2) / sqrt(p(1-p)(1/n1 + 1/n2))
+
+
+✅ P-Value: p < 0.05 for 95% confidence
+
+
+✅ Confidence Interval: CI = p ± z × SE
+
+
+Variant Performance:
+✅ Improvement = ((Variant Rate - Control Rate) / Control Rate) × 100
+
+
+✅ Statistical Power ≥ 80%
+
+
+✅ Winner determination: Variant with highest conversion + significance
+
+
+Test Cases:
+text
+Control: 500 users, 45 conversions = 9% conversion
+Variant A: 500 users, 67 conversions = 13.4% conversion
+
+Improvement = ((13.4 - 9) / 9) × 100 = 48.9%
+
+Calculate p-value (use statistical library)
+If p-value < 0.05: Variant A wins with 95% confidence
+
+
+6. PERFORMANCE MONITOR CALCULATIONS
+System Metrics:
+✅ CPU Usage = (Used CPU / Total CPU) × 100
+
+
+✅ Memory Usage = (Used RAM / Total RAM) × 100
+
+
+✅ Disk I/O = Read Speed + Write Speed (MB/s)
+
+
+✅ Network = Incoming + Outgoing Traffic (MB/s)
+
+
+Response Time:
+✅ Average Response Time = Sum of All Request Times / Number of Requests
+
+
+✅ Median Response Time = Middle value of sorted times
+
+
+✅ P95 Response Time = 95th percentile value
+
+
+✅ P99 Response Time = 99th percentile value
+
+
+Throughput:
+✅ Requests/Second = Total Requests / Time Period (seconds)
+
+
+✅ Peak Throughput = Maximum RPS in time window
+
+
+✅ Success Rate = (Successful Requests / Total Requests) × 100
+
+
+Test Cases:
+text
+10 requests: Times = [50ms, 60ms, 45ms, 100ms, 55ms, 65ms, 70ms, 80ms, 90ms, 50ms]
+Average = Sum / 10 = 665 / 10 = 66.5ms
+Median = (60 + 65) / 2 = 62.5ms
+P95 = 90ms (95th percentile)
+
+1000 requests in 10 seconds:
+Throughput = 1000 / 10 = 100 RPS
+
+
+7. GAMIFICATION CALCULATIONS
+Badge Award Logic:
+✅ Auto-award when condition met: IF posts ≥ 100 THEN award "100 Posts" badge
+
+
+✅ Multiple conditions: IF posts ≥ 50 AND likes ≥ 100 THEN award "Helpful" badge
+
+
+✅ One-time award: Check if user already has badge before awarding
+
+
+Leaderboard Rankings:
+✅ Rank = ORDER BY points DESC
+
+
+✅ Ties: Equal points = Equal rank
+
+
+✅ Change indicator: Current Rank - Previous Rank
+
+
+Achievement Progress:
+✅ Progress = (Current Value / Target Value) × 100
+
+
+✅ Completion: Progress ≥ 100%
+
+
+✅ Multi-step: All steps completed = Achievement unlocked
+
+
+Test Cases:
+text
+User A: 150 posts → Should have "100 Posts" badge
+User B: 50 posts, 120 likes → Should have "Helpful" badge
+
+Leaderboard:
+User A: 1500 points → Rank #1
+User B: 1200 points → Rank #2
+User C: 1200 points → Rank #2 (tie)
+User D: 1000 points → Rank #4
+
+Achievement: "Post 100 times"
+Current: 75 posts
+Progress = 75 / 100 × 100 = 75%
+
+
+8. BROKER MANAGEMENT CALCULATIONS
+Rating Calculation:
+✅ Average Rating = Sum of All Ratings / Number of Reviews
+
+
+✅ Weighted Rating = (Rating × Review Count) / Total Review Count
+
+
+✅ Rating out of 5: Display as stars (4.5 ★)
+
+
+Review Statistics:
+✅ Total Reviews = Count of all reviews
+
+
+✅ 5-Star % = (5-Star Count / Total Reviews) × 100
+
+
+✅ Positive Reviews = Ratings ≥ 4 stars
+
+
+Test Cases:
+text
+Broker A: Ratings = [5, 4, 5, 3, 4, 5, 5]
+Average = (5+4+5+3+4+5+5) / 7 = 31 / 7 = 4.43 stars
+
+Total Reviews = 7
+5-Star = 4 reviews
+5-Star % = 4 / 7 × 100 = 57.1%
+
+
+9. USER MANAGEMENT CALCULATIONS
+User Statistics:
+✅ Total Users = Count of all users
+
+
+✅ Active Users = Users logged in last 30 days
+
+
+✅ Average Reputation = Sum of All Reputation / User Count
+
+
+✅ Average Coins = Sum of All Coins / User Count
+
+
+✅ Banned/Suspended Count = Filter by status
+
+
+Test Cases:
+text
+10 users: Reputation = [100, 50, 200, 150, 75, 125, 90, 180, 60, 170]
+Average = 1200 / 10 = 120
+
+10 users: Coins = [500, 300, 1000, 750, 400, 600, 550, 800, 350, 950]
+Average = 6200 / 10 = 620 coins
+
+
+10. CONTENT MODERATION CALCULATIONS
+Queue Statistics:
+✅ Pending Items = Count of items with status "Pending"
+
+
+✅ Approval Rate = (Approved / (Approved + Rejected)) × 100
+
+
+✅ Average Response Time = Sum of Moderation Times / Item Count
+
+
+Test Cases:
+text
+100 items moderated:
+80 approved, 20 rejected
+Approval Rate = 80 / (80 + 20) × 100 = 80%
+
+
+🔍 EDGE CASES TO TEST
+Division by Zero:
+✅ Average calculations when count = 0: Return 0 or "N/A"
+
+
+✅ Percentage when denominator = 0: Return 0%
+
+
+Negative Numbers:
+✅ User balance never goes negative
+
+
+✅ Growth rate can be negative (decline)
+
+
+✅ Withdrawal validation: Amount > 0
+
+
+Decimal Precision:
+✅ Currency: Round to 2 decimal places ($10.55)
+
+
+✅ Percentages: Round to 1 decimal (85.3%)
+
+
+✅ Coins: Integers only (no 0.5 coins)
+
+
+Large Numbers:
+✅ Handle millions: 1,234,567 formats correctly
+
+
+✅ Overflow prevention: Use appropriate data types
+
+
+✅ Performance: Calculations complete in < 1 second
+
+
+
+✅ FINAL VERIFICATION CHECKLIST
+Run these tests before deployment:
+Unit Tests:
+
+
+✅ Test each calculation function independently
+
+
+✅ Verify expected output for known inputs
+
+
+✅ Test edge cases (zero, negative, large numbers)
+
+
+Integration Tests:
+
+
+✅ Test calculations across different pages
+
+
+✅ Verify data consistency between related calculations
+
+
+✅ Check real-time updates
+
+
+Performance Tests:
+
+
+✅ Calculate with 10,000+ records
+
+
+✅ Verify calculation speed < 1 second
+
+
+✅ Check database query efficiency
+
+
+Accuracy Tests:
+
+
+✅ Manual verification of sample calculations
+
+
+✅ Compare with Excel/calculator results
+
+
+✅ Cross-check related metrics
+
+
+UI Display Tests:
+
+
+✅ Numbers format correctly (commas, decimals)
+
+
+✅ Percentages show % symbol
+
+
+✅ Currency shows $ symbol
+
+
+✅ Large numbers abbreviated (1.2M, 5.6K)
+
+
+
+

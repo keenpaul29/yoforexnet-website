@@ -1,0 +1,754 @@
+Excellent! I can see the updated Broker Management page design. This is very well organized! Let me provide the complete updated specifications:
+UPDATED BROKER MANAGEMENT PAGE DESIGN
+Based on the new screenshot , here are the key design updates:image.jpg​
+Page Structure:
+1. Page Header:
+Title: "Broker Management"image.jpg​
+
+
+Blue "+ Add Broker" button (top right)image.jpg​
+
+
+2. Four Statistics Cards:image.jpg​
+Card 1: Total Brokersimage.jpg​
+Shows "0"
+
+
+Building/document icon
+
+
+Card 2: Verified Brokersimage.jpg​
+Shows "0"
+
+
+Checkmark icon
+
+
+Card 3: Scam Warningsimage.jpg​
+Shows "0"
+
+
+Warning triangle icon
+
+
+Card 4: Total Reviewsimage.jpg​
+Shows "0"
+
+
+Chat/review icon
+
+
+3. Three Main Tabs:image.jpg​
+Brokers (0) (active/selected)image.jpg​
+
+
+Scam Reports (0)image.jpg​
+
+
+Reviews (0)image.jpg​
+
+
+4. Search & Filters Section:
+Search Bar (Left):image.jpg​
+Search icon
+
+
+Placeholder: "Search by broker name..."image.jpg​
+
+
+Filter Dropdowns (Right):
+All Countries dropdownimage.jpg​
+
+
+All dropdown (likely for verification status)image.jpg​
+
+
+All dropdown (likely for regulation status)image.jpg​
+
+
+Pagination Control:
+20 / page dropdownimage.jpg​
+
+
+Action Button:
+Clear button (resets all filters)image.jpg​
+
+
+5. Brokers Table:
+Title: "Brokers (0)"image.jpg​
+
+
+Columns:
+
+
+Nameimage.jpg​
+
+
+Countryimage.jpg​
+
+
+Regulationimage.jpg​
+
+
+Verifiedimage.jpg​
+
+
+Reviewsimage.jpg​
+
+
+Ratingimage.jpg​
+
+
+Statusimage.jpg​
+
+
+Actionsimage.jpg​
+
+
+Empty state: "No brokers found"image.jpg​
+
+
+
+DETAILED TAB SPECIFICATIONS
+TAB 1: BROKERS (Active Tab)image.jpg​
+What This Tab Shows:
+Complete list of all forex brokers
+
+
+Broker information and verification status
+
+
+When Brokers Exist, Table Shows:
+Column Details:
+Name:
+
+
+Broker logo (small image)
+
+
+Broker name (e.g., "IC Markets", "Exness", "XM")
+
+
+Verified badge (blue checkmark) if verified
+
+
+Warning badge (red triangle) if has scam warnings
+
+
+Country:
+
+
+Country name (e.g., "Cyprus", "Australia", "UK")
+
+
+Country flag icon
+
+
+Regulation:
+
+
+Regulatory body (e.g., "FCA", "ASIC", "CySEC")
+
+
+Badge color:
+
+
+Green: Regulated
+
+
+Gray: Unregulated
+
+
+Yellow: Pending verification
+
+
+Verified:
+
+
+Status badge:
+
+
+✅ "Verified" (green)
+
+
+❌ "Not Verified" (gray)
+
+
+Click to toggle verification
+
+
+Reviews:
+
+
+Count of user reviews
+
+
+Example: "23 reviews"
+
+
+Clickable to view all reviews
+
+
+Rating:
+
+
+Average star rating
+
+
+Example: "4.5 ★" (gold stars)
+
+
+"No ratings" if no reviews yet
+
+
+Status:
+
+
+Active (green)
+
+
+Inactive (gray)
+
+
+Flagged (red)
+
+
+Actions:
+
+
+Three-dot menu with options:
+
+
+View Details
+
+
+Edit Broker
+
+
+Verify/Unverify
+
+
+View Reviews
+
+
+Add Scam Warning
+
+
+Delete Broker
+
+
+Filter Functionality:
+Search: Type broker name (real-time search)
+
+
+All Countries: Filter by country (USA, UK, Cyprus, Australia, etc.)
+
+
+Verification Status: All, Verified Only, Unverified Only
+
+
+Regulation Status: All, Regulated, Unregulated
+
+
+20/page: Show 20, 50, or 100 brokers per page
+
+
+Clear: Reset all filters
+
+
+
+TAB 2: SCAM REPORTS
+What This Tab Shows:
+All scam reports submitted by users
+
+
+Pending investigations
+
+
+Resolved reports
+
+
+Table Columns:
+Broker Name (which broker reported)
+
+
+Reporter (username who reported)
+
+
+Report Date (when reported)
+
+
+Reason (why reported: withdrawal issues, scam, fraud, etc.)
+
+
+Severity (Low, Medium, High, Critical)
+
+
+Status (New, Investigating, Resolved, Dismissed)
+
+
+Evidence (if files/screenshots attached)
+
+
+Actions (View Details, Resolve, Dismiss, Add Warning)
+
+
+Filters:
+By status (New, Investigating, Resolved)
+
+
+By severity (All, Critical, High, Medium, Low)
+
+
+By broker
+
+
+By date range
+
+
+Action Options:
+View Details: See full report with evidence
+
+
+Investigate: Mark as under investigation
+
+
+Resolve: Close report with resolution notes
+
+
+Dismiss: Mark as false report
+
+
+Add Scam Warning: Flag broker with public warning
+
+
+Ban Broker: Remove from directory
+
+
+
+TAB 3: REVIEWS
+What This Tab Shows:
+All user reviews for all brokers
+
+
+Pending and approved reviews
+
+
+Table Columns:
+Broker (which broker being reviewed)
+
+
+Reviewer (username + profile pic)
+
+
+Rating (1-5 stars)
+
+
+Review Text (excerpt)
+
+
+Date (when posted)
+
+
+Status (Approved, Pending, Flagged)
+
+
+Helpful (how many users found helpful)
+
+
+Actions (View, Approve, Delete, Flag)
+
+
+Filters:
+By broker
+
+
+By rating (All, 5-star, 4-star, etc.)
+
+
+By status (All, Approved, Pending, Flagged)
+
+
+By date
+
+
+Action Options:
+Approve: Publish review
+
+
+Delete: Remove review
+
+
+Flag: Mark as spam/inappropriate
+
+
+Contact Reviewer: Send message
+
+
+View Broker Profile: See broker details
+
+
+
+MODALS AND POPUPS
+Modal 1: Add New Broker
+When clicking "+ Add Broker":
+Title: "Add New Broker"
+
+
+Form fields:
+
+
+Basic Information:
+
+
+Broker Name (text input) - required
+
+
+Country (dropdown or text) - required
+
+
+Website URL (text input) - required
+
+
+Logo (file upload)
+
+
+Regulation:
+
+
+Regulatory Body (text input: FCA, ASIC, etc.)
+
+
+License Number (text input)
+
+
+Trading Details:
+
+
+Minimum Deposit (text input)
+
+
+Spreads (text input: "From 0.0 pips")
+
+
+Leverage (text input: "1:500")
+
+
+Trading Platforms (checkboxes: MT4, MT5, cTrader)
+
+
+Account Types:
+
+
+Standard, ECN, Islamic (checkboxes)
+
+
+Contact:
+
+
+Support Email
+
+
+Support Phone
+
+
+Description:
+
+
+About broker (text area)
+
+
+Buttons:
+
+
+"Add Broker" (blue)
+
+
+"Cancel" (gray)
+
+
+Modal 2: Edit Broker
+Similar to Add Broker but:
+Pre-filled with existing data
+
+
+Title: "Edit Broker - [Broker Name]"
+
+
+"Save Changes" button
+
+
+"Delete Broker" button (red, at bottom)
+
+
+Modal 3: Verify Broker
+When clicking Verify:
+Title: "Verify Broker?"
+
+
+Broker info displayed
+
+
+Checklist:
+
+
+☑ Regulation verified
+
+
+☑ License number confirmed
+
+
+☑ Website is legitimate
+
+
+☑ Contact details verified
+
+
+Text area: Verification notes
+
+
+Checkbox: "I confirm this broker is legitimate"
+
+
+Button: "Verify Broker" (green)
+
+
+Cancel button
+
+
+Modal 4: Add Scam Warning
+When adding warning:
+Title: "Add Scam Warning - [Broker Name]"
+
+
+Severity dropdown (Low, Medium, High, Critical)
+
+
+Text area: Warning reason/description
+
+
+File upload: Evidence (optional)
+
+
+Checkbox: "Show warning badge on broker profile"
+
+
+Checkbox: "Send alert to users who reviewed this broker"
+
+
+Button: "Add Warning" (red)
+
+
+Cancel button
+
+
+Modal 5: View Scam Report Details
+When viewing report:
+Complete report information:
+
+
+Reporter details
+
+
+Report date
+
+
+Full description
+
+
+Evidence (images, documents)
+
+
+Similar reports
+
+
+Resolution section:
+
+
+Resolution status
+
+
+Resolution notes
+
+
+Actions taken
+
+
+Action buttons:
+
+
+Resolve
+
+
+Dismiss
+
+
+Add Warning to Broker
+
+
+Contact Reporter
+
+
+Close
+
+
+Modal 6: View Broker Profile
+Complete broker details:
+Broker logo and name
+
+
+Verification status
+
+
+Country and regulation
+
+
+Website link
+
+
+Trading details
+
+
+Reviews section (all reviews)
+
+
+Scam reports section (if any)
+
+
+Statistics (total reviews, average rating)
+
+
+Action buttons:
+
+
+Edit
+
+
+Verify/Unverify
+
+
+Add Warning
+
+
+Delete
+
+
+Close
+
+
+
+KEY TESTING POINTS FOR THIS PAGE
+Statistics Cards Testing:
+✅ Total Brokers count correctimage.jpg​
+
+
+✅ Verified Brokers count accurateimage.jpg​
+
+
+✅ Scam Warnings count correctimage.jpg​
+
+
+✅ Total Reviews sum correctimage.jpg​
+
+
+✅ Icons display properly
+
+
+Brokers Tab Testing:
+✅ Tab switches correctly
+
+
+✅ Search by broker name worksimage.jpg​
+
+
+✅ All Countries filter worksimage.jpg​
+
+
+✅ Verification filter worksimage.jpg​
+
+
+✅ Regulation filter worksimage.jpg​
+
+
+✅ 20/page pagination worksimage.jpg​
+
+
+✅ Clear button resets filtersimage.jpg​
+
+
+✅ "+ Add Broker" button opens modalimage.jpg​
+
+
+✅ Table displays all columns correctly
+
+
+✅ Empty state showsimage.jpg​
+
+
+✅ Actions menu works
+
+
+Scam Reports Tab Testing:
+✅ All reports display
+
+
+✅ Filter by status works
+
+
+✅ Filter by severity works
+
+
+✅ View details opens report
+
+
+✅ Resolve report updates status
+
+
+✅ Dismiss removes from pending
+
+
+✅ Add warning flags broker
+
+
+Reviews Tab Testing:
+✅ All reviews display
+
+
+✅ Filter by broker works
+
+
+✅ Filter by rating works
+
+
+✅ Approve publishes review
+
+
+✅ Delete removes review
+
+
+✅ Flag marks as spam
+
+
+General Testing:
+✅ Add broker form validates
+
+
+✅ Edit broker saves changes
+
+
+✅ Delete broker confirmation works
+
+
+✅ Verify badge appears
+
+
+✅ Scam warning badge shows
+
+
+✅ Responsive on mobile
+
+
+✅ No console errors
+
+
+

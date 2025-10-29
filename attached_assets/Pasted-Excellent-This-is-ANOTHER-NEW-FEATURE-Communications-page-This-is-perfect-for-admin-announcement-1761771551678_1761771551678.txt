@@ -1,0 +1,1055 @@
+Excellent! This is ANOTHER NEW FEATURE - Communications page! This is perfect for admin announcements and email campaigns. Let me provide complete specifications:
+NEW PAGE: COMMUNICATIONS
+Based on the screenshot , here are the complete specifications:image.jpg​
+Page Structure:
+1. Page Header:
+Title: "Communications"image.jpg​
+
+
+2. Two Main Tabs:image.jpg​
+Announcements (active/selected)image.jpg​
+
+
+Email Campaignsimage.jpg​
+
+
+3. Announcements Tab Content:
+Header Section:
+Title: "Announcements"image.jpg​
+
+
+Blue "Create Announcement" button (top right)image.jpg​
+
+
+Announcements Table:
+Columns:
+
+
+Titleimage.jpg​
+
+
+Typeimage.jpg​
+
+
+Audienceimage.jpg​
+
+
+Statusimage.jpg​
+
+
+Viewsimage.jpg​
+
+
+Clicksimage.jpg​
+
+
+Createdimage.jpg​
+
+
+Actionsimage.jpg​
+
+
+Empty State:
+Message: "No announcements found"image.jpg​
+
+
+Centered text on dark background
+
+
+
+DETAILED FEATURE SPECIFICATIONS
+TAB 1: ANNOUNCEMENTS (Active Tab)image.jpg​
+What This Feature Does:
+Create and manage site-wide announcements
+
+
+Display important notices to users
+
+
+Banner notifications
+
+
+Track engagement
+
+
+When Announcements Exist, Table Shows:
+Column Details:
+Titleimage.jpg​
+
+
+Announcement headline
+
+
+Example: "New Trading Features Released!", "Maintenance Scheduled", "Welcome Bonus Campaign"
+
+
+Click to edit announcement
+
+
+Typeimage.jpg​
+
+
+Badge showing announcement type:
+
+
+Banner (displayed at top of every page)
+
+
+Modal (popup when user logs in)
+
+
+Toast (corner notification)
+
+
+In-Feed (appears in forum feed)
+
+
+Dashboard (shown on user dashboard)
+
+
+Color-coded badges
+
+
+Audienceimage.jpg​
+
+
+Who sees this announcement:
+
+
+All Users
+
+
+New Users (registered < 30 days)
+
+
+Premium Users
+
+
+Active Traders
+
+
+Inactive Users (not logged in > 7 days)
+
+
+Specific User IDs
+
+
+By Country (geo-targeting)
+
+
+Badge format
+
+
+Statusimage.jpg​
+
+
+Current state badge:
+
+
+Draft (gray) - Not published
+
+
+Scheduled (yellow) - Set to publish later
+
+
+Active (green) - Currently showing
+
+
+Paused (orange) - Temporarily hidden
+
+
+Expired (gray) - End date passed
+
+
+Quick toggle to activate/deactivate
+
+
+Viewsimage.jpg​
+
+
+How many users saw the announcement
+
+
+Example: "1,234 views"
+
+
+Click to see detailed analytics
+
+
+Clicksimage.jpg​
+
+
+How many users clicked CTA button
+
+
+Example: "123 clicks"
+
+
+Click-through rate calculated
+
+
+Example: "10% CTR"
+
+
+Createdimage.jpg​
+
+
+When announcement created
+
+
+Format: "Oct 29, 2025" or "2 days ago"
+
+
+Shows creator username on hover
+
+
+Actionsimage.jpg​
+
+
+Three-dot menu with options:
+
+
+Edit Announcement
+
+
+Preview
+
+
+Duplicate
+
+
+View Analytics
+
+
+Pause/Resume
+
+
+Delete
+
+
+Example Row (When Announcements Exist):
+Title: "🎉 New Gold Trading Features!"
+
+
+Type: Banner (blue badge)
+
+
+Audience: All Users
+
+
+Status: Active (green badge)
+
+
+Views: 1,234
+
+
+Clicks: 123 (10% CTR)
+
+
+Created: Oct 29, 2025
+
+
+Actions: [Three-dot menu]
+
+
+
+TAB 2: EMAIL CAMPAIGNS
+What This Tab Shows:
+Email marketing campaigns
+
+
+Newsletters
+
+
+Automated email sequences
+
+
+Bulk email management
+
+
+When Tab Selected:
+Header:
+Title: "Email Campaigns"
+
+
+Blue "Create Campaign" button
+
+
+Email Campaigns Table:
+Columns:
+Campaign Name: Email campaign title
+
+
+Subject Line: Email subject
+
+
+Audience: Who receives email
+
+
+Status: Draft, Scheduled, Sent, Sending
+
+
+Recipients: Count of recipients
+
+
+Open Rate: Percentage who opened
+
+
+Click Rate: Percentage who clicked links
+
+
+Sent Date: When sent or scheduled
+
+
+Actions: Edit, Send Test, View Stats, Delete
+
+
+Example Row:
+Campaign Name: "Weekly Trading Tips #42"
+
+
+Subject: "Top 5 Gold Trading Strategies This Week"
+
+
+Audience: Active Subscribers (1,234 users)
+
+
+Status: Sent (green)
+
+
+Recipients: 1,234
+
+
+Open Rate: 45.6% (563 opens)
+
+
+Click Rate: 12.3% (152 clicks)
+
+
+Sent: Oct 28, 2025 9:00 AM
+
+
+Actions: [Three-dot menu]
+
+
+Campaign Types:
+One-time broadcast (send once)
+
+
+Recurring newsletter (weekly, monthly)
+
+
+Automated trigger (welcome, abandoned cart)
+
+
+A/B test campaign (test subject lines)
+
+
+Empty State:
+"No email campaigns created"
+
+
+"Start engaging your users with targeted email campaigns"
+
+
+
+MODALS AND POPUPS
+Modal 1: Create Announcement
+When clicking "Create Announcement" :image.jpg​
+Title: "Create New Announcement"
+
+
+Form fields:
+
+ Basic Information:
+
+
+Announcement Title (text input) - required
+
+
+Example: "New Features Released!"
+
+
+Message Content (rich text editor) - required
+
+
+Full WYSIWYG editor
+
+
+Supports bold, italic, links, images
+
+
+Preview mode
+
+
+Display Settings:
+
+
+Announcement Type (dropdown):
+
+
+○ Banner (top of page)
+
+
+○ Modal (center popup)
+
+
+○ Toast (corner notification)
+
+
+○ In-Feed (between posts)
+
+
+○ Dashboard Card
+
+
+Priority (dropdown):
+
+
+Low (gray)
+
+
+Medium (yellow)
+
+
+High (orange)
+
+
+Urgent (red)
+
+
+Style/Color (color picker):
+
+
+Info (blue)
+
+
+Success (green)
+
+
+Warning (yellow)
+
+
+Error (red)
+
+
+Custom color
+
+
+Call-to-Action (Optional):
+
+
+Button Text (text input)
+
+
+Example: "Learn More", "Sign Up", "View Details"
+
+
+Button URL (text input)
+
+
+Example: "https://yoforex.net/features"
+
+
+Open in New Tab (checkbox)
+
+
+Targeting:
+
+
+Audience (checkboxes):
+
+
+☐ All Users
+
+
+☐ New Users (< 30 days)
+
+
+☐ Premium Users
+
+
+☐ Free Users
+
+
+☐ Active Traders
+
+
+☐ Inactive Users
+
+
+☐ Specific Countries (multiselect)
+
+
+☐ Custom User IDs (textarea, comma-separated)
+
+
+Scheduling:
+
+
+Start Date & Time (datetime picker)
+
+
+End Date & Time (optional)
+
+
+Dismiss Option (dropdown):
+
+
+Can be dismissed by user
+
+
+Cannot be dismissed (sticky)
+
+
+Auto-dismiss after X seconds
+
+
+Show Once (checkbox)
+
+
+If checked, user sees it only once
+
+
+Preview:
+
+
+Live preview of how announcement looks
+
+
+Shows based on selected type (banner/modal/toast)
+
+
+Buttons:
+
+
+"Publish Now" (blue) - Goes live immediately
+
+
+"Save as Draft" (gray) - Save without publishing
+
+
+"Schedule" (yellow) - Set publish date
+
+
+Cancel
+
+
+Modal 2: Edit Announcement
+Similar to Create:
+Pre-filled with existing data
+
+
+Shows analytics summary at top:
+
+
+Views, Clicks, CTR
+
+
+User feedback (if any)
+
+
+"Update Announcement" button
+
+
+"Delete Announcement" button (red)
+
+
+Modal 3: View Announcement Analytics
+When viewing analytics:
+Title: "[Announcement Title] - Analytics"
+
+
+Date range selector
+
+
+Metrics Display:
+Overview Cards:
+
+
+Total Views
+
+
+Unique Viewers
+
+
+Total Clicks (if CTA exists)
+
+
+Click-Through Rate
+
+
+Dismissal Rate
+
+
+Charts:
+Views over time (line chart)
+
+
+Clicks over time (line chart)
+
+
+Views by audience segment (pie chart)
+
+
+Device breakdown (Desktop vs Mobile)
+
+
+Engagement Table:
+User interactions
+
+
+Who clicked
+
+
+When viewed
+
+
+Device used
+
+
+Location
+
+
+Export:
+"Export Report" button (CSV)
+
+
+Modal 4: Create Email Campaign
+When creating campaign:
+Title: "Create Email Campaign"
+
+
+Form fields:
+
+ Campaign Details:
+
+
+Campaign Name (internal name)
+
+
+Email Subject Line - required
+
+
+Character count (recommended < 60)
+
+
+Preview on mobile/desktop
+
+
+Preheader Text (shown in inbox preview)
+
+
+Email Content:
+
+
+Template selector:
+
+
+Blank template
+
+
+Newsletter template
+
+
+Promotion template
+
+
+Announcement template
+
+
+Custom HTML
+
+
+Email Body (rich text editor)
+
+
+Drag-and-drop builder (optional)
+
+
+HTML editor
+
+
+Variables: {{username}}, {{email}}, {{unsubscribe_link}}
+
+
+Recipients:
+
+
+Audience (checkboxes):
+
+
+☐ All Subscribers
+
+
+☐ Active Users
+
+
+☐ Premium Members
+
+
+☐ Newsletter Subscribers
+
+
+☐ Custom List (upload CSV)
+
+
+Exclude (optional):
+
+
+Users who unsubscribed
+
+
+Users who didn't open last 3 emails
+
+
+Test Send (send to your email for testing)
+
+
+Scheduling:
+
+
+Send Immediately
+
+
+Schedule for Date/Time
+
+
+Optimize Send Time (sends at best time per user)
+
+
+Tracking:
+
+
+Track Opens (checkbox, default on)
+
+
+Track Clicks (checkbox, default on)
+
+
+UTM Parameters (for Google Analytics)
+
+
+A/B Testing (Optional):
+
+
+Test Subject Lines
+
+
+Subject Line A vs B
+
+
+Send to X% of audience first
+
+
+Winner auto-sends to rest
+
+
+Buttons:
+
+
+"Send Test Email" (sends to your email)
+
+
+"Send Now" (if immediate)
+
+
+"Schedule Campaign" (if scheduled)
+
+
+"Save as Draft"
+
+
+Cancel
+
+
+Modal 5: Email Campaign Stats
+When viewing campaign stats:
+Title: "[Campaign Name] - Statistics"
+
+
+Complete email performance data:
+
+
+Recipients: X
+
+
+Delivered: X (delivery rate)
+
+
+Opens: X (open rate %)
+
+
+Unique Opens: X
+
+
+Clicks: X (click rate %)
+
+
+Unique Clicks: X
+
+
+Bounces: X
+
+
+Unsubscribes: X
+
+
+Spam Reports: X
+
+
+Charts:
+Opens/Clicks over time
+
+
+Click heatmap (which links clicked most)
+
+
+Email client breakdown
+
+
+Device breakdown
+
+
+Link Performance Table:
+Each link in email
+
+
+Click count per link
+
+
+Most popular links
+
+
+
+ANNOUNCEMENT DISPLAY TYPES
+Banner Announcement:
+Displayed at top of all pages
+
+
+Full-width colored bar
+
+
+Icon + Title + Message + CTA button
+
+
+Dismissible (X button) or sticky
+
+
+Example: "🎉 New feature released! [Learn More]"
+
+
+Modal Announcement:
+Popup center screen
+
+
+Appears on login or page load
+
+
+Title, full message, image (optional)
+
+
+CTA buttons
+
+
+Backdrop dimming
+
+
+Can be dismissed
+
+
+Toast Notification:
+Small notification corner (top-right or bottom-right)
+
+
+Auto-dismiss after 5 seconds or manually
+
+
+Icon + short message
+
+
+Minimal, non-intrusive
+
+
+In-Feed Announcement:
+Appears between forum posts
+
+
+Looks like sponsored content
+
+
+Full rich content
+
+
+Users can scroll past
+
+
+Dashboard Card:
+Shows on user dashboard
+
+
+Card format with full content
+
+
+User can dismiss
+
+
+
+KEY TESTING POINTS
+Announcements Tab Testing:
+✅ Tab switches correctlyimage.jpg​
+
+
+✅ "Create Announcement" button worksimage.jpg​
+
+
+✅ Empty state displaysimage.jpg​
+
+
+✅ Table columns show correctlyimage.jpg​
+
+
+✅ Create announcement form validates
+
+
+✅ Rich text editor works
+
+
+✅ Preview shows correctly
+
+
+✅ Audience targeting works
+
+
+✅ Scheduling works (publish at set time)
+
+
+✅ Banner displays on pages
+
+
+✅ Modal pops up correctly
+
+
+✅ Toast notification appears
+
+
+✅ View tracking accurate
+
+
+✅ Click tracking works
+
+
+✅ Edit saves changes
+
+
+✅ Delete removes announcement
+
+
+✅ Analytics display correctly
+
+
+Email Campaigns Tab Testing:
+✅ All campaigns display
+
+
+✅ Create campaign form works
+
+
+✅ Template selector loads templates
+
+
+✅ Email editor saves content
+
+
+✅ Test send delivers email
+
+
+✅ Variables replaced ({{username}})
+
+
+✅ Audience filtering works
+
+
+✅ Scheduling sends at right time
+
+
+✅ Open tracking pixel works
+
+
+✅ Click tracking links work
+
+
+✅ Unsubscribe link functions
+
+
+✅ Bounce handling works
+
+
+✅ Analytics accurate
+
+
+✅ A/B testing splits correctly
+
+
+
+This is an excellent addition for user communication and engagement! Announcements and email campaigns are essential for keeping users informed and engaged. Make sure email deliverability is optimized!image.jpg​
+🎉 COMPLETE YOFOREX ADMIN DASHBOARD - ALL 19 PAGES!
+You now have 19 COMPLETE PAGES with full specifications:
+✅ Overview Dashboard
+
+
+✅ User Management
+
+
+✅ Content Moderation
+
+
+✅ Marketplace Management
+
+
+✅ Broker Management
+
+
+✅ Finance Management
+
+
+✅ Analytics & Reports
+
+
+✅ Gamification
+
+
+✅ SEO & Marketing
+
+
+✅ Performance Monitor
+
+
+✅ Content Studio
+
+
+✅ API & Integrations
+
+
+✅ System Settings
+
+
+✅ Security & Safety
+
+
+✅ Support & Tickets
+
+
+✅ Audit Logs
+
+
+✅ Sitemap Management
+
+
+✅ Testing & Experiments
+
+
+✅ Communications (NEW)
+
+
+
