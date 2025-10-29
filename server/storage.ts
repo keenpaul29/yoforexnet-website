@@ -834,6 +834,91 @@ export interface IStorage {
    */
   getTransactionVelocity(): Promise<any>;
   
+  /**
+   * Get total revenue with change percentage
+   */
+  getTotalRevenue(period?: string): Promise<{
+    totalRevenue: number;
+    change: number;
+  }>;
+  
+  /**
+   * Get revenue trend for last N days
+   */
+  getRevenueTrend(days: number): Promise<Array<{ date: string; revenue: number }>>;
+  
+  /**
+   * Get revenue for a specific period
+   */
+  getRevenuePeriod(period: 'today' | 'week' | 'month' | 'year' | 'all'): Promise<{
+    totalRevenue: number;
+    count: number;
+  }>;
+  
+  /**
+   * Get all withdrawal requests with filters
+   */
+  getAllWithdrawals(filters?: {
+    status?: string;
+    method?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ items: any[]; total: number }>;
+  
+  /**
+   * Complete withdrawal (mark as paid)
+   */
+  completeWithdrawal(
+    withdrawalId: string,
+    adminId: string,
+    transactionId: string,
+    notes?: string
+  ): Promise<void>;
+  
+  /**
+   * Get recent transactions (unified across all types)
+   */
+  getRecentTransactions(limit?: number, period?: string): Promise<Array<{
+    id: string;
+    userId: string;
+    username: string;
+    type: string;
+    amount: number;
+    status: string;
+    createdAt: Date;
+  }>>;
+  
+  /**
+   * Get all transactions with filters
+   */
+  getAllTransactions(filters?: {
+    type?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ items: any[]; total: number }>;
+  
+  /**
+   * Export transactions to CSV
+   */
+  exportTransactionsCSV(filters?: {
+    types?: string[];
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<string>;
+  
+  /**
+   * Get overall financial statistics
+   */
+  getFinancialStats(): Promise<{
+    totalRevenue: number;
+    totalWithdrawals: number;
+    pendingWithdrawals: number;
+    totalTransactions: number;
+    activeSubscriptions: number;
+  }>;
+  
   // ============================================================================
   // ADMIN OPERATIONS - GROUP 4: System Management (25 methods)
   // ============================================================================
@@ -13623,6 +13708,642 @@ export class DrizzleStorage implements IStorage {
       return items;
     } catch (error) {
       console.error('Error getting pending brokers:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // FINANCE METHODS IMPLEMENTATION
+  // ============================================================================
+
+  async getTotalRevenue(period?: string): Promise<{ totalRevenue: number; change: number }> {
+    try {
+      const now = new Date();
+      let startDate: Date;
+      let previousStartDate: Date;
+      
+      switch (period) {
+        case 'today':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          previousStartDate = new Date(startDate);
+          previousStartDate.setDate(previousStartDate.getDate() - 1);
+          break;
+        case '7d':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          previousStartDate = new Date(startDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case '30d':
+        default:
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          previousStartDate = new Date(startDate.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        case '90d':
+          startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+          previousStartDate = new Date(startDate.getTime() - 90 * 24 * 60 * 60 * 1000);
+          break;
+        case 'year':
+          startDate = new Date(now.getFullYear(), 0, 1);
+          previousStartDate = new Date(now.getFullYear() - 1, 0, 1);
+          break;
+        case 'all':
+          startDate = new Date(0);
+          previousStartDate = new Date(0);
+          break;
+      }
+
+      const [rechargeRevenue] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)`,
+        })
+        .from(rechargeOrders)
+        .where(and(
+          eq(rechargeOrders.status, 'completed'),
+          gte(rechargeOrders.createdAt, startDate)
+        ));
+
+      const [subscriptionRevenue] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${subscriptions.priceUsd}), 0)`,
+        })
+        .from(subscriptions)
+        .where(gte(subscriptions.createdAt, startDate));
+
+      const [previousRechargeRevenue] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)`,
+        })
+        .from(rechargeOrders)
+        .where(and(
+          eq(rechargeOrders.status, 'completed'),
+          gte(rechargeOrders.createdAt, previousStartDate),
+          lt(rechargeOrders.createdAt, startDate)
+        ));
+
+      const [previousSubscriptionRevenue] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${subscriptions.priceUsd}), 0)`,
+        })
+        .from(subscriptions)
+        .where(and(
+          gte(subscriptions.createdAt, previousStartDate),
+          lt(subscriptions.createdAt, startDate)
+        ));
+
+      const totalRevenue = Number(rechargeRevenue?.total || 0) + Number(subscriptionRevenue?.total || 0);
+      const previousRevenue = Number(previousRechargeRevenue?.total || 0) + Number(previousSubscriptionRevenue?.total || 0);
+      
+      const change = previousRevenue > 0 
+        ? ((totalRevenue - previousRevenue) / previousRevenue) * 100 
+        : 0;
+
+      return { totalRevenue, change };
+    } catch (error) {
+      console.error('Error getting total revenue:', error);
+      throw error;
+    }
+  }
+
+  async getRevenueTrend(days: number): Promise<Array<{ date: string; revenue: number }>> {
+    try {
+      const now = new Date();
+      const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+
+      const rechargeData = await db
+        .select({
+          date: sql<string>`DATE(${rechargeOrders.createdAt})`,
+          revenue: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)`,
+        })
+        .from(rechargeOrders)
+        .where(and(
+          eq(rechargeOrders.status, 'completed'),
+          gte(rechargeOrders.createdAt, startDate)
+        ))
+        .groupBy(sql`DATE(${rechargeOrders.createdAt})`);
+
+      const subscriptionData = await db
+        .select({
+          date: sql<string>`DATE(${subscriptions.createdAt})`,
+          revenue: sql<number>`COALESCE(SUM(${subscriptions.priceUsd}), 0)`,
+        })
+        .from(subscriptions)
+        .where(gte(subscriptions.createdAt, startDate))
+        .groupBy(sql`DATE(${subscriptions.createdAt})`);
+
+      const revenueMap = new Map<string, number>();
+      
+      rechargeData.forEach(item => {
+        revenueMap.set(item.date, (revenueMap.get(item.date) || 0) + Number(item.revenue));
+      });
+      
+      subscriptionData.forEach(item => {
+        revenueMap.set(item.date, (revenueMap.get(item.date) || 0) + Number(item.revenue));
+      });
+
+      const result: Array<{ date: string; revenue: number }> = [];
+      for (let i = 0; i < days; i++) {
+        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const dateStr = date.toISOString().split('T')[0];
+        result.unshift({
+          date: dateStr,
+          revenue: revenueMap.get(dateStr) || 0,
+        });
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error getting revenue trend:', error);
+      throw error;
+    }
+  }
+
+  async getRevenuePeriod(period: 'today' | 'week' | 'month' | 'year' | 'all'): Promise<{ totalRevenue: number; count: number }> {
+    try {
+      const now = new Date();
+      let startDate: Date;
+
+      switch (period) {
+        case 'today':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          break;
+        case 'week':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'month':
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        case 'year':
+          startDate = new Date(now.getFullYear(), 0, 1);
+          break;
+        case 'all':
+          startDate = new Date(0);
+          break;
+      }
+
+      const [rechargeStats] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)`,
+          count: sql<number>`COUNT(*)::int`,
+        })
+        .from(rechargeOrders)
+        .where(and(
+          eq(rechargeOrders.status, 'completed'),
+          gte(rechargeOrders.createdAt, startDate)
+        ));
+
+      const [subscriptionStats] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${subscriptions.priceUsd}), 0)`,
+          count: sql<number>`COUNT(*)::int`,
+        })
+        .from(subscriptions)
+        .where(gte(subscriptions.createdAt, startDate));
+
+      return {
+        totalRevenue: Number(rechargeStats?.total || 0) + Number(subscriptionStats?.total || 0),
+        count: Number(rechargeStats?.count || 0) + Number(subscriptionStats?.count || 0),
+      };
+    } catch (error) {
+      console.error('Error getting revenue period:', error);
+      throw error;
+    }
+  }
+
+  async getAllWithdrawals(filters?: {
+    status?: string;
+    method?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ items: any[]; total: number }> {
+    try {
+      const conditions = [];
+      
+      if (filters?.status) {
+        conditions.push(eq(withdrawalRequests.status, filters.status));
+      }
+      if (filters?.method) {
+        conditions.push(eq(withdrawalRequests.method, filters.method));
+      }
+
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+      const [countResult] = await db
+        .select({ count: sql<number>`COUNT(*)::int` })
+        .from(withdrawalRequests)
+        .where(whereClause);
+
+      const items = await db
+        .select({
+          id: withdrawalRequests.id,
+          userId: withdrawalRequests.userId,
+          username: users.username,
+          avatarUrl: users.profileImageUrl,
+          amount: withdrawalRequests.amount,
+          method: withdrawalRequests.method,
+          walletAddress: withdrawalRequests.walletAddress,
+          status: withdrawalRequests.status,
+          createdAt: withdrawalRequests.createdAt,
+          userBalance: users.totalCoins,
+        })
+        .from(withdrawalRequests)
+        .leftJoin(users, eq(withdrawalRequests.userId, users.id))
+        .where(whereClause)
+        .orderBy(desc(withdrawalRequests.createdAt))
+        .limit(filters?.limit || 50)
+        .offset(filters?.offset || 0);
+
+      return {
+        items,
+        total: Number(countResult?.count || 0),
+      };
+    } catch (error) {
+      console.error('Error getting all withdrawals:', error);
+      throw error;
+    }
+  }
+
+  async completeWithdrawal(
+    withdrawalId: string,
+    adminId: string,
+    transactionId: string,
+    notes?: string
+  ): Promise<void> {
+    try {
+      await db.transaction(async (tx) => {
+        const [withdrawal] = await tx
+          .select()
+          .from(withdrawalRequests)
+          .where(eq(withdrawalRequests.id, withdrawalId));
+
+        if (!withdrawal) {
+          throw new Error('Withdrawal not found');
+        }
+
+        if (withdrawal.status !== 'approved') {
+          throw new Error('Withdrawal must be approved before completing');
+        }
+
+        await tx
+          .update(withdrawalRequests)
+          .set({
+            status: 'completed',
+            completedBy: adminId,
+            completedAt: new Date(),
+            transactionHash: transactionId,
+            adminNotes: notes || withdrawal.adminNotes,
+            updatedAt: new Date(),
+          })
+          .where(eq(withdrawalRequests.id, withdrawalId));
+
+        await tx.insert(adminActions).values({
+          adminId,
+          actionType: 'complete_withdrawal',
+          targetType: 'withdrawal',
+          targetId: withdrawalId,
+          details: {
+            userId: withdrawal.userId,
+            amount: withdrawal.amount,
+            transactionId,
+            notes,
+          },
+        });
+      });
+    } catch (error) {
+      console.error('Error completing withdrawal:', error);
+      throw error;
+    }
+  }
+
+  async getRecentTransactions(limit: number = 20, period?: string): Promise<Array<{
+    id: string;
+    userId: string;
+    username: string;
+    type: string;
+    amount: number;
+    status: string;
+    createdAt: Date;
+  }>> {
+    try {
+      const now = new Date();
+      let startDate: Date | undefined;
+
+      if (period) {
+        switch (period) {
+          case 'today':
+            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            break;
+          case '7d':
+            startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            break;
+          case '30d':
+            startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            break;
+          case '90d':
+            startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+            break;
+          case 'year':
+            startDate = new Date(now.getFullYear(), 0, 1);
+            break;
+        }
+      }
+
+      const rechargeConditions = [eq(rechargeOrders.status, 'completed')];
+      if (startDate) {
+        rechargeConditions.push(gte(rechargeOrders.createdAt, startDate));
+      }
+
+      const recharges = await db
+        .select({
+          id: rechargeOrders.id,
+          userId: rechargeOrders.userId,
+          username: users.username,
+          type: sql<string>`'Coin Purchase'`,
+          amount: rechargeOrders.priceUsd,
+          status: rechargeOrders.status,
+          createdAt: rechargeOrders.createdAt,
+        })
+        .from(rechargeOrders)
+        .leftJoin(users, eq(rechargeOrders.userId, users.id))
+        .where(and(...rechargeConditions))
+        .orderBy(desc(rechargeOrders.createdAt))
+        .limit(limit);
+
+      const subscriptionConditions = [];
+      if (startDate) {
+        subscriptionConditions.push(gte(subscriptions.createdAt, startDate));
+      }
+
+      const subs = await db
+        .select({
+          id: subscriptions.id,
+          userId: subscriptions.userId,
+          username: users.username,
+          type: sql<string>`'Subscription'`,
+          amount: subscriptions.priceUsd,
+          status: subscriptions.status,
+          createdAt: subscriptions.createdAt,
+        })
+        .from(subscriptions)
+        .leftJoin(users, eq(subscriptions.userId, users.id))
+        .where(subscriptionConditions.length > 0 ? and(...subscriptionConditions) : undefined)
+        .orderBy(desc(subscriptions.createdAt))
+        .limit(limit);
+
+      const purchaseConditions = [];
+      if (startDate) {
+        purchaseConditions.push(gte(contentPurchases.purchasedAt, startDate));
+      }
+
+      const purchases = await db
+        .select({
+          id: contentPurchases.id,
+          userId: contentPurchases.buyerId,
+          username: users.username,
+          type: sql<string>`'Marketplace'`,
+          amount: sql<number>`${contentPurchases.priceCoins}`,
+          status: sql<string>`'completed'`,
+          createdAt: contentPurchases.purchasedAt,
+        })
+        .from(contentPurchases)
+        .leftJoin(users, eq(contentPurchases.buyerId, users.id))
+        .where(purchaseConditions.length > 0 ? and(...purchaseConditions) : undefined)
+        .orderBy(desc(contentPurchases.purchasedAt))
+        .limit(limit);
+
+      const withdrawalConditions = [];
+      if (startDate) {
+        withdrawalConditions.push(gte(withdrawalRequests.createdAt, startDate));
+      }
+
+      const withdrawals = await db
+        .select({
+          id: withdrawalRequests.id,
+          userId: withdrawalRequests.userId,
+          username: users.username,
+          type: sql<string>`'Withdrawal'`,
+          amount: withdrawalRequests.amount,
+          status: withdrawalRequests.status,
+          createdAt: withdrawalRequests.createdAt,
+        })
+        .from(withdrawalRequests)
+        .leftJoin(users, eq(withdrawalRequests.userId, users.id))
+        .where(withdrawalConditions.length > 0 ? and(...withdrawalConditions) : undefined)
+        .orderBy(desc(withdrawalRequests.createdAt))
+        .limit(limit);
+
+      const allTransactions = [
+        ...recharges.map(r => ({ ...r, createdAt: new Date(r.createdAt) })),
+        ...subs.map(s => ({ ...s, createdAt: new Date(s.createdAt) })),
+        ...purchases.map(p => ({ ...p, createdAt: new Date(p.createdAt), amount: Number(p.amount) })),
+        ...withdrawals.map(w => ({ ...w, createdAt: new Date(w.createdAt) })),
+      ];
+
+      allTransactions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+      return allTransactions.slice(0, limit);
+    } catch (error) {
+      console.error('Error getting recent transactions:', error);
+      throw error;
+    }
+  }
+
+  async getAllTransactions(filters?: {
+    type?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ items: any[]; total: number }> {
+    try {
+      const transactions: any[] = [];
+      let total = 0;
+
+      if (!filters?.type || filters.type === 'recharge') {
+        const conditions = [eq(rechargeOrders.status, 'completed')];
+        if (filters?.startDate) {
+          conditions.push(gte(rechargeOrders.createdAt, filters.startDate));
+        }
+        if (filters?.endDate) {
+          conditions.push(lte(rechargeOrders.createdAt, filters.endDate));
+        }
+
+        const recharges = await db
+          .select({
+            id: rechargeOrders.id,
+            userId: rechargeOrders.userId,
+            username: users.username,
+            type: sql<string>`'recharge'`,
+            amount: rechargeOrders.priceUsd,
+            status: rechargeOrders.status,
+            method: rechargeOrders.paymentMethod,
+            createdAt: rechargeOrders.createdAt,
+          })
+          .from(rechargeOrders)
+          .leftJoin(users, eq(rechargeOrders.userId, users.id))
+          .where(and(...conditions))
+          .orderBy(desc(rechargeOrders.createdAt));
+
+        transactions.push(...recharges);
+        total += recharges.length;
+      }
+
+      if (!filters?.type || filters.type === 'subscription') {
+        const conditions = [];
+        if (filters?.startDate) {
+          conditions.push(gte(subscriptions.createdAt, filters.startDate));
+        }
+        if (filters?.endDate) {
+          conditions.push(lte(subscriptions.createdAt, filters.endDate));
+        }
+
+        const subs = await db
+          .select({
+            id: subscriptions.id,
+            userId: subscriptions.userId,
+            username: users.username,
+            type: sql<string>`'subscription'`,
+            amount: subscriptions.priceUsd,
+            status: subscriptions.status,
+            method: subscriptions.paymentMethod,
+            createdAt: subscriptions.createdAt,
+          })
+          .from(subscriptions)
+          .leftJoin(users, eq(subscriptions.userId, users.id))
+          .where(conditions.length > 0 ? and(...conditions) : undefined)
+          .orderBy(desc(subscriptions.createdAt));
+
+        transactions.push(...subs);
+        total += subs.length;
+      }
+
+      if (!filters?.type || filters.type === 'withdrawal') {
+        const conditions = [];
+        if (filters?.startDate) {
+          conditions.push(gte(withdrawalRequests.createdAt, filters.startDate));
+        }
+        if (filters?.endDate) {
+          conditions.push(lte(withdrawalRequests.createdAt, filters.endDate));
+        }
+
+        const withdrawals = await db
+          .select({
+            id: withdrawalRequests.id,
+            userId: withdrawalRequests.userId,
+            username: users.username,
+            type: sql<string>`'withdrawal'`,
+            amount: withdrawalRequests.amount,
+            status: withdrawalRequests.status,
+            method: withdrawalRequests.method,
+            createdAt: withdrawalRequests.createdAt,
+          })
+          .from(withdrawalRequests)
+          .leftJoin(users, eq(withdrawalRequests.userId, users.id))
+          .where(conditions.length > 0 ? and(...conditions) : undefined)
+          .orderBy(desc(withdrawalRequests.createdAt));
+
+        transactions.push(...withdrawals);
+        total += withdrawals.length;
+      }
+
+      transactions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      const limit = filters?.limit || 50;
+      const offset = filters?.offset || 0;
+
+      return {
+        items: transactions.slice(offset, offset + limit),
+        total,
+      };
+    } catch (error) {
+      console.error('Error getting all transactions:', error);
+      throw error;
+    }
+  }
+
+  async exportTransactionsCSV(filters?: {
+    types?: string[];
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<string> {
+    try {
+      const { items } = await this.getAllTransactions({
+        startDate: filters?.startDate,
+        endDate: filters?.endDate,
+        limit: 10000,
+      });
+
+      const filteredItems = filters?.types && filters.types.length > 0
+        ? items.filter(item => filters.types!.includes(item.type))
+        : items;
+
+      const headers = ['ID', 'Date', 'Username', 'Type', 'Amount', 'Status', 'Method'];
+      const rows = filteredItems.map(item => [
+        item.id,
+        new Date(item.createdAt).toISOString(),
+        item.username || 'N/A',
+        item.type,
+        item.amount.toString(),
+        item.status,
+        item.method || 'N/A',
+      ]);
+
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
+      ].join('\n');
+
+      return csvContent;
+    } catch (error) {
+      console.error('Error exporting transactions CSV:', error);
+      throw error;
+    }
+  }
+
+  async getFinancialStats(): Promise<{
+    totalRevenue: number;
+    totalWithdrawals: number;
+    pendingWithdrawals: number;
+    totalTransactions: number;
+    activeSubscriptions: number;
+  }> {
+    try {
+      const [rechargeStats] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${rechargeOrders.priceUsd}), 0)`,
+          count: sql<number>`COUNT(*)::int`,
+        })
+        .from(rechargeOrders)
+        .where(eq(rechargeOrders.status, 'completed'));
+
+      const [subscriptionStats] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${subscriptions.priceUsd}), 0)`,
+          count: sql<number>`COUNT(*)::int`,
+        })
+        .from(subscriptions);
+
+      const [withdrawalStats] = await db
+        .select({
+          total: sql<number>`COALESCE(SUM(${withdrawalRequests.amount}), 0)`,
+          pending: sql<number>`COALESCE(SUM(CASE WHEN ${withdrawalRequests.status} = 'pending' THEN ${withdrawalRequests.amount} ELSE 0 END), 0)`,
+        })
+        .from(withdrawalRequests);
+
+      const [activeSubCount] = await db
+        .select({
+          count: sql<number>`COUNT(*)::int`,
+        })
+        .from(subscriptions)
+        .where(eq(subscriptions.status, 'active'));
+
+      return {
+        totalRevenue: Number(rechargeStats?.total || 0) + Number(subscriptionStats?.total || 0),
+        totalWithdrawals: Number(withdrawalStats?.total || 0),
+        pendingWithdrawals: Number(withdrawalStats?.pending || 0),
+        totalTransactions: Number(rechargeStats?.count || 0) + Number(subscriptionStats?.count || 0),
+        activeSubscriptions: Number(activeSubCount?.count || 0),
+      };
+    } catch (error) {
+      console.error('Error getting financial stats:', error);
       throw error;
     }
   }

@@ -1005,11 +1005,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: 'pending',
       });
       
-      // Send withdrawal request email (fire-and-forget)
+      // Send withdrawal request email (fire-and-forget) - only for crypto withdrawals
       (async () => {
         try {
           const user = await storage.getUser(authenticatedUserId);
-          if (user?.username) {
+          if (user?.username && validated.cryptoType) {
             await emailService.sendWithdrawalRequestReceived(
               user.username,
               validated.amount,
