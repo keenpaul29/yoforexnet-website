@@ -4691,14 +4691,16 @@ export class DrizzleStorage implements IStorage {
     if (!user) throw new Error("User not found");
     
     // Note: Slug, focusKeyword, metaDescription are now passed from routes.ts
-    // This method just stores whatever is provided
+    // This method just stores whatever is provided, with fallbacks for required fields
     const [thread] = await db.insert(forumThreads).values({
       ...insertThread,
+      // Ensure slug is always defined (generate from title if missing)
+      slug: insertThread.slug || generateThreadSlug(insertThread.title),
       // Ensure defaults for optional fields
-      isPinned: insertThread.isPinned || false,
-      isLocked: insertThread.isLocked || false,
-      isSolved: insertThread.isSolved || false,
-      engagementScore: insertThread.engagementScore || 0,
+      isPinned: insertThread.isPinned ?? false,
+      isLocked: insertThread.isLocked ?? false,
+      isSolved: insertThread.isSolved ?? false,
+      engagementScore: insertThread.engagementScore ?? 0,
       status: "approved" as const,
     }).returning();
     
