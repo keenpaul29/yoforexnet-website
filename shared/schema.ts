@@ -267,6 +267,8 @@ export const content = pgTable("content", {
   focusKeyword: text("focus_keyword"),
   autoMetaDescription: text("auto_meta_description"),
   autoImageAltTexts: text("auto_image_alt_texts").array(),
+  metaTitle: text("meta_title"),
+  metaKeywords: text("meta_keywords"),
   
   // Ranking system
   salesScore: integer("sales_score").notNull().default(0),
@@ -490,6 +492,8 @@ export const forumThreads = pgTable("forum_threads", {
   slug: text("slug").notNull().unique(),
   focusKeyword: text("focus_keyword"),
   metaDescription: text("meta_description"),
+  metaTitle: text("meta_title"),
+  metaKeywords: text("meta_keywords"),
   
   // Enhanced SEO & Thread Type
   threadType: text("thread_type").notNull().$type<"question" | "discussion" | "review" | "journal" | "guide" | "program_sharing">().default("discussion"),
@@ -775,8 +779,10 @@ export const campaigns = pgTable("campaigns", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   name: varchar("name", { length: 200 }).notNull(),
-  type: varchar("type", { length: 50 }).notNull(),
+  description: text("description"),
+  type: varchar("type", { length: 50 }).default("marketing"),
   status: varchar("status", { length: 20 }).notNull().default("active"),
+  budget: integer("budget"),
   discountPercent: integer("discount_percent"),
   discountCode: varchar("discount_code", { length: 50 }).unique(),
   startDate: timestamp("start_date").notNull(),

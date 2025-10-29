@@ -7413,7 +7413,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const searchQuery = req.query.search as string | undefined;
       
-      // Build content query with optional search filter
+      // Build content query with optional search filter - FIXED: Return metaTitle and metaKeywords
       const contentItems = searchQuery
         ? await db
             .select({
@@ -7423,8 +7423,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               type: content.type,
               category: content.category,
               status: content.status,
-              focusKeyword: content.focusKeyword,
-              autoMetaDescription: content.autoMetaDescription,
+              metaTitle: content.metaTitle,
+              metaDescription: content.autoMetaDescription,
+              metaKeywords: content.metaKeywords,
               views: content.views,
               downloads: content.downloads,
               createdAt: content.createdAt,
@@ -7446,8 +7447,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               type: content.type,
               category: content.category,
               status: content.status,
-              focusKeyword: content.focusKeyword,
-              autoMetaDescription: content.autoMetaDescription,
+              metaTitle: content.metaTitle,
+              metaDescription: content.autoMetaDescription,
+              metaKeywords: content.metaKeywords,
               views: content.views,
               downloads: content.downloads,
               createdAt: content.createdAt,
@@ -7456,7 +7458,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .orderBy(desc(content.createdAt))
             .limit(100);
 
-      // Build threads query with optional search filter
+      // Build threads query with optional search filter - FIXED: Return metaTitle and metaKeywords
       const threads = searchQuery
         ? await db
             .select({
@@ -7466,8 +7468,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               type: sql<string>`'thread'`.as('type'),
               category: forumThreads.categorySlug,
               status: forumThreads.status,
-              focusKeyword: forumThreads.focusKeyword,
-              autoMetaDescription: forumThreads.metaDescription,
+              metaTitle: forumThreads.metaTitle,
+              metaDescription: forumThreads.metaDescription,
+              metaKeywords: forumThreads.metaKeywords,
               views: forumThreads.views,
               downloads: sql<number>`0`.as('downloads'),
               createdAt: forumThreads.createdAt,
@@ -7489,8 +7492,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               type: sql<string>`'thread'`.as('type'),
               category: forumThreads.categorySlug,
               status: forumThreads.status,
-              focusKeyword: forumThreads.focusKeyword,
-              autoMetaDescription: forumThreads.metaDescription,
+              metaTitle: forumThreads.metaTitle,
+              metaDescription: forumThreads.metaDescription,
+              metaKeywords: forumThreads.metaKeywords,
               views: forumThreads.views,
               downloads: sql<number>`0`.as('downloads'),
               createdAt: forumThreads.createdAt,
@@ -7499,13 +7503,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .orderBy(desc(forumThreads.createdAt))
             .limit(100);
 
-      // Combine and return
+      // Combine and return - Return as array directly for frontend compatibility
       const allContent = [...contentItems, ...threads];
       
-      res.json({
-        content: allContent,
-        total: allContent.length,
-      });
+      res.json(allContent);
     } catch (error: any) {
       console.error("[SEO Admin] Error fetching content:", error);
       res.status(500).json({ error: "Failed to fetch content" });
@@ -7516,33 +7517,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/admin/seo/meta/:id", isModOrAdmin, adminOperationLimiter, async (req, res) => {
     try {
       const contentId = req.params.id;
-      const { focusKeyword, metaDescription, contentType } = req.body;
+      const { title, description, keywords, contentType } = req.body;
 
-      // Validate input
+      // Validate input - FIXED: Accept frontend fields (title, description, keywords)
       const updateSchema = z.object({
-        focusKeyword: z.string().optional(),
-        metaDescription: z.string().max(160).optional(),
+        title: z.string().optional(),
+        description: z.string().max(160).optional(),
+        keywords: z.string().optional(),
         contentType: z.enum(['content', 'thread']).default('content'),
       });
 
-      const validated = updateSchema.parse({ focusKeyword, metaDescription, contentType: contentType || 'content' });
+      const validated = updateSchema.parse({ title, description, keywords, contentType: contentType || 'content' });
 
       if (validated.contentType === 'thread') {
-        // Update forum thread meta tags
+        // Update forum thread meta tags - Map to correct fields
         await db
           .update(forumThreads)
           .set({
-            focusKeyword: validated.focusKeyword,
-            metaDescription: validated.metaDescription,
+            metaTitle: validated.title,
+            metaDescription: validated.description,
+            metaKeywords: validated.keywords,
           })
           .where(eq(forumThreads.id, contentId));
       } else {
-        // Update content meta tags
+        // Update content meta tags - Map to correct fields
         await db
           .update(content)
           .set({
-            focusKeyword: validated.focusKeyword,
-            autoMetaDescription: validated.metaDescription,
+            metaTitle: validated.title,
+            autoMetaDescription: validated.description,
+            metaKeywords: validated.keywords,
           })
           .where(eq(content.id, contentId));
       }
@@ -7554,7 +7558,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         actionType: 'seo_meta_updated',
         targetType: validated.contentType,
         targetId: contentId,
-        details: { focusKeyword: validated.focusKeyword, metaDescription: validated.metaDescription },
+        details: { metaTitle: validated.title, metaDescription: validated.description, metaKeywords: validated.keywords },
       });
 
       res.json({ success: true, message: "Meta tags updated successfully" });
@@ -7572,11 +7576,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const adminId = getAuthenticatedUserId(req);
       
-      // Validate campaign data
+      // Validate campaign data - FIXED: Accept frontend fields (name, description, startDate, endDate, budget)
       const campaignSchema = z.object({
         name: z.string().min(1).max(200),
-        type: z.string().max(50),
-        status: z.enum(['active', 'paused', 'completed', 'draft']).default('draft'),
+        description: z.string().optional(),
+        budget: z.number().int().min(0).optional(),
+        type: z.string().max(50).optional().default('marketing'),
+        status: z.enum(['active', 'paused', 'completed', 'draft']).optional().default('draft'),
         discountPercent: z.number().int().min(0).max(100).optional(),
         discountCode: z.string().max(50).optional(),
         startDate: z.string().transform(str => new Date(str)),
@@ -7589,6 +7595,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const [campaign] = await db.insert(campaigns).values({
         userId: adminId,
         name: validated.name,
+        description: validated.description || null,
+        budget: validated.budget || null,
         type: validated.type,
         status: validated.status,
         discountPercent: validated.discountPercent || null,
@@ -7626,7 +7634,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .from(campaigns)
         .orderBy(desc(campaigns.createdAt));
 
-      res.json({ campaigns: allCampaigns });
+      // FIXED: Return campaigns array directly (not wrapped in object)
+      res.json(allCampaigns);
     } catch (error: any) {
       console.error("[SEO Admin] Error fetching campaigns:", error);
       res.status(500).json({ error: "Failed to fetch campaigns" });

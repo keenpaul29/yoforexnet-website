@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/guides/forum-rules":{},"/guides/safe-download-guide":{},"/guides/verified-brokers":{},"/guides/ea-coding-rules":{},"/guides/how-to-earn-coins":{},"/guides/how-to-get-your-thread-seen":{},"/guides/how-to-rank-articles-blogs":{},"/guides/how-to-rank-ea-publications":{},"/guides/new-member-quickstart":{},"/guides/report-a-scam":{},"/guides/badges-levels":{},"/guides/marketplace-seller-guide":{},"/guides/template-beginner-thread":{},"/guides/template-ea-review":{},"/guides/template-trading-journal":{}},"dynamicRoutes":{"/guides/[slug]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/guides/[slug]","routeRegex":"^\\/guides\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"8a88d028fbca4fa7e34ee5a13f019578","previewModeSigningKey":"2c61dea33ccbc4dc92a1371cb1734ee173996a7aabb7013fc77a60171fc11910","previewModeEncryptionKey":"a4ecd87dfacc6dc0c0934b87c5ccff7e3fa3284f0ae7fcde2b180f4ad7b476fa"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "c6f50983e8eb9f7852d16474355e42e2",
+    "previewModeSigningKey": "8172ec8a57a12410aa823c01485651ee419e2140b1abfbca6ba0c66feb8e9f94",
+    "previewModeEncryptionKey": "5e38c4cf693d77cbc6d88f9bbc4f78ea93ed2ed36f307541c061d30fbd62d93e"
+  }
+}
