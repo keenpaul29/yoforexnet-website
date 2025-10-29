@@ -39,6 +39,12 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
     - **Main Content**: Search and filter functionality, broker cards in responsive grid, comparison selection system
     - **Right Sidebar**: Featured broker showcase, trending brokers ranking, recent reviews display, scam alerts system, broker tools (calculators), educational resources, community recommendations, newsletter signup
     - **Note**: Advanced filter UI is implemented but non-functional pending broker schema extension with required fields (regulation types, account types, leverage details, platform info, etc.)
+- **Community Members**: 3-column responsive layout with comprehensive leaderboard and member features:
+    - **Left Sidebar**: Advanced member filters (by role, activity status, coin range, join date), leaderboard categories (6 types), community stats dashboard, top achievements showcase
+    - **Main Content**: Member search, leaderboard tabs (Coins/Active/Publishers), member cards in responsive grid (1/2/3 columns), "Climb the Leaderboard" CTA
+    - **Right Sidebar**: Member of the Month spotlight (gradient card with stats and bio), Trending This Week (top 5 with coin changes), Recent Activity feed (6 activities with timestamps), New Members (4 newest with welcome badges)
+    - **Safety**: Production-ready with comprehensive guards (array safety, numeric safety, string safety, hydration safety), graceful empty states, SSR-compatible
+    - **Note**: Advanced filter UI is implemented but non-functional pending user schema extension with role/activity metadata fields. Working filters: search query.
 - **Admin Dashboard**: Provides comprehensive tools for content moderation, marketplace management, finance management, broker management, schema validation, and analytics monitoring.
     - **Admin Marketplace Management System**: Features a comprehensive moderation workflow (approve/reject/feature/soft-delete), advanced search and filtering, pagination, interactive modals, and sales analytics.
     - **Admin Finance Management System**: Includes multi-source revenue tracking, multi-method withdrawal workflow, unified transaction monitoring with CSV export, and detailed revenue analytics.
