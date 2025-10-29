@@ -5324,6 +5324,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     suspendedBy: z.string().optional()
   });
 
+  // Marketplace validation schemas
+  const approveItemSchema = z.object({
+    // No fields needed, admin ID from session
+  });
+
+  const rejectItemSchema = z.object({
+    reason: z.string().min(10, 'Rejection reason must be at least 10 characters').max(500),
+  });
+
+  const featureItemSchema = z.object({
+    durationDays: z.number().min(1).max(365),
+  });
+
   const activateUserSchema = z.object({
     activatedBy: z.string().optional()
   });
@@ -5917,6 +5930,247 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('Error fetching user stats:', error);
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ============================================
+  // ADMIN MARKETPLACE MANAGEMENT ROUTES (16 routes)
+  // ============================================
+
+  // 1. GET /api/admin/marketplace/items - All marketplace items with filters
+  app.get('/api/admin/marketplace/items', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const params = {
+        page: req.query.page ? parseInt(req.query.page as string) : 1,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 20,
+        search: req.query.search as string | undefined,
+        status: req.query.status as string | undefined,
+        category: req.query.category as string | undefined,
+        priceMin: req.query.priceMin ? parseFloat(req.query.priceMin as string) : undefined,
+        priceMax: req.query.priceMax ? parseFloat(req.query.priceMax as string) : undefined,
+        sort: req.query.sort as 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'sales' | undefined,
+      };
+      const result = await storage.getMarketplaceItems(params);
+      res.json(result);
+    } catch (error) {
+      console.error('Error fetching marketplace items:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace items' });
+    }
+  });
+
+  // 2. GET /api/admin/marketplace/items/:id - Single item details
+  app.get('/api/admin/marketplace/items/:id', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const item = await storage.getMarketplaceItemById(req.params.id);
+      if (!item) {
+        return res.status(404).json({ message: 'Item not found' });
+      }
+      res.json(item);
+    } catch (error) {
+      console.error('Error fetching marketplace item:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace item' });
+    }
+  });
+
+  // 3. GET /api/admin/marketplace/items/search - Search items
+  app.get('/api/admin/marketplace/items/search', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const params = {
+        page: 1,
+        pageSize: 50,
+        search: req.query.q as string,
+      };
+      const result = await storage.getMarketplaceItems(params);
+      res.json(result.items); // Return just the items array for search results
+    } catch (error) {
+      console.error('Error searching marketplace items:', error);
+      res.status(500).json({ message: 'Failed to search marketplace items' });
+    }
+  });
+
+  // 4. GET /api/admin/marketplace/items/pending - Pending approval items
+  app.get('/api/admin/marketplace/items/pending', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      const items = await storage.getPendingMarketplaceItems(limit);
+      res.json(items);
+    } catch (error) {
+      console.error('Error fetching pending marketplace items:', error);
+      res.status(500).json({ message: 'Failed to fetch pending marketplace items' });
+    }
+  });
+
+  // 5. POST /api/admin/marketplace/:id/approve - Approve listing
+  app.post('/api/admin/marketplace/:id/approve', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      await storage.approveMarketplaceItem(req.params.id, adminId);
+      res.json({ success: true, message: 'Item approved successfully' });
+    } catch (error: any) {
+      console.error('Error approving marketplace item:', error);
+      res.status(500).json({ message: error.message || 'Failed to approve marketplace item' });
+    }
+  });
+
+  // 6. POST /api/admin/marketplace/:id/reject - Reject listing with reason
+  app.post('/api/admin/marketplace/:id/reject', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      const validated = rejectItemSchema.parse(req.body);
+      await storage.rejectMarketplaceItem(req.params.id, adminId, validated.reason);
+      res.json({ success: true, message: 'Item rejected successfully' });
+    } catch (error: any) {
+      console.error('Error rejecting marketplace item:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: error.message || 'Failed to reject marketplace item' });
+    }
+  });
+
+  // 7. POST /api/admin/marketplace/:id/feature - Feature item
+  app.post('/api/admin/marketplace/:id/feature', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      const validated = featureItemSchema.parse(req.body);
+      await storage.featureMarketplaceItem(req.params.id, adminId, validated.durationDays);
+      res.json({ success: true, message: 'Item featured successfully' });
+    } catch (error: any) {
+      console.error('Error featuring marketplace item:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ error: 'Validation failed', details: error.errors });
+      }
+      res.status(500).json({ message: error.message || 'Failed to feature marketplace item' });
+    }
+  });
+
+  // 8. DELETE /api/admin/marketplace/:id/delete - Delete item
+  app.delete('/api/admin/marketplace/:id/delete', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      await storage.deleteMarketplaceItem(req.params.id, adminId);
+      res.json({ success: true, message: 'Item deleted successfully' });
+    } catch (error: any) {
+      console.error('Error deleting marketplace item:', error);
+      res.status(500).json({ message: error.message || 'Failed to delete marketplace item' });
+    }
+  });
+
+  // 9. GET /api/admin/marketplace/sales - All sales transactions
+  app.get('/api/admin/marketplace/sales', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const params = {
+        page: req.query.page ? parseInt(req.query.page as string) : 1,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : 50,
+        contentId: req.query.contentId as string | undefined,
+        buyerId: req.query.buyerId as string | undefined,
+        startDate: req.query.startDate ? new Date(req.query.startDate as string) : undefined,
+        endDate: req.query.endDate ? new Date(req.query.endDate as string) : undefined,
+      };
+      const result = await storage.getMarketplaceSales(params);
+      res.json(result);
+    } catch (error) {
+      console.error('Error fetching marketplace sales:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace sales' });
+    }
+  });
+
+  // 10. GET /api/admin/marketplace/sales/recent - Recent 50 sales
+  app.get('/api/admin/marketplace/sales/recent', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      const sales = await storage.getRecentMarketplaceSales(limit);
+      res.json(sales);
+    } catch (error) {
+      console.error('Error fetching recent marketplace sales:', error);
+      res.status(500).json({ message: 'Failed to fetch recent marketplace sales' });
+    }
+  });
+
+  // 11. GET /api/admin/marketplace/revenue - Revenue data by period
+  app.get('/api/admin/marketplace/revenue', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const period = (req.query.period as 'today' | 'week' | 'month' | 'year' | 'all') || 'all';
+      const revenue = await storage.getMarketplaceRevenue(period);
+      res.json(revenue);
+    } catch (error) {
+      console.error('Error fetching marketplace revenue:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace revenue' });
+    }
+  });
+
+  // 12. GET /api/admin/marketplace/revenue-chart - 30-day revenue trend
+  app.get('/api/admin/marketplace/revenue-chart', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const days = req.query.days ? parseInt(req.query.days as string) : 30;
+      const trendData = await storage.getRevenueTrend(days);
+      res.json(trendData);
+    } catch (error) {
+      console.error('Error fetching revenue trend:', error);
+      res.status(500).json({ message: 'Failed to fetch revenue trend' });
+    }
+  });
+
+  // 13. GET /api/admin/marketplace/top-selling - Best-selling items
+  app.get('/api/admin/marketplace/top-selling', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const items = await storage.getTopSellingItems(limit);
+      res.json(items);
+    } catch (error) {
+      console.error('Error fetching top-selling items:', error);
+      res.status(500).json({ message: 'Failed to fetch top-selling items' });
+    }
+  });
+
+  // 14. GET /api/admin/marketplace/top-vendors - Top-earning sellers
+  app.get('/api/admin/marketplace/top-vendors', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const vendors = await storage.getTopVendors(limit);
+      res.json(vendors);
+    } catch (error) {
+      console.error('Error fetching top vendors:', error);
+      res.status(500).json({ message: 'Failed to fetch top vendors' });
+    }
+  });
+
+  // 15. GET /api/admin/marketplace/categories - Category performance
+  app.get('/api/admin/marketplace/categories', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      // This endpoint returns category-level analytics
+      // For now, return empty array (can be enhanced later with storage method)
+      res.json([]);
+    } catch (error) {
+      console.error('Error fetching marketplace categories:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace categories' });
+    }
+  });
+
+  // 16. GET /api/admin/marketplace/stats - Marketplace statistics
+  app.get('/api/admin/marketplace/stats', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const stats = await storage.getMarketplaceStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Error fetching marketplace stats:', error);
+      res.status(500).json({ message: 'Failed to fetch marketplace stats' });
     }
   });
 
