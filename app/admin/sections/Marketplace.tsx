@@ -226,7 +226,10 @@ export default function AdminMarketplace() {
       return apiRequest("POST", `/api/admin/marketplace/${itemId}/approve`, {});
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-selling"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-vendors"] });
       toast({ title: "Item approved successfully" });
     },
     onError: () => {
@@ -240,9 +243,12 @@ export default function AdminMarketplace() {
       return apiRequest("POST", `/api/admin/marketplace/${rejectItemId}/reject`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace"] });
-      toast({ title: "Item rejected successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-selling"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-vendors"] });
       setRejectItemId(null);
+      toast({ title: "Item rejected successfully" });
       rejectForm.reset();
     },
     onError: () => {
@@ -256,9 +262,12 @@ export default function AdminMarketplace() {
       return apiRequest("POST", `/api/admin/marketplace/${featureItemId}/feature`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace"] });
-      toast({ title: "Item featured successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/items"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-selling"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/marketplace/top-vendors"] });
       setFeatureItemId(null);
+      toast({ title: "Item featured successfully" });
       featureForm.reset();
     },
     onError: () => {
