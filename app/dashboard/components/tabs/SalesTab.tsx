@@ -9,9 +9,16 @@ import { FilterPanel } from "../shared/FilterPanel";
 import { DollarSign, ShoppingCart, TrendingUp, Percent } from "lucide-react";
 import { Line, LineChart, Bar, BarChart, Pie, PieChart, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
+interface SalesDashboardData {
+  totalRevenue: number;
+  totalSales: number;
+  avgSale: number;
+  conversionRate: number;
+}
+
 export function SalesTab() {
   const [filters, setFilters] = useState({});
-  const { data: salesData, isLoading } = useQuery({
+  const { data: salesData, isLoading } = useQuery<SalesDashboardData>({
     queryKey: ["/api/me/sales-dashboard", filters],
   });
 
