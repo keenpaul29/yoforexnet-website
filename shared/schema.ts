@@ -138,14 +138,35 @@ export const withdrawalRequests = pgTable("withdrawal_requests", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => users.id),
   amount: integer("amount").notNull(),
-  cryptoType: text("crypto_type").notNull().$type<"BTC" | "ETH">(),
+  
+  // Withdrawal Method Flexibility - method field with default 'crypto' for backward compatibility
+  method: text("method").$type<"crypto" | "paypal" | "bank" | "other">().default("crypto"),
+  paymentReference: text("payment_reference"), // For fiat payment confirmations
+  
+  // Crypto fields - now NULLABLE for backward compatibility with fiat withdrawals
+  cryptoType: text("crypto_type").$type<"BTC" | "ETH">(),
   walletAddress: text("wallet_address").notNull(),
-  status: text("status").notNull().$type<"pending" | "processing" | "completed" | "failed" | "cancelled">().default("pending"),
-  exchangeRate: numeric("exchange_rate", { precision: 20, scale: 8 }).notNull(),
-  cryptoAmount: numeric("crypto_amount", { precision: 20, scale: 8 }).notNull(),
+  exchangeRate: numeric("exchange_rate", { precision: 20, scale: 8 }),
+  cryptoAmount: numeric("crypto_amount", { precision: 20, scale: 8 }),
+  
+  // Extended status enum to include 'approved' and 'rejected'
+  status: text("status").notNull().$type<"pending" | "approved" | "rejected" | "processing" | "completed" | "failed" | "cancelled">().default("pending"),
+  
   processingFee: integer("processing_fee").notNull(),
   transactionHash: text("transaction_hash"),
   adminNotes: text("admin_notes"),
+  
+  // Admin Workflow Tracking Fields (all nullable for backward compatibility)
+  approvedBy: varchar("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at"),
+  rejectedBy: varchar("rejected_by").references(() => users.id),
+  rejectedAt: timestamp("rejected_at"),
+  rejectionReason: text("rejection_reason"),
+  completedBy: varchar("completed_by").references(() => users.id),
+  
+  // Revenue Tracking Field (for finance reporting)
+  amountUsd: numeric("amount_usd", { precision: 10, scale: 2 }),
+  
   requestedAt: timestamp("requested_at").notNull().defaultNow(),
   processedAt: timestamp("processed_at"),
   completedAt: timestamp("completed_at"),
@@ -154,6 +175,9 @@ export const withdrawalRequests = pgTable("withdrawal_requests", {
 }, (table) => ({
   userIdIdx: index("idx_withdrawal_requests_user_id").on(table.userId),
   statusIdx: index("idx_withdrawal_requests_status").on(table.status),
+  methodIdx: index("idx_withdrawal_requests_method").on(table.method),
+  approvedByIdx: index("idx_withdrawal_requests_approved_by").on(table.approvedBy),
+  statusMethodIdx: index("idx_withdrawal_requests_status_method").on(table.status, table.method),
   amountCheck: check("chk_withdrawal_amount_min", sql`${table.amount} >= 1000`),
 }));
 
@@ -1234,9 +1258,12 @@ export const insertWithdrawalRequestSchema = createInsertSchema(withdrawalReques
   completedAt: true,
   createdAt: true,
   updatedAt: true,
+  approvedAt: true,
+  rejectedAt: true,
 }).extend({
   amount: z.number().min(1000, "Minimum withdrawal is 1000 coins"),
-  cryptoType: z.enum(["BTC", "ETH"]),
+  method: z.enum(["crypto", "paypal", "bank", "other"]).optional(),
+  cryptoType: z.enum(["BTC", "ETH"]).optional(),
   walletAddress: z.string().min(26, "Invalid wallet address").max(100, "Invalid wallet address"),
 });
 
@@ -1404,6 +1431,7 @@ export type InsertCoinTransaction = z.infer<typeof insertCoinTransactionSchema>;
 export type RechargeOrder = typeof rechargeOrders.$inferSelect;
 export type InsertRechargeOrder = z.infer<typeof insertRechargeOrderSchema>;
 export type WithdrawalRequest = typeof withdrawalRequests.$inferSelect;
+export type SelectWithdrawalRequest = typeof withdrawalRequests.$inferSelect; // Alias for consistency
 export type InsertWithdrawalRequest = z.infer<typeof insertWithdrawalRequestSchema>;
 export type Content = typeof content.$inferSelect;
 export type InsertContent = z.infer<typeof insertContentSchema>;
@@ -1838,6 +1866,7 @@ export type ContentRevision = typeof contentRevisions.$inferSelect;
 export const insertUserActivitySchema = createInsertSchema(userActivity).omit({ id: true, createdAt: true });
 export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
 export type UserActivity = typeof userActivity.$inferSelect;
+
 
 //=================================================================
 // SITEMAP LOGS

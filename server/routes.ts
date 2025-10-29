@@ -6638,7 +6638,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Use getScamReports without filters to find specific report
       const result = await storage.getScamReports({ page: 1, pageSize: 1000 });
-      const report = result.items.find(r => r.id === reportId);
+      const report = result.items.find((r: any) => r.id === reportId);
       
       if (!report) {
         return res.status(404).json({ error: "Scam report not found" });
