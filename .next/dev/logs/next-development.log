@@ -1,70 +1,22 @@
-[00:00:01.590] Server  LOG      ✓ Ready in 1158ms
-[00:00:01.592] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.477] Server  LOG      ✓ Ready in 1089ms
+[00:00:01.972] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:05.129] Server  LOG      ○ Compiling / ...
-[00:00:12.115] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.134] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.135] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:12.138] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.139] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:12.140] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.141] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:12.219] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.270] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.270] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:12.271] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.271] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:12.272] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.272] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:13.476] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.477] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:13.478] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.479] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:13.480] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.480] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:14.093] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:14.154] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:15.132] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
-      <RedirectBoundary>
-        <RedirectErrorBoundary router={{...}}>
-          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
-            <SegmentViewNode type="page" pagePath="page.tsx">
-              <SegmentTrieNode>
-              <HomePage>
-                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
-                  <div className="min-h-scre...">
-                    <Header>
-                    <StatsBar>
-                    <main>
-                    <EnhancedFooter>
-                      <footer className="border-t m...">
-                        <div className="container ...">
-                          <div>
-                          <div className="border-t p...">
-                            <p>
-                            <div className="flex flex-...">
-                              <p>
-                              <p>
-+                               1761756505575
--                               1761756504544
-            ...
-          ...
-
-[00:00:17.147] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:04.534] Server  LOG      ○ Compiling / ...
+[00:00:18.505] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.531] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.532] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:18.537] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.537] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:18.539] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.539] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:18.616] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.616] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:18.628] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.628] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:18.631] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:18.631] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:18.855] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.807] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -406,65 +358,7 @@ https://react.dev/link/hydration-mismatch
                                   <div className="flex flex-...">
                                     <p>
                                     <p>
-+                                     1761756506823
--                                     1761756503553
++                                     1761757242487
+-                                     1761757239376
                   ...
 
-[00:00:20.626] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.tsx">
-                      <SegmentTrieNode>
-                      <link>
-                      <script>
-                      <script>
-                      <script>
-                      <RootLayout>
-                        <html lang="en" suppressHydrationWarning={true}>
-                          <head>
-                            <script>
-                            <script
-                              dangerouslySetInnerHTML={{
-+                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
--                               __html: ""
-                              }}
--                             src="/__replco/static/devtools/injected.js"
--                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
-                            >
-                          <body
-                            className="inter_5972bc34-module__OU16Qa__className"
--                           data-new-gr-c-s-check-loaded="14.1260.0"
--                           data-gr-ext-installed=""
-                          >
-                            ...
-                              <div className="border-t p...">
-                                <p>
-                                <div className="flex flex-...">
-                                  <p>
-                                  <p>
-+                                   1761756509914
--                                   1761756503755
-                  ...
-
-[00:03:28.646] Server  LOG      ○ Compiling /admin ...
-[00:03:31.093] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

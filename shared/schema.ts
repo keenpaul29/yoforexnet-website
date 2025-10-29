@@ -228,6 +228,16 @@ export const content = pgTable("content", {
   salesScore: integer("sales_score").notNull().default(0),
   lastSalesUpdate: timestamp("last_sales_update"),
   
+  // Marketplace moderation fields
+  approvedBy: varchar("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at"),
+  rejectedBy: varchar("rejected_by").references(() => users.id),
+  rejectedAt: timestamp("rejected_at"),
+  rejectionReason: text("rejection_reason"),
+  featured: boolean("featured").notNull().default(false),
+  featuredUntil: timestamp("featured_until"),
+  deletedAt: timestamp("deleted_at"),
+  
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
@@ -236,6 +246,8 @@ export const content = pgTable("content", {
   categoryIdx: index("idx_content_category").on(table.category),
   slugIdx: index("idx_content_slug").on(table.slug),
   salesScoreIdx: index("idx_content_sales_score").on(table.salesScore),
+  featuredIdx: index("idx_content_featured").on(table.featured),
+  deletedAtIdx: index("idx_content_deleted_at").on(table.deletedAt),
 }));
 
 export const contentPurchases = pgTable("content_purchases", {
