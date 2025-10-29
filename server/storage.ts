@@ -233,7 +233,7 @@ export interface IStorage {
   updateBrokerReviewStatus(reviewId: string, status: string): Promise<BrokerReview>;
   updateBrokerRating(brokerId: string): Promise<void>;
   
-  createForumThread(thread: InsertForumThread): Promise<ForumThread>;
+  createForumThread(thread: InsertForumThread, authorId: string): Promise<ForumThread>;
   getForumThreadById(id: string): Promise<ForumThread | undefined>;
   getForumThreadBySlug(slug: string): Promise<ForumThread | undefined>;
   listForumThreads(filters?: { categorySlug?: string; status?: string; isPinned?: boolean; limit?: number }): Promise<ForumThread[]>;
@@ -1338,6 +1338,46 @@ export interface IStorage {
    * Update feedback status (admin)
    */
   updateFeedbackStatus(id: string, status: string, adminNotes?: string): Promise<void>;
+  
+  // ============================================================================
+  // ADMIN OVERVIEW ENDPOINTS - Dashboard Analytics
+  // ============================================================================
+  
+  /**
+   * Get admin overview statistics
+   * Returns aggregated stats for users, content, revenue, and moderation
+   */
+  getAdminOverviewStats(): Promise<{
+    users: { total: number; new24h: number };
+    content: { total: number; new24h: number };
+    revenue: { total: number; today: number };
+    moderation: { pending: number; reports: number };
+  }>;
+  
+  /**
+   * Get user growth series for charts
+   * Returns daily user registration counts for the last N days
+   */
+  getUserGrowthSeries(days: number): Promise<Array<{ date: string; users: number }>>;
+  
+  /**
+   * Get content trend series for charts
+   * Returns daily content creation counts for the last N days
+   */
+  getContentTrendSeries(days: number): Promise<Array<{ date: string; count: number }>>;
+  
+  /**
+   * Get recent admin actions for activity feed
+   * Returns the last N admin actions with admin usernames
+   */
+  getRecentAdminActions(limit: number): Promise<Array<{
+    id: string;
+    adminUsername: string;
+    actionType: string;
+    targetType: string;
+    status: string;
+    createdAt: string;
+  }>>;
 }
 
 export class MemStorage implements IStorage {
@@ -2315,8 +2355,8 @@ export class MemStorage implements IStorage {
     });
   }
   
-  async createForumThread(insertThread: InsertForumThread): Promise<ForumThread> {
-    const user = this.users.get(insertThread.authorId);
+  async createForumThread(insertThread: InsertForumThread, authorId: string): Promise<ForumThread> {
+    const user = this.users.get(authorId);
     if (!user) throw new Error("User not found");
     
     const id = randomUUID();
@@ -2328,7 +2368,7 @@ export class MemStorage implements IStorage {
     
     const thread: ForumThread = {
       id,
-      authorId: insertThread.authorId,
+      authorId,
       categorySlug: insertThread.categorySlug,
       subcategorySlug: insertThread.subcategorySlug || null,
       title: insertThread.title,
@@ -2377,7 +2417,7 @@ export class MemStorage implements IStorage {
     await this.updateCategoryStats(insertThread.categorySlug);
     
     await this.createActivity({
-      userId: insertThread.authorId,
+      userId: authorId,
       activityType: "thread_created",
       entityType: "thread",
       entityId: id,
@@ -3655,10 +3695,6 @@ export class MemStorage implements IStorage {
     return { actions: [], total: 0 };
   }
 
-  async getRecentAdminActions(limit?: number): Promise<any[]> {
-    return [];
-  }
-
   async getAdminActivitySummary(adminId: string, days: number): Promise<any> {
     return { totalActions: 0, actionsByType: {} };
   }
@@ -3848,6 +3884,40 @@ export class MemStorage implements IStorage {
 
   async updateFeedbackStatus(id: string, status: string, adminNotes?: string): Promise<void> {
     return Promise.resolve();
+  }
+  
+  // Admin Overview Endpoints - Return empty/zero data for MemStorage
+  async getAdminOverviewStats(): Promise<{
+    users: { total: number; new24h: number };
+    content: { total: number; new24h: number };
+    revenue: { total: number; today: number };
+    moderation: { pending: number; reports: number };
+  }> {
+    return {
+      users: { total: 0, new24h: 0 },
+      content: { total: 0, new24h: 0 },
+      revenue: { total: 0, today: 0 },
+      moderation: { pending: 0, reports: 0 }
+    };
+  }
+  
+  async getUserGrowthSeries(days: number): Promise<Array<{ date: string; users: number }>> {
+    return [];
+  }
+  
+  async getContentTrendSeries(days: number): Promise<Array<{ date: string; count: number }>> {
+    return [];
+  }
+  
+  async getRecentAdminActions(limit: number): Promise<Array<{
+    id: string;
+    adminUsername: string;
+    actionType: string;
+    targetType: string;
+    status: string;
+    createdAt: string;
+  }>> {
+    return [];
   }
 }
 
@@ -4693,14 +4763,15 @@ export class DrizzleStorage implements IStorage {
       .where(eq(brokers.id, brokerId));
   }
   
-  async createForumThread(insertThread: InsertForumThread): Promise<ForumThread> {
-    const user = await this.getUser(insertThread.authorId);
+  async createForumThread(insertThread: InsertForumThread, authorId: string): Promise<ForumThread> {
+    const user = await this.getUser(authorId);
     if (!user) throw new Error("User not found");
     
     // Note: Slug, focusKeyword, metaDescription are now passed from routes.ts
     // This method just stores whatever is provided, with fallbacks for required fields
     const [thread] = await db.insert(forumThreads).values({
       ...insertThread,
+      authorId,
       // Ensure slug is always defined (generate from title if missing)
       slug: insertThread.slug || generateThreadSlug(insertThread.title),
       // Ensure defaults for optional fields
@@ -4714,7 +4785,7 @@ export class DrizzleStorage implements IStorage {
     await this.updateCategoryStats(insertThread.categorySlug);
     
     await this.createActivity({
-      userId: insertThread.authorId,
+      userId: authorId,
       activityType: "thread_created",
       entityType: "thread",
       entityId: thread.id,
@@ -8701,19 +8772,6 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async getRecentAdminActions(limit: number = 50): Promise<any[]> {
-    try {
-      return await db
-        .select()
-        .from(adminActions)
-        .orderBy(desc(adminActions.createdAt))
-        .limit(limit);
-    } catch (error) {
-      console.error("Error fetching recent admin actions:", error);
-      throw error;
-    }
-  }
-
   async getAdminActivitySummary(adminId: string, days: number = 30): Promise<any> {
     try {
       const cutoffDate = new Date();
@@ -9497,6 +9555,209 @@ export class DrizzleStorage implements IStorage {
         .where(eq(feedback.id, id));
     } catch (error) {
       console.error("Error updating feedback status:", error);
+      throw error;
+    }
+  }
+  
+  // ============================================================================
+  // ADMIN OVERVIEW ENDPOINTS - Dashboard Analytics
+  // ============================================================================
+  
+  async getAdminOverviewStats(): Promise<{
+    users: { total: number; new24h: number };
+    content: { total: number; new24h: number };
+    revenue: { total: number; today: number };
+    moderation: { pending: number; reports: number };
+  }> {
+    try {
+      // Count total users
+      const [totalUsersResult] = await db
+        .select({ count: count() })
+        .from(users);
+      const totalUsers = totalUsersResult?.count || 0;
+      
+      // Count new users in last 24h
+      const [new24hUsersResult] = await db
+        .select({ count: count() })
+        .from(users)
+        .where(gte(users.createdAt, sql`NOW() - INTERVAL '24 hours'`));
+      const new24hUsers = new24hUsersResult?.count || 0;
+      
+      // Count total content (forumThreads + content)
+      const [totalThreadsResult] = await db
+        .select({ count: count() })
+        .from(forumThreads);
+      const totalThreads = totalThreadsResult?.count || 0;
+      
+      const [totalContentResult] = await db
+        .select({ count: count() })
+        .from(content);
+      const totalContent = totalContentResult?.count || 0;
+      
+      const totalContentCount = totalThreads + totalContent;
+      
+      // Count new content in last 24h
+      const [new24hThreadsResult] = await db
+        .select({ count: count() })
+        .from(forumThreads)
+        .where(gte(forumThreads.createdAt, sql`NOW() - INTERVAL '24 hours'`));
+      const new24hThreads = new24hThreadsResult?.count || 0;
+      
+      const [new24hContentResult] = await db
+        .select({ count: count() })
+        .from(content)
+        .where(gte(content.createdAt, sql`NOW() - INTERVAL '24 hours'`));
+      const new24hContent = new24hContentResult?.count || 0;
+      
+      const new24hContentCount = new24hThreads + new24hContent;
+      
+      // Sum revenue from coinTransactions (type='recharge')
+      const revenueResults = await db
+        .select({ amount: coinTransactions.amount })
+        .from(coinTransactions)
+        .where(eq(coinTransactions.type, 'recharge'));
+      
+      const totalRevenue = revenueResults.reduce((sum, row) => sum + (row.amount || 0), 0);
+      
+      // Sum today's revenue
+      const todayRevenueResults = await db
+        .select({ amount: coinTransactions.amount })
+        .from(coinTransactions)
+        .where(
+          and(
+            eq(coinTransactions.type, 'recharge'),
+            gte(coinTransactions.createdAt, sql`CURRENT_DATE`)
+          )
+        );
+      
+      const todayRevenue = todayRevenueResults.reduce((sum, row) => sum + (row.amount || 0), 0);
+      
+      // Count pending moderation queue items
+      const [pendingModerationResult] = await db
+        .select({ count: count() })
+        .from(moderationQueue)
+        .where(eq(moderationQueue.status, 'pending'));
+      const pendingModeration = pendingModerationResult?.count || 0;
+      
+      // Count unresolved reported content
+      const [unresolvedReportsResult] = await db
+        .select({ count: count() })
+        .from(reportedContent)
+        .where(eq(reportedContent.status, 'pending'));
+      const unresolvedReports = unresolvedReportsResult?.count || 0;
+      
+      return {
+        users: { total: totalUsers, new24h: new24hUsers },
+        content: { total: totalContentCount, new24h: new24hContentCount },
+        revenue: { total: totalRevenue, today: todayRevenue },
+        moderation: { pending: pendingModeration, reports: unresolvedReports }
+      };
+    } catch (error) {
+      console.error("Error getting admin overview stats:", error);
+      throw error;
+    }
+  }
+  
+  async getUserGrowthSeries(days: number): Promise<Array<{ date: string; users: number }>> {
+    try {
+      const results = await db
+        .select({
+          date: sql<string>`DATE(${users.createdAt})`,
+          users: count()
+        })
+        .from(users)
+        .where(gte(users.createdAt, sql`CURRENT_DATE - INTERVAL '${sql.raw(days.toString())} days'`))
+        .groupBy(sql`DATE(${users.createdAt})`)
+        .orderBy(asc(sql`DATE(${users.createdAt})`));
+      
+      return results.map(row => ({
+        date: row.date,
+        users: row.users || 0
+      }));
+    } catch (error) {
+      console.error("Error getting user growth series:", error);
+      throw error;
+    }
+  }
+  
+  async getContentTrendSeries(days: number): Promise<Array<{ date: string; count: number }>> {
+    try {
+      // Get thread counts by day
+      const threadResults = await db
+        .select({
+          date: sql<string>`DATE(${forumThreads.createdAt})`,
+          count: count()
+        })
+        .from(forumThreads)
+        .where(gte(forumThreads.createdAt, sql`CURRENT_DATE - INTERVAL '${sql.raw(days.toString())} days'`))
+        .groupBy(sql`DATE(${forumThreads.createdAt})`);
+      
+      // Get content counts by day
+      const contentResults = await db
+        .select({
+          date: sql<string>`DATE(${content.createdAt})`,
+          count: count()
+        })
+        .from(content)
+        .where(gte(content.createdAt, sql`CURRENT_DATE - INTERVAL '${sql.raw(days.toString())} days'`))
+        .groupBy(sql`DATE(${content.createdAt})`);
+      
+      // Merge the results by date
+      const dateMap = new Map<string, number>();
+      
+      threadResults.forEach(row => {
+        dateMap.set(row.date, (dateMap.get(row.date) || 0) + (row.count || 0));
+      });
+      
+      contentResults.forEach(row => {
+        dateMap.set(row.date, (dateMap.get(row.date) || 0) + (row.count || 0));
+      });
+      
+      // Convert to array and sort by date
+      const result = Array.from(dateMap.entries())
+        .map(([date, count]) => ({ date, count }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+      
+      return result;
+    } catch (error) {
+      console.error("Error getting content trend series:", error);
+      throw error;
+    }
+  }
+  
+  async getRecentAdminActions(limit: number): Promise<Array<{
+    id: string;
+    adminUsername: string;
+    actionType: string;
+    targetType: string;
+    status: string;
+    createdAt: string;
+  }>> {
+    try {
+      const results = await db
+        .select({
+          id: adminActions.id,
+          adminId: adminActions.adminId,
+          adminUsername: users.username,
+          actionType: adminActions.actionType,
+          targetType: adminActions.targetType,
+          createdAt: adminActions.createdAt
+        })
+        .from(adminActions)
+        .leftJoin(users, eq(adminActions.adminId, users.id))
+        .orderBy(desc(adminActions.createdAt))
+        .limit(limit);
+      
+      return results.map(row => ({
+        id: row.id?.toString() || '',
+        adminUsername: row.adminUsername || 'System',
+        actionType: row.actionType || '',
+        targetType: row.targetType || '',
+        status: 'completed', // adminActions table doesn't have status field - all logged actions are completed
+        createdAt: row.createdAt?.toISOString() || new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error("Error getting recent admin actions:", error);
       throw error;
     }
   }

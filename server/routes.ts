@@ -2600,9 +2600,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 2. Sanitize inputs - allow HTML in body only
       const validated = sanitizeRequestBody(validationResult.data, ['body']);
       
-      // Override authorId with authenticated user ID
-      validated.authorId = authenticatedUserId;
-      
       // Validate word count (min 150 words)
       const wordCount = countWords(validated.body);
       if (wordCount < 150) {
@@ -2661,7 +2658,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         strategies: deduplicated.strategies,
         hashtags: deduplicated.hashtags,
         engagementScore: 0, // Initial score
-      });
+      }, authenticatedUserId);
       
       // Award coins for thread creation
       try {
@@ -4689,6 +4686,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================================
   // ADMIN ROUTES - Use only existing storage methods
   // ============================================
+  
+  // Admin Overview Dashboard Endpoints
+  app.get('/api/admin/overview/stats', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const stats = await storage.getAdminOverviewStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Error fetching admin overview stats:', error);
+      res.status(500).json({ message: 'Failed to fetch overview stats' });
+    }
+  });
+  
+  app.get('/api/admin/overview/user-growth', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const userGrowth = await storage.getUserGrowthSeries(7);
+      res.json(userGrowth);
+    } catch (error) {
+      console.error('Error fetching user growth series:', error);
+      res.status(500).json({ message: 'Failed to fetch user growth data' });
+    }
+  });
+  
+  app.get('/api/admin/overview/content-trend', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const contentTrend = await storage.getContentTrendSeries(7);
+      res.json(contentTrend);
+    } catch (error) {
+      console.error('Error fetching content trend series:', error);
+      res.status(500).json({ message: 'Failed to fetch content trend data' });
+    }
+  });
+  
+  app.get('/api/admin/overview/activity-feed', isAuthenticated, adminOperationLimiter, async (req, res) => {
+    if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
+    try {
+      const activityFeed = await storage.getRecentAdminActions(20);
+      res.json(activityFeed);
+    } catch (error) {
+      console.error('Error fetching admin activity feed:', error);
+      res.status(500).json({ message: 'Failed to fetch activity feed' });
+    }
+  });
 
   // Admin System Settings
   app.get('/api/admin/settings', isAuthenticated, adminOperationLimiter, async (req, res) => {
@@ -5002,7 +5044,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/admin/logs/recent', isAuthenticated, adminOperationLimiter, async (req, res) => {
     if (!isAdmin(req.user)) return res.status(403).json({ message: 'Admin access required' });
     try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
       const actions = await storage.getRecentAdminActions(limit);
       res.json(actions);
     } catch (error) {
