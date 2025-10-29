@@ -14,6 +14,10 @@ import { apiRequest } from '@/lib/api-config';
 import { getCategoryByPath } from '@/lib/category-path';
 import ThreadDetailClient from '@/app/thread/[slug]/ThreadDetailClient';
 import CategoryDiscussionClient from '@/app/category/[slug]/CategoryDiscussionClient';
+import BreadcrumbSchema from '@/app/components/BreadcrumbSchema';
+import { db } from '@/lib/db';
+import { forumCategories } from '@/shared/schema';
+import { eq } from 'drizzle-orm';
 
 type Props = {
   params: { path: string[] };
@@ -144,6 +148,37 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
     notFound();
   }
   
-  // Render category discussion page
-  return <CategoryDiscussionClient slug={category.slug} />;
+  // Build breadcrumb path from category hierarchy
+  const breadcrumbPath: { name: string; url: string }[] = [
+    { name: 'Home', url: '/' },
+  ];
+  
+  // Walk up the category hierarchy to build breadcrumbs
+  const categorySegments = fullPath.split('/');
+  for (let i = 0; i < categorySegments.length; i++) {
+    const segmentPath = categorySegments.slice(0, i + 1).join('/');
+    const segmentSlug = categorySegments[i];
+    
+    // Fetch category name for this segment
+    const [segmentCategory] = await db
+      .select()
+      .from(forumCategories)
+      .where(eq(forumCategories.slug, segmentSlug))
+      .limit(1);
+    
+    if (segmentCategory) {
+      breadcrumbPath.push({
+        name: segmentCategory.name,
+        url: `/category/${segmentPath}`,
+      });
+    }
+  }
+  
+  // Render category discussion page with breadcrumbs
+  return (
+    <>
+      <BreadcrumbSchema path={breadcrumbPath} />
+      <CategoryDiscussionClient slug={category.slug} />
+    </>
+  );
 }

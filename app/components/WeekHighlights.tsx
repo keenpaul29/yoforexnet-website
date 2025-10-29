@@ -227,9 +227,11 @@ export default function WeekHighlights({
   const displaySolvedThreads = solvedData && solvedData.length > 0 ? solvedData.map(convertToHighlightThread) : solvedThreads;
 
   const handleThreadClick = (thread: HighlightThread) => {
-    // Try to get the slug from the full thread data
+    // Try to get the fullUrl or slug from the full thread data
     const fullThread = threadsWithSlug.get(thread.id);
-    if (fullThread?.slug) {
+    if (fullThread?.fullUrl) {
+      router.push(fullThread.fullUrl);
+    } else if (fullThread?.slug) {
       router.push(`/thread/${fullThread.slug}`);
     } else {
       // Fallback to ID-based navigation (will need backend support)

@@ -13,6 +13,7 @@ import { RefreshButton } from "./RefreshButton";
 interface TopSeller {
   id: string;
   slug: string;
+  fullUrl?: string;
   title: string;
   type: "ea" | "indicator" | "article" | "source_code";
   priceCoins: number;
@@ -105,7 +106,7 @@ export default function TopSellers() {
         ) : (
           // Content items
           topSellers.map((item, index) => (
-            <Link key={item.id} href={`/content/${item.slug}`} data-testid={`link-seller-${item.id}`}>
+            <Link key={item.id} href={item.fullUrl || `/content/${item.slug}`} data-testid={`link-seller-${item.id}`}>
               <div className="flex items-center gap-3 py-2 px-2.5 rounded-lg hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-seller-${item.id}`}>
                 <div className="flex-shrink-0 relative">
                   <Avatar className="w-10 h-10 rounded-md">

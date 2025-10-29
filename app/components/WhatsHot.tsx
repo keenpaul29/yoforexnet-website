@@ -83,7 +83,8 @@ export default function WhatsHot() {
   };
 
   // Get link URL based on content type
-  const getItemLink = (item: HotItem) => {
+  const getItemLink = (item: HotItem & { fullUrl?: string }) => {
+    if (item.fullUrl) return item.fullUrl;
     if (item.type === 'thread') return `/thread/${item.slug}`;
     if (item.type === 'broker') return `/brokers/${item.slug}`;
     return `/content/${item.slug}`;

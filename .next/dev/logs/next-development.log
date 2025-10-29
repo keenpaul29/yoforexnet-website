@@ -1,28 +1,29 @@
-[00:00:01.261] Server  LOG      ✓ Ready in 830ms
-[00:00:01.461] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.706] Server  LOG      ✓ Ready in 1341ms
+[00:00:01.709] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:04.278] Server  LOG      ○ Compiling / ...
-[00:00:13.826] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.840] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.840] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:13.844] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.844] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:13.845] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.845] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:13.945] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.015] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.015] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:14.017] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.017] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:14.025] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.026] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:14.053] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.054] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:14.054] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.055] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:14.057] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:14.057] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:18.103] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:04.766] Server  LOG      ○ Compiling / ...
+[00:00:23.235] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.254] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.255] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:23.259] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.259] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:23.260] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.260] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:23.300] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.301] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:23.302] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.302] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:23.303] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.304] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:23.385] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.486] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.487] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:23.488] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.511] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:23.512] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:23.512] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:28.513] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:28.851] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -56,13 +57,12 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761741283941
--                               1761741324814
++                               1761741988653
+-                               1761742028149
             ...
           ...
 
-[00:00:19.040] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:19.040] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:29.522] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -96,21 +96,21 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761741284690
--                               1761741324957
++                               1761741988070
+-                               1761742027693
             ...
           ...
 
-[00:00:29.086] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:29.087] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:29.088] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:29.089] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:29.090] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:29.091] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:30.123] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:02:00.735] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:00.736] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:02:00.738] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:00.738] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:02:00.740] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:02:00.740] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:02:01.825] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:30.206] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:31.199] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:02:01.905] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:02.936] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -133,21 +133,334 @@ https://react.dev/link/hydration-mismatch
                 <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
                   <div className="min-h-scre...">
                     <Header>
-                    <StatsBar initialStats={{...}}>
-                      <div className="border-y b...">
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
                         <div className="container ...">
                           <div>
-                          <div className="grid grid-...">
-                            <div>
-                            <div className="flex items...">
-                              <div>
-                              <div>
-                                <div className="text-2xl font-bold" data-testid="text-stat-members">
-+                                 15
--                                 16
-                                ...
-                            ...
-                    ...
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761742125996
+-                               1761742124641
             ...
           ...
 
+[00:04:36.312] Server  ERROR    ⨯ ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:04:36.776] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:36.864] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:37.775] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:37.775] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:37.993] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:37.993] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:38.211] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:38.863] Browser ERROR   ./app/thread/[slug]/page.tsx:7:1
+Module not found: Can't resolve '@/lib/category-path'
+   5 | import type { ForumThread, ForumReply } from '@shared/schema';
+   6 | import ThreadDetailClient from './ThreadDetailClient';
+>  7 | import { getThreadUrl } from '@/lib/category-path';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | interface PageProps {
+  10 |   params: Promise<{ slug: string }>;
+
+Import map: aliased to relative './app/lib/category-path' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:10.151] Server  ERROR    ⨯ ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:05:10.157] Server  ERROR    ⨯ ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:05:10.600] Browser ERROR   ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:10.861] Browser ERROR   ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:12.413] Browser ERROR   ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:12.859] Browser ERROR   ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:25.118] Server  LOG      ✓ Compiled in 352ms
+[00:05:25.126] Browser ERROR   ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:25.439] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:25.439] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:05:25.441] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:25.441] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:05:25.442] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:25.442] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:05:25.500] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:25.501] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:05:25.502] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:25.503] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:05:25.504] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:25.504] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:05:25.850] Browser ERROR   ./lib/category-path.ts:9:1
+Module not found: Can't resolve '@/server/db'
+   7 |  */
+   8 |
+>  9 | import { db } from '@/server/db';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { forumCategories, type ForumThread, type Content } from '@shared/schema';
+  11 | import { eq } from 'drizzle-orm';
+  12 |
+
+Import map: aliased to relative './app/server/db' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./lib/category-path.ts
+    ./app/thread/[slug]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:39.472] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:05:39.673] Server  ERROR   Failed to fetch /api/threads/slug/gold-20-xauusd-m1-scalping: 404 "Not Found"
+[00:05:39.674] Server  ERROR   Failed to fetch /api/threads/slug/gold-20-xauusd-m1-scalping: 404 "Not Found"
+[00:05:53.294] Server  ERROR    ⨯ Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+  {}
+[00:06:47.841] Server  LOG      ✓ Compiled in 486ms
+[00:06:48.134] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:48.134] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:48.136] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:48.136] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:48.137] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:48.137] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:48.175] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:48.176] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:48.177] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:48.177] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:48.178] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:48.178] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:51.334] Server  LOG      ✓ Compiled in 481ms
+[00:06:51.606] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:51.606] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:51.607] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:51.607] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:51.609] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:51.609] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:06:51.648] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:51.648] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:06:51.650] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:51.650] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:06:51.652] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:06:51.652] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:07:01.942] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001

@@ -6,7 +6,7 @@
  * "xauusd-scalping" → "trading-strategies/scalping-m1-m15/xauusd-scalping"
  */
 
-import { db } from '@/server/db';
+import { db } from '../server/db';
 import { forumCategories, type ForumThread, type Content } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 

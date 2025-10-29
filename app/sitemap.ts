@@ -3,6 +3,7 @@ import { db } from '../lib/db';
 import { forumThreads, content, users, forumCategories } from '../shared/schema';
 import { desc } from 'drizzle-orm';
 import type { ForumThread, Content, User, ForumCategory } from '../shared/schema';
+import { getCategoryPath, getThreadUrl, getContentUrl } from '../lib/category-path';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://yoforex.net';
@@ -28,6 +29,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all categories
   const categories = await db.query.forumCategories.findMany();
 
+  // Generate hierarchical URLs for threads in parallel
+  const threadUrls = await Promise.all(
+    threads.map(async (thread: ForumThread) => ({
+      url: `${baseUrl}${await getThreadUrl(thread)}`,
+      lastModified: thread.updatedAt ? new Date(thread.updatedAt) : new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
+  );
+
+  // Generate hierarchical URLs for content in parallel
+  const contentUrls = await Promise.all(
+    contentItems.map(async (item: Content) => ({
+      url: `${baseUrl}${await getContentUrl(item)}`,
+      lastModified: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    }))
+  );
+
+  // Generate hierarchical URLs for categories in parallel
+  const categoryUrls = await Promise.all(
+    categories.map(async (category: ForumCategory) => ({
+      url: `${baseUrl}/category/${await getCategoryPath(category.slug)}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    }))
+  );
+
   return [
     // Homepage
     {
@@ -36,20 +67,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 1.0,
     },
-    // Forum threads
-    ...threads.map((thread: ForumThread) => ({
-      url: `${baseUrl}/thread/${thread.slug}`,
-      lastModified: thread.updatedAt ? new Date(thread.updatedAt) : new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    })),
-    // Marketplace content
-    ...contentItems.map((item: Content) => ({
-      url: `${baseUrl}/content/${item.slug}`,
-      lastModified: item.updatedAt ? new Date(item.updatedAt) : new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    })),
+    // Forum threads (hierarchical URLs)
+    ...threadUrls,
+    // Marketplace content (hierarchical URLs)
+    ...contentUrls,
     // User profiles
     ...userProfiles.map((user: User) => ({
       url: `${baseUrl}/user/${user.username}`,
@@ -57,13 +78,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),
-    // Categories
-    ...categories.map((category: ForumCategory) => ({
-      url: `${baseUrl}/category/${category.slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.7,
-    })),
+    // Categories (hierarchical URLs)
+    ...categoryUrls,
     // Static pages
     {
       url: `${baseUrl}/marketplace`,

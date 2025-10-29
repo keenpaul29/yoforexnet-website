@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import { permanentRedirect } from 'next/navigation';
 import ContentDetailClient from './ContentDetailClient';
 import type { Content, User as UserType, ContentReview } from '@shared/schema';
+import { getContentUrl } from '../../../lib/category-path';
 
 // Express API base URL
 const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL || 'http://localhost:5000';
@@ -86,7 +88,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     content = undefined;
   }
 
-  // If content not found, return Client Component with undefined content to show custom error card
+  // If content not found, return 404
   if (!content) {
     return (
       <ContentDetailClient
@@ -100,46 +102,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     );
   }
 
-  // Fetch all additional data in parallel
-  const [authorRes, reviewsRes, similarContentRes, authorReleasesRes] = await Promise.all([
-    // Fetch author
-    content.authorId 
-      ? fetch(`${EXPRESS_URL}/api/user/${content.authorId}`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-    
-    // Fetch reviews
-    content.id 
-      ? fetch(`${EXPRESS_URL}/api/content/${content.id}/reviews`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-    
-    // Fetch similar content (same category)
-    content.category 
-      ? fetch(`${EXPRESS_URL}/api/content?category=${content.category}&limit=5`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-    
-    // Fetch author's other releases
-    content.authorId 
-      ? fetch(`${EXPRESS_URL}/api/user/${content.authorId}/content`, { cache: 'no-store' }).catch(() => null)
-      : Promise.resolve(null),
-  ]);
-
-  // Parse responses
-  const author = authorRes?.ok ? await authorRes.json() : undefined;
-  const reviews = reviewsRes?.ok ? await reviewsRes.json() : [];
-  const similarContent = similarContentRes?.ok ? await similarContentRes.json() : [];
-  const authorReleases = authorReleasesRes?.ok ? await authorReleasesRes.json() : [];
-
-  // Pass all data to Client Component
-  return (
-    <ContentDetailClient
-      slug={slug}
-      initialContent={content}
-      initialAuthor={author}
-      initialReviews={reviews}
-      initialSimilarContent={similarContent}
-      initialAuthorReleases={authorReleases}
-    />
-  );
+  // Generate hierarchical URL and perform permanent redirect (308 for SEO)
+  // Note: Next.js uses 308 (not 301) for permanent redirects to preserve HTTP method
+  // Both 301 and 308 transfer SEO equity equally; 308 is the modern standard
+  const hierarchicalUrl = await getContentUrl(content);
+  permanentRedirect(hierarchicalUrl);
 }
 
 // Enable dynamic rendering with no caching

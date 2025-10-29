@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { Content, User as UserType, ContentReview } from "@shared/schema";
+import BreadcrumbSchema from "@/app/components/BreadcrumbSchema";
 
 // Review form schema
 const reviewFormSchema = z.object({
@@ -263,8 +264,17 @@ export default function ContentDetailClient({
   const files = content.files || [];
   const tags = content.tags || [];
 
+  // Build breadcrumb schema
+  const breadcrumbPath = [
+    { name: 'Home', url: '/' },
+    { name: 'Marketplace', url: '/marketplace' },
+    { name: content.category || 'Content', url: `/category/${content.category}` },
+    { name: content.title, url: content.fullUrl || `/content/${content.slug}` }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <BreadcrumbSchema path={breadcrumbPath} />
       <Header />
       
       <main className="container max-w-7xl mx-auto px-4 py-8">

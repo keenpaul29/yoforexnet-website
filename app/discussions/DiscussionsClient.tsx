@@ -39,6 +39,7 @@ type Thread = {
   title: string;
   body: string;
   slug: string;
+  fullUrl?: string;
   categorySlug: string;
   authorId: string;
   views: number;
@@ -540,7 +541,7 @@ export default function DiscussionsClient({ initialThreads }: DiscussionsClientP
                 const isExpanded = expandedCards.has(thread.id);
 
                 return (
-                  <Link key={thread.id} href={`/thread/${thread.slug}`}>
+                  <Link key={thread.id} href={thread.fullUrl || `/thread/${thread.slug}`}>
                     <Card 
                       className="h-full hover:border-primary/30 hover-elevate active-elevate-2 cursor-pointer transition-all duration-200"
                       data-testid={`card-thread-${thread.slug}`}

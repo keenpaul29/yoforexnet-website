@@ -10,6 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 interface ForumThreadCardProps {
   id: string;
   slug?: string;
+  fullUrl?: string;
   title: string;
   excerpt: string;
   author: {
@@ -100,6 +101,7 @@ const threadTypeConfig = {
 export default function ForumThreadCard({
   id,
   slug,
+  fullUrl,
   title,
   excerpt,
   author,
@@ -116,7 +118,7 @@ export default function ForumThreadCard({
   lastActivity
 }: ForumThreadCardProps) {
   const categoryStyles = getCategoryStyles(category);
-  const threadUrl = slug ? `/thread/${slug}` : `/thread/${id}`;
+  const threadUrl = fullUrl || (slug ? `/thread/${slug}` : `/thread/${id}`);
   const threadConfig = threadTypeConfig[threadType];
   const ThreadIcon = threadConfig.icon;
   

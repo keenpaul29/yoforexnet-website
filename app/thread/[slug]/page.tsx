@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import type { ForumThread, ForumReply } from '@shared/schema';
 import ThreadDetailClient from './ThreadDetailClient';
+import { getThreadUrl } from '../../../lib/category-path';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -91,17 +92,9 @@ export default async function ThreadDetailPage({ params }: PageProps) {
     notFound();
   }
   
-  // Fetch replies if thread exists
-  let replies: ForumReply[] = [];
-  if (thread?.id) {
-    const repliesData = await fetchData(`/api/threads/${thread.id}/replies`);
-    replies = repliesData || [];
-  }
-
-  return (
-    <ThreadDetailClient 
-      initialThread={thread}
-      initialReplies={replies}
-    />
-  );
+  // Generate hierarchical URL and perform permanent redirect (308 for SEO)
+  // Note: Next.js uses 308 (not 301) for permanent redirects to preserve HTTP method
+  // Both 301 and 308 transfer SEO equity equally; 308 is the modern standard
+  const hierarchicalUrl = await getThreadUrl(thread);
+  permanentRedirect(hierarchicalUrl);
 }

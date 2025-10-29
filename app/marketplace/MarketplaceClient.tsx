@@ -30,6 +30,7 @@ import Link from "next/link";
 interface Content {
   id: string;
   slug: string;
+  fullUrl?: string;
   title: string;
   description: string;
   type: string;
@@ -301,7 +302,7 @@ export default function MarketplaceClient({ initialContent }: MarketplaceClientP
                 : "space-y-4"
               }>
                 {filteredAndSortedContent.map((item) => (
-                  <Link key={item.id} href={`/content/${item.slug}`} data-testid={`link-content-${item.id}`}>
+                  <Link key={item.id} href={item.fullUrl || `/content/${item.slug}`} data-testid={`link-content-${item.id}`}>
                     <Card className="hover-elevate active-elevate-2 cursor-pointer h-full" data-testid={`card-content-${item.id}`}>
                       <CardContent className="p-0">
                         {viewMode === "grid" ? (

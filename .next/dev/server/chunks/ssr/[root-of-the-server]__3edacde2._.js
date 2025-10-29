@@ -3062,9 +3062,9 @@ const threadTypeConfig = {
         color: "text-indigo-600 dark:text-indigo-400"
     }
 };
-function ForumThreadCard({ id, slug, title, excerpt, author, category, threadType = "discussion", replyCount, viewCount, coinsEarned = 0, isAnswered = false, isPinned = false, hasSetFile = false, hasBacktest = false, isLiveVerified = false, lastActivity }) {
+function ForumThreadCard({ id, slug, fullUrl, title, excerpt, author, category, threadType = "discussion", replyCount, viewCount, coinsEarned = 0, isAnswered = false, isPinned = false, hasSetFile = false, hasBacktest = false, isLiveVerified = false, lastActivity }) {
     const categoryStyles = getCategoryStyles(category);
-    const threadUrl = slug ? `/thread/${slug}` : `/thread/${id}`;
+    const threadUrl = fullUrl || (slug ? `/thread/${slug}` : `/thread/${id}`);
     const threadConfig = threadTypeConfig[threadType];
     const ThreadIcon = threadConfig.icon;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3091,7 +3091,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         src: author.avatar
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 137,
+                                        lineNumber: 139,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -3099,13 +3099,13 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         children: author.name.slice(0, 2).toUpperCase()
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 138,
+                                        lineNumber: 140,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 136,
+                                lineNumber: 138,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3120,7 +3120,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                 children: "Pinned"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 144,
+                                                lineNumber: 146,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3132,14 +3132,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 151,
+                                                        lineNumber: 153,
                                                         columnNumber: 19
                                                     }, this),
                                                     threadConfig.label
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 146,
+                                                lineNumber: 148,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3148,7 +3148,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                 children: category
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 154,
+                                                lineNumber: 156,
                                                 columnNumber: 17
                                             }, this),
                                             isAnswered && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3158,20 +3158,20 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 162,
+                                                        lineNumber: 164,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Solved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 163,
+                                                        lineNumber: 165,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 161,
+                                                lineNumber: 163,
                                                 columnNumber: 19
                                             }, this),
                                             isLiveVerified && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3182,14 +3182,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 168,
+                                                        lineNumber: 170,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Live"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 167,
+                                                lineNumber: 169,
                                                 columnNumber: 19
                                             }, this),
                                             hasSetFile && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3200,14 +3200,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 174,
+                                                        lineNumber: 176,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Set"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 173,
+                                                lineNumber: 175,
                                                 columnNumber: 19
                                             }, this),
                                             hasBacktest && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3218,14 +3218,14 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-2.5 w-2.5 mr-0.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 180,
+                                                        lineNumber: 182,
                                                         columnNumber: 21
                                                     }, this),
                                                     "Test"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 179,
+                                                lineNumber: 181,
                                                 columnNumber: 19
                                             }, this),
                                             coinsEarned > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3235,7 +3235,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 186,
+                                                        lineNumber: 188,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3245,19 +3245,19 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 187,
+                                                        lineNumber: 189,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 185,
+                                                lineNumber: 187,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 142,
+                                        lineNumber: 144,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3266,7 +3266,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         children: title
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 192,
+                                        lineNumber: 194,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3274,7 +3274,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         children: excerpt
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 196,
+                                        lineNumber: 198,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3286,7 +3286,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                 children: author.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 201,
+                                                lineNumber: 203,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3296,20 +3296,20 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 203,
+                                                        lineNumber: 205,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: author.reputation
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                        lineNumber: 204,
+                                                        lineNumber: 206,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 202,
+                                                lineNumber: 204,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3317,7 +3317,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                 children: "•"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 206,
+                                                lineNumber: 208,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3328,30 +3328,30 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                                 })
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                                lineNumber: 207,
+                                                lineNumber: 209,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 200,
+                                        lineNumber: 202,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 141,
+                                lineNumber: 143,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                        lineNumber: 135,
+                        lineNumber: 137,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/components/ForumThreadCard.tsx",
-                    lineNumber: 134,
+                    lineNumber: 136,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3367,7 +3367,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         className: "h-3.5 w-3.5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 216,
+                                        lineNumber: 218,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3378,13 +3378,13 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 217,
+                                        lineNumber: 219,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 215,
+                                lineNumber: 217,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3395,7 +3395,7 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         className: "h-3.5 w-3.5"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 220,
+                                        lineNumber: 222,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3405,35 +3405,35 @@ function ForumThreadCard({ id, slug, title, excerpt, author, category, threadTyp
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                        lineNumber: 221,
+                                        lineNumber: 223,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/ForumThreadCard.tsx",
-                                lineNumber: 219,
+                                lineNumber: 221,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/ForumThreadCard.tsx",
-                        lineNumber: 214,
+                        lineNumber: 216,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/components/ForumThreadCard.tsx",
-                    lineNumber: 213,
+                    lineNumber: 215,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/ForumThreadCard.tsx",
-            lineNumber: 125,
+            lineNumber: 127,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/ForumThreadCard.tsx",
-        lineNumber: 124,
+        lineNumber: 126,
         columnNumber: 5
     }, this);
 }
@@ -4525,9 +4525,11 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
     const displayTrendingThreads = trendingData && trendingData.length > 0 ? trendingData.map(convertToHighlightThread) : trendingThreads;
     const displaySolvedThreads = solvedData && solvedData.length > 0 ? solvedData.map(convertToHighlightThread) : solvedThreads;
     const handleThreadClick = (thread)=>{
-        // Try to get the slug from the full thread data
+        // Try to get the fullUrl or slug from the full thread data
         const fullThread = threadsWithSlug.get(thread.id);
-        if (fullThread?.slug) {
+        if (fullThread?.fullUrl) {
+            router.push(fullThread.fullUrl);
+        } else if (fullThread?.slug) {
             router.push(`/thread/${fullThread.slug}`);
         } else {
             // Fallback to ID-based navigation (will need backend support)
@@ -4556,7 +4558,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                 children: thread.category
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 253,
+                                                lineNumber: 255,
                                                 columnNumber: 17
                                             }, this),
                                             thread.isAnswered && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4567,26 +4569,26 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 262,
+                                                        lineNumber: 264,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Solved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 263,
+                                                        lineNumber: 265,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 261,
+                                                lineNumber: 263,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 252,
+                                        lineNumber: 254,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -4595,7 +4597,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                         children: thread.title
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 269,
+                                        lineNumber: 271,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4603,7 +4605,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                         children: thread.id
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 277,
+                                        lineNumber: 279,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4616,7 +4618,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5 text-blue-500/70"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 284,
+                                                        lineNumber: 286,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4625,13 +4627,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         children: thread.replies
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 287,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 283,
+                                                lineNumber: 285,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4641,7 +4643,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5 text-purple-500/70"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 291,
+                                                        lineNumber: 293,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4650,13 +4652,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         children: thread.views.toLocaleString()
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 292,
+                                                        lineNumber: 294,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 290,
+                                                lineNumber: 292,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4666,7 +4668,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         className: "h-3.5 w-3.5 text-orange-500/70"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 298,
+                                                        lineNumber: 300,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4676,25 +4678,25 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                        lineNumber: 299,
+                                                        lineNumber: 301,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                                lineNumber: 297,
+                                                lineNumber: 299,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 282,
+                                        lineNumber: 284,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                lineNumber: 250,
+                                lineNumber: 252,
                                 columnNumber: 13
                             }, this),
                             thread.isAnswered ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4706,17 +4708,17 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                         children: "0"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                                        lineNumber: 308,
+                                        lineNumber: 310,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 307,
+                                    lineNumber: 309,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                lineNumber: 306,
+                                lineNumber: 308,
                                 columnNumber: 15
                             }, this) : thread.coins && thread.coins > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
                                 variant: "secondary",
@@ -4728,23 +4730,23 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/WeekHighlights.tsx",
-                                lineNumber: 314,
+                                lineNumber: 316,
                                 columnNumber: 15
                             }, this) : null
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/components/WeekHighlights.tsx",
-                        lineNumber: 249,
+                        lineNumber: 251,
                         columnNumber: 11
                     }, this)
                 }, thread.id, false, {
                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                    lineNumber: 243,
+                    lineNumber: 245,
                     columnNumber: 9
                 }, this))
         }, void 0, false, {
             fileName: "[project]/app/components/WeekHighlights.tsx",
-            lineNumber: 241,
+            lineNumber: 243,
             columnNumber: 5
         }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -4763,7 +4765,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     className: "h-5 w-5 text-primary"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 334,
+                                    lineNumber: 336,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4771,13 +4773,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "This Week's Highlights"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 335,
+                                    lineNumber: 337,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 333,
+                            lineNumber: 335,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$RefreshButton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["RefreshButton"], {
@@ -4786,13 +4788,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                             variant: "ghost"
                         }, void 0, false, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 337,
+                            lineNumber: 339,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                    lineNumber: 332,
+                    lineNumber: 334,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -4809,7 +4811,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "New"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 347,
+                                    lineNumber: 349,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -4819,7 +4821,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "Trending"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 354,
+                                    lineNumber: 356,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -4829,13 +4831,13 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: "Solved"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 361,
+                                    lineNumber: 363,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 346,
+                            lineNumber: 348,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4847,7 +4849,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: renderThreadList(displayNewThreads)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 371,
+                                    lineNumber: 373,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -4856,7 +4858,7 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: renderThreadList(displayTrendingThreads)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 374,
+                                    lineNumber: 376,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -4865,30 +4867,30 @@ function WeekHighlights({ newThreads = defaultNewThreads, trendingThreads = defa
                                     children: renderThreadList(displaySolvedThreads)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                                    lineNumber: 377,
+                                    lineNumber: 379,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WeekHighlights.tsx",
-                            lineNumber: 370,
+                            lineNumber: 372,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/WeekHighlights.tsx",
-                    lineNumber: 345,
+                    lineNumber: 347,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/WeekHighlights.tsx",
-            lineNumber: 330,
+            lineNumber: 332,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/WeekHighlights.tsx",
-        lineNumber: 329,
+        lineNumber: 331,
         columnNumber: 5
     }, this);
 }
@@ -5502,6 +5504,7 @@ function WhatsHot() {
     };
     // Get link URL based on content type
     const getItemLink = (item)=>{
+        if (item.fullUrl) return item.fullUrl;
         if (item.type === 'thread') return `/thread/${item.slug}`;
         if (item.type === 'broker') return `/brokers/${item.slug}`;
         return `/content/${item.slug}`;
@@ -5522,7 +5525,7 @@ function WhatsHot() {
                                     className: "w-5 h-5 text-orange-500/70"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 98,
+                                    lineNumber: 99,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5530,13 +5533,13 @@ function WhatsHot() {
                                     children: "What's Hot"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 99,
+                                    lineNumber: 100,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WhatsHot.tsx",
-                            lineNumber: 97,
+                            lineNumber: 98,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5550,7 +5553,7 @@ function WhatsHot() {
                                     variant: "ghost"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 104,
+                                    lineNumber: 105,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -5564,29 +5567,29 @@ function WhatsHot() {
                                         children: "See All"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/WhatsHot.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 111,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 109,
+                                    lineNumber: 110,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WhatsHot.tsx",
-                            lineNumber: 103,
+                            lineNumber: 104,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/WhatsHot.tsx",
-                    lineNumber: 96,
+                    lineNumber: 97,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/components/WhatsHot.tsx",
-                lineNumber: 95,
+                lineNumber: 96,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -5605,7 +5608,7 @@ function WhatsHot() {
                                     className: "absolute inset-0 rounded-lg bg-gradient-to-r from-orange-500/3 to-red-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 135,
+                                    lineNumber: 136,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5613,7 +5616,7 @@ function WhatsHot() {
                                     children: index + 1
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 138,
+                                    lineNumber: 139,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5625,7 +5628,7 @@ function WhatsHot() {
                                             children: item.title
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                            lineNumber: 145,
+                                            lineNumber: 146,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5640,7 +5643,7 @@ function WhatsHot() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 154,
+                                                    lineNumber: 155,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5648,7 +5651,7 @@ function WhatsHot() {
                                                     children: "•"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 157,
+                                                    lineNumber: 158,
                                                     columnNumber: 21
                                                 }, this),
                                                 item.type === 'thread' && item.replyCount !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -5660,7 +5663,7 @@ function WhatsHot() {
                                                                     className: "w-3 h-3"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                    lineNumber: 163,
+                                                                    lineNumber: 164,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5670,13 +5673,13 @@ function WhatsHot() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                    lineNumber: 164,
+                                                                    lineNumber: 165,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 162,
+                                                            lineNumber: 163,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5684,7 +5687,7 @@ function WhatsHot() {
                                                             children: "•"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 166,
+                                                            lineNumber: 167,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
@@ -5702,12 +5705,12 @@ function WhatsHot() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                    lineNumber: 175,
+                                                                    lineNumber: 176,
                                                                     columnNumber: 31
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                lineNumber: 174,
+                                                                lineNumber: 175,
                                                                 columnNumber: 29
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5715,7 +5718,7 @@ function WhatsHot() {
                                                                 children: "•"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 178,
                                                                 columnNumber: 29
                                                             }, this)
                                                         ]
@@ -5730,20 +5733,20 @@ function WhatsHot() {
                                                                     className: "w-3 h-3 fill-yellow-400 text-yellow-400"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                    lineNumber: 186,
+                                                                    lineNumber: 187,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                     children: (item.overallRating / 100).toFixed(1)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                                    lineNumber: 187,
+                                                                    lineNumber: 188,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 185,
+                                                            lineNumber: 186,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5751,7 +5754,7 @@ function WhatsHot() {
                                                             children: "•"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 189,
+                                                            lineNumber: 190,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
@@ -5763,7 +5766,7 @@ function WhatsHot() {
                                                             className: "w-3.5 h-3.5"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 194,
+                                                            lineNumber: 195,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5771,19 +5774,19 @@ function WhatsHot() {
                                                             children: item.views?.toLocaleString() || 0
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 195,
+                                                            lineNumber: 196,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 193,
+                                                    lineNumber: 194,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                            lineNumber: 153,
+                                            lineNumber: 154,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5796,7 +5799,7 @@ function WhatsHot() {
                                                             className: "w-3 h-3"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 204,
+                                                            lineNumber: 205,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5806,13 +5809,13 @@ function WhatsHot() {
                                                             })
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 205,
+                                                            lineNumber: 206,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 203,
+                                                    lineNumber: 204,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -5823,14 +5826,14 @@ function WhatsHot() {
                                                             className: "w-3 h-3 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                                            lineNumber: 213,
+                                                            lineNumber: 214,
                                                             columnNumber: 23
                                                         }, this),
                                                         contentTypeInfo.label
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 209,
+                                                    lineNumber: 210,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -5839,19 +5842,19 @@ function WhatsHot() {
                                                     children: item.categorySlug
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                                    lineNumber: 218,
+                                                    lineNumber: 219,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/WhatsHot.tsx",
-                                            lineNumber: 202,
+                                            lineNumber: 203,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 143,
+                                    lineNumber: 144,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5864,42 +5867,42 @@ function WhatsHot() {
                                                 className: "w-3 h-3 mr-1"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/components/WhatsHot.tsx",
-                                                lineNumber: 233,
+                                                lineNumber: 234,
                                                 columnNumber: 21
                                             }, this),
                                             "Hot"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/components/WhatsHot.tsx",
-                                        lineNumber: 229,
+                                        lineNumber: 230,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/WhatsHot.tsx",
-                                    lineNumber: 228,
+                                    lineNumber: 229,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/WhatsHot.tsx",
-                            lineNumber: 130,
+                            lineNumber: 131,
                             columnNumber: 15
                         }, this)
                     }, item.id, false, {
                         fileName: "[project]/app/components/WhatsHot.tsx",
-                        lineNumber: 129,
+                        lineNumber: 130,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/app/components/WhatsHot.tsx",
-                lineNumber: 123,
+                lineNumber: 124,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/WhatsHot.tsx",
-        lineNumber: 93,
+        lineNumber: 94,
         columnNumber: 5
     }, this);
 }
@@ -5972,7 +5975,7 @@ function TopSellers() {
             children: index + 1
         }, void 0, false, {
             fileName: "[project]/app/components/TopSellers.tsx",
-            lineNumber: 56,
+            lineNumber: 57,
             columnNumber: 7
         }, this);
     };
@@ -5991,14 +5994,14 @@ function TopSellers() {
                                     className: "w-4 h-4 text-amber-500"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                    lineNumber: 67,
+                                    lineNumber: 68,
                                     columnNumber: 13
                                 }, this),
                                 "Top Sellers"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/TopSellers.tsx",
-                            lineNumber: 66,
+                            lineNumber: 67,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6012,7 +6015,7 @@ function TopSellers() {
                                     variant: "ghost"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                    lineNumber: 71,
+                                    lineNumber: 72,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -6026,29 +6029,29 @@ function TopSellers() {
                                         children: "See All"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TopSellers.tsx",
-                                        lineNumber: 77,
+                                        lineNumber: 78,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                    lineNumber: 76,
+                                    lineNumber: 77,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/TopSellers.tsx",
-                            lineNumber: 70,
+                            lineNumber: 71,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/TopSellers.tsx",
-                    lineNumber: 65,
+                    lineNumber: 66,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/components/TopSellers.tsx",
-                lineNumber: 64,
+                lineNumber: 65,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -6063,7 +6066,7 @@ function TopSellers() {
                                 className: "w-10 h-10 rounded-md"
                             }, void 0, false, {
                                 fileName: "[project]/app/components/TopSellers.tsx",
-                                lineNumber: 89,
+                                lineNumber: 90,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6073,20 +6076,20 @@ function TopSellers() {
                                         className: "h-4 w-3/4"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TopSellers.tsx",
-                                        lineNumber: 91,
+                                        lineNumber: 92,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                                         className: "h-3 w-1/2"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TopSellers.tsx",
-                                        lineNumber: 92,
+                                        lineNumber: 93,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/TopSellers.tsx",
-                                lineNumber: 90,
+                                lineNumber: 91,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6096,26 +6099,26 @@ function TopSellers() {
                                         className: "h-4 w-12"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TopSellers.tsx",
-                                        lineNumber: 95,
+                                        lineNumber: 96,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                                         className: "h-4 w-16"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/TopSellers.tsx",
-                                        lineNumber: 96,
+                                        lineNumber: 97,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/components/TopSellers.tsx",
-                                lineNumber: 94,
+                                lineNumber: 95,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, index, true, {
                         fileName: "[project]/app/components/TopSellers.tsx",
-                        lineNumber: 88,
+                        lineNumber: 89,
                         columnNumber: 13
                     }, this)) : topSellers.length === 0 ? // Empty state
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6123,11 +6126,11 @@ function TopSellers() {
                     children: "No content available yet"
                 }, void 0, false, {
                     fileName: "[project]/app/components/TopSellers.tsx",
-                    lineNumber: 102,
+                    lineNumber: 103,
                     columnNumber: 11
                 }, this) : // Content items
                 topSellers.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                        href: `/content/${item.slug}`,
+                        href: item.fullUrl || `/content/${item.slug}`,
                         "data-testid": `link-seller-${item.id}`,
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center gap-3 py-2 px-2.5 rounded-lg hover-elevate active-elevate-2 cursor-pointer",
@@ -6144,7 +6147,7 @@ function TopSellers() {
                                                     alt: item.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 112,
+                                                    lineNumber: 113,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -6152,20 +6155,20 @@ function TopSellers() {
                                                     children: item.title.substring(0, 2).toUpperCase()
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 113,
+                                                    lineNumber: 114,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                            lineNumber: 111,
+                                            lineNumber: 112,
                                             columnNumber: 19
                                         }, this),
                                         getRankBadge(index)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                    lineNumber: 110,
+                                    lineNumber: 111,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6177,7 +6180,7 @@ function TopSellers() {
                                             children: item.title
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                            lineNumber: 121,
+                                            lineNumber: 122,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6189,7 +6192,7 @@ function TopSellers() {
                                                     children: item.author.username || "Unknown"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 126,
+                                                    lineNumber: 127,
                                                     columnNumber: 21
                                                 }, this),
                                                 item.avgRating > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6199,7 +6202,7 @@ function TopSellers() {
                                                             className: "w-3 h-3 fill-amber-500 text-amber-500"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                                            lineNumber: 131,
+                                                            lineNumber: 132,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6207,25 +6210,25 @@ function TopSellers() {
                                                             children: item.avgRating.toFixed(1)
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                                            lineNumber: 132,
+                                                            lineNumber: 133,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 130,
+                                                    lineNumber: 131,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                            lineNumber: 125,
+                                            lineNumber: 126,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                    lineNumber: 120,
+                                    lineNumber: 121,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6237,7 +6240,7 @@ function TopSellers() {
                                             children: "FREE"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                            lineNumber: 140,
+                                            lineNumber: 141,
                                             columnNumber: 21
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex items-center gap-1 text-xs font-semibold text-amber-600",
@@ -6246,20 +6249,20 @@ function TopSellers() {
                                                     className: "w-3 h-3"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 145,
+                                                    lineNumber: 146,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: item.priceCoins
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 146,
+                                                    lineNumber: 147,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                            lineNumber: 144,
+                                            lineNumber: 145,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -6270,7 +6273,7 @@ function TopSellers() {
                                                     className: "w-2.5 h-2.5 mr-0.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                                    lineNumber: 150,
+                                                    lineNumber: 151,
                                                     columnNumber: 21
                                                 }, this),
                                                 item.totalSales,
@@ -6278,35 +6281,35 @@ function TopSellers() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/components/TopSellers.tsx",
-                                            lineNumber: 149,
+                                            lineNumber: 150,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/TopSellers.tsx",
-                                    lineNumber: 138,
+                                    lineNumber: 139,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/components/TopSellers.tsx",
-                            lineNumber: 109,
+                            lineNumber: 110,
                             columnNumber: 15
                         }, this)
                     }, item.id, false, {
                         fileName: "[project]/app/components/TopSellers.tsx",
-                        lineNumber: 108,
+                        lineNumber: 109,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/components/TopSellers.tsx",
-                lineNumber: 84,
+                lineNumber: 85,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/components/TopSellers.tsx",
-        lineNumber: 63,
+        lineNumber: 64,
         columnNumber: 5
     }, this);
 }
