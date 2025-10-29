@@ -1011,12 +1011,12 @@ export interface IStorage {
   /**
    * Resolve security event
    */
-  resolveSecurityEvent(eventId: number, resolvedBy: string): Promise<void>;
+  resolveSecurityEvent(eventId: number, resolvedBy: string, notes: string): Promise<void>;
   
   /**
    * Get IP bans
    */
-  getIpBans(activeOnly?: boolean): Promise<any[]>;
+  getIpBans(filters?: { isActive?: boolean }): Promise<any[]>;
   
   /**
    * Ban an IP address
@@ -1026,7 +1026,7 @@ export interface IStorage {
   /**
    * Unban an IP address
    */
-  unbanIp(ipAddress: string): Promise<void>;
+  unbanIp(ipAddress: string, unbannedBy: string): Promise<void>;
   
   /**
    * Check if IP is banned
@@ -1040,11 +1040,11 @@ export interface IStorage {
     adminId: string;
     actionType: string;
     targetType: string;
-    targetId?: string;
-    details: any;
-    ipAddress: string;
-    userAgent: string;
-  }): Promise<any>;
+    targetId: string;
+    details?: any;
+    ipAddress?: string;
+    userAgent?: string;
+  }): Promise<void>;
   
   /**
    * Get admin action logs
@@ -1057,7 +1057,7 @@ export interface IStorage {
     endDate?: Date;
     limit?: number;
     offset?: number;
-  }): Promise<{logs: any[]; total: number}>;
+  }): Promise<{actions: any[]; total: number}>;
   
   /**
    * Get recent admin actions
@@ -1083,12 +1083,18 @@ export interface IStorage {
   /**
    * Get performance metrics
    */
-  getPerformanceMetrics(metricType: string, startDate: Date, endDate: Date): Promise<any[]>;
+  getPerformanceMetrics(filters: {
+    metricType?: string;
+    metricName?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+  }): Promise<any[]>;
   
   /**
    * Get average performance
    */
-  getAveragePerformance(metricType: string, metricName: string, hours: number): Promise<number>;
+  getAveragePerformance(metricName: string, days?: number): Promise<number>;
   
   /**
    * Get performance alerts
@@ -1135,7 +1141,7 @@ export interface IStorage {
   /**
    * Get A/B tests
    */
-  getAbTests(status?: string): Promise<any[]>;
+  getAbTests(filters?: {status?: string}): Promise<any[]>;
   
   /**
    * Create A/B test
@@ -1203,7 +1209,7 @@ export interface IStorage {
   /**
    * Get API keys
    */
-  getApiKeys(userId?: string): Promise<any[]>;
+  getApiKeys(filters?: {userId?: string; isActive?: boolean}): Promise<any[]>;
   
   /**
    * Create API key
@@ -1229,7 +1235,7 @@ export interface IStorage {
   /**
    * Get webhooks
    */
-  getWebhooks(activeOnly?: boolean): Promise<any[]>;
+  getWebhooks(filters?: {isActive?: boolean}): Promise<any[]>;
   
   /**
    * Create webhook
@@ -1381,6 +1387,7 @@ export class MemStorage implements IStorage {
       firstName: null,
       lastName: null,
       profileImageUrl: null,
+      location: null,
       totalCoins: 2450,
       weeklyEarned: 85,
       rank: 142,
@@ -1401,6 +1408,8 @@ export class MemStorage implements IStorage {
       onboardingProgress: null,
       reputationScore: 0,
       lastReputationUpdate: null,
+      lastJournalPost: null,
+      level: 2,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -1438,6 +1447,7 @@ export class MemStorage implements IStorage {
       firstName: isOIDC ? ((insertUser as UpsertUser).firstName ?? null) : null,
       lastName: isOIDC ? ((insertUser as UpsertUser).lastName ?? null) : null,
       profileImageUrl: isOIDC ? ((insertUser as UpsertUser).profileImageUrl ?? null) : null,
+      location: null,
       // Traditional auth fields (if present)
       username: 'username' in insertUser ? insertUser.username : (isOIDC ? (insertUser as UpsertUser).email || 'user' : 'user'),
       password: 'password' in insertUser ? insertUser.password : null,
@@ -1462,6 +1472,8 @@ export class MemStorage implements IStorage {
       onboardingProgress: null,
       reputationScore: 0,
       lastReputationUpdate: null,
+      lastJournalPost: null,
+      level: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -1632,7 +1644,7 @@ export class MemStorage implements IStorage {
         userId,
         type: "earn",
         amount: newCoins,
-        description: `Daily activity reward: ${minutesAdded} active minutes`,
+        description: `Daily activity reward: ${minutes} active minutes`,
         status: "completed",
       });
     }
@@ -1843,6 +1855,9 @@ export class MemStorage implements IStorage {
       views: 0,
       downloads: 0,
       likes: 0,
+      isFeatured: false,
+      averageRating: null,
+      reviewCount: 0,
       status: "pending",
       slug: uniqueSlug,
       focusKeyword: seo.focusKeyword,
@@ -2167,7 +2182,11 @@ export class MemStorage implements IStorage {
       websiteUrl: insertBroker.websiteUrl || null,
       logoUrl: insertBroker.logoUrl || null,
       yearFounded: insertBroker.yearFounded || null,
+      regulation: insertBroker.regulation || null,
       regulationSummary: insertBroker.regulationSummary || null,
+      platform: insertBroker.platform || null,
+      spreadType: insertBroker.spreadType || null,
+      minSpread: insertBroker.minSpread || null,
       overallRating: 0,
       reviewCount: 0,
       scamReportCount: 0,
@@ -2311,19 +2330,44 @@ export class MemStorage implements IStorage {
       id,
       authorId: insertThread.authorId,
       categorySlug: insertThread.categorySlug,
+      subcategorySlug: insertThread.subcategorySlug || null,
       title: insertThread.title,
       body: insertThread.body,
       slug,
       focusKeyword,
       metaDescription,
+      threadType: insertThread.threadType || "discussion",
+      seoExcerpt: null,
+      primaryKeyword: null,
+      language: "en",
+      instruments: [],
+      timeframes: [],
+      strategies: [],
+      platform: null,
+      broker: null,
+      riskNote: null,
+      hashtags: [],
+      reviewTarget: null,
+      reviewVersion: null,
+      reviewRating: null,
+      reviewPros: null,
+      reviewCons: null,
+      questionSummary: null,
+      acceptedAnswerId: null,
+      attachmentUrls: [],
       isPinned: insertThread.isPinned || false,
       isLocked: insertThread.isLocked || false,
+      isSolved: false,
       views: 0,
       replyCount: 0,
+      likeCount: 0,
+      bookmarkCount: 0,
+      shareCount: 0,
       lastActivityAt: new Date(),
       status: "approved",
       engagementScore: 0,
       lastScoreUpdate: null,
+      helpfulVotes: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -2424,6 +2468,7 @@ export class MemStorage implements IStorage {
       metaDescription,
       imageUrls: insertReply.imageUrls || null,
       helpful: 0,
+      helpfulVotes: 0,
       isAccepted: false,
       isVerified: false,
       createdAt: new Date(),
@@ -3574,11 +3619,11 @@ export class MemStorage implements IStorage {
     return { id: 1, ...event, createdAt: new Date() };
   }
 
-  async resolveSecurityEvent(eventId: number, resolvedBy: string): Promise<void> {
+  async resolveSecurityEvent(eventId: number, resolvedBy: string, notes: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async getIpBans(activeOnly?: boolean): Promise<any[]> {
+  async getIpBans(filters?: { isActive?: boolean }): Promise<any[]> {
     return [];
   }
 
@@ -3586,7 +3631,7 @@ export class MemStorage implements IStorage {
     return { id: 1, ipAddress, reason, bannedBy };
   }
 
-  async unbanIp(ipAddress: string): Promise<void> {
+  async unbanIp(ipAddress: string, unbannedBy: string): Promise<void> {
     throw new Error("Not implemented in MemStorage");
   }
 
@@ -3594,12 +3639,20 @@ export class MemStorage implements IStorage {
     return false;
   }
 
-  async logAdminAction(action: any): Promise<any> {
-    return { id: 1, ...action, createdAt: new Date() };
+  async logAdminAction(action: {
+    adminId: string;
+    actionType: string;
+    targetType: string;
+    targetId: string;
+    details?: any;
+    ipAddress?: string;
+    userAgent?: string;
+  }): Promise<void> {
+    // No-op in MemStorage
   }
 
-  async getAdminActionLogs(filters: any): Promise<{logs: any[]; total: number}> {
-    return { logs: [], total: 0 };
+  async getAdminActionLogs(filters: any): Promise<{actions: any[]; total: number}> {
+    return { actions: [], total: 0 };
   }
 
   async getRecentAdminActions(limit?: number): Promise<any[]> {
@@ -3614,11 +3667,17 @@ export class MemStorage implements IStorage {
     // No-op in MemStorage
   }
 
-  async getPerformanceMetrics(metricType: string, startDate: Date, endDate: Date): Promise<any[]> {
+  async getPerformanceMetrics(filters: {
+    metricType?: string;
+    metricName?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+  }): Promise<any[]> {
     return [];
   }
 
-  async getAveragePerformance(metricType: string, metricName: string, hours: number): Promise<number> {
+  async getAveragePerformance(metricName: string, days?: number): Promise<number> {
     return 0;
   }
 
@@ -3650,7 +3709,7 @@ export class MemStorage implements IStorage {
     throw new Error("Not implemented in MemStorage");
   }
 
-  async getAbTests(status?: string): Promise<any[]> {
+  async getAbTests(filters?: {status?: string}): Promise<any[]> {
     return [];
   }
 
@@ -3694,7 +3753,7 @@ export class MemStorage implements IStorage {
     return false;
   }
 
-  async getApiKeys(userId?: string): Promise<any[]> {
+  async getApiKeys(filters?: {userId?: string; isActive?: boolean}): Promise<any[]> {
     return [];
   }
 
@@ -3710,7 +3769,7 @@ export class MemStorage implements IStorage {
     // No-op in MemStorage
   }
 
-  async getWebhooks(activeOnly?: boolean): Promise<any[]> {
+  async getWebhooks(filters?: {isActive?: boolean}): Promise<any[]> {
     return [];
   }
 
@@ -8432,22 +8491,18 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async getIpBans(filters?: {isActive?: boolean}): Promise<any[]> {
+  async getIpBans(filters?: { isActive?: boolean }): Promise<any[]> {
     try {
-      const { isActive } = filters || {};
-      
-      const conditions = [];
-      
-      if (isActive !== undefined) {
-        conditions.push(eq(ipBans.isActive, isActive));
+      if (filters?.isActive !== undefined) {
+        return await db
+          .select()
+          .from(ipBans)
+          .where(eq(ipBans.isActive, filters.isActive));
       }
-      
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       
       return await db
         .select()
         .from(ipBans)
-        .where(whereClause)
         .orderBy(desc(ipBans.bannedAt));
     } catch (error) {
       console.error("Error fetching IP bans:", error);
@@ -8757,22 +8812,18 @@ export class DrizzleStorage implements IStorage {
   // ============================================================================
 
   // Automation Rules
-  async getAutomationRules(filters?: {isActive?: boolean}): Promise<any[]> {
+  async getAutomationRules(activeOnly?: boolean): Promise<any[]> {
     try {
-      const { isActive } = filters || {};
-      
-      const conditions = [];
-      
-      if (isActive !== undefined) {
-        conditions.push(eq(automationRules.isActive, isActive));
+      if (activeOnly !== undefined) {
+        return await db
+          .select()
+          .from(automationRules)
+          .where(eq(automationRules.isActive, activeOnly));
       }
-      
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       
       return await db
         .select()
         .from(automationRules)
-        .where(whereClause)
         .orderBy(desc(automationRules.createdAt));
     } catch (error) {
       console.error("Error fetching automation rules:", error);
@@ -8843,22 +8894,18 @@ export class DrizzleStorage implements IStorage {
   }
 
   // A/B Testing
-  async getAbTests(filters?: {status?: string}): Promise<any[]> {
+  async getAbTests(status?: string): Promise<any[]> {
     try {
-      const { status } = filters || {};
-      
-      const conditions = [];
-      
       if (status) {
-        conditions.push(eq(abTests.status, status));
+        return await db
+          .select()
+          .from(abTests)
+          .where(eq(abTests.status, status));
       }
-      
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       
       return await db
         .select()
         .from(abTests)
-        .where(whereClause)
         .orderBy(desc(abTests.createdAt));
     } catch (error) {
       console.error("Error fetching A/B tests:", error);
