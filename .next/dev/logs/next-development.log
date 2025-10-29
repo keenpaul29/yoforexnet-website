@@ -95,3 +95,49 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
+[00:03:33.399] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:33.399] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:03:33.400] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:33.400] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:03:33.401] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:03:33.404] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:03:39.110] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:39.110] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar>
+                    <main>
+                    <EnhancedFooter>
+                      <footer className="border-t m...">
+                        <div className="container ...">
+                          <div>
+                          <div className="border-t p...">
+                            <p>
+                            <div className="flex flex-...">
+                              <p>
+                              <p>
++                               1761737175531
+-                               1761737214328
+            ...
+          ...
+
