@@ -1,0 +1,663 @@
+## COMPLETE INSTRUCTIONS: Build the Performance Monitor Page
+
+**WHAT YOU ARE BUILDING:**
+You are creating a Performance Monitor page for YoForex forum admin panel. This page monitors server performance, database health, system resources, response times, and provides alerts when performance issues occur to ensure the forum runs smoothly.
+
+---
+
+## PART 1: BACKEND (Server Side - Performance Monitoring)
+
+### What the Backend Does
+The backend collects real-time server metrics, monitors database performance, tracks response times, manages cache, and logs performance data for analysis.
+
+### Create These Files:
+
+**File 1: Performance Monitor Routes (routes/performance.js)**
+
+Create URLs for performance monitoring:
+
+1. `/api/performance/metrics/current` - Get current system metrics
+2. `/api/performance/metrics/history` - Get historical metrics (last 24h)
+3. `/api/performance/cpu` - Get CPU usage data
+4. `/api/performance/memory` - Get memory usage data
+5. `/api/performance/disk` - Get disk I/O data
+6. `/api/performance/network` - Get network bandwidth data
+7. `/api/performance/response-time` - Get API response times
+8. `/api/performance/throughput` - Get requests per second
+9. `/api/performance/database/queries` - Get database query performance
+10. `/api/performance/database/connections` - Get database connection pool status
+11. `/api/performance/database/slow-queries` - Get slow queries list
+12. `/api/performance/cache/stats` - Get cache hit/miss rates
+13. `/api/performance/cache/clear` - Clear cache
+14. `/api/performance/alerts` - Get performance alerts
+15. `/api/performance/alerts/configure` - Configure alert thresholds
+16. `/api/performance/export` - Export performance report
+
+**File 2: Performance Monitor Service (services/performanceService.js)**
+
+Functions that collect performance data:
+
+**Function 1: Get Current System Metrics**
+- Use Node.js `os` module to get:
+  - **CPU Usage**: Percentage of CPU being used (0-100%)
+  - **Memory Usage**: RAM used / Total RAM (percentage and MB)
+  - **Disk I/O**: Read/write speed in MB/s
+  - **Network**: Incoming/outgoing traffic in MB/s
+- Calculate in real-time
+- Return current snapshot
+
+**Function 2: Get Historical Metrics**
+- Query `performance_metrics` table
+- Get metrics collected over last 24 hours
+- For each hour include:
+  - Timestamp
+  - CPU usage (average, peak)
+  - Memory usage (average, peak)
+  - Disk I/O (average)
+  - Network traffic (average)
+  - Response time (average)
+  - Requests per second
+- Return array for charts
+
+**Function 3: Monitor Response Time**
+- Measure API endpoint response times
+- Track:
+  - Average response time (in milliseconds)
+  - Min response time
+  - Max response time
+  - P95 (95th percentile) response time
+  - P99 (99th percentile) response time
+- Group by endpoint or overall
+- Return data for last 24 hours
+
+**Function 4: Monitor Throughput**
+- Count HTTP requests per second
+- Track:
+  - Total requests
+  - Successful requests (200-299 status)
+  - Failed requests (400-599 status)
+  - Average requests per second
+  - Peak requests per second
+- Return data over time
+
+**Function 5: Database Performance Monitoring**
+- Monitor database queries:
+  - Total queries executed
+  - Average query execution time
+  - Slow queries (> 1000ms)
+  - Failed queries
+  - Connection pool status (active/idle connections)
+  - Database size
+  - Table sizes
+- Return database health metrics
+
+**Function 6: Get Slow Queries**
+- Query database logs or monitoring table
+- Find queries taking > 1000ms (configurable threshold)
+- For each slow query show:
+  - SQL query text
+  - Execution time
+  - When it ran
+  - How many times executed
+  - Tables involved
+  - Suggested optimization (indexes)
+- Sort by execution time (slowest first)
+- Return top 20 slow queries
+
+**Function 7: Cache Statistics**
+- Monitor cache performance (Redis or in-memory cache):
+  - Total cache requests
+  - Cache hits (data found in cache)
+  - Cache misses (data not in cache)
+  - Hit rate percentage (hits / total × 100)
+  - Cache size (MB)
+  - Number of keys stored
+  - Eviction rate (how often cache clears)
+- Return cache health metrics
+
+**Function 8: Clear Cache**
+- Clear specified cache:
+  - All cache
+  - Specific cache keys
+  - Expired cache only
+- Record cache clear action
+- Return success message
+
+**Function 9: Performance Alerts**
+- Query `performance_alerts` table
+- Get active alerts for:
+  - High CPU usage (> 80%)
+  - High memory usage (> 85%)
+  - Slow response times (> 500ms)
+  - High error rate (> 5%)
+  - Low disk space (< 10% free)
+  - Database connection pool exhausted
+- For each alert include:
+  - Alert type
+  - Severity (warning, critical)
+  - Current value
+  - Threshold exceeded
+  - When detected
+  - Status (active, acknowledged, resolved)
+- Return active alerts
+
+**Function 10: Configure Alert Thresholds**
+- Allow admin to set thresholds:
+  - CPU warning at X%, critical at Y%
+  - Memory warning at X%, critical at Y%
+  - Response time warning at X ms, critical at Y ms
+  - Error rate warning at X%, critical at Y%
+- Save configuration
+- Apply new thresholds to monitoring
+
+**Function 11: Export Performance Report**
+- Generate comprehensive report:
+  - System overview (uptime, version)
+  - Performance summary (24h)
+  - Resource usage trends
+  - Top slow queries
+  - Alert history
+  - Recommendations for optimization
+- Export as PDF or CSV
+- Return download link
+
+***
+
+## PART 2: FRONTEND (Display Side - Performance Monitor Interface)
+
+### What the Frontend Does
+Shows real-time performance metrics with charts, system stats, database performance, and alerts.
+
+### Create These Files:
+
+**File 1: Main Performance Monitor Page (app/admin/performance/page.tsx)**
+
+This page has these sections:
+
+**Section 1: Page Header**
+- Title: "Performance Monitor"[1]
+
+**Section 2: Four Category Tabs**[1]
+
+Tab 1: **Metrics** (default active)[1]
+- Shows real-time system metrics
+
+Tab 2: **Alerts**[1]
+- Shows performance alerts and warnings
+
+Tab 3: **Database Performance**[1]
+- Shows database query performance
+
+Tab 4: **Cache Stats**[1]
+- Shows cache performance metrics
+
+***
+
+## METRICS TAB CONTENT[1]
+
+**Section 1: Tab Header**
+- Title: "System Metrics"[1]
+- Blue button top right: "Record Metric"[1]
+  - Manually record a performance snapshot
+
+**Section 2: Four Real-Time Metric Cards**[1]
+
+Card 1: **CPU Usage**[1]
+- Title: "CPU Usage"
+- Big number: "0%"[1]
+- Settings icon on right (configure alerts)
+- Updates every 5 seconds
+- Color code:
+  - Green if < 70%
+  - Yellow if 70-85%
+  - Red if > 85%
+
+Card 2: **Memory Usage**[1]
+- Title: "Memory Usage"
+- Big number: "0%"[1]
+- Shows: X MB / Total MB
+- Updates every 5 seconds
+- Color code:
+  - Green if < 75%
+  - Yellow if 75-90%
+  - Red if > 90%
+
+Card 3: **Disk I/O**[1]
+- Title: "Disk I/O"
+- Big number: "0 MB/s"[1]
+- Shows read + write speed
+- Updates every 5 seconds
+
+Card 4: **Network**[1]
+- Title: "Network"
+- Big number: "0 MB/s"[1]
+- Shows incoming + outgoing traffic
+- Updates every 5 seconds
+
+**Section 3: Two Large Charts Side by Side**
+
+Chart 1: **Response Time (Last 24 Hours)**[1]
+- Title: "Response Time (Last 24 Hours)"
+- Line chart showing API response times
+- X-axis: Time (24 hours, hourly intervals)
+- Y-axis: Response time in milliseconds (0, 100, 200, 300...)
+- Blue line connecting data points
+- Show average, min, max lines
+- Empty state: "No data available"[1]
+- Hover shows exact time and value
+- Target line at 200ms (acceptable threshold)
+
+Chart 2: **Throughput (Requests/Second)**[1]
+- Title: "Throughput (Requests/Second)"
+- Line chart or area chart
+- X-axis: Time (24 hours)
+- Y-axis: Requests per second (0, 5, 10, 15...)
+- Shows total requests per second
+- Color fill under line
+- Empty state: "No data available"[1]
+- Peak throughput indicated
+
+**Section 4: Resource Usage History**
+
+Additional charts (below):
+
+**CPU Usage Trend (24h)**
+- Line chart showing CPU usage over time
+- Multiple lines: Current, Average, Peak
+- Shows historical pattern
+
+**Memory Usage Trend (24h)**
+- Line chart showing memory consumption
+- Area chart with gradient fill
+- Shows if memory leak exists
+
+---
+
+## ALERTS TAB CONTENT
+
+When "Alerts" tab is selected:
+
+**Section 1: Alert Summary Cards**
+
+Three cards showing:
+
+Card 1: **Active Alerts**
+- Count of current alerts
+- Red color
+
+Card 2: **Warnings**
+- Count of warnings
+- Yellow color
+
+Card 3: **Resolved Today**
+- Count resolved in last 24h
+- Green color
+
+**Section 2: Alerts List**
+
+Table or cards showing alerts:
+
+Each alert shows:
+- Severity icon (🔴 Critical, 🟡 Warning, 🟢 Info)
+- Alert type (High CPU, High Memory, Slow Response, etc.)
+- Message ("CPU usage exceeded 85%")
+- Current value (87%)
+- Threshold (85%)
+- When detected (timestamp)
+- Duration (how long alert active)
+- Status badge (Active, Acknowledged, Resolved)
+- Action buttons:
+  - Acknowledge
+  - View Details
+  - Resolve
+  - Configure Threshold
+
+**Alert Types:**
+- **High CPU Usage**: CPU > 80%
+- **High Memory Usage**: Memory > 85%
+- **Slow Response Time**: Avg response > 500ms
+- **High Error Rate**: Errors > 5% of requests
+- **Low Disk Space**: < 10% disk free
+- **Database Slow**: Queries > 1000ms
+- **Connection Pool Full**: Max connections reached
+- **High Network Latency**: Network delay > 200ms
+
+**Empty state:** "No active alerts - System running smoothly"
+
+---
+
+## DATABASE PERFORMANCE TAB CONTENT
+
+When "Database Performance" tab is selected:
+
+**Section 1: Database Metrics Cards**
+
+Four cards:
+
+Card 1: **Query Count**
+- Total queries executed (last hour)
+- Queries per second
+
+Card 2: **Avg Query Time**
+- Average execution time (ms)
+- Target: < 100ms
+
+Card 3: **Slow Queries**
+- Count of queries > 1000ms
+- Red if > 10 slow queries
+
+Card 4: **Connection Pool**
+- Active / Total connections
+- Example: 15 / 100
+- Progress bar showing utilization
+
+**Section 2: Slow Queries Table**
+
+Table showing slow database queries:
+
+Columns:
+- Query (first 100 characters of SQL)
+- Execution Time (ms)
+- Executed Count (how many times)
+- Table(s) involved
+- When Last Run
+- Actions (View Full Query, Explain, Suggest Index)
+
+Sort by: Execution Time (slowest first)
+Show top 20 slow queries
+
+**Click "View Full Query":**
+- Opens modal with:
+  - Complete SQL query
+  - Execution plan
+  - Suggested optimizations
+  - Add index recommendation
+
+**Section 3: Query Performance Chart**
+
+Line chart showing:
+- Average query time over last 24 hours
+- X-axis: Time
+- Y-axis: Query time (ms)
+- Shows if performance degrading
+
+**Section 4: Database Health**
+
+Status indicators:
+- ✅ Database Responsive
+- ✅ Connection Pool Healthy (30% utilization)
+- ✅ No Long-Running Queries
+- ✅ Replication Lag: 0ms (if using replication)
+- ⚠️ 5 Slow Queries Detected
+- ⚠️ Database Size: 4.5GB (approaching limit)
+
+***
+
+## CACHE STATS TAB CONTENT
+
+When "Cache Stats" tab is selected:
+
+**Section 1: Cache Metrics Cards**
+
+Four cards:
+
+Card 1: **Cache Hit Rate**
+- Percentage of successful cache hits
+- Example: 85.4%
+- Target: > 80%
+- Green if good, yellow if poor
+
+Card 2: **Total Requests**
+- Total cache requests (last hour)
+- Shows hit vs miss count
+
+Card 3: **Cache Size**
+- Current cache size (MB)
+- Example: 256 MB / 512 MB
+- Progress bar
+
+Card 4: **Keys Stored**
+- Number of cache entries
+- Example: 1,234 keys
+
+**Section 2: Hit vs Miss Chart**
+
+Pie chart showing:
+- Cache Hits (green segment) - 85%
+- Cache Misses (red segment) - 15%
+- Legend with counts
+
+**Section 3: Cache Performance Over Time**
+
+Line chart showing:
+- Cache hit rate over last 24 hours
+- X-axis: Time
+- Y-axis: Hit rate percentage
+- Shows if cache effectiveness changing
+
+**Section 4: Cache Management**
+
+Actions available:
+- Button: "Clear All Cache" (red, with confirmation)
+- Button: "Clear Expired Cache" (yellow)
+- Button: "View Cache Keys" (shows list of all keys)
+- Button: "Configure Cache Settings"
+
+**Top Cached Items:**
+- Table showing most frequently cached items:
+  - Key name
+  - Hit count
+  - Size
+  - Last accessed
+  - TTL (time to live)
+
+***
+
+## PART 3: MODALS AND POPUPS
+
+### Create These Popup Windows:
+
+**Modal 1: Configure Alert Thresholds**
+
+When clicking settings icon on metric cards:
+- Title: "Configure [Metric] Alerts"
+- Fields:
+  - Warning Threshold (slider or number input)
+    - Example: Warn at 70% CPU
+  - Critical Threshold (slider or number input)
+    - Example: Critical at 85% CPU
+  - Email Notifications (checkbox)
+  - Slack/Discord Webhook (text input, optional)
+  - Check Frequency (dropdown: Every 1min, 5min, 15min)
+- Save button
+- Cancel button
+
+**Modal 2: View Alert Details**
+
+When viewing alert:
+- Alert type and severity
+- Complete message
+- Timeline showing:
+  - When alert triggered
+  - Current status
+  - Value over time (mini chart)
+  - Previous occurrences
+- Recommended actions:
+  - "Restart service"
+  - "Scale up resources"
+  - "Check logs"
+- Acknowledge button
+- Resolve button
+- Close button
+
+**Modal 3: View Full Query**
+
+When viewing slow query:
+- Title: "Slow Query Analysis"
+- Full SQL query (syntax highlighted)
+- Execution statistics:
+  - Execution time: 1,250ms
+  - Rows examined: 50,000
+  - Rows returned: 10
+  - Times executed: 234
+- Execution plan (EXPLAIN output)
+- Optimization suggestions:
+  - "Add index on users.created_at"
+  - "Consider query rewrite"
+  - "Check table statistics"
+- Copy query button
+- Apply optimization button (if available)
+- Close button
+
+**Modal 4: Record Manual Metric**
+
+When clicking "Record Metric":
+- Title: "Record Performance Snapshot"
+- Shows current metrics:
+  - CPU: X%
+  - Memory: X%
+  - Disk I/O: X MB/s
+  - Network: X MB/s
+  - Response Time: X ms
+- Text area: Notes (why recording snapshot)
+- Checkbox: "Mark as baseline for comparison"
+- Button: "Record Snapshot"
+- Cancel button
+
+**Modal 5: Export Performance Report**
+
+When exporting report:
+- Title: "Export Performance Report"
+- Date range selector (last 24h, 7d, 30d, custom)
+- Include sections (checkboxes):
+  - System metrics
+  - Response times
+  - Database performance
+  - Cache statistics
+  - Alert history
+  - Recommendations
+- Format (dropdown: PDF, CSV, JSON)
+- Email report (checkbox + email input)
+- Generate Report button
+- Shows progress bar during generation
+
+**Modal 6: Clear Cache Confirmation**
+
+When clearing cache:
+- Warning: "Clear Cache?"
+- Text: "This will clear all cached data. Pages may load slower until cache rebuilds."
+- Info: "Users may experience temporary slowdown"
+- Checkbox: "I understand the impact"
+- Red button: "Clear Cache" (only enabled after checkbox)
+- Cancel button
+
+***
+
+## PART 4: REAL-TIME MONITORING FEATURES
+
+### Live Updates:
+- All metric cards update every 5 seconds
+- Charts update every 30 seconds
+- New alerts appear with toast notification
+- Critical alerts show popup immediately
+- Sound alert for critical issues (optional, toggleable)
+
+### WebSocket Connection:
+- Real-time data streaming from server
+- No page refresh needed
+- Connection status indicator (connected/disconnected)
+- Auto-reconnect if connection drops
+
+### Performance Indicators:
+- Green dot: System healthy
+- Yellow dot: Warning level
+- Red dot: Critical issues
+- Pulsing animation on critical
+
+***
+
+## PART 5: OPTIMIZATION RECOMMENDATIONS
+
+### Auto-Suggestions Section:
+
+Based on collected data, show recommendations:
+- **"High memory usage detected"** → "Consider increasing server memory"
+- **"Many slow queries"** → "Review and optimize database indexes"
+- **"Low cache hit rate"** → "Increase cache TTL or size"
+- **"High CPU during peak hours"** → "Consider load balancing"
+
+Actionable recommendations with:
+- Problem description
+- Impact level
+- Suggested solution
+- Implement button (if can auto-fix)
+
+---
+
+## PART 6: HISTORICAL COMPARISON
+
+### Compare Performance:
+- Button: "Compare with Previous Period"
+- Select two time periods
+- Shows side-by-side comparison:
+  - This week vs last week
+  - This month vs last month
+  - Before/after deployment
+- Highlights improvements or regressions
+
+---
+
+## PART 7: RESPONSIVE DESIGN
+
+### On Mobile Phones:
+- Tabs scroll horizontally
+- Metric cards stack vertically (one per row)
+- Charts take full width
+- Table data as cards
+- Simplified alert view
+
+### On Tablets:
+- Metric cards show 2 per row
+- Charts side by side but narrower
+- Table shows key columns only
+
+### On Computers:
+- All 4 metric cards in one row[1]
+- Charts side by side[1]
+- Full tables with all columns
+- All features visible
+
+***
+
+## SUCCESS CHECKLIST
+
+When everything works, admin can:
+
+✅ See four tabs: Metrics, Alerts, Database Performance, Cache Stats[1]
+✅ View real-time CPU usage (0%)[1]
+✅ View real-time memory usage (0%)[1]
+✅ View real-time disk I/O (0 MB/s)[1]
+✅ View real-time network usage (0 MB/s)[1]
+✅ See response time chart for last 24 hours[1]
+✅ See throughput (requests/second) chart[1]
+✅ View empty states when no data[1]
+✅ Click "Record Metric" to save snapshots[1]
+✅ Configure alert thresholds per metric
+✅ View active performance alerts
+✅ Acknowledge and resolve alerts
+✅ Monitor database query performance
+✅ View and analyze slow queries
+✅ Get query optimization suggestions
+✅ View cache hit/miss statistics
+✅ Clear cache when needed
+✅ See real-time updates (every 5 seconds)
+✅ Receive critical alert notifications
+✅ Export performance reports
+✅ Compare performance over time
+✅ Get automatic optimization recommendations
+✅ Works on phone, tablet, and computer
+✅ Professional monitoring interface
+
+**The admin now has enterprise-grade performance monitoring to ensure YoForex forum runs smoothly and efficiently!**[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/bc9f5917-cf8b-4415-abe1-cede80daa30d/image.jpg?AWSAccessKeyId=ASIA2F3EMEYEWUAIC2IJ&Signature=f80LrI8RV0xLoUfyODk%2FIq97AR0%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEB8aCXVzLWVhc3QtMSJHMEUCIQCNEAifxoKgq%2By6QJL5%2Fqpx74aCqZiK97o2VCrUJl%2BMwQIgAixiKgZneTVIbhGMFsQ9a%2B8jq3vOdaVXWpbx%2FuKEgCoq%2FAQI2P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDLnOfqkxfN0XL0YTTSrQBPTL%2FkSWmAJvP4ZSNupPwV7k0Tr3Em0U5tRFy9M1%2FBXD6kBqB8yROJ3j3bV015wAitwrZmGSG36dctTt5BLE57gyHr9%2FnBszE4tja62C7YBSWEEYKGjSQmjmRhyR4hNoLqM%2BWKtzNoq5nLlLKKCKHmjCK0usZOP4D3awEQus4%2F30%2By8sPg3%2FZrDrTcsvdGPjB8%2Bs56HfwJek1BKkSN2rnNxBxad1m5QWVMQ0%2FY%2B4rXIEVO9khPYxuLdH7ggwhUJ%2BlpwhIloJFxA66qRvMcxC3lBaZQ3Xv4KgSNPTYU4MH%2Fqoc8mudo197Pgtq9oUebghJljhOEW%2F8ElLBtlRdv0%2FD1bMg%2BtlgNHYlzbZwK7iDVu%2FoIys1OPz2r2MZqqYN06fCsObTeEirODSlyvg02nY4U56Zz2q%2BFQ3yq9dnyd0NEtrylgo0nBR27gyPS5seSSvDBhTe7dCBmEYFKBMp%2FPm45YLEa0jlAFc7JhMwjFOTHse%2FoErQ9hojL5PBkV0ECjetwftwq8ATQfEYBGZ%2FlQnSch0ArU2QIvd1dPxP7QIOV9toGF6Sww%2FMqk%2FwSLzB8%2BOrs%2FA9SUluHEi7w9PFLaxSUS7wfDh%2BQytCUcUqkBg8JMiwhwacNbzGTaePXee%2BzIKR4SskkI6WquAYHEgxHCvk7tZ6Jyne%2Fvw%2BhQy1x9INmkFTBwtaALJniBye6G92bT%2BP0XmgmU5Y5HVC0w5k5rm4licYXaa%2F2Y7myQrF3PJ5IdYF%2FRQWRZSiV4M40rUsT8G9ysosjlF7eHPORSwtlTLThMw%2B9iIyAY6mAGI6Yo2R8FYgOTRBVVq1V1GGKgzh2AuWvfrqJZPRwWBAf73z%2FdmkpuAHYQ%2FEBiOh7TYbtFThXTYdlTCDgOesSQzP0dbfdts%2FwQpmVo22zM40IVCFmuXOrK0AhgUKLay0IzGBmeDG8wV3JCKrximzi7aJtcyZfYdUxlHSIVGSSP%2FFXAek1%2BbkT5Y0qeDYLCgkz689t7dLMrf5w%3D%3D&Expires=1761753072)

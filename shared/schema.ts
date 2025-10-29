@@ -73,6 +73,14 @@ export const users = pgTable("users", {
   // User level system
   level: integer("level").default(0).notNull(),
   
+  // Admin Management fields
+  role: varchar("role", { length: 20 }).notNull().default("member"), // member, moderator, admin
+  status: varchar("status", { length: 20 }).notNull().default("active"), // active, suspended, banned
+  suspendedUntil: timestamp("suspended_until"), // When suspension ends
+  bannedAt: timestamp("banned_at"), // When user was banned
+  bannedBy: varchar("banned_by"), // Admin ID who banned the user
+  lastActive: timestamp("last_active").defaultNow(), // Last activity timestamp for online tracking
+  
   // Timestamps
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -82,6 +90,9 @@ export const users = pgTable("users", {
   reputationIdx: index("idx_users_reputation").on(table.reputationScore),
   levelIdx: index("idx_users_level").on(table.level),
   coinsIdx: index("idx_users_coins").on(table.totalCoins),
+  roleIdx: index("idx_users_role").on(table.role), // Index for admin filters
+  statusIdx: index("idx_users_status").on(table.status), // Index for admin filters
+  lastActiveIdx: index("idx_users_last_active").on(table.lastActive), // Index for online users query
   coinsCheck: check("chk_user_coins_nonnegative", sql`${table.totalCoins} >= 0`),
 }));
 
