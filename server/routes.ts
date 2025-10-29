@@ -980,19 +980,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const EXCHANGE_RATES = {
         BTC: 50000,
         ETH: 3000,
-      };
-      
-      const exchangeRate = EXCHANGE_RATES[validated.cryptoType];
-      const cryptoAmount = validated.amount / exchangeRate;
+      } as const;
       
       // Calculate processing fee: 5% or 100 coins (whichever is greater)
       const fivePercent = Math.floor(validated.amount * 0.05);
       const processingFee = Math.max(fivePercent, 100);
       
+      // Only calculate crypto-related fields if cryptoType is present (crypto withdrawals)
+      let exchangeRate: string | undefined;
+      let cryptoAmount: string | undefined;
+      
+      if (validated.cryptoType && validated.cryptoType in EXCHANGE_RATES) {
+        const rate = EXCHANGE_RATES[validated.cryptoType as keyof typeof EXCHANGE_RATES];
+        const amount = validated.amount / rate;
+        exchangeRate = rate.toString();
+        cryptoAmount = amount.toString();
+      }
+      
       const withdrawal = await storage.createWithdrawalRequest(authenticatedUserId, {
         ...validated,
-        exchangeRate: exchangeRate.toString(),
-        cryptoAmount: cryptoAmount.toString(),
+        exchangeRate,
+        cryptoAmount,
         processingFee,
         status: 'pending',
       });
