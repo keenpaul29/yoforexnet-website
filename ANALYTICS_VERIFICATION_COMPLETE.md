@@ -83,11 +83,11 @@ Your YoForex platform now has **complete analytics tracking** and **search engin
 
 ### **4. Seznam.cz** ✅
 **Status:** VERIFIED  
-**Verification Code:** `aVrviVp76xjLZOqc5q0E4GHSDgofJpN6`
+**Verification Code:** `gC30ex5zCD1Do4CA0NzAXCL9ysLkAGlz`
 
 **Meta Tag:**
 ```html
-<meta name="seznam-wmt" content="aVrviVp76xjLZOqc5q0E4GHSDgofJpN6" />
+<meta name="seznam-wmt" content="gC30ex5zCD1Do4CA0NzAXCL9ysLkAGlz" />
 ```
 
 **Coverage:** Czech Republic  
@@ -143,7 +143,7 @@ Your YoForex platform now has **complete analytics tracking** and **search engin
 3. Search for (Ctrl+F):
    - "yandex-verification" → Should find: e91dbe03ac0e8a86
    - "msvalidate.01" → Should find: A5F52C377150D58660B161CD33E36F94
-   - "seznam-wmt" → Should find: aVrviVp76xjLZOqc5q0E4GHSDgofJpN6
+   - "seznam-wmt" → Should find: gC30ex5zCD1Do4CA0NzAXCL9ysLkAGlz
    - "G-LWZ81QCJMR" → Should find Google Analytics
 ```
 
@@ -335,7 +335,7 @@ Your YoForex platform now has **complete analytics tracking** and **search engin
      yandex: 'e91dbe03ac0e8a86',
      other: {
        'msvalidate.01': 'A5F52C377150D58660B161CD33E36F94',
-       'seznam-wmt': 'aVrviVp76xjLZOqc5q0E4GHSDgofJpN6',
+       'seznam-wmt': 'gC30ex5zCD1Do4CA0NzAXCL9ysLkAGlz',
      },
    }
    ```

@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     yandex: 'e91dbe03ac0e8a86',
     other: {
       'msvalidate.01': 'A5F52C377150D58660B161CD33E36F94',
-      'seznam-wmt': 'aVrviVp76xjLZOqc5q0E4GHSDgofJpN6',
+      'seznam-wmt': 'gC30ex5zCD1Do4CA0NzAXCL9ysLkAGlz',
     },
   },
 };
