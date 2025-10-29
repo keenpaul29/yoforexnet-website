@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageSquare, Users, MessagesSquare, Activity } from "lucide-react";
-import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
+import { useQuery } from "@tanstack/react-query";
 import { RefreshButton } from "./RefreshButton";
 
 interface StatsData {
@@ -14,9 +14,18 @@ interface StatsData {
   };
 }
 
-export default function StatsBar() {
-  // No auto-refresh for performance
-  const { data, isLoading, refetch } = useRealtimeUpdates<StatsData>('/api/stats', { enabled: false });
+interface StatsBarProps {
+  initialStats?: StatsData;
+}
+
+export default function StatsBar({ initialStats }: StatsBarProps) {
+  // Use React Query with initial data from server
+  const { data, isLoading, refetch } = useQuery<StatsData>({
+    queryKey: ['/api/stats'],
+    initialData: initialStats,
+    enabled: false, // Don't auto-fetch, use manual refresh
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   const stats = [
     { 

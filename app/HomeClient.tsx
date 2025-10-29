@@ -123,7 +123,7 @@ export default function HomeClient({
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <StatsBar />
+      <StatsBar initialStats={initialStats} />
       
       <main className="container max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">

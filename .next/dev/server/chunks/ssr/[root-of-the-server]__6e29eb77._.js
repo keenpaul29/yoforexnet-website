@@ -2521,10 +2521,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Refresh
 ;
 ;
 ;
-function StatsBar() {
+function StatsBar({ initialStats }) {
     // No auto-refresh for performance
     const { data, isLoading, refetch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$hooks$2f$useRealtimeUpdates$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRealtimeUpdates"])('/api/stats', {
-        enabled: false
+        enabled: false,
+        initialData: initialStats
     });
     const stats = [
         {
@@ -2571,7 +2572,7 @@ function StatsBar() {
                                     className: "bg-muted rounded-lg h-11 w-11"
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/StatsBar.tsx",
-                                    lineNumber: 55,
+                                    lineNumber: 62,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2581,41 +2582,41 @@ function StatsBar() {
                                             className: "h-8 w-20 bg-muted rounded"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/StatsBar.tsx",
-                                            lineNumber: 57,
+                                            lineNumber: 64,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "h-4 w-24 bg-muted rounded"
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/StatsBar.tsx",
-                                            lineNumber: 58,
+                                            lineNumber: 65,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/StatsBar.tsx",
-                                    lineNumber: 56,
+                                    lineNumber: 63,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, i, true, {
                             fileName: "[project]/app/components/StatsBar.tsx",
-                            lineNumber: 54,
+                            lineNumber: 61,
                             columnNumber: 15
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/app/components/StatsBar.tsx",
-                    lineNumber: 52,
+                    lineNumber: 59,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/components/StatsBar.tsx",
-                lineNumber: 51,
+                lineNumber: 58,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/components/StatsBar.tsx",
-            lineNumber: 50,
+            lineNumber: 57,
             columnNumber: 7
         }, this);
     }
@@ -2632,7 +2633,7 @@ function StatsBar() {
                             children: "Platform Statistics"
                         }, void 0, false, {
                             fileName: "[project]/app/components/StatsBar.tsx",
-                            lineNumber: 72,
+                            lineNumber: 79,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$RefreshButton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["RefreshButton"], {
@@ -2643,13 +2644,13 @@ function StatsBar() {
                             variant: "ghost"
                         }, void 0, false, {
                             fileName: "[project]/app/components/StatsBar.tsx",
-                            lineNumber: 73,
+                            lineNumber: 80,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/components/StatsBar.tsx",
-                    lineNumber: 71,
+                    lineNumber: 78,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2663,12 +2664,12 @@ function StatsBar() {
                                         className: "h-5 w-5 text-primary dark:text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/app/components/StatsBar.tsx",
-                                        lineNumber: 83,
+                                        lineNumber: 90,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/components/StatsBar.tsx",
-                                    lineNumber: 82,
+                                    lineNumber: 89,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2679,7 +2680,7 @@ function StatsBar() {
                                             children: stat.value
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/StatsBar.tsx",
-                                            lineNumber: 86,
+                                            lineNumber: 93,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2687,35 +2688,35 @@ function StatsBar() {
                                             children: stat.label
                                         }, void 0, false, {
                                             fileName: "[project]/app/components/StatsBar.tsx",
-                                            lineNumber: 87,
+                                            lineNumber: 94,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/components/StatsBar.tsx",
-                                    lineNumber: 85,
+                                    lineNumber: 92,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, stat.key, true, {
                             fileName: "[project]/app/components/StatsBar.tsx",
-                            lineNumber: 81,
+                            lineNumber: 88,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/app/components/StatsBar.tsx",
-                    lineNumber: 79,
+                    lineNumber: 86,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/components/StatsBar.tsx",
-            lineNumber: 70,
+            lineNumber: 77,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/components/StatsBar.tsx",
-        lineNumber: 69,
+        lineNumber: 76,
         columnNumber: 5
     }, this);
 }
@@ -7238,7 +7239,9 @@ function HomeClient({ initialStats, initialCategories, initialThreads }) {
                 lineNumber: 125,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$StatsBar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$StatsBar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                initialStats: initialStats
+            }, void 0, false, {
                 fileName: "[project]/app/HomeClient.tsx",
                 lineNumber: 126,
                 columnNumber: 7
