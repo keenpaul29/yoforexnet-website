@@ -6631,12 +6631,12 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async addUserBadge(userId: string, badgeSlug: string, grantedBy: string): Promise<void> {
+  async addUserBadge(userId: string, badgeType: BadgeType, grantedBy: string): Promise<void> {
     try {
       await db.transaction(async (tx) => {
         await tx.insert(userBadges).values({
           userId,
-          badgeType: badgeSlug,
+          badgeType,
         });
         
         await tx.insert(adminActions).values({
@@ -6644,7 +6644,7 @@ export class DrizzleStorage implements IStorage {
           actionType: 'badge_grant',
           targetType: 'user',
           targetId: userId,
-          details: { badgeSlug },
+          details: { badgeType },
           ipAddress: '0.0.0.0',
           userAgent: 'admin-dashboard',
         });
@@ -6655,13 +6655,13 @@ export class DrizzleStorage implements IStorage {
     }
   }
 
-  async removeUserBadge(userId: string, badgeSlug: string, removedBy: string): Promise<void> {
+  async removeUserBadge(userId: string, badgeType: BadgeType, removedBy: string): Promise<void> {
     try {
       await db.transaction(async (tx) => {
         await tx.delete(userBadges).where(
           and(
             eq(userBadges.userId, userId),
-            eq(userBadges.badgeType, badgeSlug)
+            eq(userBadges.badgeType, badgeType)
           )
         );
         
@@ -6670,7 +6670,7 @@ export class DrizzleStorage implements IStorage {
           actionType: 'badge_remove',
           targetType: 'user',
           targetId: userId,
-          details: { badgeSlug },
+          details: { badgeType },
           ipAddress: '0.0.0.0',
           userAgent: 'admin-dashboard',
         });

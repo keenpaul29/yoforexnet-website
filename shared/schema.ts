@@ -1585,14 +1585,13 @@ export const publishContentSchema = insertContentSchema.superRefine((data, ctx) 
 
 export type PublishContent = z.infer<typeof publishContentSchema>;
 
-// Badge System Constants
+// Badge System Constants (matches database schema)
 export const BADGE_TYPES = {
   VERIFIED_TRADER: 'verified_trader',
   TOP_CONTRIBUTOR: 'top_contributor',
-  EA_MASTER: 'ea_master',
-  HELPFUL: 'helpful',
+  EA_EXPERT: 'ea_expert',
+  HELPFUL_MEMBER: 'helpful_member',
   EARLY_ADOPTER: 'early_adopter',
-  BUG_HUNTER: 'bug_hunter',
 } as const;
 
 export type BadgeType = typeof BADGE_TYPES[keyof typeof BADGE_TYPES];
@@ -1615,14 +1614,14 @@ export const BADGE_METADATA: Record<BadgeType, {
     icon: 'Star',
     color: 'text-yellow-500',
   },
-  [BADGE_TYPES.EA_MASTER]: {
-    name: 'EA Master',
+  [BADGE_TYPES.EA_EXPERT]: {
+    name: 'EA Expert',
     description: 'Published 5+ Expert Advisors',
     icon: 'Award',
     color: 'text-purple-500',
   },
-  [BADGE_TYPES.HELPFUL]: {
-    name: 'Helpful',
+  [BADGE_TYPES.HELPFUL_MEMBER]: {
+    name: 'Helpful Member',
     description: '50+ helpful replies',
     icon: 'Heart',
     color: 'text-red-500',
@@ -1632,12 +1631,6 @@ export const BADGE_METADATA: Record<BadgeType, {
     description: 'Joined in the first month',
     icon: 'Zap',
     color: 'text-orange-500',
-  },
-  [BADGE_TYPES.BUG_HUNTER]: {
-    name: 'Bug Hunter',
-    description: 'Reported verified bugs',
-    icon: 'Bug',
-    color: 'text-green-500',
   },
 };
 
