@@ -163,7 +163,7 @@ export default function UserProfileClient({
   const mockUser = {
     username: userData.username || "Unknown",
     isVerifiedTrader: true,
-    totalCoins: userData.coins || 0,
+    totalCoins: 0, // TODO: Fetch from /api/user/{userId}/coins
     weeklyEarned: 340,
     rank: 15,
     reputation: userData.reputationScore || 0,
