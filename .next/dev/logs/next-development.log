@@ -1,389 +1,17 @@
-[00:00:03.098] Server  LOG      ✓ Ready in 2.1s
-[00:00:06.117] Server  LOG      ○ Compiling / ...
-[00:00:11.357] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.375] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.375] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:11.378] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.379] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:11.380] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.380] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:11.423] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.424] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:11.425] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.425] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:11.426] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.427] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:11.527] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.529] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:12.115] Server  ERROR   TypeError: fetch failed
-[00:00:12.123] Server  ERROR   TypeError: fetch failed
-[00:00:15.401] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/me/onboarding Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.402] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.417] Server  WARN     ⚠ Cross origin request detected from 5c700d50-5399-46df-98d2-dc27dba0ac4f-00-22i6j8lxxvd32.kirk.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.790] Server  LOG      ✓ Ready in 1110ms
+[00:00:05.142] Server  LOG      ○ Compiling / ...
+[00:00:11.667] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.687] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.687] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:11.691] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.691] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:11.692] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.693] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:11.791] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:11.792] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:16.091] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:15.424] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/stats Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.425] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.433] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/threads?sortBy=trending&limit=3 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.434] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.438] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/threads?sortBy=answered&limit=3 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.440] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.442] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/threads?sortBy=newest&limit=3 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.443] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.448] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/hot?limit=5 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.449] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.672] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/content/top-sellers Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.675] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.714] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/me Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.717] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:15.971] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
-      <RedirectBoundary>
-        <RedirectErrorBoundary router={{...}}>
-          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
-            <SegmentViewNode type="page" pagePath="page.tsx">
-              <SegmentTrieNode>
-              <HomePage>
-                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
-                  <div className="min-h-scre...">
-                    ...
-                      <DialogTrigger asChild={true}>
-                        <Primitive.button type="button" aria-haspopup="dialog" aria-expanded={false} ...>
-                          <Primitive.button.Slot type="button" aria-haspopup="dialog" aria-expanded={false} ...>
-                            <Primitive.button.SlotClone type="button" aria-haspopup="dialog" aria-expanded={false} ...>
-                              <_c variant="ghost" size="icon" className="md:hidden" data-testid="button-menu" ...>
-                                <button
-                                  className={"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded..."}
-                                  ref={function}
-                                  data-testid="button-menu"
-                                  type="button"
-                                  aria-haspopup="dialog"
-                                  aria-expanded={false}
-+                                 aria-controls="radix-_R_16anelb_"
--                                 aria-controls="radix-_R_4pinelb_"
-                                  data-state="closed"
-                                  onClick={function handleEvent}
-                                >
-                      ...
-                    <StatsBar>
-                    <main className="container ...">
-                      <div className="grid grid-...">
-                        <aside>
-                        ...
-                          <div dir="ltr" data-orientation="horizontal" className="w-full" ref={null}>
-                            ...
-                              <div role="tablist" aria-orientation="horizontal" className="h-10 items..." tabIndex={-1} ...>
-                                ...
-                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                      <Primitive.button type="button" role="tab" aria-selected={true} ...>
-                                        <button
-                                          type="button"
-                                          role="tab"
-                                          aria-selected={true}
-+                                         aria-controls="radix-_R_2cqnelb_-content-new"
--                                         aria-controls="radix-_R_9jinelb_-content-new"
-                                          data-state="active"
-                                          data-disabled={undefined}
-                                          disabled={false}
-+                                         id="radix-_R_2cqnelb_-trigger-new"
--                                         id="radix-_R_9jinelb_-trigger-new"
-                                          className="inline-flex items-center justify-center whitespace-nowrap px-3 py..."
-                                          data-testid="tab-new"
-                                          onMouseDown={function}
-                                          onKeyDown={function}
-                                          onFocus={function}
-                                          tabIndex={-1}
-                                          data-orientation="horizontal"
-                                          data-radix-collection-item=""
-                                          ref={function}
-                                        >
-+                                         New
-                                ...
-                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                        <button
-                                          type="button"
-                                          role="tab"
-                                          aria-selected={false}
-+                                         aria-controls="radix-_R_2cqnelb_-content-trending"
--                                         aria-controls="radix-_R_9jinelb_-content-trending"
-                                          data-state="inactive"
-                                          data-disabled={undefined}
-                                          disabled={false}
-+                                         id="radix-_R_2cqnelb_-trigger-trending"
--                                         id="radix-_R_9jinelb_-trigger-trending"
-                                          className="inline-flex items-center justify-center whitespace-nowrap px-3 py..."
-                                          data-testid="tab-trending"
-                                          onMouseDown={function}
-                                          onKeyDown={function}
-                                          onFocus={function}
-                                          tabIndex={-1}
-                                          data-orientation="horizontal"
-                                          data-radix-collection-item=""
-                                          ref={function}
-                                        >
-+                                         Trending
-                                ...
-                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                        <button
-                                          type="button"
-                                          role="tab"
-                                          aria-selected={false}
-+                                         aria-controls="radix-_R_2cqnelb_-content-solved"
--                                         aria-controls="radix-_R_9jinelb_-content-solved"
-                                          data-state="inactive"
-                                          data-disabled={undefined}
-                                          disabled={false}
-+                                         id="radix-_R_2cqnelb_-trigger-solved"
--                                         id="radix-_R_9jinelb_-trigger-solved"
-                                          className="inline-flex items-center justify-center whitespace-nowrap px-3 py..."
-                                          data-testid="tab-solved"
-                                          onMouseDown={function}
-                                          onKeyDown={function}
-                                          onFocus={function}
-                                          tabIndex={-1}
-                                          data-orientation="horizontal"
-                                          data-radix-collection-item=""
-                                          ref={function}
-                                        >
-+                                         Solved
-                            <div className="px-5 py-1">
-                              <_c4 value="new" className="mt-0">
-                                <TabsContent ref={null} className="ring-offse..." value="new">
-                                  <Presence present={true}>
-                                    <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
-                                      <div
-                                        data-state="active"
-                                        data-orientation="horizontal"
-                                        role="tabpanel"
-+                                       aria-labelledby="radix-_R_2cqnelb_-trigger-new"
--                                       aria-labelledby="radix-_R_9jinelb_-trigger-new"
-                                        hidden={false}
-+                                       id="radix-_R_2cqnelb_-content-new"
--                                       id="radix-_R_9jinelb_-content-new"
-                                        tabIndex={0}
-                                        className="ring-offset-background focus-visible:outline-none focus-visible:rin..."
-                                        style={{animationDuration:"0s"}}
-                                        ref={function}
-                                      >
-                              <_c4 value="trending" className="mt-0">
-                                <TabsContent ref={null} className="ring-offse..." value="trending">
-                                  <Presence present={false}>
-                                    <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
-                                      <div
-                                        data-state="inactive"
-                                        data-orientation="horizontal"
-                                        role="tabpanel"
-+                                       aria-labelledby="radix-_R_2cqnelb_-trigger-trending"
--                                       aria-labelledby="radix-_R_9jinelb_-trigger-trending"
-                                        hidden={true}
-+                                       id="radix-_R_2cqnelb_-content-trending"
--                                       id="radix-_R_9jinelb_-content-trending"
-                                        tabIndex={0}
-                                        className="ring-offset-background focus-visible:outline-none focus-visible:rin..."
-                                        style={{animationDuration:undefined}}
-                                        ref={function}
-                                      >
-                              <_c4 value="solved" className="mt-0">
-                                <TabsContent ref={null} className="ring-offse..." value="solved">
-                                  <Presence present={false}>
-                                    <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
-                                      <div
-                                        data-state="inactive"
-                                        data-orientation="horizontal"
-                                        role="tabpanel"
-+                                       aria-labelledby="radix-_R_2cqnelb_-trigger-solved"
--                                       aria-labelledby="radix-_R_9jinelb_-trigger-solved"
-                                        hidden={true}
-+                                       id="radix-_R_2cqnelb_-content-solved"
--                                       id="radix-_R_9jinelb_-content-solved"
-                                        tabIndex={0}
-                                        className="ring-offset-background focus-visible:outline-none focus-visible:rin..."
-                                        style={{animationDuration:undefined}}
-                                        ref={function}
-                                      >
-                        ...
-                          <div dir="ltr" data-orientation="horizontal" className="w-full" ref={null}>
-                            ...
-                              <div role="tablist" aria-orientation="horizontal" className="items-cent..." tabIndex={-1} ...>
-                                ...
-                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                      <Primitive.button type="button" role="tab" aria-selected={true} ...>
-                                        <button
-                                          type="button"
-                                          role="tab"
-                                          aria-selected={true}
-+                                         aria-controls="radix-_R_4uqnelb_-content-contributors"
--                                         aria-controls="radix-_R_jrinelb_-content-contributors"
-                                          data-state="active"
-                                          data-disabled={undefined}
-                                          disabled={false}
-+                                         id="radix-_R_4uqnelb_-trigger-contributors"
--                                         id="radix-_R_jrinelb_-trigger-contributors"
-                                          className="inline-flex items-center justify-center whitespace-nowrap rounded..."
-                                          data-testid="tab-contributors"
-                                          onMouseDown={function}
-                                          onKeyDown={function}
-                                          onFocus={function}
-                                          tabIndex={-1}
-                                          data-orientation="horizontal"
-                                          data-radix-collection-item=""
-                                          ref={function}
-                                        >
-+                                         Helpful
-                                ...
-                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                        <button
-                                          type="button"
-                                          role="tab"
-                                          aria-selected={false}
-+                                         aria-controls="radix-_R_4uqnelb_-content-uploaders"
--                                         aria-controls="radix-_R_jrinelb_-content-uploaders"
-                                          data-state="inactive"
-                                          data-disabled={undefined}
-                                          disabled={false}
-+                                         id="radix-_R_4uqnelb_-trigger-uploaders"
--                                         id="radix-_R_jrinelb_-trigger-uploaders"
-                                          className="inline-flex items-center justify-center whitespace-nowrap rounded..."
-                                          data-testid="tab-uploaders"
-                                          onMouseDown={function}
-                                          onKeyDown={function}
-                                          onFocus={function}
-                                          tabIndex={-1}
-                                          data-orientation="horizontal"
-                                          data-radix-collection-item=""
-                                          ref={function}
-                                        >
-+                                         Uploads
-                                ...
-                                  <Primitive.span.Slot tabIndex={-1} data-orientation="horizontal" ...>
-                                    <Primitive.span.SlotClone tabIndex={-1} data-orientation="horizontal" ...>
-                                      <Primitive.button type="button" role="tab" aria-selected={false} ...>
-                                        <button
-                                          type="button"
-                                          role="tab"
-                                          aria-selected={false}
-+                                         aria-controls="radix-_R_4uqnelb_-content-streaks"
--                                         aria-controls="radix-_R_jrinelb_-content-streaks"
-                                          data-state="inactive"
-                                          data-disabled={undefined}
-                                          disabled={false}
-+                                         id="radix-_R_4uqnelb_-trigger-streaks"
--                                         id="radix-_R_jrinelb_-trigger-streaks"
-                                          className="inline-flex items-center justify-center whitespace-nowrap rounded..."
-                                          data-testid="tab-streaks"
-                                          onMouseDown={function}
-                                          onKeyDown={function}
-                                          onFocus={function}
-                                          tabIndex={-1}
-                                          data-orientation="horizontal"
-                                          data-radix-collection-item=""
-                                          ref={function}
-                                        >
-+                                         Streaks
-                            <_c4 value="contributors" className="mt-2">
-                              <TabsContent ref={null} className="ring-offse..." value="contributors">
-                                <Presence present={true}>
-                                  <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
-                                    <div
-                                      data-state="active"
-                                      data-orientation="horizontal"
-                                      role="tabpanel"
-+                                     aria-labelledby="radix-_R_4uqnelb_-trigger-contributors"
--                                     aria-labelledby="radix-_R_jrinelb_-trigger-contributors"
-                                      hidden={false}
-+                                     id="radix-_R_4uqnelb_-content-contributors"
--                                     id="radix-_R_jrinelb_-content-contributors"
-                                      tabIndex={0}
-                                      className="ring-offset-background focus-visible:outline-none focus-visible:ring-..."
-                                      style={{animationDuration:"0s"}}
-                                      ref={function}
-                                    >
-                            <_c4 value="uploaders" className="mt-2">
-                              <TabsContent ref={null} className="ring-offse..." value="uploaders">
-                                <Presence present={false}>
-                                  <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
-                                    <div
-                                      data-state="inactive"
-                                      data-orientation="horizontal"
-                                      role="tabpanel"
-+                                     aria-labelledby="radix-_R_4uqnelb_-trigger-uploaders"
--                                     aria-labelledby="radix-_R_jrinelb_-trigger-uploaders"
-                                      hidden={true}
-+                                     id="radix-_R_4uqnelb_-content-uploaders"
--                                     id="radix-_R_jrinelb_-content-uploaders"
-                                      tabIndex={0}
-                                      className="ring-offset-background focus-visible:outline-none focus-visible:ring-..."
-                                      style={{animationDuration:undefined}}
-                                      ref={function}
-                                    >
-                            <_c4 value="streaks" className="mt-2">
-                              <TabsContent ref={null} className="ring-offse..." value="streaks">
-                                <Presence present={false}>
-                                  <Primitive.div data-state="inactive" data-orientation="horizontal" role="tabpanel" ...>
-                                    <div
-                                      data-state="inactive"
-                                      data-orientation="horizontal"
-                                      role="tabpanel"
-+                                     aria-labelledby="radix-_R_4uqnelb_-trigger-streaks"
--                                     aria-labelledby="radix-_R_jrinelb_-trigger-streaks"
-                                      hidden={true}
-+                                     id="radix-_R_4uqnelb_-content-streaks"
--                                     id="radix-_R_jrinelb_-content-streaks"
-                                      tabIndex={0}
-                                      className="ring-offset-background focus-visible:outline-none focus-visible:ring-..."
-                                      style={{animationDuration:undefined}}
-                                      ref={function}
-                                    >
-                    <EnhancedFooter>
-                      <footer className="border-t m...">
-                        <div className="container ...">
-                          <div>
-                          <div className="border-t p...">
-                            <p>
-                            <div className="flex flex-...">
-                              <p>
-                              <p>
-+                               1761715986018
--                               1761715983074
-            ...
-          ...
-
-[00:00:16.138] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/stats Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.140] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.147] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/me/onboarding Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.148] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.156] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/threads?sortBy=trending&limit=3 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.157] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.167] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/threads?sortBy=answered&limit=3 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.168] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.171] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/threads?sortBy=newest&limit=3 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.172] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.174] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/content/top-sellers Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.175] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.405] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/hot?limit=5 Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.406] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.414] Server  ERROR   Failed to proxy http://127.0.0.1:3001/api/me Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.415] Server  ERROR   Error: connect ECONNREFUSED 127.0.0.1:3001
-[00:00:16.560] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:16.393] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -417,8 +45,89 @@ https://react.dev/link/hydration-mismatch
                             <div className="flex flex-...">
                               <p>
                               <p>
-+                               1761715987417
--                               1761715982941
++                               1761724833063
+-                               1761724872945
             ...
           ...
+
+[00:00:21.166] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:21.167] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:21.168] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:21.173] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:21.175] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:21.175] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:21.726] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:21.781] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:22.288] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LoadingBoundary name="/" loading={null}>
+      <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+        <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="page.tsx">
+                  <SegmentTrieNode>
+                  <HomePage>
+                    <HomeClient initialStats={{totalThreads:0, ...}} initialCategories={[...]} initialThreads={[...]}>
+                      <div className="min-h-scre...">
+                        <Header>
+                        <StatsBar>
+                        <main className="container ...">
+                          <div className="grid grid-...">
+                            <aside>
+                            <div className="lg:col-spa...">
+                              <section>
+                              <section>
+                              <section>
+                                <div>
+                                <div className="space-y-2 ...">
+-                                 <a
+-                                   data-testid="link-thread-eab533f8-4895-453b-b302-7410861db0ba"
+-                                   href="/thread/signal-services-are-they-worth-it"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-535a7da6-8f5d-434e-9d2f-01ca881e86cb"
+-                                   href="/thread/vps-in-singapore-vs-london-latency-comparison"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-81e16228-6a6e-431e-b48a-7c7b0e14076f"
+-                                   href="/thread/trend-following-on-h4-which-pairs-work-best"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-39140584-e353-4aed-a5fe-45d876539d0b"
+-                                   href="/thread/mql5-programming-where-to-start"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-f0d24926-8128-4f79-bddf-77cb60ef3a83"
+-                                   href="/thread/eurusd-scalping-best-indicators"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-733910b1-e164-41f2-a144-15efb859d16d"
+-                                   href="/thread/beginner-question-what-is-leverage"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-1853f20b-eb1f-424f-ae80-7b4ad9e5b9f3"
+-                                   href="/thread/python-bot-vs-mql5-ea-which-is-faster"
+-                                 >
+-                                 <a
+-                                   data-testid="link-thread-bd452157-03bf-46a2-a1f6-6594aba6f13c"
+-                                   href="/thread/hedging-strategy-how-to-calculate-position-sizes"
+-                                 >
+                            ...
+                        ...
+                ...
+              ...
 

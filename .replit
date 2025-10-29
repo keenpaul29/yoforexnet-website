@@ -23,20 +23,16 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 35051
-externalPort = 3001
-
-[[ports]]
-localPort = 38585
-externalPort = 4200
-
-[[ports]]
 localPort = 41287
 externalPort = 3002
 
 [[ports]]
 localPort = 42787
 externalPort = 3000
+
+[[ports]]
+localPort = 44841
+externalPort = 3001
 
 [env]
 PORT = "5000"
@@ -57,13 +53,13 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "bash start-nextjs-only.sh"
 waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
 
 [agent]
 integrations = ["javascript_log_in_with_replit:1.0.0", "javascript_database:1.0.0"]
