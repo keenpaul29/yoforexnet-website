@@ -20,11 +20,12 @@ The platform is built with a modern tech stack:
 The platform emphasizes a clean, intuitive interface designed for ease of use and engagement. Key features like forum threads, marketplace listings, and user profiles are presented clearly, leveraging a responsive design for various devices.
 
 **Technical Implementations:**
-- **Dynamic Schema Generation**: Automated Schema.org JSON-LD generation system that dynamically detects content types (e.g., DiscussionForumPosting, Product, Person) and generates structured data for optimal SEO.
+- **Dynamic Schema Generation**: Production-ready Schema.org JSON-LD generation system with 10 schema types and automated content type detection. Features conditional properties (commentCount, aggregateRating with 5+ review minimum), schema relationships via @id linking, absolute URL validation, HTML sanitization, and graceful error handling. Compliant with Schema.org 2025 and Google Rich Results guidelines.
+- **Schema Utilities Library**: Comprehensive utility system (lib/schema-utils.ts) with 9 helper functions including HTML sanitization (prevents double-escaping), URL normalization (handles http, https, protocol-relative, data, mailto, tel URLs), ISO 8601 date formatting, required property validation, and content sanitization for valid JSON-LD.
 - **Hierarchical URLs**: All components utilize a hierarchical URL structure (e.g., `/category/path/to/category/content-slug`) for improved SEO and content organization, with 301/308 redirects for backward compatibility.
 - **Type Safety**: Comprehensive TypeScript implementation with strict type checking across the entire codebase, including specific handling for PostgreSQL numeric fields (string conversion) and badge types.
 - **API Connectivity**: A centralized Express API backend (port 3001) is robustly connected to the Next.js frontend (port 5000) using React Query for state management and caching.
-- **SEO Optimization**: Beyond schema generation and hierarchical URLs, SEO is enhanced with Google Tag Manager, a dynamic sitemap, and Schema.org Breadcrumbs.
+- **SEO Optimization**: Beyond schema generation and hierarchical URLs, SEO is enhanced with Google Tag Manager, a dynamic sitemap, and Schema.org Breadcrumbs. All schemas include inLanguage property, Person schema @id links, and Organization references for entity relationships.
 
 **Feature Specifications:**
 - **Forum System**: Supports discussions, replies, and interaction statistics.
