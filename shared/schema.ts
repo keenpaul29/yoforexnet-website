@@ -1818,3 +1818,106 @@ export const insertSitemapLogSchema = createInsertSchema(sitemapLogs).omit({
   id: true,
   createdAt: true,
 });
+
+//=================================================================
+// MODERATION TYPES - Phase 2
+// Type definitions for Content Moderation Admin Dashboard
+//=================================================================
+
+export type ModerationQueueItem = {
+  id: string;
+  type: "thread" | "reply";
+  threadId?: string;
+  title?: string;
+  preview: string;
+  author: {
+    id: string;
+    username: string;
+    avatarUrl: string | null;
+    reputation: number;
+  };
+  submittedAt: Date;
+  wordCount: number;
+  hasLinks: boolean;
+  hasImages: boolean;
+  categorySlug?: string;
+  threadTitle?: string;
+  status: "pending" | "approved" | "rejected";
+};
+
+export type ReportedContentSummary = {
+  contentId: string;
+  contentType: "thread" | "reply";
+  titleOrPreview: string;
+  reportCount: number;
+  reportReasons: string[];
+  reporters: Array<{ id: string; username: string }>;
+  firstReportedAt: Date;
+  author: {
+    id: string;
+    username: string;
+    reputation: number;
+  };
+  latestAction: string | null;
+  status: "pending" | "resolved" | "dismissed";
+};
+
+export type ContentDetails = {
+  id: string;
+  type: "thread" | "reply";
+  title?: string;
+  body: string;
+  attachments: string[];
+  author: User;
+  authorRecentPosts: Array<{ id: string; title?: string; body: string; createdAt: Date; type: string }>;
+  authorWarnings: Array<{ actionType: string; details: any; createdAt: Date }>;
+  threadContext?: { id: string; title: string; categorySlug: string };
+  metadata: {
+    createdAt: Date;
+    updatedAt: Date;
+    wordCount: number;
+    hasLinks: boolean;
+    hasImages: boolean;
+  };
+};
+
+export type ReportDetails = {
+  id: number;
+  contentId: string;
+  contentType: "thread" | "reply";
+  content: {
+    title?: string;
+    body: string;
+    author: {
+      id: string;
+      username: string;
+      reputation: number;
+    };
+  };
+  reports: Array<{
+    id: number;
+    reporter: {
+      id: string;
+      username: string;
+    };
+    reason: string;
+    description: string;
+    createdAt: Date;
+  }>;
+  status: string;
+  availableActions: string[];
+};
+
+export type ModerationActionLog = {
+  id: number;
+  action: string;
+  contentId: string | null;
+  contentType: string | null;
+  moderator: {
+    id: string;
+    username: string;
+  };
+  reason: string | null;
+  timestamp: Date;
+  metadata: any;
+};
