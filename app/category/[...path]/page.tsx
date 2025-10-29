@@ -160,109 +160,117 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
       };
     }
     
-    // Generate schema based on detected type
+    // Generate schema based on detected type with error handling
     let schema = null;
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoforex.com';
     
-    switch (schemaAnalysis.schemaType) {
-      case 'FAQPage':
-        // FAQ schema for Q&A threads
-        const faqQuestions = [{
-          question: thread.title,
-          answer: thread.body || 'See discussion for details',
-          id: thread.id
-        }];
-        // Add top replies as additional Q&A pairs
-        if (replies && replies.length > 0) {
-          replies.slice(0, 3).forEach((reply: any) => {
-            if (reply.body) {
-              faqQuestions.push({
-                question: `Reply: ${thread.title}`,
-                answer: reply.body,
-                id: reply.id
-              });
-            }
+    try {
+      switch (schemaAnalysis.schemaType) {
+        case 'FAQPage':
+          // FAQ schema for Q&A threads
+          const faqQuestions = [{
+            question: thread.title,
+            answer: thread.body || 'See discussion for details',
+            id: thread.id
+          }];
+          // Add top replies as additional Q&A pairs
+          if (replies && replies.length > 0) {
+            replies.slice(0, 3).forEach((reply: any) => {
+              if (reply.body) {
+                faqQuestions.push({
+                  question: `Reply: ${thread.title}`,
+                  answer: reply.body,
+                  id: reply.id
+                });
+              }
+            });
+          }
+          schema = generateFAQPageSchema({
+            questions: faqQuestions,
+            baseUrl,
+            pageUrl: `/category/${pathSegments.join('/')}`
           });
-        }
-        schema = generateFAQPageSchema({
-          questions: faqQuestions,
-          baseUrl,
-          pageUrl: `/category/${pathSegments.join('/')}`
-        });
-        break;
+          break;
+          
+        case 'NewsArticle':
+          // News article schema for recent news threads
+          schema = generateNewsArticleSchema({
+            headline: thread.title,
+            description: thread.body?.substring(0, 160),
+            content: thread.body || '',
+            author,
+            publishDate: new Date(thread.createdAt),
+            modifiedDate: thread.updatedAt ? new Date(thread.updatedAt) : undefined,
+            baseUrl,
+            url: `/category/${pathSegments.join('/')}`,
+            imageUrl: undefined,
+            location: undefined,
+            commentCount: replies?.length || 0,
+          });
+          break;
+          
+        case 'BlogPosting':
+          // Blog posting schema for tutorials/guides
+          schema = generateBlogPostingSchema({
+            title: thread.title,
+            description: thread.body?.substring(0, 160),
+            content: thread.body || '',
+            author,
+            publishDate: new Date(thread.createdAt),
+            modifiedDate: thread.updatedAt ? new Date(thread.updatedAt) : undefined,
+            baseUrl,
+            url: `/category/${pathSegments.join('/')}`,
+            imageUrl: undefined,
+            category: pathSegments[0],
+            commentCount: replies?.length || 0,
+          });
+          break;
         
-      case 'NewsArticle':
-        // News article schema for recent news threads
-        schema = generateNewsArticleSchema({
-          headline: thread.title,
-          description: thread.body?.substring(0, 160),
-          content: thread.body || '',
-          author,
-          publishDate: new Date(thread.createdAt),
-          modifiedDate: thread.updatedAt ? new Date(thread.updatedAt) : undefined,
-          baseUrl,
-          url: `/category/${pathSegments.join('/')}`,
-          imageUrl: undefined, // Add if available
-          location: undefined
-        });
-        break;
-        
-      case 'BlogPosting':
-        // Blog posting schema for tutorials/guides
-        schema = generateBlogPostingSchema({
-          title: thread.title,
-          description: thread.body?.substring(0, 160),
-          content: thread.body || '',
-          author,
-          publishDate: new Date(thread.createdAt),
-          modifiedDate: thread.updatedAt ? new Date(thread.updatedAt) : undefined,
-          baseUrl,
-          url: `/category/${pathSegments.join('/')}`,
-          imageUrl: undefined,
-          category: pathSegments[0] // First segment as category
-        });
-        break;
-        
-      case 'VideoObject':
-        // Video object schema for threads with video links
-        // Extract video URL from thread body
-        const youtubeMatch = thread.body?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-        const videoId = youtubeMatch ? youtubeMatch[1] : null;
-        const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : undefined;
-        
-        schema = generateVideoObjectSchema({
-          title: thread.title,
-          description: thread.body?.substring(0, 160) || thread.title,
-          thumbnailUrl: videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : `${baseUrl}/default-video-thumbnail.jpg`,
-          uploadDate: new Date(thread.createdAt),
-          videoUrl: undefined,
-          embedUrl,
-          durationSeconds: undefined, // Unknown for embedded videos
-          viewCount: thread.viewCount || 0,
-          baseUrl,
-          author
-        });
-        break;
-        
-      case 'DiscussionForumPosting':
-      default:
-        // Standard forum discussion schema
-        schema = generateDiscussionForumPostingSchema({
-          thread,
-          author,
-          baseUrl,
-          viewCount: thread.viewCount || 0,
-          replyCount: replies?.length || 0,
-          upvoteCount: thread.upvoteCount || 0,
-          replies: replies?.slice(0, 10).map((r: any) => ({
-            id: r.id,
-            content: r.body,
-            author: r.author || { username: 'Anonymous' },
-            createdAt: new Date(r.createdAt),
-            upvotes: r.helpfulCount || 0
-          })) || []
-        });
-        break;
+        case 'VideoObject':
+          // Video object schema for threads with video links
+          // Extract video URL from thread body
+          const youtubeMatch = thread.body?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+          const videoId = youtubeMatch ? youtubeMatch[1] : null;
+          const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : undefined;
+          
+          schema = generateVideoObjectSchema({
+            title: thread.title,
+            description: thread.body?.substring(0, 160) || thread.title,
+            thumbnailUrl: videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : `${baseUrl}/default-video-thumbnail.jpg`,
+            uploadDate: new Date(thread.createdAt),
+            videoUrl: undefined,
+            embedUrl,
+            durationSeconds: undefined,
+            viewCount: thread.viewCount || 0,
+            baseUrl,
+            author
+          });
+          break;
+          
+        case 'DiscussionForumPosting':
+        default:
+          // Standard forum discussion schema
+          schema = generateDiscussionForumPostingSchema({
+            thread,
+            author,
+            baseUrl,
+            viewCount: thread.viewCount || 0,
+            replyCount: replies?.length || 0,
+            upvoteCount: thread.upvoteCount || 0,
+            replies: replies?.slice(0, 10).map((r: any) => ({
+              id: r.id,
+              content: r.body,
+              author: r.author || { username: 'Anonymous' },
+              createdAt: new Date(r.createdAt),
+              upvotes: r.helpfulCount || 0
+            })) || []
+          });
+          break;
+      }
+    } catch (error) {
+      console.error('[Schema Error]', error);
+      // Omit schema entirely if generation fails
+      schema = null;
     }
     
     // Render thread detail page with hierarchical breadcrumbs
@@ -307,22 +315,30 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   }
   
   if (content) {
-    // Generate Product schema for marketplace items
+    // Generate Product schema for marketplace items with error handling
     let schema = null;
     if (author) {
-      schema = generateProductSchema({
-        product: content,
-        baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://yoforex.com',
-        author,
-        averageRating: content.averageRating || 0,
-        reviewCount: reviews?.length || 0,
-        reviews: reviews?.slice(0, 5).map((r: any) => ({
-          author: r.author || { username: 'Anonymous' },
-          rating: r.rating || 5,
-          comment: r.comment || '',
-          createdAt: new Date(r.createdAt)
-        })) || []
-      });
+      try {
+        const reviewCount = reviews?.length || 0;
+        schema = generateProductSchema({
+          product: content,
+          baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://yoforex.com',
+          author,
+          // Conditional: Only include averageRating when >= 5 reviews
+          averageRating: reviewCount >= 5 ? content.averageRating : undefined,
+          reviewCount: reviewCount,
+          reviews: reviews?.slice(0, 5).map((r: any) => ({
+            author: r.author || { username: 'Anonymous' },
+            rating: r.rating || 5,
+            comment: r.comment || '',
+            createdAt: new Date(r.createdAt)
+          })) || []
+        });
+      } catch (error) {
+        console.error('[Schema Error]', error);
+        // Omit schema entirely if generation fails
+        schema = null;
+      }
     }
     
     // Render content detail page with all required data

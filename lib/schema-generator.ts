@@ -14,6 +14,16 @@
  */
 
 import { ForumThread, Content, User, ForumCategory } from '@shared/schema';
+import { 
+  toAbsoluteUrl, 
+  validateImageUrl, 
+  sanitizeForSchema, 
+  toISO8601, 
+  shouldIncludeRating,
+  validateRequiredProperties,
+  getLanguage,
+  getWordCount
+} from './schema-utils';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -519,63 +529,78 @@ export function generateProductSchema(params: {
     additionalType = 'https://schema.org/SoftwareApplication';
   }
 
-  // Build reviews array if provided
+  // Build reviews array if provided with Person schema links
   const reviewSchemas: ReviewSchema[] | undefined = reviews?.map((review) => ({
     '@context': 'https://schema.org',
     '@type': 'Review',
     author: {
       '@type': 'Person',
+      '@id': `${baseUrl}/user/${review.author.username}#person`,
       name: review.author.username,
       url: `${baseUrl}/user/${review.author.username}`,
     },
-    datePublished: new Date(review.createdAt).toISOString(),
+    datePublished: toISO8601(review.createdAt)!,
     reviewRating: {
       '@type': 'Rating',
       ratingValue: review.rating,
       bestRating: 5,
     },
-    reviewBody: review.comment,
+    reviewBody: sanitizeForSchema(review.comment),
   }));
 
-  return {
+  const schema: ProductSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    '@id': `${baseUrl}/content/${product.slug}`,
+    '@id': `${baseUrl}/content/${product.slug}#product`,
     name: product.title,
-    description: product.description || '',
-    image: imageUrls || coverImage?.url || `${baseUrl}/logo.png`,
+    description: sanitizeForSchema(product.description) || '',
+    image: validateImageUrl(imageUrls || coverImage?.url, baseUrl) || `${baseUrl}/logo.png`,
     brand: {
       '@type': 'Brand',
       name: SITE_CONFIG.name,
     },
     offers: {
       '@type': 'Offer',
-      price: (product.priceCoins || 0).toString(),
+      price: product.isFree ? '0' : (product.priceCoins || 0).toString(),
       priceCurrency: 'USD',
       availability: product.status === 'approved' 
         ? 'https://schema.org/InStock' 
         : 'https://schema.org/OutOfStock',
       url: `${baseUrl}/content/${product.slug}`,
       seller: {
-        '@type': 'Organization',
-        '@id': SITE_CONFIG.organizationId,
-        name: SITE_CONFIG.name,
+        '@type': 'Person',
+        '@id': `${baseUrl}/user/${author.username}#person`,
+        name: author.username,
+        url: `${baseUrl}/user/${author.username}`,
       },
     },
-    ...(averageRating && reviewCount && {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: averageRating,
-        reviewCount: reviewCount,
-        bestRating: 5,
-        worstRating: 1,
-      },
-    }),
-    ...(reviewSchemas && reviewSchemas.length > 0 && { review: reviewSchemas }),
+    sku: product.id,
     ...(additionalType && { additionalType }),
     ...(product.category && { category: product.category }),
-    sku: product.id,
   };
+  
+  // Conditional: Include aggregateRating only when minimum 5 reviews present
+  if (reviewCount && shouldIncludeRating(reviewCount) && averageRating) {
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: averageRating,
+      reviewCount: reviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    };
+  }
+  
+  // Include individual reviews
+  if (reviewSchemas && reviewSchemas.length > 0) {
+    schema.review = reviewSchemas;
+  }
+  
+  // Validate required properties
+  if (!validateRequiredProperties(schema, ['name', 'offers'])) {
+    throw new Error('Missing required Product schema properties');
+  }
+  
+  return schema;
 }
 
 /**
@@ -871,35 +896,35 @@ export function generateDiscussionForumPostingSchema(params: {
     '@context': 'https://schema.org',
     '@type': 'Comment',
     '@id': `${threadUrl}#comment-${reply.id}`,
-    text: reply.content,
+    text: sanitizeForSchema(reply.content) || '',
     author: {
       '@type': 'Person',
+      '@id': `${baseUrl}/user/${reply.author.username}#person`,
       name: reply.author.username,
       url: `${baseUrl}/user/${reply.author.username}`,
     },
-    datePublished: new Date(reply.createdAt).toISOString(),
+    datePublished: toISO8601(reply.createdAt)!,
     ...(reply.upvotes !== undefined && { upvoteCount: reply.upvotes }),
     parentItem: { '@id': threadUrl },
   }));
   
-  return {
+  const schema: DiscussionForumPostingSchema = {
     '@context': 'https://schema.org',
     '@type': 'DiscussionForumPosting',
     '@id': threadUrl,
-    headline: thread.title,
-    articleBody: thread.body || '',
+    headline: thread.title.substring(0, 110),
+    articleBody: sanitizeForSchema(thread.body) || '',
     author: {
       '@type': 'Person',
+      '@id': `${baseUrl}/user/${author.username}#person`,
       name: author.username,
       url: `${baseUrl}/user/${author.username}`,
     },
-    datePublished: new Date(thread.createdAt).toISOString(),
-    dateModified: new Date(thread.updatedAt).toISOString(),
+    datePublished: toISO8601(thread.createdAt)!,
+    dateModified: toISO8601(thread.updatedAt)!,
     url: threadUrl,
     mainEntityOfPage: { '@id': threadUrl },
-    ...(interactionStatistic.length > 0 && { interactionStatistic }),
-    ...(comments && comments.length > 0 && { comment: comments }),
-    ...(replyCount !== undefined && { commentCount: replyCount }),
+    inLanguage: getLanguage(thread.body),
     publisher: {
       '@type': 'Organization',
       '@id': SITE_CONFIG.organizationId,
@@ -910,6 +935,23 @@ export function generateDiscussionForumPostingSchema(params: {
       },
     },
   };
+  
+  // Add interaction statistics if provided
+  if (interactionStatistic.length > 0) {
+    schema.interactionStatistic = interactionStatistic;
+  }
+  
+  // Add comments if provided
+  if (comments && comments.length > 0) {
+    schema.comment = comments;
+  }
+  
+  // Add commentCount if provided
+  if (replyCount !== undefined) {
+    schema.commentCount = replyCount;
+  }
+  
+  return schema;
 }
 
 /**
@@ -927,21 +969,23 @@ export function generateNewsArticleSchema(params: {
   url: string;
   imageUrl?: string;
   location?: string;
+  commentCount?: number;
 }): NewsArticleSchema {
-  const { headline, description, content, author, publishDate, modifiedDate, baseUrl, url, imageUrl, location } = params;
+  const { headline, description, content, author, publishDate, modifiedDate, baseUrl, url, imageUrl, location, commentCount } = params;
   
-  return {
+  const schema: NewsArticleSchema = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
-    '@id': url,
-    headline,
-    ...(description && { description }),
-    ...(imageUrl && { image: imageUrl }),
-    datePublished: new Date(publishDate).toISOString(),
-    ...(modifiedDate && { dateModified: new Date(modifiedDate).toISOString() }),
+    '@id': `${baseUrl}${url}#newsarticle`,
+    headline: headline.substring(0, 110),
+    description: sanitizeForSchema(description),
+    image: validateImageUrl(imageUrl, baseUrl),
+    datePublished: toISO8601(publishDate)!,
+    dateModified: toISO8601(modifiedDate) || toISO8601(publishDate)!,
     author: {
       '@type': 'Person',
-      name: author.username,
+      '@id': `${baseUrl}/user/${author.username}#person`,
+      name: author.firstName && author.lastName ? `${author.firstName} ${author.lastName}` : author.username,
       url: `${baseUrl}/user/${author.username}`,
     },
     publisher: {
@@ -953,10 +997,23 @@ export function generateNewsArticleSchema(params: {
         url: SITE_CONFIG.logo,
       },
     },
-    articleBody: content,
+    articleBody: sanitizeForSchema(content),
+    inLanguage: getLanguage(content),
+    url: `${baseUrl}${url}`,
     ...(location && { dateline: location }),
-    url,
   };
+  
+  // Conditional: Add commentCount only if comments exist
+  if (commentCount && commentCount > 0) {
+    (schema as any).commentCount = commentCount;
+  }
+  
+  // Validate required properties
+  if (!validateRequiredProperties(schema, ['headline', 'datePublished', 'author', 'publisher'])) {
+    throw new Error('Missing required NewsArticle schema properties');
+  }
+  
+  return schema;
 }
 
 /**
@@ -974,24 +1031,23 @@ export function generateBlogPostingSchema(params: {
   url: string;
   imageUrl?: string;
   category?: string;
+  commentCount?: number;
 }): BlogPostingSchema {
-  const { title, description, content, author, publishDate, modifiedDate, baseUrl, url, imageUrl, category } = params;
+  const { title, description, content, author, publishDate, modifiedDate, baseUrl, url, imageUrl, category, commentCount } = params;
   
-  // Calculate word count from content
-  const wordCount = content.trim().split(/\s+/).length;
-  
-  return {
+  const schema: BlogPostingSchema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    '@id': url,
-    headline: title,
-    ...(description && { description }),
-    ...(imageUrl && { image: imageUrl }),
-    datePublished: new Date(publishDate).toISOString(),
-    ...(modifiedDate && { dateModified: new Date(modifiedDate).toISOString() }),
+    '@id': `${baseUrl}${url}#blogposting`,
+    headline: title.substring(0, 110),
+    description: sanitizeForSchema(description),
+    image: validateImageUrl(imageUrl, baseUrl),
+    datePublished: toISO8601(publishDate)!,
+    dateModified: toISO8601(modifiedDate) || toISO8601(publishDate)!,
     author: {
       '@type': 'Person',
-      name: author.username,
+      '@id': `${baseUrl}/user/${author.username}#person`,
+      name: author.firstName && author.lastName ? `${author.firstName} ${author.lastName}` : author.username,
       url: `${baseUrl}/user/${author.username}`,
     },
     publisher: {
@@ -1003,12 +1059,25 @@ export function generateBlogPostingSchema(params: {
         url: SITE_CONFIG.logo,
       },
     },
-    articleBody: content,
-    wordCount,
+    articleBody: sanitizeForSchema(content),
+    wordCount: getWordCount(content),
+    inLanguage: getLanguage(content),
+    url: `${baseUrl}${url}`,
+    mainEntityOfPage: { '@id': `${baseUrl}${url}` },
     ...(category && { articleSection: category }),
-    url,
-    mainEntityOfPage: { '@id': url },
   };
+  
+  // Conditional: Add commentCount only if comments exist
+  if (commentCount && commentCount > 0) {
+    (schema as any).commentCount = commentCount;
+  }
+  
+  // Validate required properties
+  if (!validateRequiredProperties(schema, ['headline', 'datePublished', 'author', 'publisher'])) {
+    throw new Error('Missing required BlogPosting schema properties');
+  }
+  
+  return schema;
 }
 
 // ============================================================================
