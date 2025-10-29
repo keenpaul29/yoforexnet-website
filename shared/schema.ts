@@ -134,6 +134,26 @@ export const rechargeOrders = pgTable("recharge_orders", {
   userIdIdx: index("idx_recharge_orders_user_id").on(table.userId),
 }));
 
+export const subscriptions = pgTable("subscriptions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  plan: text("plan").notNull().$type<"monthly" | "quarterly" | "yearly">(),
+  priceUsd: integer("price_usd").notNull(),
+  paymentMethod: text("payment_method").notNull().$type<"stripe" | "paypal" | "crypto" | "other">(),
+  paymentId: text("payment_id"),
+  status: text("status").notNull().$type<"active" | "cancelled" | "expired" | "paused">(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  autoRenew: boolean("auto_renew").notNull().default(true),
+  cancelledAt: timestamp("cancelled_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_subscriptions_user_id").on(table.userId),
+  statusIdx: index("idx_subscriptions_status").on(table.status),
+  statusEndDateIdx: index("idx_subscriptions_status_end_date").on(table.status, table.endDate),
+}));
+
 export const withdrawalRequests = pgTable("withdrawal_requests", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => users.id),
@@ -1251,6 +1271,12 @@ export const insertRechargeOrderSchema = createInsertSchema(rechargeOrders).omit
   completedAt: true,
 });
 
+export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertWithdrawalRequestSchema = createInsertSchema(withdrawalRequests).omit({
   id: true,
   requestedAt: true,
@@ -1430,6 +1456,8 @@ export type CoinTransaction = typeof coinTransactions.$inferSelect;
 export type InsertCoinTransaction = z.infer<typeof insertCoinTransactionSchema>;
 export type RechargeOrder = typeof rechargeOrders.$inferSelect;
 export type InsertRechargeOrder = z.infer<typeof insertRechargeOrderSchema>;
+export type SelectSubscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
 export type WithdrawalRequest = typeof withdrawalRequests.$inferSelect;
 export type SelectWithdrawalRequest = typeof withdrawalRequests.$inferSelect; // Alias for consistency
 export type InsertWithdrawalRequest = z.infer<typeof insertWithdrawalRequestSchema>;
