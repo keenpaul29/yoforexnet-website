@@ -38,6 +38,11 @@ import {
   validateSufficientCoins,
   runValidators,
 } from "./validation.js";
+import { 
+  ObjectStorageService, 
+  ObjectNotFoundError 
+} from "./objectStorage.js";
+import { ObjectPermission } from "./objectAcl.js";
 import {
   coinOperationLimiter,
   contentCreationLimiter,
@@ -162,6 +167,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('File upload error:', error);
       res.status(500).json({ error: error.message || "Failed to upload files" });
+    }
+  });
+
+  // ===== OBJECT STORAGE ENDPOINTS (Replit Object Storage) =====
+  // Based on blueprint:javascript_object_storage for protected file uploading
+  
+  // Get presigned upload URL for EA files and screenshots
+  app.post("/api/objects/upload", isAuthenticated, async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error: any) {
+      console.error('[OBJECT STORAGE] Failed to get upload URL:', error);
+      res.status(500).json({ error: error.message || "Failed to get upload URL" });
+    }
+  });
+
+  // Download protected files with ACL check
+  app.get("/objects/:objectPath(*)", isAuthenticated, async (req, res) => {
+    try {
+      const userId = (req.user as any)?.claims?.sub;
+      const objectStorageService = new ObjectStorageService();
+      
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      const canAccess = await objectStorageService.canAccessObjectEntity({
+        objectFile,
+        userId: userId,
+        requestedPermission: ObjectPermission.READ,
+      });
+      
+      if (!canAccess) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error: any) {
+      console.error('[OBJECT STORAGE] Download error:', error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Set ACL policy for uploaded EA files
+  app.put("/api/content/files", isAuthenticated, async (req, res) => {
+    try {
+      const { fileURL, visibility, contentId } = req.body;
+      
+      if (!fileURL) {
+        return res.status(400).json({ error: "fileURL is required" });
+      }
+
+      const userId = (req.user as any)?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      
+      // Set ACL policy based on visibility
+      // - public: Screenshots viewable by everyone
+      // - private: EA files only for purchasers + owner
+      const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
+        fileURL,
+        {
+          owner: userId,
+          visibility: visibility === "public" ? "public" : "private",
+          // For private files, we'll later add ACL rules for purchasers
+          aclRules: contentId && visibility === "private" ? [{
+            group: {
+              type: 1, // ObjectAccessGroupType.PURCHASERS
+              id: contentId
+            },
+            permission: ObjectPermission.READ
+          }] : undefined
+        }
+      );
+
+      console.log(`[OBJECT STORAGE] ACL set for ${objectPath} (${visibility})`);
+
+      res.json({
+        objectPath,
+        visibility,
+        message: "File uploaded and access control set successfully"
+      });
+    } catch (error: any) {
+      console.error('[OBJECT STORAGE] ACL setting error:', error);
+      res.status(500).json({ error: error.message || "Failed to set file access control" });
     }
   });
 
