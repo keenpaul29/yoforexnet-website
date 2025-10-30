@@ -1,0 +1,13 @@
+User-Agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /messages
+Disallow: /notifications
+Disallow: /recharge
+Disallow: /withdrawal
+Disallow: /transactions
+Disallow: /publish
+Disallow: /api/
+
+Sitemap: https://yoforex.net/sitemap.xml
