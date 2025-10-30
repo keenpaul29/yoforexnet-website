@@ -24,6 +24,7 @@
   "/earn/page": "/earn",
   "/feedback/page": "/feedback",
   "/guides/[slug]/page": "/guides/[slug]",
+  "/health/route": "/health",
   "/hot/page": "/hot",
   "/leaderboard/page": "/leaderboard",
   "/marketplace/page": "/marketplace",

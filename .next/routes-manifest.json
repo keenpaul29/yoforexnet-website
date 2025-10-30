@@ -219,6 +219,12 @@
       "namedRegex": "^/feedback(?:/)?$"
     },
     {
+      "page": "/health",
+      "regex": "^/health(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/health(?:/)?$"
+    },
+    {
       "page": "/hot",
       "regex": "^/hot(?:/)?$",
       "routeKeys": {},
