@@ -957,6 +957,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get recharge packages (must come before :orderId route)
+  app.get("/api/recharge/packages", async (req, res) => {
+    res.json(RECHARGE_PACKAGES);
+  });
+
   // Get recharge order status
   app.get("/api/recharge/:orderId", async (req, res) => {
     const order = await storage.getRechargeOrder(req.params.orderId);
@@ -964,11 +969,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: "Order not found" });
     }
     res.json(order);
-  });
-
-  // Get recharge packages
-  app.get("/api/recharge/packages", async (req, res) => {
-    res.json(RECHARGE_PACKAGES);
   });
 
   // ===== WITHDRAWAL ENDPOINTS =====
