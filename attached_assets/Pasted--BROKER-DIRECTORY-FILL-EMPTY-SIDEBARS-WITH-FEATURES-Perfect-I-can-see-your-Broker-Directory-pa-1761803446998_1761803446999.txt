@@ -1,0 +1,1130 @@
+🏢 BROKER DIRECTORY - FILL EMPTY SIDEBARS WITH FEATURES
+Perfect! I can see your Broker Directory page with 7 brokers (IC Markets, Pepperstone, XM Global, FBS, Exness, FXTM, Tickmill) but the sides are completely empty. Let me add powerful sidebar features!image.jpg​
+📊 CURRENT PAGE ANALYSIS
+Your page has:
+✅ 7 Total Brokers, 0 Verified, 0 Reviews, 0.0 Avg Rating, 0 Scam Alerts, 0 New 24h
+
+
+✅ Search bar
+
+
+✅ Three filter dropdowns: All Brokers, All Ratings, By Rating
+
+
+✅ Two sorting tabs: Top Rated, Most Reviewed
+
+
+✅ Broker cards in grid (3 columns)
+
+
+❌ BLANK LEFT SIDEBAR
+
+
+❌ BLANK RIGHT SIDEBAR
+
+
+
+🎨 COMPLETE 3-COLUMN LAYOUT WITH SIDEBARS
+tsx
+// BrokerDirectoryPage.tsx - Full layout with sidebars
+const BrokerDirectoryPage = () => {
+  return (
+    <div className="broker-directory-layout">
+      {/* LEFT SIDEBAR - 280px */}
+      <LeftSidebar />
+      
+      {/* MAIN CONTENT - Flexible */}
+      <MainContent />
+      
+      {/* RIGHT SIDEBAR - 320px */}
+      <RightSidebar />
+    </div>
+  );
+};
+
+const styles = `
+.broker-directory-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+@media (max-width: 1400px) {
+  .broker-directory-layout {
+    grid-template-columns: 1fr 320px;
+  }
+  .left-sidebar { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .broker-directory-layout {
+    grid-template-columns: 1fr;
+  }
+  .right-sidebar { display: none; }
+}
+`;
+
+
+📱 LEFT SIDEBAR FEATURES
+tsx
+// LeftSidebar.tsx - Advanced filters and categories
+const LeftSidebar = () => {
+  return (
+    <div className="left-sidebar">
+      {/* Advanced Filters */}
+      <div className="sidebar-card">
+        <h3>🔍 Advanced Filters</h3>
+        
+        {/* Regulation Status */}
+        <div className="filter-section">
+          <h4>Regulation</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🇬🇧 FCA Regulated</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🇺🇸 CFTC Regulated</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🇨🇾 CySEC Regulated</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🇦🇺 ASIC Regulated</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>⚠️ Offshore/Unregulated</span>
+          </label>
+        </div>
+        
+        {/* Account Type */}
+        <div className="filter-section">
+          <h4>Account Types</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Standard Account</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>ECN Account</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Islamic Account</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Demo Account</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Cent Account</span>
+          </label>
+        </div>
+        
+        {/* Minimum Deposit */}
+        <div className="filter-section">
+          <h4>Minimum Deposit</h4>
+          <div className="radio-group">
+            <label>
+              <input type="radio" name="deposit" />
+              <span>$0 - $100</span>
+            </label>
+            <label>
+              <input type="radio" name="deposit" />
+              <span>$100 - $500</span>
+            </label>
+            <label>
+              <input type="radio" name="deposit" />
+              <span>$500 - $1,000</span>
+            </label>
+            <label>
+              <input type="radio" name="deposit" />
+              <span>$1,000+</span>
+            </label>
+          </div>
+        </div>
+        
+        {/* Maximum Leverage */}
+        <div className="filter-section">
+          <h4>Maximum Leverage</h4>
+          <select>
+            <option>Any Leverage</option>
+            <option>Up to 1:30</option>
+            <option>Up to 1:100</option>
+            <option>Up to 1:500</option>
+            <option>1:1000+</option>
+          </select>
+        </div>
+        
+        {/* Spread Type */}
+        <div className="filter-section">
+          <h4>Spread Type</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Fixed Spreads</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Variable Spreads</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Raw Spread (Commission)</span>
+          </label>
+        </div>
+        
+        {/* Platforms */}
+        <div className="filter-section">
+          <h4>Trading Platforms</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>MetaTrader 4</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>MetaTrader 5</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>cTrader</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Proprietary Platform</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>WebTrader</span>
+          </label>
+        </div>
+        
+        {/* Payment Methods */}
+        <div className="filter-section">
+          <h4>Payment Methods</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>💳 Credit/Debit Card</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🏦 Bank Transfer</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>💰 PayPal</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>₿ Cryptocurrency</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🌐 Neteller/Skrill</span>
+          </label>
+        </div>
+        
+        {/* Features */}
+        <div className="filter-section">
+          <h4>Special Features</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Copy Trading</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Social Trading</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>Bonus Offers</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>24/7 Support</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>VPS Hosting</span>
+          </label>
+        </div>
+        
+        <button className="clear-filters-btn">Clear All Filters</button>
+      </div>
+      
+      {/* Broker Categories */}
+      <div className="sidebar-card">
+        <h3>📂 Categories</h3>
+        <div className="category-list">
+          <a href="#top-rated" className="category-item">
+            <span>⭐</span>
+            <div>
+              <strong>Top Rated</strong>
+              <small>4.5+ stars</small>
+            </div>
+            <span className="count">3</span>
+          </a>
+          
+          <a href="#low-spread" className="category-item">
+            <span>📉</span>
+            <div>
+              <strong>Low Spread</strong>
+              <small>Under 1 pip</small>
+            </div>
+            <span className="count">5</span>
+          </a>
+          
+          <a href="#beginners" className="category-item">
+            <span>🎓</span>
+            <div>
+              <strong>For Beginners</strong>
+              <small>$0-$100 min</small>
+            </div>
+            <span className="count">4</span>
+          </a>
+          
+          <a href="#ecn" className="category-item">
+            <span>🔄</span>
+            <div>
+              <strong>ECN Brokers</strong>
+              <small>Direct market access</small>
+            </div>
+            <span className="count">6</span>
+          </a>
+          
+          <a href="#us-clients" className="category-item">
+            <span>🇺🇸</span>
+            <div>
+              <strong>US Clients</strong>
+              <small>Accepts US traders</small>
+            </div>
+            <span className="count">2</span>
+          </a>
+          
+          <a href="#islamic" className="category-item">
+            <span>☪️</span>
+            <div>
+              <strong>Islamic Accounts</strong>
+              <small>Swap-free</small>
+            </div>
+            <span className="count">7</span>
+          </a>
+        </div>
+      </div>
+      
+      {/* Broker Comparison Tool */}
+      <div className="sidebar-card comparison-card">
+        <h3>⚖️ Compare Brokers</h3>
+        <p>Select 2-4 brokers to compare side-by-side</p>
+        
+        <div className="selected-brokers">
+          <div className="selected-broker">
+            <img src="/brokers/ic-markets.png" alt="" />
+            <span>IC Markets</span>
+            <button>×</button>
+          </div>
+          <div className="selected-broker">
+            <img src="/brokers/pepperstone.png" alt="" />
+            <span>Pepperstone</span>
+            <button>×</button>
+          </div>
+        </div>
+        
+        <button className="compare-btn">Compare Now (2)</button>
+        <button className="clear-comparison">Clear</button>
+      </div>
+      
+      {/* Quick Stats */}
+      <div className="sidebar-card">
+        <h3>📊 Directory Stats</h3>
+        <div className="quick-stats">
+          <div className="stat-item">
+            <span className="stat-icon">🏢</span>
+            <div>
+              <span className="stat-value">7</span>
+              <span className="stat-label">Total Brokers</span>
+            </div>
+          </div>
+          <div className="stat-item">
+            <span className="stat-icon">✅</span>
+            <div>
+              <span className="stat-value">0</span>
+              <span className="stat-label">Verified</span>
+            </div>
+          </div>
+          <div className="stat-item">
+            <span className="stat-icon">💬</span>
+            <div>
+              <span className="stat-value">0</span>
+              <span className="stat-label">Total Reviews</span>
+            </div>
+          </div>
+          <div className="stat-item">
+            <span className="stat-icon">⚠️</span>
+            <div>
+              <span className="stat-value">0</span>
+              <span className="stat-label">Scam Alerts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+📊 RIGHT SIDEBAR FEATURES
+tsx
+// RightSidebar.tsx - Featured brokers and tools
+const RightSidebar = () => {
+  return (
+    <div className="right-sidebar">
+      {/* Featured Broker of the Month */}
+      <div className="sidebar-card featured-broker-card">
+        <div className="featured-badge">✨ Featured Broker</div>
+        <h3>Broker of the Month</h3>
+        
+        <div className="featured-broker">
+          <img src="/brokers/ic-markets.png" alt="IC Markets" className="featured-logo" />
+          <h4>IC Markets</h4>
+          <div className="featured-rating">
+            <span className="stars">⭐⭐⭐⭐⭐</span>
+            <span className="rating-text">No ratings yet</span>
+          </div>
+          
+          <div className="featured-highlights">
+            <div className="highlight-item">
+              <span className="label">Regulation:</span>
+              <span className="value">ASIC, CySEC</span>
+            </div>
+            <div className="highlight-item">
+              <span className="label">Min Deposit:</span>
+              <span className="value">$200</span>
+            </div>
+            <div className="highlight-item">
+              <span className="label">Spread:</span>
+              <span className="value">From 0.0 pips</span>
+            </div>
+            <div className="highlight-item">
+              <span className="label">Leverage:</span>
+              <span className="value">Up to 1:500</span>
+            </div>
+          </div>
+          
+          <div className="featured-actions">
+            <button className="view-broker-btn">View Details</button>
+            <button className="write-review-btn">Write Review</button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Top 5 Brokers This Week */}
+      <div className="sidebar-card">
+        <h3>🔥 Trending This Week</h3>
+        <div className="trending-brokers">
+          <div className="trending-broker-item">
+            <span className="rank">#1</span>
+            <img src="/brokers/ic-markets.png" alt="" />
+            <div className="broker-info">
+              <strong>IC Markets</strong>
+              <span className="views">+1.2K views</span>
+            </div>
+            <span className="rating">N/A</span>
+          </div>
+          
+          <div className="trending-broker-item">
+            <span className="rank">#2</span>
+            <img src="/brokers/pepperstone.png" alt="" />
+            <div className="broker-info">
+              <strong>Pepperstone</strong>
+              <span className="views">+980 views</span>
+            </div>
+            <span className="rating">N/A</span>
+          </div>
+          
+          <div className="trending-broker-item">
+            <span className="rank">#3</span>
+            <img src="/brokers/xm-global.png" alt="" />
+            <div className="broker-info">
+              <strong>XM Global</strong>
+              <span className="views">+750 views</span>
+            </div>
+            <span className="rating">N/A</span>
+          </div>
+          
+          <div className="trending-broker-item">
+            <span className="rank">#4</span>
+            <img src="/brokers/fbs.png" alt="" />
+            <div className="broker-info">
+              <strong>FBS</strong>
+              <span className="views">+620 views</span>
+            </div>
+            <span className="rating">N/A</span>
+          </div>
+          
+          <div className="trending-broker-item">
+            <span className="rank">#5</span>
+            <img src="/brokers/exness.png" alt="" />
+            <div className="broker-info">
+              <strong>Exness</strong>
+              <span className="views">+580 views</span>
+            </div>
+            <span className="rating">N/A</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Recent Reviews */}
+      <div className="sidebar-card">
+        <h3>📝 Recent Reviews</h3>
+        <div className="recent-reviews">
+          <div className="empty-reviews">
+            <p>No reviews yet</p>
+            <small>Be the first to review a broker!</small>
+            <button className="submit-review-btn">Submit Review</button>
+          </div>
+          
+          {/* Will show when there are reviews: */}
+          {/* <div className="review-item">
+            <div className="review-header">
+              <img src="/avatars/user1.jpg" alt="" />
+              <div>
+                <strong>John Trader</strong>
+                <span className="review-broker">reviewed IC Markets</span>
+              </div>
+            </div>
+            <div className="review-rating">⭐⭐⭐⭐⭐</div>
+            <p className="review-text">"Excellent spreads and fast execution..."</p>
+            <span className="review-time">2 hours ago</span>
+          </div> */}
+        </div>
+      </div>
+      
+      {/* Scam Alert Warnings */}
+      <div className="sidebar-card alert-card">
+        <h3>⚠️ Scam Alerts</h3>
+        <div className="scam-alerts">
+          <div className="alert-empty">
+            <span className="alert-icon">✅</span>
+            <p>No recent scam alerts</p>
+            <small>All brokers are under review</small>
+          </div>
+          
+          <button className="report-scam-btn">Report a Scam</button>
+        </div>
+      </div>
+      
+      {/* Broker Tools */}
+      <div className="sidebar-card tools-card">
+        <h3>🛠️ Broker Tools</h3>
+        <div className="tools-list">
+          <a href="/tools/pip-calculator" className="tool-item">
+            <span>📊</span>
+            <div>
+              <strong>Pip Calculator</strong>
+              <small>Calculate pip value</small>
+            </div>
+          </a>
+          
+          <a href="/tools/lot-size-calculator" className="tool-item">
+            <span>📐</span>
+            <div>
+              <strong>Lot Size Calculator</strong>
+              <small>Position sizing tool</small>
+            </div>
+          </a>
+          
+          <a href="/tools/margin-calculator" className="tool-item">
+            <span>💰</span>
+            <div>
+              <strong>Margin Calculator</strong>
+              <small>Required margin</small>
+            </div>
+          </a>
+          
+          <a href="/tools/spread-comparison" className="tool-item">
+            <span>📉</span>
+            <div>
+              <strong>Spread Comparison</strong>
+              <small>Compare broker spreads</small>
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      {/* Educational Resources */}
+      <div className="sidebar-card education-card">
+        <h3>📚 Choosing a Broker</h3>
+        <div className="education-links">
+          <a href="/guides/how-to-choose-broker">
+            <span>📖</span>
+            How to Choose a Forex Broker
+          </a>
+          <a href="/guides/regulation-explained">
+            <span>🏛️</span>
+            Understanding Broker Regulation
+          </a>
+          <a href="/guides/spread-types">
+            <span>📊</span>
+            Fixed vs Variable Spreads
+          </a>
+          <a href="/guides/leverage-guide">
+            <span>⚖️</span>
+            Leverage: Risks & Benefits
+          </a>
+          <a href="/guides/avoiding-scams">
+            <span>⚠️</span>
+            Avoiding Broker Scams
+          </a>
+        </div>
+      </div>
+      
+      {/* Community Recommendations */}
+      <div className="sidebar-card recommendations-card">
+        <h3>💡 Community Picks</h3>
+        <p>Most recommended by YoForex traders</p>
+        
+        <div className="community-picks">
+          <div className="pick-item">
+            <img src="/brokers/ic-markets.png" alt="" />
+            <div>
+              <strong>IC Markets</strong>
+              <span>87% recommend</span>
+            </div>
+            <button className="vote-btn">👍</button>
+          </div>
+          
+          <div className="pick-item">
+            <img src="/brokers/pepperstone.png" alt="" />
+            <div>
+              <strong>Pepperstone</strong>
+              <span>82% recommend</span>
+            </div>
+            <button className="vote-btn">👍</button>
+          </div>
+          
+          <div className="pick-item">
+            <img src="/brokers/exness.png" alt="" />
+            <div>
+              <strong>Exness</strong>
+              <span>78% recommend</span>
+            </div>
+            <button className="vote-btn">👍</button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Newsletter Signup */}
+      <div className="sidebar-card newsletter-card">
+        <h3>📬 Broker Updates</h3>
+        <p>Get notified about new brokers, scam alerts, and updates</p>
+        
+        <form className="newsletter-form">
+          <input type="email" placeholder="Your email address" />
+          <button type="submit">Subscribe</button>
+        </form>
+        
+        <small>🔒 We respect your privacy. Unsubscribe anytime.</small>
+      </div>
+    </div>
+  );
+};
+
+
+🎨 COMPLETE STYLING
+css
+/* Sidebar Cards */
+.sidebar-card {
+  background: #1a1d24;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebar-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Filter Sections */
+.filter-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #2d3139;
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+}
+
+.filter-section h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-checkbox,
+.radio-group label {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  cursor: pointer;
+  color: #d1d5db;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.filter-checkbox:hover {
+  color: #fff;
+}
+
+.filter-checkbox input,
+.radio-group input {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.clear-filters-btn {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 12px;
+  transition: all 0.2s;
+}
+
+.clear-filters-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* Category List */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #d1d5db;
+  transition: all 0.2s;
+  background: #252932;
+}
+
+.category-item:hover {
+  background: #2d3342;
+  color: #fff;
+}
+
+.category-item > span:first-child {
+  font-size: 20px;
+}
+
+.category-item > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-item strong {
+  font-size: 14px;
+  color: #fff;
+}
+
+.category-item small {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.category-item .count {
+  background: #374151;
+  color: #d1d5db;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Comparison Tool */
+.comparison-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: #fff;
+}
+
+.selected-brokers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.selected-broker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.selected-broker img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.selected-broker span {
+  flex: 1;
+  font-size: 14px;
+}
+
+.selected-broker button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.compare-btn,
+.clear-comparison {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.compare-btn {
+  background: #fff;
+  color: #667eea;
+}
+
+.clear-comparison {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* Featured Broker */
+.featured-broker-card {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  border: none;
+  color: #fff;
+  text-align: center;
+}
+
+.featured-badge {
+  background: rgba(255, 255, 255, 0.2);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.featured-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  margin: 16px auto;
+  background: #fff;
+  padding: 8px;
+}
+
+.featured-rating {
+  margin: 12px 0;
+}
+
+.featured-highlights {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.highlight-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.highlight-item:last-child {
+  border-bottom: none;
+}
+
+.highlight-item .label {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.highlight-item .value {
+  font-weight: 600;
+}
+
+.featured-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.view-broker-btn,
+.write-review-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.view-broker-btn {
+  background: #fff;
+  color: #f59e0b;
+}
+
+.write-review-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Trending Brokers */
+.trending-broker-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #252932;
+  transition: background 0.2s;
+}
+
+.trending-broker-item:hover {
+  background: #2d3342;
+}
+
+.trending-broker-item .rank {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fbbf24;
+  min-width: 30px;
+}
+
+.trending-broker-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.broker-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.broker-info strong {
+  font-size: 14px;
+  color: #fff;
+}
+
+.views {
+  font-size: 12px;
+  color: #10b981;
+}
+
+.rating {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Tools List */
+.tool-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #d1d5db;
+  background: #252932;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.tool-item:hover {
+  background: #2d3342;
+  color: #fff;
+}
+
+.tool-item > span:first-child {
+  font-size: 24px;
+}
+
+.tool-item strong {
+  font-size: 14px;
+  color: #fff;
+  display: block;
+}
+
+.tool-item small {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Newsletter Form */
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.newsletter-form input {
+  padding: 10px 12px;
+  border: 1px solid #374151;
+  background: #1a1d24;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.newsletter-form button {
+  padding: 10px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.newsletter-card small {
+  display: block;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+/* Empty States */
+.empty-reviews,
+.alert-empty {
+  text-align: center;
+  padding: 20px;
+  color: #9ca3af;
+}
+
+.alert-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* Quick Stats */
+.quick-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #252932;
+  border-radius: 8px;
+}
+
+.stat-icon {
+  font-size: 24px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3b82f6;
+  display: block;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+
+✅ COMPLETE FEATURES ADDED
+Left Sidebar (11 Features):
+✅ Advanced Filters (Regulation, Account Type, Deposit, Leverage, Spreads, Platforms, Payment Methods, Special Features)
+
+
+✅ Broker Categories (6 quick categories)
+
+
+✅ Broker Comparison Tool (Select & compare)
+
+
+✅ Directory Statistics (Quick overview)
+
+
+Right Sidebar (8 Features):
+✅ Featured Broker of the Month (Highlighted broker)
+
+
+✅ Trending Brokers (Top 5 this week)
+
+
+✅ Recent Reviews (Community feedback)
+
+
+✅ Scam Alerts (Warning system)
+
+
+✅ Broker Tools (Calculators & utilities)
+
+
+✅ Educational Resources (Guides)
+
+
+✅ Community Recommendations (Most voted)
+
+
+✅ Newsletter Signup (Updates subscription)
+
+
+
+
