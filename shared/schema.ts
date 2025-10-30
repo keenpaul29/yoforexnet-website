@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, json, check, uniqueIndex, numeric, serial, date } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, json, check, uniqueIndex, numeric, serial, date, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -134,18 +134,59 @@ export const rechargeOrders = pgTable("recharge_orders", {
   userIdIdx: index("idx_recharge_orders_user_id").on(table.userId),
 }));
 
+export const subscriptions = pgTable("subscriptions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  plan: text("plan").notNull().$type<"monthly" | "quarterly" | "yearly">(),
+  priceUsd: integer("price_usd").notNull(),
+  paymentMethod: text("payment_method").notNull().$type<"stripe" | "paypal" | "crypto" | "other">(),
+  paymentId: text("payment_id"),
+  status: text("status").notNull().$type<"active" | "cancelled" | "expired" | "paused">(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  autoRenew: boolean("auto_renew").notNull().default(true),
+  cancelledAt: timestamp("cancelled_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_subscriptions_user_id").on(table.userId),
+  statusIdx: index("idx_subscriptions_status").on(table.status),
+  statusEndDateIdx: index("idx_subscriptions_status_end_date").on(table.status, table.endDate),
+}));
+
 export const withdrawalRequests = pgTable("withdrawal_requests", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => users.id),
   amount: integer("amount").notNull(),
-  cryptoType: text("crypto_type").notNull().$type<"BTC" | "ETH">(),
+  
+  // Withdrawal Method Flexibility - method field with default 'crypto' for backward compatibility
+  method: text("method").$type<"crypto" | "paypal" | "bank" | "other">().default("crypto"),
+  paymentReference: text("payment_reference"), // For fiat payment confirmations
+  
+  // Crypto fields - now NULLABLE for backward compatibility with fiat withdrawals
+  cryptoType: text("crypto_type").$type<"BTC" | "ETH">(),
   walletAddress: text("wallet_address").notNull(),
-  status: text("status").notNull().$type<"pending" | "processing" | "completed" | "failed" | "cancelled">().default("pending"),
-  exchangeRate: numeric("exchange_rate", { precision: 20, scale: 8 }).notNull(),
-  cryptoAmount: numeric("crypto_amount", { precision: 20, scale: 8 }).notNull(),
+  exchangeRate: numeric("exchange_rate", { precision: 20, scale: 8 }),
+  cryptoAmount: numeric("crypto_amount", { precision: 20, scale: 8 }),
+  
+  // Extended status enum to include 'approved' and 'rejected'
+  status: text("status").notNull().$type<"pending" | "approved" | "rejected" | "processing" | "completed" | "failed" | "cancelled">().default("pending"),
+  
   processingFee: integer("processing_fee").notNull(),
   transactionHash: text("transaction_hash"),
   adminNotes: text("admin_notes"),
+  
+  // Admin Workflow Tracking Fields (all nullable for backward compatibility)
+  approvedBy: varchar("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at"),
+  rejectedBy: varchar("rejected_by").references(() => users.id),
+  rejectedAt: timestamp("rejected_at"),
+  rejectionReason: text("rejection_reason"),
+  completedBy: varchar("completed_by").references(() => users.id),
+  
+  // Revenue Tracking Field (for finance reporting)
+  amountUsd: numeric("amount_usd", { precision: 10, scale: 2 }),
+  
   requestedAt: timestamp("requested_at").notNull().defaultNow(),
   processedAt: timestamp("processed_at"),
   completedAt: timestamp("completed_at"),
@@ -154,6 +195,9 @@ export const withdrawalRequests = pgTable("withdrawal_requests", {
 }, (table) => ({
   userIdIdx: index("idx_withdrawal_requests_user_id").on(table.userId),
   statusIdx: index("idx_withdrawal_requests_status").on(table.status),
+  methodIdx: index("idx_withdrawal_requests_method").on(table.method),
+  approvedByIdx: index("idx_withdrawal_requests_approved_by").on(table.approvedBy),
+  statusMethodIdx: index("idx_withdrawal_requests_status_method").on(table.status, table.method),
   amountCheck: check("chk_withdrawal_amount_min", sql`${table.amount} >= 1000`),
 }));
 
@@ -223,6 +267,8 @@ export const content = pgTable("content", {
   focusKeyword: text("focus_keyword"),
   autoMetaDescription: text("auto_meta_description"),
   autoImageAltTexts: text("auto_image_alt_texts").array(),
+  metaTitle: text("meta_title"),
+  metaKeywords: text("meta_keywords"),
   
   // Ranking system
   salesScore: integer("sales_score").notNull().default(0),
@@ -446,6 +492,8 @@ export const forumThreads = pgTable("forum_threads", {
   slug: text("slug").notNull().unique(),
   focusKeyword: text("focus_keyword"),
   metaDescription: text("meta_description"),
+  metaTitle: text("meta_title"),
+  metaKeywords: text("meta_keywords"),
   
   // Enhanced SEO & Thread Type
   threadType: text("thread_type").notNull().$type<"question" | "discussion" | "review" | "journal" | "guide" | "program_sharing">().default("discussion"),
@@ -554,6 +602,59 @@ export const forumCategories = pgTable("forum_categories", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
   parentSlugIdx: index("idx_forum_categories_parent_slug").on(table.parentSlug),
+}));
+
+// SEO-Optimized Categories for Marketplace Content
+export const seoCategories = pgTable("seo_categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(), // URL-friendly slug (e.g., "forex-trading", "expert-advisors")
+  name: text("name").notNull(), // Display name (e.g., "Forex Trading", "Expert Advisors")
+  urlPath: text("url_path").notNull().unique(), // Full URL path (e.g., "/forex-trading/expert-advisors/")
+  parentId: varchar("parent_id").references((): any => seoCategories.id),
+  categoryType: text("category_type").notNull().$type<"main" | "sub" | "leaf">().default("main"),
+  oldSlug: text("old_slug"), // For mapping from old category names
+  
+  // SEO Fields
+  metaTitle: text("meta_title"),
+  metaDescription: text("meta_description"),
+  metaKeywords: text("meta_keywords"),
+  h1Title: text("h1_title"), // Custom H1 for category pages
+  
+  // Display Settings
+  icon: text("icon").notNull().default("Folder"), // Lucide icon name
+  color: text("color").notNull().default("bg-primary"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  showInMenu: boolean("show_in_menu").notNull().default(true),
+  showInSidebar: boolean("show_in_sidebar").notNull().default(true),
+  
+  // Stats
+  contentCount: integer("content_count").notNull().default(0),
+  viewCount: integer("view_count").notNull().default(0),
+  
+  // Status
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index("idx_seo_categories_slug").on(table.slug),
+  urlPathIdx: index("idx_seo_categories_url_path").on(table.urlPath),
+  parentIdIdx: index("idx_seo_categories_parent_id").on(table.parentId),
+  oldSlugIdx: index("idx_seo_categories_old_slug").on(table.oldSlug),
+}));
+
+// Category URL Redirects for SEO preservation
+export const categoryRedirects = pgTable("category_redirects", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  oldUrl: text("old_url").notNull().unique(),
+  newUrl: text("new_url").notNull(),
+  redirectType: integer("redirect_type").notNull().default(301), // 301 for permanent, 302 for temporary
+  hitCount: integer("hit_count").notNull().default(0),
+  lastUsed: timestamp("last_used"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  oldUrlIdx: index("idx_category_redirects_old_url").on(table.oldUrl),
+  isActiveIdx: index("idx_category_redirects_active").on(table.isActive),
 }));
 
 // User Badges & Trust Levels
@@ -731,8 +832,10 @@ export const campaigns = pgTable("campaigns", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   name: varchar("name", { length: 200 }).notNull(),
-  type: varchar("type", { length: 50 }).notNull(),
+  description: text("description"),
+  type: varchar("type", { length: 50 }).default("marketing"),
   status: varchar("status", { length: 20 }).notNull().default("active"),
+  budget: integer("budget"),
   discountPercent: integer("discount_percent"),
   discountCode: varchar("discount_code", { length: 50 }).unique(),
   startDate: timestamp("start_date").notNull(),
@@ -1177,6 +1280,198 @@ export const contentRevisions = pgTable("content_revisions", {
   createdAtIdx: index("idx_content_revisions_created_at").on(table.createdAt),
 }));
 
+// ========================================
+// CLIENT DASHBOARD TABLES
+// ========================================
+
+// Trading Journal - Track user trades and performance
+export const tradingJournalEntries = pgTable("trading_journal_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  tradingPair: varchar("trading_pair").notNull(),
+  entryPrice: decimal("entry_price", { precision: 20, scale: 8 }).notNull(),
+  exitPrice: decimal("exit_price", { precision: 20, scale: 8 }),
+  positionSize: decimal("position_size", { precision: 20, scale: 8 }).notNull(),
+  positionType: varchar("position_type").notNull().$type<"long" | "short">(),
+  entryDate: timestamp("entry_date").notNull(),
+  exitDate: timestamp("exit_date"),
+  profitLoss: decimal("profit_loss", { precision: 20, scale: 8 }),
+  profitLossPercent: decimal("profit_loss_percent", { precision: 10, scale: 4 }),
+  strategy: varchar("strategy"),
+  notes: text("notes"),
+  tags: text("tags").array().default(sql`'{}'::text[]`),
+  screenshotUrls: text("screenshot_urls").array().default(sql`'{}'::text[]`),
+  broker: varchar("broker"),
+  status: varchar("status").notNull().default("open").$type<"open" | "closed">(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_trading_journal_user_id").on(table.userId),
+  statusIdx: index("idx_trading_journal_status").on(table.status),
+  entryDateIdx: index("idx_trading_journal_entry_date").on(table.entryDate),
+  tradingPairIdx: index("idx_trading_journal_trading_pair").on(table.tradingPair),
+}));
+
+// Watchlists - User custom symbol lists
+export const watchlists = pgTable("watchlists", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  symbols: text("symbols").array().default(sql`'{}'::text[]`),
+  isDefault: boolean("is_default").notNull().default(false),
+  color: varchar("color"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_watchlists_user_id").on(table.userId),
+  isDefaultIdx: index("idx_watchlists_is_default").on(table.isDefault),
+}));
+
+// Price Alerts - Real-time price notifications
+export const priceAlerts = pgTable("price_alerts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  symbol: varchar("symbol").notNull(),
+  targetPrice: decimal("target_price", { precision: 20, scale: 8 }).notNull(),
+  condition: varchar("condition").notNull().$type<"above" | "below" | "equals">(),
+  isActive: boolean("is_active").notNull().default(true),
+  isTriggered: boolean("is_triggered").notNull().default(false),
+  triggeredAt: timestamp("triggered_at"),
+  notificationMethod: varchar("notification_method").notNull().default("in_app").$type<"in_app" | "email" | "push" | "all">(),
+  note: text("note"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_price_alerts_user_id").on(table.userId),
+  symbolIdx: index("idx_price_alerts_symbol").on(table.symbol),
+  isActiveIdx: index("idx_price_alerts_is_active").on(table.isActive),
+  isTriggeredIdx: index("idx_price_alerts_is_triggered").on(table.isTriggered),
+}));
+
+// Saved Searches - Quick access to frequent searches
+export const savedSearches = pgTable("saved_searches", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  query: text("query").notNull(),
+  filters: jsonb("filters"),
+  category: varchar("category").$type<"content" | "threads" | "users" | "brokers" | "all">(),
+  useCount: integer("use_count").notNull().default(0),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_saved_searches_user_id").on(table.userId),
+  categoryIdx: index("idx_saved_searches_category").on(table.category),
+}));
+
+// User Habits - Track daily/weekly engagement patterns
+export const userHabits = pgTable("user_habits", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  habitType: varchar("habit_type").notNull().$type<"daily_login" | "post_thread" | "trading_journal" | "learning_course" | "marketplace_visit">(),
+  currentStreak: integer("current_streak").notNull().default(0),
+  longestStreak: integer("longest_streak").notNull().default(0),
+  lastCompletedAt: timestamp("last_completed_at"),
+  totalCompletions: integer("total_completions").notNull().default(0),
+  streakData: jsonb("streak_data"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_user_habits_user_id").on(table.userId),
+  habitTypeIdx: index("idx_user_habits_habit_type").on(table.habitType),
+  currentStreakIdx: index("idx_user_habits_current_streak").on(table.currentStreak),
+}));
+
+// Chat Rooms - Group discussions and channels
+export const chatRooms = pgTable("chat_rooms", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  roomType: varchar("room_type").notNull().$type<"public" | "private" | "trading_pair" | "strategy">(),
+  category: varchar("category"),
+  memberCount: integer("member_count").notNull().default(0),
+  messageCount: integer("message_count").notNull().default(0),
+  lastMessageAt: timestamp("last_message_at"),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  isActive: boolean("is_active").notNull().default(true),
+  settings: jsonb("settings"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  roomTypeIdx: index("idx_chat_rooms_room_type").on(table.roomType),
+  categoryIdx: index("idx_chat_rooms_category").on(table.category),
+  isActiveIdx: index("idx_chat_rooms_is_active").on(table.isActive),
+  lastMessageAtIdx: index("idx_chat_rooms_last_message_at").on(table.lastMessageAt),
+}));
+
+// Chat Room Members - Track room membership
+export const chatRoomMembers = pgTable("chat_room_members", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  roomId: varchar("room_id").notNull().references(() => chatRooms.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  role: varchar("role").notNull().default("member").$type<"admin" | "moderator" | "member">(),
+  joinedAt: timestamp("joined_at").notNull().defaultNow(),
+  lastReadAt: timestamp("last_read_at"),
+  isMuted: boolean("is_muted").notNull().default(false),
+}, (table) => ({
+  roomIdIdx: index("idx_chat_room_members_room_id").on(table.roomId),
+  userIdIdx: index("idx_chat_room_members_user_id").on(table.userId),
+  roomUserIdx: index("idx_chat_room_members_room_user").on(table.roomId, table.userId),
+}));
+
+// Chat Room Messages - Real-time messaging
+export const chatRoomMessages = pgTable("chat_room_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  roomId: varchar("room_id").notNull().references(() => chatRooms.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  messageType: varchar("message_type").notNull().default("text").$type<"text" | "image" | "file" | "system">(),
+  attachmentUrl: text("attachment_url"),
+  replyToId: varchar("reply_to_id"),
+  editedAt: timestamp("edited_at"),
+  deletedAt: timestamp("deleted_at"),
+  reactions: jsonb("reactions"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  roomIdIdx: index("idx_chat_room_messages_room_id").on(table.roomId),
+  userIdIdx: index("idx_chat_room_messages_user_id").on(table.userId),
+  createdAtIdx: index("idx_chat_room_messages_created_at").on(table.createdAt),
+}));
+
+// Dashboard Widgets - User dashboard customization
+export const dashboardWidgets = pgTable("dashboard_widgets", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  widgetType: varchar("widget_type").notNull().$type<"kpi_cards" | "activity_feed" | "trading_journal" | "leaderboard" | "market_ticker" | "watchlist" | "portfolio" | "chat" | "achievements" | "news_feed" | "learning_progress" | "quick_actions">(),
+  position: jsonb("position").notNull(),
+  size: jsonb("size").notNull(),
+  settings: jsonb("settings"),
+  isVisible: boolean("is_visible").notNull().default(true),
+  layoutName: varchar("layout_name").notNull().default("default"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_dashboard_widgets_user_id").on(table.userId),
+  layoutNameIdx: index("idx_dashboard_widgets_layout_name").on(table.layoutName),
+  widgetTypeIdx: index("idx_dashboard_widgets_widget_type").on(table.widgetType),
+}));
+
+// User Dashboard Layouts - Save multiple dashboard configurations
+export const dashboardLayouts = pgTable("dashboard_layouts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  isDefault: boolean("is_default").notNull().default(false),
+  layoutType: varchar("layout_type").notNull().default("trader").$type<"trader" | "publisher" | "learner" | "custom">(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_dashboard_layouts_user_id").on(table.userId),
+  isDefaultIdx: index("idx_dashboard_layouts_is_default").on(table.isDefault),
+}));
+
 // Upsert User schema for Replit Auth (OIDC)
 export const upsertUserSchema = createInsertSchema(users).pick({
   id: true,
@@ -1227,6 +1522,12 @@ export const insertRechargeOrderSchema = createInsertSchema(rechargeOrders).omit
   completedAt: true,
 });
 
+export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertWithdrawalRequestSchema = createInsertSchema(withdrawalRequests).omit({
   id: true,
   requestedAt: true,
@@ -1234,9 +1535,12 @@ export const insertWithdrawalRequestSchema = createInsertSchema(withdrawalReques
   completedAt: true,
   createdAt: true,
   updatedAt: true,
+  approvedAt: true,
+  rejectedAt: true,
 }).extend({
   amount: z.number().min(1000, "Minimum withdrawal is 1000 coins"),
-  cryptoType: z.enum(["BTC", "ETH"]),
+  method: z.enum(["crypto", "paypal", "bank", "other"]).optional(),
+  cryptoType: z.enum(["BTC", "ETH"]).optional(),
   walletAddress: z.string().min(26, "Invalid wallet address").max(100, "Invalid wallet address"),
 });
 
@@ -1403,7 +1707,10 @@ export type CoinTransaction = typeof coinTransactions.$inferSelect;
 export type InsertCoinTransaction = z.infer<typeof insertCoinTransactionSchema>;
 export type RechargeOrder = typeof rechargeOrders.$inferSelect;
 export type InsertRechargeOrder = z.infer<typeof insertRechargeOrderSchema>;
+export type SelectSubscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
 export type WithdrawalRequest = typeof withdrawalRequests.$inferSelect;
+export type SelectWithdrawalRequest = typeof withdrawalRequests.$inferSelect; // Alias for consistency
 export type InsertWithdrawalRequest = z.infer<typeof insertWithdrawalRequestSchema>;
 export type Content = typeof content.$inferSelect;
 export type InsertContent = z.infer<typeof insertContentSchema>;
@@ -1473,16 +1780,8 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   language: z.string().default("en"),
   
   // Optional SEO fields
-  seoExcerpt: z.string()
-    .min(120, "SEO excerpt should be at least 120 characters")
-    .max(160, "SEO excerpt should not exceed 160 characters")
-    .optional(),
-  primaryKeyword: z.string()
-    .refine(
-      (val) => !val || (val.split(/\s+/).length >= 1 && val.split(/\s+/).length <= 6),
-      { message: "Primary keyword should be 1-6 words" }
-    )
-    .optional(),
+  seoExcerpt: z.string().optional().or(z.literal("")),
+  primaryKeyword: z.string().optional().or(z.literal("")),
   
   // Trading metadata (optional multi-select)
   instruments: z.array(z.string()).optional().default([]),
@@ -1497,8 +1796,8 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   reviewTarget: z.string().optional(),
   reviewVersion: z.string().optional(),
   reviewRating: z.number().int().min(1).max(5).optional(),
-  reviewPros: z.array(z.string()).optional(),
-  reviewCons: z.array(z.string()).optional(),
+  reviewPros: z.array(z.string()).optional().default([]),
+  reviewCons: z.array(z.string()).optional().default([]),
   
   // Question-specific fields (conditional)
   questionSummary: z.string().max(200).optional(),
@@ -1543,6 +1842,25 @@ export const insertForumCategorySchema = createInsertSchema(forumCategories).omi
   description: z.string().min(10).max(500),
 });
 
+export const insertSeoCategorySchema = createInsertSchema(seoCategories).omit({
+  id: true,
+  contentCount: true,
+  viewCount: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  slug: z.string().min(1).max(100),
+  name: z.string().min(1).max(100),
+  urlPath: z.string().min(1).max(255),
+});
+
+export const insertCategoryRedirectSchema = createInsertSchema(categoryRedirects).omit({
+  id: true,
+  hitCount: true,
+  lastUsed: true,
+  createdAt: true,
+});
+
 export const insertUserBadgeSchema = createInsertSchema(userBadges).omit({
   id: true,
   awardedAt: true,
@@ -1562,6 +1880,10 @@ export type ForumReply = typeof forumReplies.$inferSelect;
 export type InsertForumReply = z.infer<typeof insertForumReplySchema>;
 export type ForumCategory = typeof forumCategories.$inferSelect;
 export type InsertForumCategory = z.infer<typeof insertForumCategorySchema>;
+export type SeoCategory = typeof seoCategories.$inferSelect;
+export type InsertSeoCategory = z.infer<typeof insertSeoCategorySchema>;
+export type CategoryRedirect = typeof categoryRedirects.$inferSelect;
+export type InsertCategoryRedirect = z.infer<typeof insertCategoryRedirectSchema>;
 export type UserBadge = typeof userBadges.$inferSelect;
 export type InsertUserBadge = z.infer<typeof insertUserBadgeSchema>;
 export type ActivityFeed = typeof activityFeed.$inferSelect;
@@ -1839,6 +2161,7 @@ export const insertUserActivitySchema = createInsertSchema(userActivity).omit({ 
 export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
 export type UserActivity = typeof userActivity.$inferSelect;
 
+
 //=================================================================
 // SITEMAP LOGS
 // Tracks sitemap generation, submission to search engines, and errors
@@ -1965,3 +2288,130 @@ export type ModerationActionLog = {
   timestamp: Date;
   metadata: any;
 };
+
+// ============================================================================
+// CLIENT DASHBOARD SCHEMAS AND TYPES (New client dashboard tables)
+// ============================================================================
+
+// Trading Journal Entries
+export const insertTradingJournalEntrySchema = createInsertSchema(tradingJournalEntries).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  tradingPair: z.string().min(1, "Trading pair is required"),
+  entryPrice: z.string().min(1, "Entry price is required"),
+  positionSize: z.string().min(1, "Position size is required"),
+  positionType: z.enum(["long", "short"]),
+  entryDate: z.date().or(z.string()),
+  exitDate: z.date().or(z.string()).optional(),
+});
+export type InsertTradingJournalEntry = z.infer<typeof insertTradingJournalEntrySchema>;
+export type TradingJournalEntry = typeof tradingJournalEntries.$inferSelect;
+
+// Watchlists
+export const insertWatchlistSchema = createInsertSchema(watchlists).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(1, "Watchlist name is required").max(100),
+  symbols: z.array(z.string()).default([]),
+});
+export type InsertWatchlist = z.infer<typeof insertWatchlistSchema>;
+export type Watchlist = typeof watchlists.$inferSelect;
+
+// Price Alerts
+export const insertPriceAlertSchema = createInsertSchema(priceAlerts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  isTriggered: true,
+  triggeredAt: true,
+}).extend({
+  symbol: z.string().min(1, "Symbol is required"),
+  targetPrice: z.string().min(1, "Target price is required"),
+  condition: z.enum(["above", "below", "equals"]),
+});
+export type InsertPriceAlert = z.infer<typeof insertPriceAlertSchema>;
+export type PriceAlert = typeof priceAlerts.$inferSelect;
+
+// Saved Searches
+export const insertSavedSearchSchema = createInsertSchema(savedSearches).omit({
+  id: true,
+  createdAt: true,
+  useCount: true,
+  lastUsedAt: true,
+}).extend({
+  name: z.string().min(1, "Search name is required").max(100),
+  query: z.string().min(1, "Search query is required"),
+});
+export type InsertSavedSearch = z.infer<typeof insertSavedSearchSchema>;
+export type SavedSearch = typeof savedSearches.$inferSelect;
+
+// User Habits
+export const insertUserHabitSchema = createInsertSchema(userHabits).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  currentStreak: true,
+  longestStreak: true,
+  totalCompletions: true,
+});
+export type InsertUserHabit = z.infer<typeof insertUserHabitSchema>;
+export type UserHabit = typeof userHabits.$inferSelect;
+
+// Chat Rooms
+export const insertChatRoomSchema = createInsertSchema(chatRooms).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  memberCount: true,
+  messageCount: true,
+  lastMessageAt: true,
+}).extend({
+  name: z.string().min(1, "Room name is required").max(100),
+  roomType: z.enum(["public", "private", "trading_pair", "strategy"]),
+});
+export type InsertChatRoom = z.infer<typeof insertChatRoomSchema>;
+export type ChatRoom = typeof chatRooms.$inferSelect;
+
+// Chat Room Members
+export const insertChatRoomMemberSchema = createInsertSchema(chatRoomMembers).omit({
+  id: true,
+  joinedAt: true,
+});
+export type InsertChatRoomMember = z.infer<typeof insertChatRoomMemberSchema>;
+export type ChatRoomMember = typeof chatRoomMembers.$inferSelect;
+
+// Chat Room Messages
+export const insertChatRoomMessageSchema = createInsertSchema(chatRoomMessages).omit({
+  id: true,
+  createdAt: true,
+  editedAt: true,
+  deletedAt: true,
+}).extend({
+  content: z.string().min(1, "Message content is required").max(2000),
+});
+export type InsertChatRoomMessage = z.infer<typeof insertChatRoomMessageSchema>;
+export type ChatRoomMessage = typeof chatRoomMessages.$inferSelect;
+
+// Dashboard Widgets
+export const insertDashboardWidgetSchema = createInsertSchema(dashboardWidgets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type InsertDashboardWidget = z.infer<typeof insertDashboardWidgetSchema>;
+export type DashboardWidget = typeof dashboardWidgets.$inferSelect;
+
+// Dashboard Layouts
+export const insertDashboardLayoutSchema = createInsertSchema(dashboardLayouts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(1, "Layout name is required").max(100),
+});
+export type InsertDashboardLayout = z.infer<typeof insertDashboardLayoutSchema>;
+export type DashboardLayout = typeof dashboardLayouts.$inferSelect;

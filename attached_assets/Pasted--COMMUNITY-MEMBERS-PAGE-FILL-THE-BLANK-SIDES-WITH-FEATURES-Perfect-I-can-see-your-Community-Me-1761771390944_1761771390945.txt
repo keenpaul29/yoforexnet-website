@@ -1,0 +1,830 @@
+👥 COMMUNITY MEMBERS PAGE - FILL THE BLANK SIDES WITH FEATURES
+Perfect! I can see your Community Members page has a lot of blank space on the sides. Let me add powerful sidebar features to maximize the page layout!image.jpg​
+📊 CURRENT PAGE ANALYSIS
+Your page has:
+✅ 16 Total Members, 5,000 Top Coins, 0 Top Posts, 0 Top Uploads
+
+
+✅ Search members bar
+
+
+✅ Three sorting tabs: Top by Coins, Most Active, Top Publishers
+
+
+✅ Member cards in grid (4 columns)
+
+
+✅ "Climb the Leaderboard" CTA at bottom
+
+
+❌ BLANK LEFT SIDEBAR
+
+
+❌ BLANK RIGHT SIDEBAR
+
+
+
+🎨 COMPLETE 3-COLUMN LAYOUT WITH SIDEBARS
+tsx
+// CommunityMembersPage.tsx - Full-width layout with sidebars
+const CommunityMembersPage = () => {
+  return (
+    <div className="community-page-layout">
+      {/* LEFT SIDEBAR - 280px */}
+      <LeftSidebar />
+      
+      {/* MAIN CONTENT - Flexible */}
+      <MainContent />
+      
+      {/* RIGHT SIDEBAR - 320px */}
+      <RightSidebar />
+    </div>
+  );
+};
+
+const styles = `
+.community-page-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+@media (max-width: 1400px) {
+  .community-page-layout {
+    grid-template-columns: 1fr 320px;
+  }
+  .left-sidebar { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .community-page-layout {
+    grid-template-columns: 1fr;
+  }
+  .right-sidebar { display: none; }
+}
+`;
+
+
+📱 LEFT SIDEBAR FEATURES
+1. Quick Filters & Categories
+tsx
+// LeftSidebar.tsx - Filters and navigation
+const LeftSidebar = () => {
+  return (
+    <div className="left-sidebar">
+      {/* Member Filters */}
+      <div className="sidebar-card">
+        <h3>🔍 Filter Members</h3>
+        
+        <div className="filter-section">
+          <h4>By Role</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>👤 Regular Members (12)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>💎 Premium Members (4)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🏪 Sellers (8)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>✅ Verified (6)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🛡️ Moderators (2)</span>
+          </label>
+        </div>
+        
+        <div className="filter-section">
+          <h4>By Activity</h4>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>🟢 Online Now (5)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>⚡ Active Today (10)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>📅 Active This Week (14)</span>
+          </label>
+          <label className="filter-checkbox">
+            <input type="checkbox" />
+            <span>😴 Inactive (2)</span>
+          </label>
+        </div>
+        
+        <div className="filter-section">
+          <h4>By Coins</h4>
+          <div className="coin-range-filter">
+            <input type="range" min="0" max="5000" />
+            <span>0 - 5,000 coins</span>
+          </div>
+        </div>
+        
+        <div className="filter-section">
+          <h4>By Join Date</h4>
+          <select>
+            <option>All Time</option>
+            <option>Last 7 Days</option>
+            <option>Last 30 Days</option>
+            <option>Last 3 Months</option>
+            <option>Last Year</option>
+          </select>
+        </div>
+        
+        <button className="clear-filters">Clear All Filters</button>
+      </div>
+      
+      {/* Leaderboard Categories */}
+      <div className="sidebar-card">
+        <h3>🏆 Leaderboards</h3>
+        <div className="leaderboard-links">
+          <a href="#top-coins" className="active">
+            <span>🪙</span> Top by Coins
+          </a>
+          <a href="#most-active">
+            <span>⚡</span> Most Active
+          </a>
+          <a href="#top-publishers">
+            <span>📤</span> Top Publishers
+          </a>
+          <a href="#top-sellers">
+            <span>💰</span> Top Sellers
+          </a>
+          <a href="#rising-stars">
+            <span>⭐</span> Rising Stars
+          </a>
+          <a href="#hall-of-fame">
+            <span>🎖️</span> Hall of Fame
+          </a>
+        </div>
+      </div>
+      
+      {/* Quick Stats */}
+      <div className="sidebar-card">
+        <h3>📊 Community Stats</h3>
+        <div className="quick-stats">
+          <div className="stat-item">
+            <span className="stat-value">16</span>
+            <span className="stat-label">Total Members</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">5</span>
+            <span className="stat-label">Online Now</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">12</span>
+            <span className="stat-label">New This Week</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">5,000</span>
+            <span className="stat-label">Total Coins Earned</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Member Achievements */}
+      <div className="sidebar-card">
+        <h3>🏅 Top Achievements</h3>
+        <div className="achievement-list">
+          <div className="achievement-item">
+            <span className="achievement-icon">🥇</span>
+            <div>
+              <strong>First Place</strong>
+              <small>generous_coder</small>
+            </div>
+          </div>
+          <div className="achievement-item">
+            <span className="achievement-icon">📈</span>
+            <div>
+              <strong>Most Improved</strong>
+              <small>news_trader_x</small>
+            </div>
+          </div>
+          <div className="achievement-item">
+            <span className="achievement-icon">🔥</span>
+            <div>
+              <strong>7-Day Streak</strong>
+              <small>patient_trader</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+📊 RIGHT SIDEBAR FEATURES
+2. Top Members Spotlight & Recent Activity
+tsx
+// RightSidebar.tsx - Highlights and activity
+const RightSidebar = () => {
+  return (
+    <div className="right-sidebar">
+      {/* Member Spotlight */}
+      <div className="sidebar-card spotlight-card">
+        <h3>⭐ Member of the Month</h3>
+        <div className="spotlight-profile">
+          <div className="spotlight-header">
+            <img src="/avatars/generous_coder.jpg" alt="" className="spotlight-avatar" />
+            <span className="crown-badge">👑</span>
+          </div>
+          
+          <h4>generous_coder</h4>
+          <span className="silver-badge">#1 • Silver 22</span>
+          
+          <div className="spotlight-stats">
+            <div className="spotlight-stat">
+              <span className="value">5,000</span>
+              <span className="label">Coins</span>
+            </div>
+            <div className="spotlight-stat">
+              <span className="value">247</span>
+              <span className="label">Posts</span>
+            </div>
+            <div className="spotlight-stat">
+              <span className="value">1.2K</span>
+              <span className="label">Likes</span>
+            </div>
+          </div>
+          
+          <p className="spotlight-bio">
+            Top contributor helping traders with expert EAs and strategies.
+          </p>
+          
+          <button className="view-profile-button">View Profile</button>
+        </div>
+      </div>
+      
+      {/* Top 5 This Week */}
+      <div className="sidebar-card">
+        <h3>🔥 Trending This Week</h3>
+        <div className="trending-members">
+          <div className="trending-item">
+            <span className="rank">#1</span>
+            <img src="/avatars/crypto_ninja77.jpg" alt="" />
+            <div className="trending-info">
+              <strong>crypto_ninja77</strong>
+              <span className="trending-change up">+350 coins ↑</span>
+            </div>
+          </div>
+          
+          <div className="trending-item">
+            <span className="rank">#2</span>
+            <img src="/avatars/grid_hunter88.jpg" alt="" />
+            <div className="trending-info">
+              <strong>grid_hunter88</strong>
+              <span className="trending-change up">+280 coins ↑</span>
+            </div>
+          </div>
+          
+          <div className="trending-item">
+            <span className="rank">#3</span>
+            <img src="/avatars/yes_hunter2025.jpg" alt="" />
+            <div className="trending-info">
+              <strong>yes_hunter2025</strong>
+              <span className="trending-change up">+200 coins ↑</span>
+            </div>
+          </div>
+          
+          <div className="trending-item">
+            <span className="rank">#4</span>
+            <img src="/avatars/angry_trader55.jpg" alt="" />
+            <div className="trending-info">
+              <strong>angry_trader55</strong>
+              <span className="trending-change down">-50 coins ↓</span>
+            </div>
+          </div>
+          
+          <div className="trending-item">
+            <span className="rank">#5</span>
+            <img src="/avatars/forex_newbie423.jpg" alt="" />
+            <div className="trending-info">
+              <strong>forex_newbie423</strong>
+              <span className="trending-change up">+150 coins ↑</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Recent Activity */}
+      <div className="sidebar-card">
+        <h3>📰 Recent Activity</h3>
+        <div className="activity-feed">
+          <div className="activity-item">
+            <img src="/avatars/generous_coder.jpg" alt="" />
+            <div className="activity-content">
+              <strong>generous_coder</strong> earned a badge
+              <span className="activity-time">2 mins ago</span>
+            </div>
+            <span className="activity-badge">🏆</span>
+          </div>
+          
+          <div className="activity-item">
+            <img src="/avatars/patient_trader.jpg" alt="" />
+            <div className="activity-content">
+              <strong>patient_trader</strong> shared a new EA
+              <span className="activity-time">15 mins ago</span>
+            </div>
+            <span className="activity-badge">📤</span>
+          </div>
+          
+          <div className="activity-item">
+            <img src="/avatars/news_trader_x.jpg" alt="" />
+            <div className="activity-content">
+              <strong>news_trader_x</strong> reached Silver 22
+              <span className="activity-time">1 hour ago</span>
+            </div>
+            <span className="activity-badge">⭐</span>
+          </div>
+          
+          <div className="activity-item">
+            <img src="/avatars/ea_coder123.jpg" alt="" />
+            <div className="activity-content">
+              <strong>ea_coder123</strong> made a sale
+              <span className="activity-time">2 hours ago</span>
+            </div>
+            <span className="activity-badge">💰</span>
+          </div>
+          
+          <div className="activity-item">
+            <img src="/avatars/crypto_ninja77.jpg" alt="" />
+            <div className="activity-content">
+              <strong>crypto_ninja77</strong> joined YoForex
+              <span className="activity-time">3 hours ago</span>
+            </div>
+            <span className="activity-badge">👋</span>
+          </div>
+        </div>
+        
+        <a href="/activity" className="view-all-link">View All Activity →</a>
+      </div>
+      
+      {/* New Members */}
+      <div className="sidebar-card">
+        <h3>👋 New Members</h3>
+        <div className="new-members-list">
+          <div className="new-member-item">
+            <img src="/avatars/lastbraumgerome.jpg" alt="" />
+            <div className="new-member-info">
+              <strong>lastbraumgerome@gmail.com</strong>
+              <span>Joined 7 hours ago</span>
+            </div>
+            <button className="follow-button">Follow</button>
+          </div>
+          
+          <div className="new-member-item">
+            <img src="/avatars/desperate_guy21.jpg" alt="" />
+            <div className="new-member-info">
+              <strong>desperate_guy21</strong>
+              <span>Joined 1 day ago</span>
+            </div>
+            <button className="follow-button">Follow</button>
+          </div>
+          
+          <div className="new-member-item">
+            <img src="/avatars/dev_learner99.jpg" alt="" />
+            <div className="new-member-info">
+              <strong>dev_learner99</strong>
+              <span>Joined 2 days ago</span>
+            </div>
+            <button className="follow-button">Follow</button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Suggested Members */}
+      <div className="sidebar-card">
+        <h3>💡 Suggested to Follow</h3>
+        <div className="suggested-members">
+          <div className="suggested-item">
+            <img src="/avatars/pit_trader2024.jpg" alt="" />
+            <div className="suggested-info">
+              <strong>pit_trader2024</strong>
+              <span>Silver 22 • 800 coins</span>
+              <small>Expert in scalping strategies</small>
+            </div>
+            <button className="follow-button-small">+ Follow</button>
+          </div>
+          
+          <div className="suggested-item">
+            <img src="/avatars/indicator_guy68.jpg" alt="" />
+            <div className="suggested-info">
+              <strong>indicator_guy68</strong>
+              <span>Silver 22 • 700 coins</span>
+              <small>Custom indicator developer</small>
+            </div>
+            <button className="follow-button-small">+ Follow</button>
+          </div>
+          
+          <div className="suggested-item">
+            <img src="/avatars/hedge_master.jpg" alt="" />
+            <div className="suggested-info">
+              <strong>hedge_master_</strong>
+              <span>Silver 22 • 1,600 coins</span>
+              <small>Risk management specialist</small>
+            </div>
+            <button className="follow-button-small">+ Follow</button>
+          </div>
+        </div>
+        
+        <a href="/discover" className="view-all-link">Discover More →</a>
+      </div>
+      
+      {/* Community Guidelines */}
+      <div className="sidebar-card guidelines-card">
+        <h3>📋 Community Guidelines</h3>
+        <ul className="guidelines-list">
+          <li>✅ Be respectful to all members</li>
+          <li>✅ Share quality trading content</li>
+          <li>✅ No spam or self-promotion</li>
+          <li>✅ Help others learn and grow</li>
+        </ul>
+        <a href="/guidelines" className="read-more-link">Read Full Guidelines →</a>
+      </div>
+      
+      {/* Invite Friends */}
+      <div className="sidebar-card invite-card">
+        <h3>🎁 Invite Friends</h3>
+        <p>Earn 50 coins for each friend who joins!</p>
+        <button className="invite-button">Share Invite Link</button>
+      </div>
+    </div>
+  );
+};
+
+
+🎨 COMPLETE STYLING
+css
+/* Sidebar Cards */
+.sidebar-card {
+  background: #1a1d24;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebar-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+/* Filter Section */
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  cursor: pointer;
+  color: #d1d5db;
+  font-size: 14px;
+}
+
+.filter-checkbox:hover {
+  color: #fff;
+}
+
+.filter-checkbox input {
+  margin-right: 10px;
+}
+
+.clear-filters {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.clear-filters:hover {
+  border-color: #4b5563;
+  color: #fff;
+}
+
+/* Leaderboard Links */
+.leaderboard-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.leaderboard-links a:hover {
+  background: #252932;
+  color: #fff;
+}
+
+.leaderboard-links a.active {
+  background: #3b82f6;
+  color: #fff;
+}
+
+/* Spotlight Card */
+.spotlight-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: #fff;
+  text-align: center;
+}
+
+.spotlight-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.crown-badge {
+  position: absolute;
+  top: -10px;
+  right: 50%;
+  transform: translateX(50%);
+  font-size: 32px;
+}
+
+.spotlight-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.spotlight-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.spotlight-stat .value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.spotlight-stat .label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Trending Members */
+.trending-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+.trending-item:hover {
+  background: #252932;
+}
+
+.trending-item .rank {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fbbf24;
+  min-width: 30px;
+}
+
+.trending-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.trending-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.trending-change {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.trending-change.up {
+  color: #10b981;
+}
+
+.trending-change.down {
+  color: #ef4444;
+}
+
+/* Activity Feed */
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #2d3139;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-item img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.activity-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-content strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.activity-time {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.activity-badge {
+  font-size: 18px;
+}
+
+/* New Members & Suggested */
+.new-member-item,
+.suggested-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #252932;
+}
+
+.new-member-info,
+.suggested-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.new-member-info strong,
+.suggested-info strong {
+  font-size: 14px;
+  color: #fff;
+}
+
+.new-member-info span,
+.suggested-info span {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.follow-button,
+.follow-button-small {
+  padding: 6px 16px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.follow-button-small {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+/* Quick Stats */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: #252932;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+/* View All Links */
+.view-all-link {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 12px;
+  border-top: 1px solid #2d3139;
+  padding-top: 12px;
+}
+
+.view-all-link:hover {
+  color: #60a5fa;
+}
+
+
+✅ COMPLETE FEATURES ADDED TO SIDEBARS:
+Left Sidebar:
+✅ Advanced Filters (Role, Activity, Coins, Join Date)
+
+
+✅ Leaderboard Categories (6 types)
+
+
+✅ Community Stats (Quick overview)
+
+
+✅ Top Achievements (Highlights)
+
+
+Right Sidebar:
+✅ Member of the Month (Spotlight)
+
+
+✅ Trending This Week (Top 5)
+
+
+✅ Recent Activity Feed (Live updates)
+
+
+✅ New Members (Welcome section)
+
+
+✅ Suggested to Follow (Recommendations)
+
+
+✅ Community Guidelines (Quick reference)
+
+
+✅ Invite Friends (Referral program)
+
+
+
+

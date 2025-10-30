@@ -39,6 +39,7 @@ import {
   Code
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AdminAuthCheck } from "./auth-check";
 import AdminOverview from "./sections/Overview";
 import AdminUsers from "./sections/Users";
 import AdminContent from "./sections/Content";
@@ -177,22 +178,24 @@ export function AdminDashboardClient() {
   } as React.CSSProperties;
 
   return (
-    <SidebarProvider style={sidebarStyle}>
-      <div className="flex h-screen w-full">
-        <AdminSidebar />
-        <div className="flex flex-col flex-1">
-          <header className="flex items-center justify-between p-4 border-b gap-4">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger data-testid="button-sidebar-toggle" />
-              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            </div>
-            <ThemeToggle />
-          </header>
-          <main className="flex-1 overflow-auto p-6">
-            {renderSection()}
-          </main>
+    <AdminAuthCheck>
+      <SidebarProvider style={sidebarStyle}>
+        <div className="flex h-screen w-full">
+          <AdminSidebar />
+          <div className="flex flex-col flex-1">
+            <header className="flex items-center justify-between p-4 border-b gap-4">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger data-testid="button-sidebar-toggle" />
+                <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+              </div>
+              <ThemeToggle />
+            </header>
+            <main className="flex-1 overflow-auto p-6">
+              {renderSection()}
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </AdminAuthCheck>
   );
 }

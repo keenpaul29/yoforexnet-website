@@ -27,7 +27,7 @@ module.exports = {
       // Environment variables
       env: {
         NODE_ENV: 'production',
-        PORT: '3000',
+        PORT: '5000',
         NEXT_PUBLIC_SITE_URL: 'https://yoforex.com',
         NEXT_PUBLIC_EXPRESS_URL: 'https://yoforex.com',
         EXPRESS_URL: 'http://127.0.0.1:3001',

@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage.js";
-import { setupAuth, isAuthenticated } from "./replitAuth.js";
+import { storage } from "./storage/index.js";
+import { setupAuth, isAuthenticated } from "./flexibleAuth.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -32,7 +32,9 @@ import {
   content,
   rechargeOrders,
   adminActions,
-  forumThreads
+  forumThreads,
+  campaigns,
+  sitemapLogs
 } from "../shared/schema.js";
 import { z } from "zod";
 import { db } from "./db.js";
@@ -74,6 +76,8 @@ import {
   deduplicateTags,
   countWords,
 } from '../shared/threadUtils.js';
+import { SitemapGenerator } from './services/sitemap-generator.js';
+import { SitemapSubmissionService } from './services/sitemap-submission.js';
 
 // Helper function to get authenticated user ID from session
 function getAuthenticatedUserId(req: any): string {
@@ -171,6 +175,73 @@ const upload = multer({
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth (OIDC) - must be called before any routes
   await setupAuth(app);
+
+  // HEALTH CHECK ENDPOINTS
+  // Database health check endpoint for monitoring and load balancers
+  app.get("/api/health", async (req, res) => {
+    try {
+      const { checkDatabaseHealth } = await import('./db.js');
+      const dbHealth = await checkDatabaseHealth();
+      
+      const overallHealth = {
+        status: dbHealth.healthy ? 'healthy' : 'unhealthy',
+        timestamp: new Date().toISOString(),
+        services: {
+          database: dbHealth,
+        },
+        environment: {
+          nodeEnv: process.env.NODE_ENV,
+          appName: process.env.APP_NAME || 'yoforex-api',
+        },
+      };
+      
+      // Return appropriate status code based on health
+      const statusCode = dbHealth.healthy ? 200 : 503;
+      res.status(statusCode).json(overallHealth);
+    } catch (error: any) {
+      console.error('Health check failed:', error);
+      res.status(503).json({
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        error: error.message || 'Health check failed',
+      });
+    }
+  });
+  
+  // Simple liveness probe for container orchestration
+  app.get("/api/health/live", (req, res) => {
+    res.status(200).json({ 
+      status: 'alive',
+      timestamp: new Date().toISOString(),
+    });
+  });
+  
+  // Readiness probe that checks database connectivity
+  app.get("/api/health/ready", async (req, res) => {
+    try {
+      const { checkDatabaseHealth } = await import('./db.js');
+      const dbHealth = await checkDatabaseHealth();
+      
+      if (dbHealth.healthy) {
+        res.status(200).json({ 
+          status: 'ready',
+          timestamp: new Date().toISOString(),
+        });
+      } else {
+        res.status(503).json({ 
+          status: 'not ready',
+          timestamp: new Date().toISOString(),
+          reason: dbHealth.message,
+        });
+      }
+    } catch (error: any) {
+      res.status(503).json({ 
+        status: 'not ready',
+        timestamp: new Date().toISOString(),
+        error: error.message || 'Readiness check failed',
+      });
+    }
+  });
 
   // FILE UPLOAD ENDPOINT
   app.post("/api/upload", isAuthenticated, upload.array('files', 10), async (req, res) => {
@@ -953,6 +1024,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get recharge packages (must come before :orderId route)
+  app.get("/api/recharge/packages", async (req, res) => {
+    res.json(RECHARGE_PACKAGES);
+  });
+
   // Get recharge order status
   app.get("/api/recharge/:orderId", async (req, res) => {
     const order = await storage.getRechargeOrder(req.params.orderId);
@@ -960,11 +1036,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: "Order not found" });
     }
     res.json(order);
-  });
-
-  // Get recharge packages
-  app.get("/api/recharge/packages", async (req, res) => {
-    res.json(RECHARGE_PACKAGES);
   });
 
   // ===== WITHDRAWAL ENDPOINTS =====
@@ -980,28 +1051,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const EXCHANGE_RATES = {
         BTC: 50000,
         ETH: 3000,
-      };
-      
-      const exchangeRate = EXCHANGE_RATES[validated.cryptoType];
-      const cryptoAmount = validated.amount / exchangeRate;
+      } as const;
       
       // Calculate processing fee: 5% or 100 coins (whichever is greater)
       const fivePercent = Math.floor(validated.amount * 0.05);
       const processingFee = Math.max(fivePercent, 100);
       
+      // Only calculate crypto-related fields if cryptoType is present (crypto withdrawals)
+      let exchangeRate: string | undefined;
+      let cryptoAmount: string | undefined;
+      
+      if (validated.cryptoType && validated.cryptoType in EXCHANGE_RATES) {
+        const rate = EXCHANGE_RATES[validated.cryptoType as keyof typeof EXCHANGE_RATES];
+        const amount = validated.amount / rate;
+        exchangeRate = rate.toString();
+        cryptoAmount = amount.toString();
+      }
+      
       const withdrawal = await storage.createWithdrawalRequest(authenticatedUserId, {
         ...validated,
-        exchangeRate: exchangeRate.toString(),
-        cryptoAmount: cryptoAmount.toString(),
+        exchangeRate,
+        cryptoAmount,
         processingFee,
         status: 'pending',
       });
       
-      // Send withdrawal request email (fire-and-forget)
+      // Send withdrawal request email (fire-and-forget) - only for crypto withdrawals
       (async () => {
         try {
           const user = await storage.getUser(authenticatedUserId);
-          if (user?.username) {
+          if (user?.username && validated.cryptoType) {
             await emailService.sendWithdrawalRequestReceived(
               user.username,
               validated.amount,
@@ -2625,14 +2704,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 2. Sanitize inputs - allow HTML in body only
       const validated = sanitizeRequestBody(validationResult.data, ['body']);
       
-      // Validate word count (min 150 words)
-      const wordCount = countWords(validated.body);
-      if (wordCount < 150) {
-        return res.status(400).json({ 
-          error: "A little more context helps people reply. Two more sentences?" 
-        });
-      }
-      
       // Generate full slug with category path
       const slug = generateFullSlug(
         validated.categorySlug,
@@ -2743,9 +2814,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (error.name === "ZodError") {
           return res.status(400).json({ error: error.message });
         }
+        
+        // Handle database constraint errors with user-friendly messages
+        const errorMessage = error.message.toLowerCase();
+        
+        // Duplicate slug error
+        if (errorMessage.includes('duplicate key') && errorMessage.includes('slug')) {
+          return res.status(400).json({ 
+            error: "A thread with this title already exists in this category. Please use a different title." 
+          });
+        }
+        
+        // Foreign key constraint errors
+        if (errorMessage.includes('foreign key constraint')) {
+          if (errorMessage.includes('category')) {
+            return res.status(400).json({ 
+              error: "The selected category doesn't exist. Please choose a valid category." 
+            });
+          }
+          if (errorMessage.includes('user')) {
+            return res.status(401).json({ 
+              error: "Your session has expired. Please log in again." 
+            });
+          }
+          return res.status(400).json({ 
+            error: "Invalid data provided. Please check your inputs and try again." 
+          });
+        }
+        
+        // Character limit errors
+        if (errorMessage.includes('too long') || errorMessage.includes('value too long')) {
+          return res.status(400).json({ 
+            error: "One or more fields exceed the maximum character limit. Please shorten your content." 
+          });
+        }
+        
+        // Required field errors
+        if (errorMessage.includes('not null') || errorMessage.includes('violates not-null constraint')) {
+          return res.status(400).json({ 
+            error: "Required fields are missing. Please fill in all required information." 
+          });
+        }
       }
+      
       console.error('Thread creation error:', error);
-      res.status(400).json({ error: "Invalid thread data" });
+      res.status(400).json({ 
+        error: "Unable to create thread. Please check your input and try again." 
+      });
     }
   });
   
@@ -5782,7 +5897,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: adminActions.id,
           adminId: adminActions.adminId,
           adminUsername: users.username,
-          action: adminActions.actionType,
+          actionType: adminActions.actionType,
+          targetType: adminActions.targetType,
           targetId: adminActions.targetId,
           details: adminActions.details,
           createdAt: adminActions.createdAt
@@ -5945,10 +6061,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ]);
 
       const stats = {
-        total: statsResult[0]?.total || 0,
-        avgReputation: Math.round(statsResult[0]?.avgReputation || 0),
-        avgCoins: Math.round(statsResult[0]?.avgCoins || 0),
-        bannedCount: bannedCountResult[0]?.count || 0
+        total: Number(statsResult[0]?.total) || 0,
+        avgReputation: Math.round(Number(statsResult[0]?.avgReputation) || 0),
+        avgCoins: Math.round(Number(statsResult[0]?.avgCoins) || 0),
+        bannedCount: Number(bannedCountResult[0]?.count) || 0
       };
 
       res.json(stats);
@@ -7089,6 +7205,838 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching moderation stats:", error);
       res.status(500).json({ error: "Failed to fetch moderation stats" });
+    }
+  });
+
+  // ===================================
+  // ADMIN: Finance Management
+  // ===================================
+
+  // Zod schemas for withdrawal operations
+  const approveWithdrawalSchema = z.object({
+    notes: z.string().optional()
+  });
+
+  const rejectWithdrawalSchema = z.object({
+    reason: z.string().min(1, "Rejection reason required"),
+    notifyUser: z.boolean().optional()
+  });
+
+  const completeWithdrawalSchema = z.object({
+    transactionId: z.string().min(1, "Transaction ID required"),
+    notes: z.string().optional()
+  });
+
+  // **Revenue Endpoints**
+
+  // 1. GET /api/finance/revenue/total
+  app.get("/api/finance/revenue/total", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const result = await storage.getTotalRevenue();
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching total revenue:", error);
+      res.status(500).json({ error: "Failed to fetch total revenue" });
+    }
+  });
+
+  // 2. GET /api/finance/revenue/trend
+  app.get("/api/finance/revenue/trend", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const days = req.query.days ? parseInt(req.query.days as string) : 30;
+      const trend = await storage.getRevenueTrend(days);
+      res.json(trend);
+    } catch (error: any) {
+      console.error("Error fetching revenue trend:", error);
+      res.status(500).json({ error: "Failed to fetch revenue trend" });
+    }
+  });
+
+  // 3. GET /api/finance/revenue/by-source
+  app.get("/api/finance/revenue/by-source", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const breakdown = await storage.getRevenueBySource();
+      res.json(breakdown);
+    } catch (error: any) {
+      console.error("Error fetching revenue by source:", error);
+      res.status(500).json({ error: "Failed to fetch revenue by source" });
+    }
+  });
+
+  // 4. GET /api/finance/revenue/period
+  app.get("/api/finance/revenue/period", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const period = req.query.period as string;
+      if (!period || !['today', 'week', 'month', 'year'].includes(period)) {
+        return res.status(400).json({ error: "Invalid period. Must be one of: today, week, month, year" });
+      }
+
+      const revenue = await storage.getRevenuePeriod(period as 'today' | 'week' | 'month' | 'year');
+      res.json(revenue);
+    } catch (error: any) {
+      console.error("Error fetching period revenue:", error);
+      res.status(500).json({ error: "Failed to fetch period revenue" });
+    }
+  });
+
+  // **Withdrawal Endpoints**
+
+  // 5. GET /api/finance/withdrawals/pending
+  app.get("/api/finance/withdrawals/pending", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const pendingWithdrawals = await storage.getPendingWithdrawals();
+      res.json(pendingWithdrawals);
+    } catch (error: any) {
+      console.error("Error fetching pending withdrawals:", error);
+      res.status(500).json({ error: "Failed to fetch pending withdrawals" });
+    }
+  });
+
+  // 6. GET /api/finance/withdrawals/all
+  app.get("/api/finance/withdrawals/all", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const filters = {
+        page: req.query.page ? parseInt(req.query.page as string) : undefined,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : undefined,
+        status: req.query.status as string | undefined,
+        method: req.query.method as string | undefined,
+        dateRange: req.query.dateRange as string | undefined,
+      };
+
+      const result = await storage.getAllWithdrawals(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching all withdrawals:", error);
+      res.status(500).json({ error: "Failed to fetch withdrawals" });
+    }
+  });
+
+  // 7. POST /api/finance/withdrawals/:id/approve
+  app.post("/api/finance/withdrawals/:id/approve", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const withdrawalId = req.params.id;
+      const validatedData = approveWithdrawalSchema.parse(req.body);
+      const adminId = getAuthenticatedUserId(req);
+
+      const result = await storage.approveWithdrawal(withdrawalId, adminId);
+
+      // Log admin action
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'withdrawal_approved',
+        targetType: 'withdrawal',
+        targetId: withdrawalId,
+        details: { notes: validatedData.notes },
+      });
+
+      res.json({ success: true, message: "Withdrawal approved successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("Error approving withdrawal:", error);
+      res.status(500).json({ error: "Failed to approve withdrawal" });
+    }
+  });
+
+  // 8. POST /api/finance/withdrawals/:id/reject
+  app.post("/api/finance/withdrawals/:id/reject", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const withdrawalId = req.params.id;
+      const validatedData = rejectWithdrawalSchema.parse(req.body);
+      const adminId = getAuthenticatedUserId(req);
+
+      await storage.rejectWithdrawal(withdrawalId, adminId, validatedData.reason);
+
+      res.json({ success: true, message: "Withdrawal rejected successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("Error rejecting withdrawal:", error);
+      res.status(500).json({ error: "Failed to reject withdrawal" });
+    }
+  });
+
+  // 9. POST /api/finance/withdrawals/:id/complete
+  app.post("/api/finance/withdrawals/:id/complete", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const withdrawalId = req.params.id;
+      const validatedData = completeWithdrawalSchema.parse(req.body);
+      const adminId = getAuthenticatedUserId(req);
+
+      await storage.completeWithdrawal(withdrawalId, adminId, validatedData.transactionId);
+
+      res.json({ success: true, message: "Withdrawal completed successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("Error completing withdrawal:", error);
+      res.status(500).json({ error: "Failed to complete withdrawal" });
+    }
+  });
+
+  // **Transaction Endpoints**
+
+  // 10. GET /api/finance/transactions/recent
+  app.get("/api/finance/transactions/recent", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      const transactions = await storage.getRecentTransactions(limit);
+      res.json(transactions);
+    } catch (error: any) {
+      console.error("Error fetching recent transactions:", error);
+      res.status(500).json({ error: "Failed to fetch recent transactions" });
+    }
+  });
+
+  // 11. GET /api/finance/transactions/all
+  app.get("/api/finance/transactions/all", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const filters = {
+        page: req.query.page ? parseInt(req.query.page as string) : undefined,
+        pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string) : undefined,
+        type: req.query.type as string | undefined,
+        dateRange: req.query.dateRange as string | undefined,
+        userId: req.query.userId as string | undefined,
+        status: req.query.status as string | undefined,
+        amountRange: req.query.amountRange as string | undefined,
+      };
+
+      const result = await storage.getAllTransactions(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching all transactions:", error);
+      res.status(500).json({ error: "Failed to fetch transactions" });
+    }
+  });
+
+  // 12. GET /api/finance/transactions/export
+  app.get("/api/finance/transactions/export", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const csvData = await storage.exportTransactionsCSV();
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="transactions.csv"');
+      res.send(csvData);
+    } catch (error: any) {
+      console.error("Error exporting transactions:", error);
+      res.status(500).json({ error: "Failed to export transactions" });
+    }
+  });
+
+  // **Analytics Endpoints**
+
+  // 13. GET /api/finance/top-earners
+  app.get("/api/finance/top-earners", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const topEarners = await storage.getTopEarners(limit);
+      res.json(topEarners);
+    } catch (error: any) {
+      console.error("Error fetching top earners:", error);
+      res.status(500).json({ error: "Failed to fetch top earners" });
+    }
+  });
+
+  // 14. GET /api/finance/stats
+  app.get("/api/finance/stats", isAuthenticated, adminOperationLimiter, async (req, res) => {
+    try {
+      if (!isAdmin(req.user)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const stats = await storage.getFinancialStats();
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Error fetching financial stats:", error);
+      res.status(500).json({ error: "Failed to fetch financial stats" });
+    }
+  });
+
+  // ============================================================================
+  // SEO & MARKETING ADMIN ENDPOINTS
+  // ============================================================================
+
+  // 1. GET /api/admin/seo/content - Get all content with meta tags (support search query parameter)
+  app.get("/api/admin/seo/content", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const searchQuery = req.query.search as string | undefined;
+      
+      // Build content query with optional search filter - FIXED: Return metaTitle and metaKeywords
+      const contentItems = searchQuery
+        ? await db
+            .select({
+              id: content.id,
+              title: content.title,
+              slug: content.slug,
+              type: content.type,
+              category: content.category,
+              status: content.status,
+              metaTitle: content.metaTitle,
+              metaDescription: content.autoMetaDescription,
+              metaKeywords: content.metaKeywords,
+              views: content.views,
+              downloads: content.downloads,
+              createdAt: content.createdAt,
+            })
+            .from(content)
+            .where(
+              or(
+                sql`${content.title} ILIKE ${'%' + searchQuery + '%'}`,
+                sql`${content.slug} ILIKE ${'%' + searchQuery + '%'}`
+              )
+            )
+            .orderBy(desc(content.createdAt))
+            .limit(100)
+        : await db
+            .select({
+              id: content.id,
+              title: content.title,
+              slug: content.slug,
+              type: content.type,
+              category: content.category,
+              status: content.status,
+              metaTitle: content.metaTitle,
+              metaDescription: content.autoMetaDescription,
+              metaKeywords: content.metaKeywords,
+              views: content.views,
+              downloads: content.downloads,
+              createdAt: content.createdAt,
+            })
+            .from(content)
+            .orderBy(desc(content.createdAt))
+            .limit(100);
+
+      // Build threads query with optional search filter - FIXED: Return metaTitle and metaKeywords
+      const threads = searchQuery
+        ? await db
+            .select({
+              id: forumThreads.id,
+              title: forumThreads.title,
+              slug: forumThreads.slug,
+              type: sql<string>`'thread'`.as('type'),
+              category: forumThreads.categorySlug,
+              status: forumThreads.status,
+              metaTitle: forumThreads.metaTitle,
+              metaDescription: forumThreads.metaDescription,
+              metaKeywords: forumThreads.metaKeywords,
+              views: forumThreads.views,
+              downloads: sql<number>`0`.as('downloads'),
+              createdAt: forumThreads.createdAt,
+            })
+            .from(forumThreads)
+            .where(
+              or(
+                sql`${forumThreads.title} ILIKE ${'%' + searchQuery + '%'}`,
+                sql`${forumThreads.slug} ILIKE ${'%' + searchQuery + '%'}`
+              )
+            )
+            .orderBy(desc(forumThreads.createdAt))
+            .limit(100)
+        : await db
+            .select({
+              id: forumThreads.id,
+              title: forumThreads.title,
+              slug: forumThreads.slug,
+              type: sql<string>`'thread'`.as('type'),
+              category: forumThreads.categorySlug,
+              status: forumThreads.status,
+              metaTitle: forumThreads.metaTitle,
+              metaDescription: forumThreads.metaDescription,
+              metaKeywords: forumThreads.metaKeywords,
+              views: forumThreads.views,
+              downloads: sql<number>`0`.as('downloads'),
+              createdAt: forumThreads.createdAt,
+            })
+            .from(forumThreads)
+            .orderBy(desc(forumThreads.createdAt))
+            .limit(100);
+
+      // Combine and return - Return as array directly for frontend compatibility
+      const allContent = [...contentItems, ...threads];
+      
+      res.json(allContent);
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching content:", error);
+      res.status(500).json({ error: "Failed to fetch content" });
+    }
+  });
+
+  // 2. PATCH /api/admin/seo/meta/:id - Update meta tags for content
+  app.patch("/api/admin/seo/meta/:id", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const contentId = req.params.id;
+      const { title, description, keywords, contentType } = req.body;
+
+      // Validate input - FIXED: Accept frontend fields (title, description, keywords)
+      const updateSchema = z.object({
+        title: z.string().optional(),
+        description: z.string().max(160).optional(),
+        keywords: z.string().optional(),
+        contentType: z.enum(['content', 'thread']).default('content'),
+      });
+
+      const validated = updateSchema.parse({ title, description, keywords, contentType: contentType || 'content' });
+
+      if (validated.contentType === 'thread') {
+        // Update forum thread meta tags - Map to correct fields
+        await db
+          .update(forumThreads)
+          .set({
+            metaTitle: validated.title,
+            metaDescription: validated.description,
+            metaKeywords: validated.keywords,
+          })
+          .where(eq(forumThreads.id, contentId));
+      } else {
+        // Update content meta tags - Map to correct fields
+        await db
+          .update(content)
+          .set({
+            metaTitle: validated.title,
+            autoMetaDescription: validated.description,
+            metaKeywords: validated.keywords,
+          })
+          .where(eq(content.id, contentId));
+      }
+
+      // Log admin action
+      const adminId = getAuthenticatedUserId(req);
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'seo_meta_updated',
+        targetType: validated.contentType,
+        targetId: contentId,
+        details: { metaTitle: validated.title, metaDescription: validated.description, metaKeywords: validated.keywords },
+      });
+
+      res.json({ success: true, message: "Meta tags updated successfully" });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("[SEO Admin] Error updating meta tags:", error);
+      res.status(500).json({ error: "Failed to update meta tags" });
+    }
+  });
+
+  // 3. POST /api/admin/seo/campaigns - Create marketing campaign
+  app.post("/api/admin/seo/campaigns", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      
+      // Validate campaign data - FIXED: Accept frontend fields (name, description, startDate, endDate, budget)
+      const campaignSchema = z.object({
+        name: z.string().min(1).max(200),
+        description: z.string().optional(),
+        budget: z.number().int().min(0).optional(),
+        type: z.string().max(50).optional().default('marketing'),
+        status: z.enum(['active', 'paused', 'completed', 'draft']).optional().default('draft'),
+        discountPercent: z.number().int().min(0).max(100).optional(),
+        discountCode: z.string().max(50).optional(),
+        startDate: z.string().transform(str => new Date(str)),
+        endDate: z.string().transform(str => new Date(str)),
+      });
+
+      const validated = campaignSchema.parse(req.body);
+
+      // Create campaign
+      const [campaign] = await db.insert(campaigns).values({
+        userId: adminId,
+        name: validated.name,
+        description: validated.description || null,
+        budget: validated.budget || null,
+        type: validated.type,
+        status: validated.status,
+        discountPercent: validated.discountPercent || null,
+        discountCode: validated.discountCode || null,
+        startDate: validated.startDate,
+        endDate: validated.endDate,
+        uses: 0,
+        revenue: 0,
+      }).returning();
+
+      // Log admin action
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'campaign_created',
+        targetType: 'campaign',
+        targetId: campaign.id.toString(),
+        details: { name: campaign.name, type: campaign.type },
+      });
+
+      res.json({ success: true, campaign });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation failed", details: error.errors });
+      }
+      console.error("[SEO Admin] Error creating campaign:", error);
+      res.status(500).json({ error: "Failed to create campaign" });
+    }
+  });
+
+  // 4. GET /api/admin/seo/campaigns - Get all campaigns
+  app.get("/api/admin/seo/campaigns", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const allCampaigns = await db
+        .select()
+        .from(campaigns)
+        .orderBy(desc(campaigns.createdAt));
+
+      // FIXED: Return campaigns array directly (not wrapped in object)
+      res.json(allCampaigns);
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching campaigns:", error);
+      res.status(500).json({ error: "Failed to fetch campaigns" });
+    }
+  });
+
+  // 5. GET /api/admin/seo/campaign-stats - Get aggregate campaign statistics
+  app.get("/api/admin/seo/campaign-stats", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Get real campaign stats from database
+      const [stats] = await db
+        .select({
+          totalCampaigns: count(),
+          totalRevenue: sql<number>`COALESCE(SUM(${campaigns.revenue}), 0)`,
+          totalUses: sql<number>`COALESCE(SUM(${campaigns.uses}), 0)`,
+          activeCampaigns: sql<number>`COUNT(CASE WHEN ${campaigns.status} = 'active' THEN 1 END)`,
+        })
+        .from(campaigns);
+
+      // Calculate additional metrics
+      const reach = stats.totalUses * 10; // Estimated reach multiplier
+      const conversions = stats.totalUses;
+      const roi = stats.totalRevenue > 0 ? ((stats.totalRevenue - 1000) / 1000) * 100 : 0; // Simplified ROI calculation
+
+      res.json({
+        totalCampaigns: stats.totalCampaigns,
+        activeCampaigns: stats.activeCampaigns,
+        totalReach: reach,
+        totalConversions: conversions,
+        totalRevenue: stats.totalRevenue,
+        averageROI: Math.round(roi * 100) / 100,
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching campaign stats:", error);
+      res.status(500).json({ error: "Failed to fetch campaign stats" });
+    }
+  });
+
+  // 6. GET /api/admin/seo/search-rankings - Get search ranking data (mock data)
+  app.get("/api/admin/seo/search-rankings", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Return mock search ranking data
+      const mockRankings = [
+        {
+          keyword: "forex trading EA",
+          position: 12,
+          previousPosition: 15,
+          searchVolume: 2400,
+          trend: "up",
+          url: "/marketplace",
+        },
+        {
+          keyword: "MT4 indicators",
+          position: 8,
+          previousPosition: 10,
+          searchVolume: 1800,
+          trend: "up",
+          url: "/marketplace",
+        },
+        {
+          keyword: "forex broker reviews",
+          position: 24,
+          previousPosition: 28,
+          searchVolume: 3200,
+          trend: "up",
+          url: "/brokers",
+        },
+        {
+          keyword: "algorithmic trading strategies",
+          position: 18,
+          previousPosition: 16,
+          searchVolume: 1200,
+          trend: "down",
+          url: "/discussions",
+        },
+        {
+          keyword: "gold trading EA",
+          position: 6,
+          previousPosition: 7,
+          searchVolume: 890,
+          trend: "up",
+          url: "/marketplace",
+        },
+      ];
+
+      res.json({
+        rankings: mockRankings,
+        averagePosition: 13.6,
+        totalKeywords: mockRankings.length,
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching search rankings:", error);
+      res.status(500).json({ error: "Failed to fetch search rankings" });
+    }
+  });
+
+  // 7. GET /api/admin/seo/top-queries - Get top search queries (mock data)
+  app.get("/api/admin/seo/top-queries", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Return mock top search queries data
+      const mockQueries = [
+        {
+          query: "best forex EA 2025",
+          impressions: 4520,
+          clicks: 342,
+          ctr: 7.57,
+          averagePosition: 8.2,
+        },
+        {
+          query: "MT5 scalping robot",
+          impressions: 3180,
+          clicks: 289,
+          ctr: 9.09,
+          averagePosition: 6.5,
+        },
+        {
+          query: "forex broker comparison",
+          impressions: 5640,
+          clicks: 198,
+          ctr: 3.51,
+          averagePosition: 14.3,
+        },
+        {
+          query: "free MT4 indicators",
+          impressions: 2890,
+          clicks: 176,
+          ctr: 6.09,
+          averagePosition: 11.2,
+        },
+        {
+          query: "gold trading strategy",
+          impressions: 2340,
+          clicks: 165,
+          ctr: 7.05,
+          averagePosition: 9.8,
+        },
+        {
+          query: "automated trading bot",
+          impressions: 1980,
+          clicks: 142,
+          ctr: 7.17,
+          averagePosition: 7.4,
+        },
+        {
+          query: "forex signal provider",
+          impressions: 3450,
+          clicks: 128,
+          ctr: 3.71,
+          averagePosition: 16.7,
+        },
+        {
+          query: "cryptocurrency trading EA",
+          impressions: 1560,
+          clicks: 115,
+          ctr: 7.37,
+          averagePosition: 10.1,
+        },
+      ];
+
+      res.json({
+        queries: mockQueries,
+        totalImpressions: mockQueries.reduce((sum, q) => sum + q.impressions, 0),
+        totalClicks: mockQueries.reduce((sum, q) => sum + q.clicks, 0),
+        averageCTR: (mockQueries.reduce((sum, q) => sum + q.ctr, 0) / mockQueries.length).toFixed(2),
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching top queries:", error);
+      res.status(500).json({ error: "Failed to fetch top queries" });
+    }
+  });
+
+  // 8. GET /api/admin/seo/sitemap-status - Get sitemap generation status
+  app.get("/api/admin/seo/sitemap-status", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      // Get recent sitemap logs
+      const recentLogs = await db
+        .select()
+        .from(sitemapLogs)
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(10);
+
+      // Get last successful generation
+      const [lastGeneration] = await db
+        .select()
+        .from(sitemapLogs)
+        .where(and(
+          eq(sitemapLogs.action, 'generate'),
+          eq(sitemapLogs.status, 'success')
+        ))
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(1);
+
+      // Get last submission attempts
+      const [lastGoogleSubmit] = await db
+        .select()
+        .from(sitemapLogs)
+        .where(eq(sitemapLogs.action, 'submit_google'))
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(1);
+
+      const [lastIndexNowSubmit] = await db
+        .select()
+        .from(sitemapLogs)
+        .where(eq(sitemapLogs.action, 'submit_indexnow'))
+        .orderBy(desc(sitemapLogs.createdAt))
+        .limit(1);
+
+      res.json({
+        lastGeneration: lastGeneration || null,
+        lastGoogleSubmit: lastGoogleSubmit || null,
+        lastIndexNowSubmit: lastIndexNowSubmit || null,
+        recentLogs,
+        sitemapUrl: `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/sitemap.xml`,
+      });
+    } catch (error: any) {
+      console.error("[SEO Admin] Error fetching sitemap status:", error);
+      res.status(500).json({ error: "Failed to fetch sitemap status" });
+    }
+  });
+
+  // 9. POST /api/admin/seo/sitemap/generate - Trigger sitemap generation
+  app.post("/api/admin/seo/sitemap/generate", isModOrAdmin, adminOperationLimiter, async (req, res) => {
+    try {
+      const adminId = getAuthenticatedUserId(req);
+      const baseUrl = process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000';
+      
+      // Log generation start
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'pending',
+        urlCount: null,
+        submittedTo: null,
+        errorMessage: null,
+      });
+
+      // Generate sitemap
+      const generator = new SitemapGenerator(baseUrl);
+      const { xml, urlCount } = await generator.generateSitemap();
+
+      // Log successful generation
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'success',
+        urlCount,
+        submittedTo: null,
+        errorMessage: null,
+      });
+
+      // Submit to search engines
+      const submissionService = new SitemapSubmissionService(baseUrl);
+      const sitemapUrl = `${baseUrl}/sitemap.xml`;
+
+      // Submit to Google (best effort)
+      try {
+        await submissionService.pingGoogle(sitemapUrl);
+      } catch (err) {
+        console.error('[SEO Admin] Google submission failed:', err);
+      }
+
+      // Submit to IndexNow if API key is configured (best effort)
+      if (process.env.INDEXNOW_API_KEY) {
+        try {
+          // For IndexNow, we'll submit the sitemap URL itself
+          await submissionService.submitToIndexNow([sitemapUrl]);
+        } catch (err) {
+          console.error('[SEO Admin] IndexNow submission failed:', err);
+        }
+      }
+
+      // Log admin action
+      await db.insert(adminActions).values({
+        adminId,
+        actionType: 'sitemap_generated',
+        targetType: 'sitemap',
+        targetId: null,
+        details: { urlCount, sitemapUrl },
+      });
+
+      res.json({
+        success: true,
+        message: "Sitemap generated successfully",
+        urlCount,
+        sitemapUrl,
+      });
+    } catch (error: any) {
+      // Log generation error
+      await db.insert(sitemapLogs).values({
+        action: 'generate',
+        status: 'error',
+        urlCount: null,
+        submittedTo: null,
+        errorMessage: error.message,
+      });
+
+      console.error("[SEO Admin] Error generating sitemap:", error);
+      res.status(500).json({ error: "Failed to generate sitemap" });
     }
   });
 

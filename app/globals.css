@@ -265,6 +265,65 @@
  * need to be distinguished from eachother visually.
  */
 @layer utilities {
+  /* Custom Professional Scrollbar Styles - Production Ready */
+  .custom-scrollbar {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(156, 163, 175, 0.3) transparent !important;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+    border-radius: 6px !important;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.3) !important;
+    border-radius: 6px !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+    transition: background 0.2s ease !important;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.5) !important;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:active {
+    background: rgba(156, 163, 175, 0.7) !important;
+  }
+
+  /* Dark mode - darker scrollbar for better contrast */
+  .dark .custom-scrollbar {
+    scrollbar-color: rgba(148, 163, 184, 0.4) transparent !important;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.4) !important;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.6) !important;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
+    background: rgba(148, 163, 184, 0.8) !important;
+  }
+
+  /* Firefox scrollbar colors */
+  @supports (scrollbar-color: auto) {
+    .custom-scrollbar {
+      scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+    }
+    
+    .dark .custom-scrollbar {
+      scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+    }
+  }
 
   /* Hide ugly search cancel button in Chrome until we can style it properly */
   input[type="search"]::-webkit-search-cancel-button {

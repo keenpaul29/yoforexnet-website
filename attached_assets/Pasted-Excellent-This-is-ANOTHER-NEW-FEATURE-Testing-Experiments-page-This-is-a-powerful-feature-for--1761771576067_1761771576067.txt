@@ -1,0 +1,988 @@
+Excellent! This is ANOTHER NEW FEATURE - Testing & Experiments page! This is a powerful feature for A/B testing and feature rollouts. Let me provide complete specifications:
+NEW PAGE: TESTING & EXPERIMENTS
+Based on the screenshot , here are the complete specifications:image.jpg​
+Page Structure:
+1. Page Header:
+Title: "Testing & Experiments"image.jpg​
+
+
+2. Two Main Tabs:image.jpg​
+A/B Tests (active/selected)image.jpg​
+
+
+Feature Flagsimage.jpg​
+
+
+3. A/B Tests Tab Content:
+Header Section:
+Title: "A/B Tests"image.jpg​
+
+
+Blue "Create A/B Test" button (top right)image.jpg​
+
+
+A/B Tests Table:
+Columns:
+
+
+Nameimage.jpg​
+
+
+Statusimage.jpg​
+
+
+Variantsimage.jpg​
+
+
+Trafficimage.jpg​
+
+
+Actionsimage.jpg​
+
+
+Empty State:
+Message: "No A/B tests created"image.jpg​
+
+
+Centered text on dark background
+
+
+
+DETAILED FEATURE SPECIFICATIONS
+TAB 1: A/B TESTS (Active Tab)image.jpg​
+What This Feature Does:
+Create and manage A/B tests
+
+
+Test different versions of features
+
+
+Measure conversion rates and user behavior
+
+
+Data-driven decision making
+
+
+When A/B Tests Exist, Table Shows:
+Column Details:
+Nameimage.jpg​
+
+
+Test name given by admin
+
+
+Example: "New Homepage Layout", "Blue vs Green CTA Button", "Pricing Page Variation"
+
+
+Click to view test details
+
+
+Statusimage.jpg​
+
+
+Badge indicators:
+
+
+Draft (gray) - Not started yet
+
+
+Running (blue) - Currently active
+
+
+Paused (yellow) - Temporarily stopped
+
+
+Completed (green) - Test finished
+
+
+Cancelled (red) - Test cancelled
+
+
+Variantsimage.jpg​
+
+
+Shows test variants (versions being tested)
+
+
+Example: "Control vs Variant A vs Variant B"
+
+
+Format: "2 variants" or "3 variants"
+
+
+Click to see variant details
+
+
+Each variant shows:
+
+
+Name (Control, Variant A, B, C...)
+
+
+Traffic allocation percentage
+
+
+Current performance metrics
+
+
+Trafficimage.jpg​
+
+
+Percentage of users included in test
+
+
+Example: "50% of users"
+
+
+Shows distribution:
+
+
+Control: 50%
+
+
+Variant A: 25%
+
+
+Variant B: 25%
+
+
+Total participants count
+
+
+Example: "1,234 users"
+
+
+Actionsimage.jpg​
+
+
+Three-dot menu with options:
+
+
+View Results
+
+
+Edit Test
+
+
+Pause/Resume
+
+
+Duplicate Test
+
+
+End Test
+
+
+Delete
+
+
+Example Row (When Tests Exist):
+Name: "New Homepage Layout"
+
+
+Status: Running (blue badge)
+
+
+Variants: "2 variants" (Control 50%, Variant A 50%)
+
+
+Traffic: "50% of users" (1,234 participants)
+
+
+Actions: [Three-dot menu]
+
+
+Test Performance Metrics (Expandable Row):
+Click row to expand and see:
+
+
+Start date and end date
+
+
+Duration running
+
+
+Statistical significance
+
+
+Conversion rates per variant
+
+
+Winner prediction (if conclusive)
+
+
+
+TAB 2: FEATURE FLAGS
+What This Tab Shows:
+Feature toggles for gradual rollouts
+
+
+Enable/disable features without code deployment
+
+
+Target specific user groups
+
+
+When Tab Selected:
+Header:
+Title: "Feature Flags"
+
+
+Blue "Create Feature Flag" button
+
+
+Feature Flags Table/List:
+Columns:
+Feature Name: Display name
+
+
+Key: Unique identifier (e.g., dark_mode, new_payment_flow)
+
+
+Description: What feature does
+
+
+Status: Active/Inactive toggle
+
+
+Rollout %: Percentage of users who see feature (0-100%)
+
+
+Target Audience: Who gets feature
+
+
+All Users
+
+
+Premium Users
+
+
+Beta Testers
+
+
+Specific User IDs
+
+
+Country-based
+
+
+Created: When flag created
+
+
+Actions: Edit, Duplicate, Delete
+
+
+Example Row:
+Feature Name: "Dark Mode Theme"
+
+
+Key: dark_mode_enabled
+
+
+Description: "New dark theme for entire forum"
+
+
+Status: Active (toggle switch ON)
+
+
+Rollout: 25% (slider showing gradual rollout)
+
+
+Target: Beta Testers
+
+
+Created: Oct 15, 2025
+
+
+Actions: [Three-dot menu]
+
+
+Rollout Control:
+Slider: 0% → 100%
+
+
+Gradual rollout options:
+
+
+10% for 1 day
+
+
+25% for 3 days
+
+
+50% for 1 week
+
+
+100% (full rollout)
+
+
+Can rollback instantly if issues
+
+
+Empty State:
+"No feature flags created"
+
+
+"Create feature flags for safer deployments and gradual rollouts"
+
+
+
+MODALS AND POPUPS
+Modal 1: Create A/B Test
+When clicking "Create A/B Test" :image.jpg​
+Title: "Create New A/B Test"
+
+
+Form fields:
+
+ Basic Information:
+
+
+Test Name (text input) - required
+
+
+Example: "Homepage Hero Section Test"
+
+
+Description (text area)
+
+
+What you're testing and why
+
+
+Hypothesis (text area)
+
+
+Example: "Changing CTA color to green will increase sign-ups by 15%"
+
+
+Test Configuration:
+
+
+Page/Feature to Test (dropdown)
+
+
+Homepage
+
+
+Sign-up page
+
+
+Pricing page
+
+
+Checkout flow
+
+
+Custom URL
+
+
+Variants:
+
+
+Number of variants (dropdown: 2, 3, 4, 5)
+
+
+For each variant:
+
+
+Variant Name (Control, A, B, C...)
+
+
+Description
+
+
+Traffic allocation (slider %)
+
+
+Configuration (what's different)
+
+
+Example: 2 Variants
+
+
+Variant: Control (Original)
+
+
+Name: "Blue CTA Button"
+
+
+Traffic: 50%
+
+
+Description: Current button color
+
+
+Variant A: Treatment
+
+
+Name: "Green CTA Button"
+
+
+Traffic: 50%
+
+
+Description: Test button in green
+
+
+Traffic Settings:
+
+
+Percentage of users in test (slider: 10-100%)
+
+
+Start with 10% to minimize risk
+
+
+Gradually increase if safe
+
+
+Target Audience (checkboxes):
+
+
+☐ All users
+
+
+☐ New users only
+
+
+☐ Returning users only
+
+
+☐ Premium users
+
+
+☐ Specific countries
+
+
+☐ Desktop only / Mobile only
+
+
+Success Metrics:
+
+
+Primary goal (dropdown):
+
+
+Sign-ups
+
+
+Purchases
+
+
+Click-through rate
+
+
+Time on page
+
+
+Bounce rate
+
+
+Custom event
+
+
+Secondary goals (optional)
+
+
+Minimum sample size (auto-calculated)
+
+
+Example: "Need 1,000 users per variant for 95% confidence"
+
+
+Duration:
+
+
+Start Date (date picker)
+
+
+End Date (optional - or run until conclusive)
+
+
+Auto-end when statistically significant (checkbox)
+
+
+Buttons:
+
+
+"Create Test" (blue)
+
+
+"Save as Draft" (gray)
+
+
+Cancel
+
+
+Modal 2: View Test Results
+When viewing A/B test results:
+Title: "[Test Name] - Results"
+
+
+Date range showing test duration
+
+
+Overview Section:
+Test status and duration
+
+
+Total participants
+
+
+Statistical significance indicator
+
+
+Winner declared (if conclusive)
+
+
+Variants Comparison Table:
+Metric
+Control
+Variant A
+Variant B
+Winner
+Participants
+500
+500
+500
+-
+Conversions
+45 (9%)
+67 (13.4%)
+52 (10.4%)
+A ✓
+Avg Session
+3:45
+4:12
+3:58
+A ✓
+Bounce Rate
+45%
+38%
+42%
+A ✓
+
+Statistical Significance:
+Confidence level: 95%
+
+
+P-value: 0.023
+
+
+Result: "Variant A is significantly better"
+
+
+Charts:
+Line chart: Conversion rate over time for each variant
+
+
+Bar chart: Side-by-side comparison
+
+
+Funnel chart: User journey through conversion
+
+
+Insights:
+"Variant A shows 49% improvement over control"
+
+
+"Statistically significant at 95% confidence"
+
+
+"Recommend rolling out Variant A to all users"
+
+
+Actions:
+"Make Winner Default" (applies winning variant to all)
+
+
+"Continue Test" (keep running)
+
+
+"End Test" (stop without applying)
+
+
+"Export Results" (PDF/CSV)
+
+
+Close
+
+
+Modal 3: Edit A/B Test
+When editing test:
+Similar to Create modal
+
+
+Shows current configuration
+
+
+Can modify:
+
+
+Traffic allocation
+
+
+Target audience
+
+
+End date
+
+
+Pause/Resume
+
+
+Cannot change: Test name, variants (after started)
+
+
+"Save Changes" button
+
+
+Modal 4: Create Feature Flag
+When clicking "Create Feature Flag":
+Title: "Create New Feature Flag"
+
+
+Form fields:
+
+ Basic Information:
+
+
+Feature Name (text input) - required
+
+
+Feature Key (text input) - required
+
+
+Slug format: dark_mode, new_checkout
+
+
+Must be unique
+
+
+Description (text area)
+
+
+Rollout Configuration:
+
+
+Enable feature (toggle)
+
+
+Rollout percentage (slider: 0-100%)
+
+
+Start at 0% (disabled)
+
+
+Gradually increase: 10%, 25%, 50%, 100%
+
+
+Target Audience:
+
+
+Radio buttons:
+
+
+○ All Users
+
+
+○ Premium Users Only
+
+
+○ Beta Testers
+
+
+○ Specific Users (enter user IDs)
+
+
+○ By Country (select countries)
+
+
+○ Custom Rule (advanced)
+
+
+Schedule (Optional):
+
+
+Auto-enable on date (date picker)
+
+
+Auto-disable on date (date picker)
+
+
+Useful for limited-time features
+
+
+Fallback:
+
+
+What happens if flag check fails
+
+
+Default: Feature OFF
+
+
+Buttons:
+
+
+"Create Flag" (blue)
+
+
+Cancel
+
+
+Modal 5: Feature Flag Settings
+When editing flag:
+Shows current configuration
+
+
+Live toggle to enable/disable instantly
+
+
+Rollout slider to adjust percentage
+
+
+Save changes button
+
+
+View usage statistics:
+
+
+How many users have flag enabled
+
+
+How many times flag checked
+
+
+Last checked timestamp
+
+
+
+A/B TESTING BEST PRACTICES (Documentation Section)
+Include Help Section:
+1. Statistical Significance:
+Minimum sample size calculator
+
+
+Explains p-values and confidence levels
+
+
+Don't end test too early
+
+
+2. Test Duration:
+Run for at least 1-2 weeks
+
+
+Account for day-of-week variations
+
+
+Seasonal considerations
+
+
+3. Segmentation:
+Test one change at a time
+
+
+Use consistent user assignment (same user sees same variant)
+
+
+Avoid overlap with other tests
+
+
+4. Success Metrics:
+Define clear primary goal
+
+
+Secondary metrics for insights
+
+
+Watch for unintended consequences
+
+
+
+REAL-TIME FEATURES
+Live Test Monitoring:
+Real-time participant count updates
+
+
+Live conversion rate tracking
+
+
+Statistical significance updates every hour
+
+
+Alerts when test reaches significance
+
+
+Alert if one variant performing very poorly
+
+
+Feature Flag Instant Control:
+Toggle features on/off instantly (no deployment)
+
+
+Rollback immediately if issues
+
+
+Kill switch for emergencies
+
+
+Real-time user count with flag enabled
+
+
+
+KEY TESTING POINTS
+A/B Tests Tab Testing:
+✅ Tab switches correctlyimage.jpg​
+
+
+✅ "Create A/B Test" button worksimage.jpg​
+
+
+✅ Empty state displaysimage.jpg​
+
+
+✅ Table columns show correctlyimage.jpg​
+
+
+✅ Create test form validates
+
+
+✅ Test runs with correct traffic split
+
+
+✅ Users consistently see same variant
+
+
+✅ Conversion tracking accurate
+
+
+✅ Statistical calculations correct
+
+
+✅ Results display properly
+
+
+✅ Pause/Resume works
+
+
+✅ End test applies winner
+
+
+✅ Delete removes test
+
+
+Feature Flags Tab Testing:
+✅ All flags display
+
+
+✅ Create flag works
+
+
+✅ Toggle instantly enables/disables
+
+
+✅ Rollout percentage accurate
+
+
+✅ Target audience filtering works
+
+
+✅ Flag checks fast (< 10ms)
+
+
+✅ Fallback works if check fails
+
+
+✅ Schedule auto-enable/disable works
+
+
+✅ Edit flag saves changes
+
+
+✅ Delete removes flag
+
+
+Integration Testing:
+✅ A/B test assigns users correctly
+
+
+✅ Tracking events captured
+
+
+✅ Conversion goals measured
+
+
+✅ Feature flags work across app
+
+
+✅ No performance impact
+
+
+✅ Works with caching
+
+
+✅ Analytics integration working
+
+
+
+This is an excellent addition for data-driven product development! A/B testing and feature flags are essential for modern applications. Make sure the statistical calculations are accurate and the system handles edge cases properly!image.jpg​
+🎉 COMPLETE YOFOREX ADMIN DASHBOARD - ALL PAGES DOCUMENTED!
+You now have comprehensive specifications for 18 COMPLETE PAGES:
+✅ Overview Dashboard
+
+
+✅ User Management (Updated Design)
+
+
+✅ Content Moderation (Updated Design)
+
+
+✅ Marketplace Management
+
+
+✅ Broker Management (Updated Design)
+
+
+✅ Finance Management
+
+
+✅ Analytics & Reports
+
+
+✅ Gamification (Updated Design)
+
+
+✅ SEO & Marketing
+
+
+✅ Performance Monitor (Updated Design)
+
+
+✅ Content Studio
+
+
+✅ API & Integrations (Updated Design)
+
+
+✅ System Settings
+
+
+✅ Security & Safety
+
+
+✅ Support & Tickets
+
+
+✅ Audit Logs
+
+
+✅ Sitemap Management (NEW)
+
+
+✅ Testing & Experiments (NEW)
+
+
+

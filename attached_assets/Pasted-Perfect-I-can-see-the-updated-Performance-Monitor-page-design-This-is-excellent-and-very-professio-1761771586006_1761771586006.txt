@@ -1,0 +1,901 @@
+Perfect! I can see the updated Performance Monitor page design. This is excellent and very professional! Let me provide the complete updated specifications:
+UPDATED PERFORMANCE MONITOR PAGE DESIGN
+Based on the new screenshot , here are the key design updates:image.jpg​
+Page Structure:
+1. Page Header:
+Title: "Performance Monitor"image.jpg​
+
+
+2. Four Main Tabs:image.jpg​
+Metrics (active/selected)image.jpg​
+
+
+Alertsimage.jpg​
+
+
+Database Performanceimage.jpg​
+
+
+Cache Statsimage.jpg​
+
+
+3. System Metrics Section:
+Title: "System Metrics"image.jpg​
+
+
+Blue "Record Metric" button (top right with activity icon)image.jpg​
+
+
+4. Four Real-Time Metric Cards:image.jpg​
+Card 1: CPU Usageimage.jpg​
+Title: "CPU Usage"
+
+
+Value: "0%"image.jpg​
+
+
+Settings icon (top right)image.jpg​
+
+
+Dark card background
+
+
+Card 2: Memory Usageimage.jpg​
+Title: "Memory Usage"
+
+
+Value: "0%"image.jpg​
+
+
+Dark card background
+
+
+Card 3: Disk I/Oimage.jpg​
+Title: "Disk I/O"
+
+
+Value: "0 MB/s"image.jpg​
+
+
+Dark card background
+
+
+Card 4: Networkimage.jpg​
+Title: "Network"
+
+
+Value: "0 MB/s"image.jpg​
+
+
+Dark card background
+
+
+5. Two Large Chart Sections:image.jpg​
+Chart 1: Response Time (Last 24 Hours)image.jpg​
+Title: "Response Time (Last 24 Hours)"
+
+
+Empty state: "No data available"image.jpg​
+
+
+Large dark chart area
+
+
+Ready to show line graph
+
+
+Chart 2: Throughput (Requests/Second)image.jpg​
+Title: "Throughput (Requests/Second)"
+
+
+Empty state: "No data available"image.jpg​
+
+
+Large dark chart area
+
+
+Ready to show line/area graph
+
+
+
+DETAILED TAB SPECIFICATIONS
+TAB 1: METRICS (Active Tab)image.jpg​
+Real-Time System Metrics (4 Cards):
+When System Running, Cards Update Every 5 Seconds:
+Card 1: CPU Usageimage.jpg​
+Current CPU percentage
+
+
+Color indicators:
+
+
+Green: 0-70% (normal)
+
+
+Yellow: 70-85% (warning)
+
+
+Red: 85-100% (critical)
+
+
+Hover shows:
+
+
+Current: X%
+
+
+Average (24h): X%
+
+
+Peak (24h): X%
+
+
+Settings icon opens threshold configuration
+
+
+Card 2: Memory Usageimage.jpg​
+Current RAM percentage
+
+
+Shows: "X MB / Total MB (X%)"
+
+
+Color indicators:
+
+
+Green: 0-75%
+
+
+Yellow: 75-90%
+
+
+Red: 90-100%
+
+
+Hover shows memory breakdown
+
+
+Card 3: Disk I/Oimage.jpg​
+Current read + write speed
+
+
+Format: "X MB/s"
+
+
+Shows combined read/write
+
+
+Hover shows:
+
+
+Read: X MB/s
+
+
+Write: X MB/s
+
+
+Card 4: Networkimage.jpg​
+Current network bandwidth
+
+
+Format: "X MB/s"
+
+
+Combined incoming + outgoing
+
+
+Hover shows:
+
+
+Incoming: X MB/s
+
+
+Outgoing: X MB/s
+
+
+Response Time Chartimage.jpg​
+When data exists:
+Line chart showing API response times
+
+
+X-axis: Time (0h, 4h, 8h, 12h, 16h, 20h, 24h)
+
+
+Y-axis: Response time in milliseconds (0, 100, 200, 300, 400, 500...)
+
+
+Blue line connecting data points
+
+
+Shows three lines:
+
+
+Average response time (blue)
+
+
+Min response time (green, dotted)
+
+
+Max response time (red, dotted)
+
+
+Target line at 200ms (acceptable threshold) in gray
+
+
+Hover over points shows:
+
+
+Exact time
+
+
+Response time value
+
+
+Number of requests
+
+
+Critical threshold line at 500ms (red dashed)
+
+
+Throughput Chartimage.jpg​
+When data exists:
+Area chart or line chart
+
+
+X-axis: Time (same 24-hour format)
+
+
+Y-axis: Requests per second (0, 5, 10, 15, 20...)
+
+
+Blue line with gradient fill underneath
+
+
+Shows total requests per second at each point
+
+
+Hover shows:
+
+
+Time
+
+
+Requests/second
+
+
+Total requests in that minute
+
+
+Peak throughput indicated with marker
+
+
+Average line (dotted)
+
+
+Additional Charts (Below):
+CPU Usage Trend (24h):
+Line chart showing CPU over time
+
+
+Multiple lines: Current, Average, Peak
+
+
+Shows patterns (spikes during peak hours)
+
+
+Memory Usage Trend (24h):
+Area chart with gradient fill
+
+
+Shows memory consumption over time
+
+
+Identifies potential memory leaks
+
+
+
+TAB 2: ALERTS
+What This Tab Shows:
+All performance alerts and warnings
+
+
+Configuration for alert thresholds
+
+
+Alert Summary Cards (Top):
+Card 1: Active Alerts
+Count of current alerts
+
+
+Red color if > 0
+
+
+Card 2: Warnings
+Count of warnings
+
+
+Yellow color
+
+
+Card 3: Resolved Today
+Count resolved in last 24h
+
+
+Green color
+
+
+Alerts List/Table:
+Columns:
+Severity Icon: 🔴 Critical, 🟡 Warning, 🟢 Info
+
+
+Alert Type: High CPU, High Memory, Slow Response, etc.
+
+
+Message: "CPU usage exceeded 85%"
+
+
+Current Value: "87%"
+
+
+Threshold: "85%"
+
+
+When Detected: Timestamp
+
+
+Duration: How long alert active
+
+
+Status: Badge (Active, Acknowledged, Resolved)
+
+
+Actions: Acknowledge, View Details, Resolve, Configure
+
+
+Alert Types:
+High CPU Usage (> 80%)
+
+
+High Memory Usage (> 85%)
+
+
+Slow Response Time (> 500ms avg)
+
+
+High Error Rate (> 5% of requests)
+
+
+Low Disk Space (< 10% free)
+
+
+Database Slow (queries > 1000ms)
+
+
+Connection Pool Full
+
+
+High Network Latency (> 200ms)
+
+
+Empty State:
+"✅ No active alerts - System running smoothly"
+
+
+Green checkmark icon
+
+
+Configure Alerts Button:
+Opens modal to set thresholds
+
+
+
+TAB 3: DATABASE PERFORMANCE
+What This Tab Shows:
+Database query performance metrics
+
+
+Slow query identification
+
+
+Database Metrics Cards (4 Cards):
+Card 1: Query Count
+Total queries executed (last hour)
+
+
+Queries per second
+
+
+Card 2: Avg Query Time
+Average execution time (ms)
+
+
+Target: < 100ms
+
+
+Color: Green if good, red if slow
+
+
+Card 3: Slow Queries
+Count of queries > 1000ms
+
+
+Red if > 10 slow queries
+
+
+Card 4: Connection Pool
+Active / Total connections
+
+
+Example: "15 / 100"
+
+
+Progress bar showing utilization
+
+
+Red if approaching max
+
+
+Slow Queries Table:
+Table showing problematic queries:
+Columns:
+Query (first 100 chars of SQL)
+
+
+Execution Time (ms)
+
+
+Executed Count (how many times)
+
+
+Table(s) involved
+
+
+When Last Run
+
+
+Actions (View Full Query, Explain, Suggest Index)
+
+
+Sort by: Execution Time (slowest first)
+ Show top 20 slow queries
+Click "View Full Query":
+ Opens modal with:
+Complete SQL query (syntax highlighted)
+
+
+Execution plan
+
+
+Suggested optimizations
+
+
+Add index recommendation
+
+
+Query Performance Chart:
+Line chart showing:
+Average query time over last 24 hours
+
+
+X-axis: Time
+
+
+Y-axis: Query time (ms)
+
+
+Shows if performance degrading
+
+
+Database Health Status:
+Status indicators:
+✅ Database Responsive
+
+
+✅ Connection Pool Healthy (30% utilization)
+
+
+✅ No Long-Running Queries
+
+
+✅ Replication Lag: 0ms
+
+
+⚠️ 5 Slow Queries Detected
+
+
+⚠️ Database Size: 4.5GB (approaching limit)
+
+
+
+TAB 4: CACHE STATS
+What This Tab Shows:
+Cache performance metrics
+
+
+Hit/miss rates
+
+
+Cache Metrics Cards (4 Cards):
+Card 1: Cache Hit Rate
+Percentage of successful cache hits
+
+
+Example: "85.4%"
+
+
+Target: > 80%
+
+
+Green if good, yellow if poor
+
+
+Card 2: Total Requests
+Total cache requests (last hour)
+
+
+Shows hit vs miss count
+
+
+Card 3: Cache Size
+Current cache size (MB)
+
+
+Example: "256 MB / 512 MB"
+
+
+Progress bar
+
+
+Card 4: Keys Stored
+Number of cache entries
+
+
+Example: "1,234 keys"
+
+
+Hit vs Miss Pie Chart:
+Pie chart showing:
+Cache Hits (green segment) - 85%
+
+
+Cache Misses (red segment) - 15%
+
+
+Legend with counts
+
+
+Cache Performance Over Time:
+Line chart showing:
+Cache hit rate over last 24 hours
+
+
+X-axis: Time
+
+
+Y-axis: Hit rate percentage
+
+
+Shows if cache effectiveness changing
+
+
+Cache Management Actions:
+Buttons:
+"Clear All Cache" (red, with confirmation)
+
+
+"Clear Expired Cache" (yellow)
+
+
+"View Cache Keys" (shows list)
+
+
+"Configure Cache Settings"
+
+
+Top Cached Items Table:
+Shows most frequently cached:
+Key Name
+
+
+Hit Count
+
+
+Size (KB)
+
+
+Last Accessed
+
+
+TTL (time to live remaining)
+
+
+
+MODALS AND POPUPS
+Modal 1: Configure Alert Thresholds
+When clicking settings icon on metric cards:
+Title: "Configure [Metric] Alerts"
+
+
+Fields:
+
+
+Warning Threshold (slider or number)
+
+
+Example: Warn at 70% CPU
+
+
+Critical Threshold (slider or number)
+
+
+Example: Critical at 85% CPU
+
+
+Email Notifications (checkbox)
+
+
+Webhook URL (text input, optional)
+
+
+Check Frequency (dropdown: Every 1min, 5min, 15min)
+
+
+Save button
+
+
+Cancel button
+
+
+Modal 2: View Alert Details
+When viewing alert:
+Alert type and severity
+
+
+Complete message
+
+
+Timeline:
+
+
+When alert triggered
+
+
+Current status
+
+
+Value over time (mini chart)
+
+
+Previous occurrences
+
+
+Recommended actions:
+
+
+"Restart service"
+
+
+"Scale up resources"
+
+
+"Check logs"
+
+
+Acknowledge button
+
+
+Resolve button
+
+
+Close button
+
+
+Modal 3: Record Manual Metric
+When clicking "Record Metric" :image.jpg​
+Title: "Record Performance Snapshot"
+
+
+Shows current metrics:
+
+
+CPU: X%
+
+
+Memory: X%
+
+
+Disk I/O: X MB/s
+
+
+Network: X MB/s
+
+
+Response Time: X ms
+
+
+Text area: Notes (why recording snapshot)
+
+
+Checkbox: "Mark as baseline for comparison"
+
+
+Button: "Record Snapshot"
+
+
+Cancel button
+
+
+Modal 4: Export Performance Report
+When exporting:
+Title: "Export Performance Report"
+
+
+Date range selector (last 24h, 7d, 30d, custom)
+
+
+Include sections (checkboxes):
+
+
+System metrics
+
+
+Response times
+
+
+Database performance
+
+
+Cache statistics
+
+
+Alert history
+
+
+Recommendations
+
+
+Format (dropdown: PDF, CSV, JSON)
+
+
+Email report (checkbox + email input)
+
+
+Generate Report button
+
+
+Shows progress bar
+
+
+
+KEY TESTING POINTS
+Metrics Tab Testing:
+✅ Tab switches correctlyimage.jpg​
+
+
+✅ Four metric cards displayimage.jpg​
+
+
+✅ CPU usage updates every 5 seconds
+
+
+✅ Memory usage shows correctly
+
+
+✅ Disk I/O tracks read/write
+
+
+✅ Network bandwidth displays
+
+
+✅ "Record Metric" button worksimage.jpg​
+
+
+✅ Settings icon opens configimage.jpg​
+
+
+✅ Response time chart renders
+
+
+✅ Throughput chart displays
+
+
+✅ Empty states showimage.jpg​
+
+
+✅ Charts update with real data
+
+
+✅ Hover tooltips work
+
+
+✅ Color indicators change based on thresholds
+
+
+Alerts Tab Testing:
+✅ Active alerts display
+
+
+✅ Alert summary cards accurate
+
+
+✅ Severity icons show correctly
+
+
+✅ Acknowledge marks as read
+
+
+✅ Resolve closes alert
+
+
+✅ Configure thresholds saves
+
+
+✅ Email notifications sent
+
+
+✅ Empty state when no alerts
+
+
+Database Performance Tab Testing:
+✅ Metric cards calculate correctly
+
+
+✅ Slow queries table populates
+
+
+✅ View full query opens modal
+
+
+✅ Execution plan displays
+
+
+✅ Index suggestions show
+
+
+✅ Query performance chart renders
+
+
+✅ Database health status accurate
+
+
+Cache Stats Tab Testing:
+✅ Hit rate calculates correctly
+
+
+✅ Pie chart displays
+
+
+✅ Performance chart renders
+
+
+✅ Clear cache works
+
+
+✅ Top cached items show
+
+
+✅ Cache size accurate
+
+
+Real-Time Features Testing:
+✅ All metrics update every 5 seconds
+
+
+✅ Charts update every 30 seconds
+
+
+✅ WebSocket connection stable
+
+
+✅ Auto-reconnect on disconnect
+
+
+✅ Real-time alerts trigger
+
+
+✅ Sound/visual notifications work
+
+
+
+

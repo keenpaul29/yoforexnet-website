@@ -62,13 +62,13 @@ export default function EnhancedFooter() {
                 </a>
               </li>
               <li>
-                <a 
-                  href="mailto:abuse@yoforex.net" 
+                <Link 
+                  href="/support" 
                   className="text-muted-foreground hover:text-foreground"
                   data-testid="footer-link-abuse"
                 >
                   Report Abuse
-                </a>
+                </Link>
               </li>
               <li>
                 <a 
@@ -161,7 +161,7 @@ export default function EnhancedFooter() {
           </p>
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} YoForex. All rights reserved.</p>
-            <p>Version v1.2.3 • Build {Date.now()}</p>
+            <p>Version v1.2.3 • Build 1761771486385</p>
           </div>
         </div>
       </div>

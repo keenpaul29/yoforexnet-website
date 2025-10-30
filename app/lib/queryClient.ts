@@ -34,11 +34,15 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior, baseUrl }) =>
   async ({ queryKey }) => {
+    // CRITICAL FIX: Only use the first element as the URL
+    // queryKey format: ["/api/endpoint", ...cacheKeys]
+    // The rest are for React Query caching/invalidation, not URL building
+    const endpoint = queryKey[0] as string;
     const url = baseUrl 
-      ? `${baseUrl}${queryKey.join("/")}`
-      : queryKey.join("/");
+      ? `${baseUrl}${endpoint}`
+      : endpoint;
     
-    const res = await fetch(url as string, {
+    const res = await fetch(url, {
       credentials: "include",
     });
 

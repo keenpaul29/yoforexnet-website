@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Try to find a thread first (most specific)
   try {
     const apiUrl = getInternalApiUrl();
-    const response = await fetch(`${apiUrl}/api/threads/by-slug/${lastSlug}`);
+    const response = await fetch(`${apiUrl}/api/threads/slug/${lastSlug}`);
     if (response.ok) {
       const thread = await response.json();
       return {
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Check if it's a marketplace content item
   try {
     const apiUrl = getInternalApiUrl();
-    const response = await fetch(`${apiUrl}/api/content/by-slug/${lastSlug}`);
+    const response = await fetch(`${apiUrl}/api/content/slug/${lastSlug}`);
     if (response.ok) {
       const content = await response.json();
       return {
@@ -117,7 +117,7 @@ export default async function HierarchicalCategoryPage({ params }: Props) {
   let replies = [];
   try {
     const apiUrl = getInternalApiUrl();
-    const threadRes = await fetch(`${apiUrl}/api/threads/by-slug/${lastSlug}`);
+    const threadRes = await fetch(`${apiUrl}/api/threads/slug/${lastSlug}`);
     
     if (threadRes.ok) {
       thread = await threadRes.json();

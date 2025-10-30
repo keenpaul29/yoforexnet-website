@@ -1,0 +1,1371 @@
+🚀 COMPLETE USER SETTINGS PAGES - FIXES & NEW FEATURES
+I can see you have 9 BEAUTIFUL SETTINGS PAGES but they're showing "coming soon" for most features! Let me provide COMPLETE implementations with tons of new features for each page:
+
+📋 CURRENT PAGES OVERVIEW
+Your 9 Settings Tabs:
+✅ Profile - Mostly workingimage.jpg​
+
+
+✅ Notifications - Working with togglesimage.jpg​
+
+
+✅ Security - Partially workingimage.jpg​
+
+
+❌ Appearance - Working theme/colorsimage.jpg​
+
+
+❌ Payment - Coming soon
+
+
+❌ API Keys - Coming soonimage.jpg​
+
+
+❌ Communication - Coming soonimage.jpg​
+
+
+❌ Content - Coming soonimage.jpg​
+
+
+❌ Seller - Coming soonimage.jpg+1​
+
+
+
+🔧 PAGE 1: PROFILE INFORMATIONimage.jpg​
+Current State:
+✅ Profile photo upload (with letter avatar "L")
+
+
+✅ Display Name field
+
+
+✅ Email Address field
+
+
+✅ Bio text area
+
+
+✅ Location field
+
+
+✅ Website field
+
+
+✅ Save Changes button
+
+
+✅ Reset button
+
+
+❌ Issues & Fixes:
+Critical Fixes:
+typescript
+// 1. Make profile photo upload work
+const handlePhotoUpload = async (file: File) => {
+  if (file.size > 5 * 1024 * 1024) {
+    toast.error('Image must be under 5MB');
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('photo', file);
+  
+  const response = await fetch('/api/profile/photo', {
+    method: 'POST',
+    body: formData
+  });
+  
+  const { photoUrl } = await response.json();
+  setProfilePhoto(photoUrl);
+  toast.success('Profile photo updated!');
+};
+
+// 2. Add character counter that works
+const [bioLength, setBioLength] = useState(0);
+<textarea 
+  maxLength={500}
+  onChange={(e) => {
+    setBio(e.target.value);
+    setBioLength(e.target.value.length);
+  }}
+/>
+<span>{bioLength}/500 characters</span>
+
+// 3. Make Save Changes persist
+const handleSave = async () => {
+  await fetch('/api/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      displayName,
+      email,
+      bio,
+      location,
+      website
+    })
+  });
+  toast.success('Profile updated successfully!');
+};
+
+✨ NEW FEATURES TO ADD:
+1. Username Field (Missing!)
+jsx
+<div className="field">
+  <label>Username</label>
+  <input 
+    type="text" 
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    pattern="[a-zA-Z0-9_]+"
+  />
+  <small>alphanumeric and underscores only</small>
+  <small>https://yoforex.net/@{username}</small>
+</div>
+
+2. Social Media Links
+jsx
+<div className="social-links">
+  <h3>Social Media</h3>
+  
+  <div className="field">
+    <label>🐦 Twitter</label>
+    <input type="url" placeholder="https://twitter.com/yourhandle" />
+  </div>
+  
+  <div className="field">
+    <label>📘 Facebook</label>
+    <input type="url" placeholder="https://facebook.com/yourpage" />
+  </div>
+  
+  <div className="field">
+    <label>📷 Instagram</label>
+    <input type="url" placeholder="https://instagram.com/yourhandle" />
+  </div>
+  
+  <div className="field">
+    <label>💼 LinkedIn</label>
+    <input type="url" placeholder="https://linkedin.com/in/yourprofile" />
+  </div>
+  
+  <div className="field">
+    <label>▶️ YouTube</label>
+    <input type="url" placeholder="https://youtube.com/@yourchannel" />
+  </div>
+  
+  <div className="field">
+    <label>📱 Telegram</label>
+    <input type="text" placeholder="@yourtelegram" />
+  </div>
+</div>
+
+3. Trading Experience Section
+jsx
+<div className="trading-experience">
+  <h3>Trading Information</h3>
+  
+  <div className="field">
+    <label>Experience Level</label>
+    <select>
+      <option>Beginner (< 1 year)</option>
+      <option>Intermediate (1-3 years)</option>
+      <option>Advanced (3-5 years)</option>
+      <option>Expert (5+ years)</option>
+      <option>Professional Trader</option>
+    </select>
+  </div>
+  
+  <div className="field">
+    <label>Primary Trading Instruments</label>
+    <div className="checkbox-group">
+      <label><input type="checkbox" /> Forex</label>
+      <label><input type="checkbox" /> Stocks</label>
+      <label><input type="checkbox" /> Crypto</label>
+      <label><input type="checkbox" /> Commodities</label>
+      <label><input type="checkbox" /> Indices</label>
+    </div>
+  </div>
+  
+  <div className="field">
+    <label>Trading Style</label>
+    <select>
+      <option>Scalper</option>
+      <option>Day Trader</option>
+      <option>Swing Trader</option>
+      <option>Position Trader</option>
+      <option>Algorithmic Trader</option>
+    </select>
+  </div>
+  
+  <div className="field">
+    <label>Preferred Broker</label>
+    <input type="text" placeholder="e.g., IC Markets, Exness" />
+  </div>
+</div>
+
+4. Privacy Settings (Profile Visibility)
+jsx
+<div className="privacy-settings">
+  <h3>Profile Visibility</h3>
+  
+  <label className="toggle-row">
+    <span>
+      <strong>Public Profile</strong>
+      <small>Allow others to view your profile</small>
+    </span>
+    <toggle />
+  </label>
+  
+  <label className="toggle-row">
+    <span>
+      <strong>Show Email</strong>
+      <small>Display email on your public profile</small>
+    </span>
+    <toggle />
+  </label>
+  
+  <label className="toggle-row">
+    <span>
+      <strong>Show Location</strong>
+      <small>Display location on your profile</small>
+    </span>
+    <toggle />
+  </label>
+  
+  <label className="toggle-row">
+    <span>
+      <strong>Show Trading Stats</strong>
+      <small>Display your performance metrics</small>
+    </span>
+    <toggle />
+  </label>
+  
+  <label className="toggle-row">
+    <span>
+      <strong>Searchable Profile</strong>
+      <small>Allow others to find you in search</small>
+    </span>
+    <toggle />
+  </label>
+</div>
+
+5. Profile Badge/Verification Status
+jsx
+<div className="verification-status">
+  <h3>Account Verification</h3>
+  
+  <div className="badge verified">
+    ✓ Email Verified
+  </div>
+  
+  <div className="badge pending">
+    ⏳ Phone Number (Not Verified)
+    <button>Verify Now</button>
+  </div>
+  
+  <div className="badge">
+    🏆 Premium Member
+    <span className="since">Since Oct 2024</span>
+  </div>
+</div>
+
+
+🔔 PAGE 2: NOTIFICATIONSimage.jpg​
+Current State:
+✅ Master Email Notifications toggle (working)
+
+
+✅ Community Interactions section with 4 toggles
+
+
+✅ Marketplace & Earnings section with 2 toggles
+
+
+✅ Activity Updates section (partially visible)
+
+
+✨ NEW FEATURES TO ADD:
+1. Complete Activity Updates Section
+jsx
+<div className="notification-section">
+  <h3>📊 Activity Updates</h3>
+  <p>Get notified about system and content updates</p>
+  
+  <NotificationToggle
+    name="New Features"
+    description="When we release new features or updates"
+  />
+  
+  <NotificationToggle
+    name="Maintenance Alerts"
+    description="Scheduled maintenance and downtime notifications"
+  />
+  
+  <NotificationToggle
+    name="System Status"
+    description="Service disruptions and status changes"
+  />
+</div>
+
+2. Add Push Notifications Section
+jsx
+<div className="notification-section">
+  <h3>📱 Push Notifications</h3>
+  <p>Receive real-time notifications on your device</p>
+  
+  <div className="push-notification-status">
+    {pushEnabled ? (
+      <div className="enabled">
+        ✓ Push notifications enabled
+        <button onClick={disablePush}>Disable</button>
+      </div>
+    ) : (
+      <div className="disabled">
+        Push notifications disabled
+        <button onClick={enablePush}>Enable Push Notifications</button>
+      </div>
+    )}
+  </div>
+  
+  <NotificationToggle
+    name="Browser Notifications"
+    description="Show desktop notifications while browsing"
+    disabled={!pushEnabled}
+  />
+  
+  <NotificationToggle
+    name="Mobile App Notifications"
+    description="Receive notifications on mobile app"
+    disabled={!pushEnabled}
+  />
+</div>
+
+3. Add Email Digest Options
+jsx
+<div className="notification-section">
+  <h3>📧 Email Digests</h3>
+  <p>Get summarized updates via email</p>
+  
+  <div className="field">
+    <label>Digest Frequency</label>
+    <select>
+      <option value="instant">Instant (as they happen)</option>
+      <option value="hourly">Hourly Summary</option>
+      <option value="daily">Daily Digest</option>
+      <option value="weekly">Weekly Summary</option>
+      <option value="never">Never (no digests)</option>
+    </select>
+  </div>
+  
+  <div className="field">
+    <label>Digest Time (for Daily/Weekly)</label>
+    <select>
+      <option>8:00 AM</option>
+      <option>12:00 PM</option>
+      <option>6:00 PM</option>
+      <option>9:00 PM</option>
+    </select>
+  </div>
+  
+  <div className="field">
+    <label>Include in Digest</label>
+    <div className="checkbox-group">
+      <label><input type="checkbox" checked /> New replies</label>
+      <label><input type="checkbox" checked /> Mentions</label>
+      <label><input type="checkbox" /> New followers</label>
+      <label><input type="checkbox" checked /> Sales</label>
+      <label><input type="checkbox" /> Likes</label>
+    </div>
+  </div>
+</div>
+
+4. Add Notification Sounds
+jsx
+<div className="notification-section">
+  <h3>🔊 Notification Sounds</h3>
+  
+  <NotificationToggle
+    name="Sound Effects"
+    description="Play sound when receiving notifications"
+  />
+  
+  <div className="field">
+    <label>Notification Sound</label>
+    <select>
+      <option>Default</option>
+      <option>Chime</option>
+      <option>Bell</option>
+      <option>Pop</option>
+      <option>Silent</option>
+    </select>
+    <button>🔊 Preview</button>
+  </div>
+</div>
+
+5. Add Do Not Disturb Mode
+jsx
+<div className="notification-section">
+  <h3>🌙 Do Not Disturb</h3>
+  
+  <NotificationToggle
+    name="Enable Do Not Disturb"
+    description="Pause all notifications during specified times"
+  />
+  
+  <div className="field">
+    <label>From Time</label>
+    <input type="time" value="22:00" />
+  </div>
+  
+  <div className="field">
+    <label>To Time</label>
+    <input type="time" value="08:00" />
+  </div>
+  
+  <div className="field">
+    <label>Active Days</label>
+    <div className="day-selector">
+      <button className="active">M</button>
+      <button className="active">T</button>
+      <button className="active">W</button>
+      <button className="active">T</button>
+      <button className="active">F</button>
+      <button>S</button>
+      <button>S</button>
+    </div>
+  </div>
+</div>
+
+6. Add Notification History
+jsx
+<div className="notification-section">
+  <h3>📜 Notification History</h3>
+  <p>View and manage past notifications</p>
+  
+  <button onClick={() => navigate('/notifications/history')}>
+    View Notification History →
+  </button>
+  
+  <div className="actions">
+    <button>Clear All Notifications</button>
+    <button>Mark All as Read</button>
+  </div>
+</div>
+
+
+🔐 PAGE 3: SECURITYimage.jpg​
+Current State:
+✅ Password change button
+
+
+✅ Two-Factor Authentication section (disabled)
+
+
+✅ Active Sessions (2 sessions shown)
+
+
+✅ Account Security section with Login Alerts (coming soon)
+
+
+✅ Download Account Data button
+
+
+✨ COMPLETE 2FA IMPLEMENTATION:
+jsx
+// Replace "Coming Soon" with full 2FA setup
+const TwoFactorAuth = () => {
+  const [step, setStep] = useState(1); // 1=setup, 2=verify, 3=backup codes
+  const [qrCode, setQrCode] = useState('');
+  const [secret, setSecret] = useState('');
+  const [verifyCode, setVerifyCode] = useState('');
+  const [backupCodes, setBackupCodes] = useState([]);
+  
+  const enable2FA = async () => {
+    const response = await fetch('/api/security/2fa/setup', { method: 'POST' });
+    const { qrCode, secret } = await response.json();
+    setQrCode(qrCode);
+    setSecret(secret);
+    setStep(2);
+  };
+  
+  const verify2FA = async () => {
+    const response = await fetch('/api/security/2fa/verify', {
+      method: 'POST',
+      body: JSON.stringify({ code: verifyCode, secret })
+    });
+    
+    if (response.ok) {
+      const { backupCodes } = await response.json();
+      setBackupCodes(backupCodes);
+      setStep(3);
+      toast.success('2FA enabled successfully!');
+    } else {
+      toast.error('Invalid code');
+    }
+  };
+  
+  return (
+    <div className="2fa-setup">
+      {step === 1 && (
+        <button onClick={enable2FA}>Enable 2FA</button>
+      )}
+      
+      {step === 2 && (
+        <div className="qr-step">
+          <h4>Scan QR Code</h4>
+          <img src={qrCode} alt="QR Code" />
+          <p>Or enter this code manually: <code>{secret}</code></p>
+          
+          <input 
+            type="text" 
+            placeholder="Enter 6-digit code"
+            value={verifyCode}
+            onChange={(e) => setVerifyCode(e.target.value)}
+            maxLength={6}
+          />
+          <button onClick={verify2FA}>Verify & Enable</button>
+        </div>
+      )}
+      
+      {step === 3 && (
+        <div className="backup-codes">
+          <h4>⚠️ Save Your Backup Codes</h4>
+          <p>Store these codes securely. You can use them if you lose access to your authenticator app.</p>
+          <div className="codes-grid">
+            {backupCodes.map(code => (
+              <code key={code}>{code}</code>
+            ))}
+          </div>
+          <button onClick={() => downloadCodes(backupCodes)}>
+            Download Codes
+          </button>
+          <button onClick={() => setStep(1)}>Done</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+✨ NEW SECURITY FEATURES:
+1. Login Alerts (Complete Implementation)
+jsx
+<div className="login-alerts">
+  <h3>🚨 Login Alerts</h3>
+  <p>Get notified of new sign-ins to your account</p>
+  
+  <NotificationToggle
+    name="Email on New Device"
+    description="Send email when logging in from a new device"
+    enabled={true}
+  />
+  
+  <NotificationToggle
+    name="Email on New Location"
+    description="Send email when logging in from a new country"
+    enabled={true}
+  />
+  
+  <NotificationToggle
+    name="Suspicious Activity Alerts"
+    description="Alert on multiple failed login attempts"
+    enabled={true}
+  />
+  
+  <div className="recent-logins">
+    <h4>Recent Login Attempts</h4>
+    <div className="login-item success">
+      ✓ Successful login from Chrome on Windows
+      <span>New York, USA • 5 minutes ago</span>
+    </div>
+    <div className="login-item failed">
+      ✗ Failed login attempt
+      <span>Unknown location • 2 hours ago</span>
+    </div>
+  </div>
+</div>
+
+2. Trusted Devices Management
+jsx
+<div className="trusted-devices">
+  <h3>✅ Trusted Devices</h3>
+  <p>Devices you've marked as trusted won't require 2FA</p>
+  
+  <div className="device-list">
+    <div className="device-item">
+      <div className="device-info">
+        <strong>💻 Chrome on Windows</strong>
+        <span>New York, USA</span>
+        <span>Added Oct 15, 2025</span>
+      </div>
+      <button className="remove">Remove</button>
+    </div>
+    
+    <div className="device-item">
+      <div className="device-info">
+        <strong>📱 Safari on iPhone</strong>
+        <span>New York, USA</span>
+        <span>Added Oct 10, 2025</span>
+      </div>
+      <button className="remove">Remove</button>
+    </div>
+  </div>
+  
+  <button className="clear-all">Clear All Trusted Devices</button>
+</div>
+
+3. Security Questions
+jsx
+<div className="security-questions">
+  <h3>❓ Security Questions</h3>
+  <p>Answer questions for account recovery</p>
+  
+  <div className="question">
+    <label>Question 1</label>
+    <select>
+      <option>What was your first pet's name?</option>
+      <option>What city were you born in?</option>
+      <option>What is your mother's maiden name?</option>
+      <option>What was your first car?</option>
+    </select>
+    <input type="text" placeholder="Your answer" />
+  </div>
+  
+  <div className="question">
+    <label>Question 2</label>
+    <select>
+      <option>What is your favorite book?</option>
+      <option>What was your childhood nickname?</option>
+      <option>What is your favorite movie?</option>
+    </select>
+    <input type="text" placeholder="Your answer" />
+  </div>
+  
+  <button>Save Security Questions</button>
+</div>
+
+4. Account Recovery Options
+jsx
+<div className="recovery-options">
+  <h3>🔑 Account Recovery</h3>
+  
+  <div className="recovery-email">
+    <label>Recovery Email</label>
+    <input type="email" value="recovery@email.com" />
+    <span className="verified">✓ Verified</span>
+  </div>
+  
+  <div className="recovery-phone">
+    <label>Recovery Phone Number</label>
+    <input type="tel" value="+1 (555) 123-4567" />
+    <span className="verified">✓ Verified</span>
+  </div>
+  
+  <button>Update Recovery Options</button>
+</div>
+
+5. Connected Apps & Permissions
+jsx
+<div className="connected-apps">
+  <h3>🔗 Connected Applications</h3>
+  <p>Third-party apps with access to your account</p>
+  
+  <div className="app-item">
+    <div className="app-info">
+      <img src="/apps/tradingview.png" alt="TradingView" />
+      <div>
+        <strong>TradingView Integration</strong>
+        <span>Access to: Profile, Trading Data</span>
+        <span>Connected on Oct 1, 2025</span>
+      </div>
+    </div>
+    <button className="revoke">Revoke Access</button>
+  </div>
+  
+  <div className="app-item">
+    <div className="app-info">
+      <img src="/apps/telegram.png" alt="Telegram" />
+      <div>
+        <strong>Telegram Bot</strong>
+        <span>Access to: Notifications</span>
+        <span>Connected on Sep 15, 2025</span>
+      </div>
+    </div>
+    <button className="revoke">Revoke Access</button>
+  </div>
+</div>
+
+6. Delete Account Option
+jsx
+<div className="danger-zone">
+  <h3>⚠️ Danger Zone</h3>
+  
+  <div className="danger-action">
+    <div>
+      <strong>Delete Account</strong>
+      <p>Permanently delete your account and all data. This action cannot be undone.</p>
+    </div>
+    <button className="danger-button">Delete Account</button>
+  </div>
+</div>
+
+
+🎨 PAGE 4: APPEARANCEimage.jpg​
+Current State:
+✅ Theme selection (Light/Dark) - Working
+
+
+✅ Accent Color picker (6 colors) - Working
+
+
+✅ Typography with font size slider - Working
+
+
+✅ Preview section
+
+
+✨ NEW APPEARANCE FEATURES:
+1. Custom Color Picker
+jsx
+<div className="custom-color-picker">
+  <h4>Custom Accent Color</h4>
+  <input type="color" value={customColor} onChange={(e) => setCustomColor(e.target.value)} />
+  <button onClick={() => applyCustomColor(customColor)}>Apply Custom Color</button>
+</div>
+
+2. Font Family Selection
+jsx
+<div className="font-selection">
+  <h4>Font Family</h4>
+  <select>
+    <option>Inter (Default)</option>
+    <option>Roboto</option>
+    <option>Open Sans</option>
+    <option>Lato</option>
+    <option>Poppins</option>
+    <option>Montserrat</option>
+  </select>
+</div>
+
+3. Line Height & Letter Spacing
+jsx
+<div className="typography-advanced">
+  <div className="field">
+    <label>Line Height</label>
+    <input type="range" min="1" max="2" step="0.1" value={lineHeight} />
+    <span>{lineHeight}</span>
+  </div>
+  
+  <div className="field">
+    <label>Letter Spacing</label>
+    <input type="range" min="-2" max="2" step="0.1" value={letterSpacing} />
+    <span>{letterSpacing}px</span>
+  </div>
+</div>
+
+4. Compact Mode
+jsx
+<div className="layout-density">
+  <h4>Layout Density</h4>
+  <div className="radio-group">
+    <label>
+      <input type="radio" name="density" value="comfortable" checked />
+      Comfortable (Default)
+    </label>
+    <label>
+      <input type="radio" name="density" value="compact" />
+      Compact (More content)
+    </label>
+    <label>
+      <input type="radio" name="density" value="spacious" />
+      Spacious (Larger spacing)
+    </label>
+  </div>
+</div>
+
+5. Sidebar Preferences
+jsx
+<div className="sidebar-settings">
+  <h4>Sidebar</h4>
+  
+  <toggle name="Collapsed by Default" description="Start with sidebar minimized" />
+  <toggle name="Icons Only" description="Show only icons in sidebar" />
+  <toggle name="Show Tooltips" description="Display tooltips on hover" />
+</div>
+
+6. Animation Preferences
+jsx
+<div className="animation-settings">
+  <h4>Animations</h4>
+  
+  <toggle name="Enable Animations" description="Page transitions and effects" enabled={true} />
+  <toggle name="Reduce Motion" description="Minimize animations (accessibility)" />
+  
+  <div className="field">
+    <label>Animation Speed</label>
+    <select>
+      <option>Fast</option>
+      <option selected>Normal</option>
+      <option>Slow</option>
+    </select>
+  </div>
+</div>
+
+
+💳 PAGE 5: PAYMENT (IMPLEMENT THIS)
+Complete Payment Settings Page:
+jsx
+<div className="payment-settings">
+  <h2>💳 Payment Settings</h2>
+  <p>Manage your payment methods and billing information</p>
+  
+  {/* Payment Methods */}
+  <div className="section">
+    <h3>Payment Methods</h3>
+    
+    <div className="payment-method primary">
+      <div className="method-info">
+        <img src="/icons/visa.svg" alt="Visa" />
+        <div>
+          <strong>Visa •••• 4242</strong>
+          <span>Expires 12/2026</span>
+        </div>
+      </div>
+      <span className="badge">Primary</span>
+      <button className="edit">Edit</button>
+    </div>
+    
+    <div className="payment-method">
+      <div className="method-info">
+        <img src="/icons/paypal.svg" alt="PayPal" />
+        <div>
+          <strong>PayPal</strong>
+          <span>user@email.com</span>
+        </div>
+      </div>
+      <button className="remove">Remove</button>
+    </div>
+    
+    <button className="add-method">+ Add Payment Method</button>
+  </div>
+  
+  {/* Billing Information */}
+  <div className="section">
+    <h3>Billing Information</h3>
+    
+    <div className="form-row">
+      <div className="field">
+        <label>Full Name</label>
+        <input type="text" placeholder="John Doe" />
+      </div>
+      <div className="field">
+        <label>Company (Optional)</label>
+        <input type="text" placeholder="Company Name" />
+      </div>
+    </div>
+    
+    <div className="field">
+      <label>Billing Address</label>
+      <input type="text" placeholder="Street Address" />
+    </div>
+    
+    <div className="form-row">
+      <div className="field">
+        <label>City</label>
+        <input type="text" />
+      </div>
+      <div className="field">
+        <label>State/Province</label>
+        <input type="text" />
+      </div>
+      <div className="field">
+        <label>ZIP/Postal Code</label>
+        <input type="text" />
+      </div>
+    </div>
+    
+    <div className="field">
+      <label>Country</label>
+      <select>
+        <option>United States</option>
+        <option>United Kingdom</option>
+        <option>Canada</option>
+        {/* ... */}
+      </select>
+    </div>
+  </div>
+  
+  {/* Tax Information */}
+  <div className="section">
+    <h3>Tax Information</h3>
+    
+    <div className="field">
+      <label>Tax ID / VAT Number (Optional)</label>
+      <input type="text" placeholder="GB123456789" />
+    </div>
+    
+    <div className="field">
+      <label>Business Type</label>
+      <select>
+        <option>Individual</option>
+        <option>Business</option>
+        <option>Non-Profit</option>
+      </select>
+    </div>
+  </div>
+  
+  {/* Invoices */}
+  <div className="section">
+    <h3>Invoice History</h3>
+    
+    <div className="invoice-item">
+      <div>
+        <strong>Invoice #1001</strong>
+        <span>Oct 1, 2025</span>
+      </div>
+      <span className="amount">$99.00</span>
+      <span className="status paid">Paid</span>
+      <button>Download PDF</button>
+    </div>
+    
+    <div className="invoice-item">
+      <div>
+        <strong>Invoice #1000</strong>
+        <span>Sep 1, 2025</span>
+      </div>
+      <span className="amount">$99.00</span>
+      <span className="status paid">Paid</span>
+      <button>Download PDF</button>
+    </div>
+    
+    <button className="view-all">View All Invoices</button>
+  </div>
+  
+  {/* Subscription */}
+  <div className="section">
+    <h3>Subscription</h3>
+    
+    <div className="subscription-card">
+      <div className="plan-info">
+        <h4>Premium Plan</h4>
+        <p>$99/month • Renews on Nov 1, 2025</p>
+      </div>
+      <button>Manage Subscription</button>
+    </div>
+    
+    <toggle name="Auto-Renew" description="Automatically renew subscription" enabled={true} />
+  </div>
+  
+  <button className="save-button">Save Payment Settings</button>
+</div>
+
+
+🔑 PAGE 6: API KEYS (IMPLEMENT THIS)image.jpg​
+jsx
+<div className="api-keys-page">
+  <h2>🔑 API Keys</h2>
+  <p>Manage your API keys for third-party integrations</p>
+  
+  {/* API Keys List */}
+  <div className="api-keys-list">
+    <div className="api-key-item">
+      <div className="key-info">
+        <strong>Production API Key</strong>
+        <code>sk_live_abc123def456...</code>
+        <span>Created Oct 15, 2025 • Last used 2 hours ago</span>
+      </div>
+      <div className="key-actions">
+        <button>👁️ Reveal</button>
+        <button>📋 Copy</button>
+        <button>🔄 Regenerate</button>
+        <button className="danger">🗑️ Delete</button>
+      </div>
+    </div>
+    
+    <div className="api-key-item">
+      <div className="key-info">
+        <strong>Development API Key</strong>
+        <code>sk_test_xyz789ghi012...</code>
+        <span>Created Sep 20, 2025 • Never used</span>
+      </div>
+      <div className="key-actions">
+        <button>👁️ Reveal</button>
+        <button>📋 Copy</button>
+        <button>🔄 Regenerate</button>
+        <button className="danger">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+  
+  <button className="create-key">+ Create New API Key</button>
+  
+  {/* Webhooks */}
+  <div className="webhooks-section">
+    <h3>🔗 Webhooks</h3>
+    <p>Configure webhooks for real-time event notifications</p>
+    
+    <div className="webhook-item">
+      <div className="webhook-info">
+        <strong>Sales Webhook</strong>
+        <code>https://yourapp.com/webhooks/sales</code>
+        <span>Events: sale.created, sale.completed</span>
+      </div>
+      <button>Edit</button>
+      <button>Delete</button>
+    </div>
+    
+    <button className="add-webhook">+ Add Webhook</button>
+  </div>
+  
+  {/* API Documentation */}
+  <div className="api-docs">
+    <h3>📚 API Documentation</h3>
+    <p>Learn how to integrate with YoForex API</p>
+    <a href="/docs/api" className="docs-link">
+      View API Documentation →
+    </a>
+  </div>
+  
+  {/* Rate Limits */}
+  <div className="rate-limits">
+    <h3>⚡ Rate Limits</h3>
+    <p>Your current API usage and limits</p>
+    
+    <div className="usage-bar">
+      <span>Requests Today: 1,234 / 10,000</span>
+      <div className="progress-bar">
+        <div className="progress" style={{width: '12.34%'}}></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+💬 PAGE 7: COMMUNICATION (IMPLEMENT THIS)image.jpg​
+jsx
+<div className="communication-settings">
+  <h2>💬 Communication Preferences</h2>
+  <p>Control how you communicate with other members</p>
+  
+  {/* Direct Messages */}
+  <div className="section">
+    <h3>Direct Messages</h3>
+    
+    <div className="field">
+      <label>Who can send you messages?</label>
+      <select>
+        <option>Everyone</option>
+        <option>People you follow</option>
+        <option>Premium members only</option>
+        <option>No one</option>
+      </select>
+    </div>
+    
+    <toggle name="Message Notifications" description="Get notified of new messages" />
+    <toggle name="Email for Messages" description="Send email for unread messages" />
+    <toggle name="Read Receipts" description="Let others know when you've read their message" />
+  </div>
+  
+  {/* Mentions & Replies */}
+  <div className="section">
+    <h3>Mentions & Replies</h3>
+    
+    <toggle name="Allow Mentions" description="Allow others to mention you in posts" enabled={true} />
+    <toggle name="Auto-Subscribe to Threads" description="Follow threads you reply to" enabled={true} />
+  </div>
+  
+  {/* Blocked Users */}
+  <div className="section">
+    <h3>Blocked Users</h3>
+    <p>Users you've blocked won't be able to contact you</p>
+    
+    <div className="blocked-user-item">
+      <div className="user-info">
+        <img src="/avatars/user1.jpg" alt="" />
+        <span>@spammer123</span>
+      </div>
+      <button>Unblock</button>
+    </div>
+    
+    <button className="add-block">+ Block a User</button>
+  </div>
+  
+  {/* Forum Preferences */}
+  <div className="section">
+    <h3>Forum Preferences</h3>
+    
+    <toggle name="Show Online Status" description="Let others see when you're online" />
+    <toggle name="Allow Friend Requests" description="Accept friend/follow requests" enabled={true} />
+  </div>
+</div>
+
+
+📄 PAGE 8: CONTENT (IMPLEMENT THIS)image.jpg​
+jsx
+<div className="content-settings">
+  <h2>📄 Content Settings</h2>
+  <p>Manage your content publishing preferences</p>
+  
+  {/* Default Publishing Settings */}
+  <div className="section">
+    <h3>Default Publishing Settings</h3>
+    
+    <div className="field">
+      <label>Default Thread Visibility</label>
+      <select>
+        <option>Public</option>
+        <option>Premium Members Only</option>
+        <option>Followers Only</option>
+        <option>Private (Draft)</option>
+      </select>
+    </div>
+    
+    <toggle name="Allow Comments" description="Enable comments on your threads by default" enabled={true} />
+    <toggle name="Enable Reactions" description="Allow likes/reactions on your posts" enabled={true} />
+    <toggle name="Show View Count" description="Display how many views your content gets" enabled={true} />
+  </div>
+  
+  {/* Content Filters */}
+  <div className="section">
+    <h3>Content Filters</h3>
+    
+    <toggle name="Hide NSFW Content" description="Filter out adult/sensitive content" />
+    <toggle name="Hide Spoilers" description="Blur spoiler content by default" />
+    
+    <div className="field">
+      <label>Blocked Keywords</label>
+      <input type="text" placeholder="Enter keywords to filter (comma-separated)" />
+      <small>Posts containing these keywords will be hidden</small>
+    </div>
+  </div>
+  
+  {/* Auto-Save */}
+  <div className="section">
+    <h3>Auto-Save & Drafts</h3>
+    
+    <toggle name="Auto-Save Drafts" description="Automatically save your posts as you type" enabled={true} />
+    
+    <div className="field">
+      <label>Auto-Save Interval</label>
+      <select>
+        <option>Every 30 seconds</option>
+        <option>Every 1 minute</option>
+        <option>Every 5 minutes</option>
+      </select>
+    </div>
+    
+    <button>View Saved Drafts (3)</button>
+  </div>
+  
+  {/* Content Licensing */}
+  <div className="section">
+    <h3>Content Licensing</h3>
+    
+    <div className="field">
+      <label>Default License</label>
+      <select>
+        <option>All Rights Reserved</option>
+        <option>Creative Commons BY</option>
+        <option>Creative Commons BY-SA</option>
+        <option>Public Domain</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+🏪 PAGE 9: SELLER DASHBOARD (IMPLEMENT THIS)image.jpg+1​
+jsx
+<div className="seller-settings">
+  <h2>🏪 Seller Dashboard</h2>
+  <p>Manage your seller profile and marketplace settings</p>
+  
+  {/* Seller Profile */}
+  <div className="section">
+    <h3>Seller Profile</h3>
+    
+    <div className="field">
+      <label>Store Name</label>
+      <input type="text" placeholder="Your Trading Tools Store" />
+    </div>
+    
+    <div className="field">
+      <label>Store Description</label>
+      <textarea placeholder="Tell buyers about your products and expertise..."></textarea>
+    </div>
+    
+    <div className="field">
+      <label>Store Banner</label>
+      <button>Upload Banner (1200x300px)</button>
+    </div>
+  </div>
+  
+  {/* Payout Settings */}
+  <div className="section">
+    <h3>Payout Settings</h3>
+    
+    <div className="field">
+      <label>Payout Method</label>
+      <select>
+        <option>PayPal</option>
+        <option>Bank Transfer</option>
+        <option>Cryptocurrency</option>
+      </select>
+    </div>
+    
+    <div className="field">
+      <label>PayPal Email</label>
+      <input type="email" placeholder="paypal@email.com" />
+    </div>
+    
+    <div className="field">
+      <label>Minimum Payout Amount</label>
+      <select>
+        <option>$50</option>
+        <option>$100</option>
+        <option>$500</option>
+      </select>
+    </div>
+    
+    <div className="field">
+      <label>Automatic Payouts</label>
+      <select>
+        <option>Weekly</option>
+        <option>Bi-weekly</option>
+        <option>Monthly</option>
+        <option>Manual</option>
+      </select>
+    </div>
+  </div>
+  
+  {/* Commission Rates */}
+  <div className="section">
+    <h3>Commission & Fees</h3>
+    
+    <div className="info-box">
+      <p>Platform Commission: 15%</p>
+      <p>Payment Processing Fee: 2.9% + $0.30</p>
+      <p>Your Net: ~82% of sale price</p>
+    </div>
+  </div>
+  
+  {/* Sales Statistics */}
+  <div className="section">
+    <h3>Sales Performance</h3>
+    
+    <div className="stats-grid">
+      <div className="stat-card">
+        <span className="value">$1,234</span>
+        <span className="label">This Month</span>
+      </div>
+      <div className="stat-card">
+        <span className="value">45</span>
+        <span className="label">Total Sales</span>
+      </div>
+      <div className="stat-card">
+        <span className="value">4.8★</span>
+        <span className="label">Avg Rating</span>
+      </div>
+    </div>
+  </div>
+  
+  {/* Product Settings */}
+  <div className="section">
+    <h3>Product Settings</h3>
+    
+    <toggle name="Instant Delivery" description="Automatically deliver products after payment" enabled={true} />
+    <toggle name="Accept Refund Requests" description="Allow buyers to request refunds" enabled={true} />
+    
+    <div className="field">
+      <label>Refund Policy</label>
+      <textarea placeholder="Describe your refund policy..."></textarea>
+    </div>
+  </div>
+  
+  {/* Tax Settings */}
+  <div className="section">
+    <h3>Tax Settings</h3>
+    
+    <toggle name="I'm a US-based seller" description="Subject to US tax reporting" />
+    <toggle name="I'm VAT registered" description="EU VAT number on file" />
+    
+    <div className="field">
+      <label>Tax ID / EIN</label>
+      <input type="text" placeholder="XX-XXXXXXX" />
+    </div>
+  </div>
+  
+  <button className="save-button">Save Seller Settings</button>
+</div>
+
+
+✅ CRITICAL FIXES CHECKLIST
+Must Fix Immediately:
+Make ALL toggles persist to database
+
+
+Implement backend API endpoints for each settings page
+
+
+Add loading states while saving
+
+
+Add success/error toast notifications
+
+
+Validate all form inputs
+
+
+Add "Unsaved Changes" warning when leaving page
+
+
+Make "Reset" buttons work correctly
+
+
+Add confirmation dialogs for destructive actions
+
+
+Backend API Endpoints Needed:
+typescript
+// Profile
+PUT /api/profile
+POST /api/profile/photo
+
+// Notifications
+PUT /api/notifications/preferences
+GET /api/notifications/preferences
+
+// Security
+POST /api/security/password
+POST /api/security/2fa/setup
+POST /api/security/2fa/verify
+POST /api/security/2fa/disable
+GET /api/security/sessions
+DELETE /api/security/sessions/:id
+
+// Appearance
+PUT /api/appearance/theme
+GET /api/appearance/theme
+
+// Payment
+GET /api/payment/methods
+POST /api/payment/methods
+DELETE /api/payment/methods/:id
+GET /api/payment/invoices
+
+// API Keys
+GET /api/keys
+POST /api/keys
+DELETE /api/keys/:id
+PUT /api/keys/:id/regenerate
+
+// Communication
+PUT /api/communication/preferences
+
+// Content
+PUT /api/content/preferences
+
+// Seller
+PUT /api/seller/profile
+PUT /api/seller/payout
+
+
+

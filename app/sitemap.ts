@@ -1,8 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { db } from '../lib/db';
-import { forumThreads, content, users, forumCategories } from '../shared/schema';
-import { desc } from 'drizzle-orm';
-import type { ForumThread, Content, User, ForumCategory } from '../shared/schema';
+import { forumThreads, content, users, forumCategories, seoCategories } from '../shared/schema';
+import { desc, eq } from 'drizzle-orm';
+import type { ForumThread, Content, User, ForumCategory, SeoCategory } from '../shared/schema';
 import { getCategoryPath, getThreadUrl, getContentUrl } from '../lib/category-path';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -26,8 +26,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     limit: 500,
   });
 
-  // Fetch all categories
+  // Fetch all forum categories
   const categories = await db.query.forumCategories.findMany();
+  
+  // Fetch all SEO categories
+  const seoCategoriesList = await db
+    .select()
+    .from(seoCategories)
+    .where(eq(seoCategories.isActive, true));
 
   // Generate hierarchical URLs for threads in parallel
   const threadUrls = await Promise.all(
@@ -49,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  // Generate hierarchical URLs for categories in parallel
+  // Generate hierarchical URLs for forum categories in parallel
   const categoryUrls = await Promise.all(
     categories.map(async (category: ForumCategory) => ({
       url: `${baseUrl}/category/${await getCategoryPath(category.slug)}`,
@@ -58,6 +64,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }))
   );
+  
+  // Generate SEO-optimized category URLs
+  const seoCategoryUrls = seoCategoriesList.map((category: SeoCategory) => ({
+    url: `${baseUrl}${category.urlPath}`,
+    lastModified: category.updatedAt ? new Date(category.updatedAt) : new Date(),
+    changeFrequency: 'daily' as const,
+    priority: category.categoryType === 'main' ? 0.9 : 0.8,
+  }));
 
   return [
     // Homepage
@@ -80,6 +94,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     // Categories (hierarchical URLs)
     ...categoryUrls,
+    // SEO-optimized category pages
+    ...seoCategoryUrls,
     // Static pages
     {
       url: `${baseUrl}/marketplace`,

@@ -1,0 +1,955 @@
+Perfect! I can see the updated API & Integrations page design. This is very clean and streamlined! Let me provide the complete updated specifications:
+UPDATED API & INTEGRATIONS PAGE DESIGN
+Based on the new screenshot , here are the key design updates:image.jpg​
+Page Structure:
+1. Page Header:
+Title: "API & Integrations"image.jpg​
+
+
+2. Three Main Tabs:image.jpg​
+API Keys (active/selected)image.jpg​
+
+
+Webhooksimage.jpg​
+
+
+Event Logsimage.jpg​
+
+
+3. API Keys Tab Content:
+Header Section:
+Title: "API Keys"image.jpg​
+
+
+Blue "Create API Key" button (top right with key icon)image.jpg​
+
+
+API Keys Table:
+Columns:
+
+
+Nameimage.jpg​
+
+
+Keyimage.jpg​
+
+
+Permissionsimage.jpg​
+
+
+Rate Limitimage.jpg​
+
+
+Last Usedimage.jpg​
+
+
+Usageimage.jpg​
+
+
+Actionsimage.jpg​
+
+
+Empty State:
+Message: "No API keys created"image.jpg​
+
+
+Centered text on dark background
+
+
+
+DETAILED TAB SPECIFICATIONS
+TAB 1: API KEYS (Active Tab)image.jpg​
+What This Tab Shows:
+All API keys for external integrations
+
+
+Key management interface
+
+
+When API Keys Exist, Table Shows:
+Column Details:
+Nameimage.jpg​
+
+
+API key name given by admin
+
+
+Example: "Mobile App", "External Dashboard", "Analytics Service"
+
+
+Badge showing key type: "Live" (green) or "Test" (yellow)
+
+
+Keyimage.jpg​
+
+
+Masked API key: sk_live_abc...xyz
+
+
+Format: First 10 and last 4 characters visible
+
+
+Example: sk_live_abc...wxyz
+
+
+Copy button (clipboard icon) on hover
+
+
+Click eye icon to reveal full key (requires confirmation)
+
+
+Permissionsimage.jpg​
+
+
+List of granted permissions as badges
+
+
+Example: "Read Users", "Write Posts", "Read Analytics"
+
+
+Shows first 2-3, then "+X more" if many permissions
+
+
+Click to expand and see all
+
+
+Rate Limitimage.jpg​
+
+
+Requests per minute or hour
+
+
+Example: "100/min" or "1000/hr"
+
+
+Progress indicator if approaching limit
+
+
+Red warning if limit exceeded recently
+
+
+Last Usedimage.jpg​
+
+
+Timestamp when key was last used
+
+
+Format: "2 hours ago" or "Never used"
+
+
+Full date on hover
+
+
+Warning icon if not used in 30+ days (inactive key)
+
+
+Usageimage.jpg​
+
+
+Total requests made with this key
+
+
+Example: "1,234 requests"
+
+
+Click to view detailed usage statistics
+
+
+Sparkline chart showing usage trend
+
+
+Actionsimage.jpg​
+
+
+Three-dot menu button
+
+
+Dropdown options:
+
+
+View Details
+
+
+Edit Permissions
+
+
+View Usage Stats
+
+
+Regenerate Key
+
+
+Revoke Key
+
+
+Delete
+
+
+Example Row (When Keys Exist):
+Name: "Mobile App" [Live badge]
+
+
+Key: sk_live_abc...wxyz [Copy icon]
+
+
+Permissions: "Read Users", "Write Posts", "+3 more"
+
+
+Rate Limit: "100/min" [75% used bar]
+
+
+Last Used: "2 hours ago"
+
+
+Usage: "1,234 requests" [sparkline]
+
+
+Actions: [Three-dot menu]
+
+
+
+TAB 2: WEBHOOKS
+What This Tab Shows:
+Configured webhooks for event notifications
+
+
+Webhook management interface
+
+
+When Tab Selected:
+Header:
+Title: "Webhooks"
+
+
+Blue "Create Webhook" button
+
+
+Webhooks Table:
+Columns:
+Name: Webhook identifier
+
+
+URL: Target endpoint URL (truncated if long)
+
+
+Events: Subscribed events as badges
+
+
+Status: Active/Paused toggle
+
+
+Last Triggered: When last event sent
+
+
+Deliveries: Total delivery count
+
+
+Success Rate: Percentage successful (e.g., "98.5%")
+
+
+Actions: Edit, Test, Delete
+
+
+Example Row:
+Name: "Slack Notifications"
+
+
+URL: https://hooks.slack.com/services/...
+
+
+Events: "user.created", "post.created", "+2 more"
+
+
+Status: Active (toggle switch on)
+
+
+Last Triggered: "5 minutes ago"
+
+
+Deliveries: 1,543
+
+
+Success Rate: 98.5% (green)
+
+
+Actions: [Three-dot menu]
+
+
+Empty State:
+"No webhooks configured"
+
+
+"Create your first webhook to receive real-time event notifications"
+
+
+Event Types Available:
+User Events: user.created, user.updated, user.deleted
+
+
+Content Events: thread.created, post.created, post.edited
+
+
+Payment Events: payment.completed, withdrawal.processed
+
+
+Moderation Events: content.flagged, user.banned
+
+
+System Events: backup.completed, error.critical
+
+
+
+TAB 3: EVENT LOGS
+What This Tab Shows:
+All API calls and webhook deliveries
+
+
+Request/response logs
+
+
+When Tab Selected:
+Header:
+Title: "Event Logs"
+
+
+Filter controls:
+
+
+Event Type dropdown (All, API Calls, Webhooks, Auth)
+
+
+Date Range picker (Today, Last 7 Days, Custom)
+
+
+Status filter (All, Success, Failed)
+
+
+Export button: "Export Logs" (CSV/JSON)
+
+
+Event Logs Table:
+Columns:
+Timestamp: Date and time
+
+
+Event Type: Badge (API Call, Webhook, Auth)
+
+
+API Key/Webhook: Which key or webhook used
+
+
+Endpoint: API endpoint or webhook URL
+
+
+Method: HTTP method (GET, POST, PUT, DELETE)
+
+
+Status: HTTP status code with color:
+
+
+2xx (Success): Green
+
+
+4xx (Client Error): Yellow
+
+
+5xx (Server Error): Red
+
+
+Response Time: Milliseconds
+
+
+IP Address: Source IP
+
+
+Actions: View Details
+
+
+Example Row:
+Timestamp: "Oct 30, 2025 12:45:30 AM"
+
+
+Event Type: "API Call" (blue badge)
+
+
+API Key: "Mobile App"
+
+
+Endpoint: "/api/users"
+
+
+Method: "GET"
+
+
+Status: "200" (green)
+
+
+Response Time: "45ms"
+
+
+IP: "192.168.1.1"
+
+
+Actions: "View Details" button
+
+
+Real-Time Log Stream:
+Auto-refresh toggle (on/off)
+
+
+Pause button to stop live updates
+
+
+New events appear at top with fade-in animation
+
+
+Live indicator showing "Live" when auto-refreshing
+
+
+Empty State:
+"No events logged yet"
+
+
+"API calls and webhook deliveries will appear here"
+
+
+
+MODALS AND POPUPS
+Modal 1: Create API Key
+When clicking "Create API Key" :image.jpg​
+Title: "Create New API Key"
+
+
+Form fields:
+
+ Basic Information:
+
+
+Key Name (text input) - required
+
+
+Example: "Mobile App", "External Dashboard"
+
+
+Description (text area)
+
+
+Purpose of this key
+
+
+Key Type:
+
+
+Radio buttons:
+
+
+○ Live (production use)
+
+
+○ Test (development/testing)
+
+
+Permissions (checkboxes):
+
+
+Users:
+
+
+☐ Read Users
+
+
+☐ Write Users
+
+
+☐ Delete Users
+
+
+Content:
+
+
+☐ Read Posts
+
+
+☐ Write Posts
+
+
+☐ Edit Posts
+
+
+☐ Delete Posts
+
+
+Analytics:
+
+
+☐ Read Analytics
+
+
+Finance:
+
+
+☐ Read Transactions
+
+
+☐ Process Payments
+
+
+Admin:
+
+
+☐ Full Access (all permissions)
+
+
+Rate Limiting:
+
+
+Requests per minute (slider: 10-1000)
+
+
+Requests per hour (slider: 100-10000)
+
+
+Expiration (optional):
+
+
+Radio buttons:
+
+
+○ Never (default)
+
+
+○ 30 days
+
+
+○ 90 days
+
+
+○ 1 year
+
+
+○ Custom (date picker)
+
+
+Button: "Generate API Key" (blue)
+
+
+Cancel button
+
+
+After Creation Success:
+New modal appears: "API Key Created Successfully"
+
+
+Warning: "⚠️ Save this key now! You won't see it again."
+
+
+Display full API key in large, copyable text box
+
+
+Copy button (copies to clipboard)
+
+
+Download button (saves as .txt file)
+
+
+Checkbox: "I have saved this API key"
+
+
+"Done" button (only enabled after checkbox checked)
+
+
+Modal 2: Edit Permissions
+When editing permissions:
+Title: "Edit Permissions - [Key Name]"
+
+
+Shows current permissions (pre-checked)
+
+
+Can add/remove permissions
+
+
+Rate limit adjustment sliders
+
+
+"Save Changes" button
+
+
+Cancel button
+
+
+Modal 3: View Usage Statistics
+When viewing usage:
+Title: "[Key Name] - Usage Statistics"
+
+
+Date range selector
+
+
+Stats Display:
+
+
+Total Requests: X
+
+
+Successful: X (%)
+
+
+Failed: X (%)
+
+
+Average Response Time: Xms
+
+
+Charts:
+
+
+Line chart: Requests over time (last 30 days)
+
+
+Bar chart: Requests by endpoint
+
+
+Pie chart: Success vs Error rate
+
+
+Top Endpoints Table:
+
+
+Endpoint URL
+
+
+Request count
+
+
+Average response time
+
+
+"Export Report" button (CSV)
+
+
+Close button
+
+
+Modal 4: Regenerate Key Confirmation
+When regenerating:
+Warning: "⚠️ Regenerate API Key?"
+
+
+Text: "This will invalidate the old key immediately. Any apps using the old key will stop working."
+
+
+Checkbox: "I understand this will break existing integrations"
+
+
+Red button: "Regenerate Key"
+
+
+Cancel button (gray)
+
+
+After Regeneration:
+Shows new key (one-time display)
+
+
+Same "Save this key" flow as creation
+
+
+Modal 5: Revoke Key Confirmation
+When revoking:
+Warning: "⚠️ Revoke API Key?"
+
+
+Text: "This key will no longer work. This action cannot be undone."
+
+
+Shows key details (name, last used)
+
+
+Checkbox: "Yes, revoke this key"
+
+
+Red button: "Revoke Key"
+
+
+Cancel button
+
+
+Modal 6: Create Webhook
+When creating webhook:
+Title: "Create New Webhook"
+
+
+Form fields:
+
+ Basic Information:
+
+
+Webhook Name (text input) - required
+
+
+Target URL (text input) - required
+
+
+Must start with https://
+
+
+Validation: Valid URL format
+
+
+Events to Subscribe:
+
+
+Expandable categories:
+
+
+User Events (expand to see: user.created, user.updated, etc.)
+
+
+Content Events
+
+
+Payment Events
+
+
+Moderation Events
+
+
+System Events
+
+
+Checkboxes for each event
+
+
+Security:
+
+
+Secret Key (auto-generated, shown)
+
+
+Used for HMAC signature verification
+
+
+Copy button
+
+
+Custom Headers (optional):
+
+
+Key-Value pairs
+
+
+"Add Header" button
+
+
+Testing:
+
+
+"Test Connection" button
+
+
+Sends test payload to verify endpoint works
+
+
+Shows response in real-time
+
+
+Button: "Create Webhook" (blue)
+
+
+Cancel button
+
+
+Modal 7: View Event Details
+When viewing log entry:
+Title: "Event Details"
+
+
+Complete information:
+
+
+Event ID
+
+
+Timestamp (full precision)
+
+
+Event type
+
+
+API key or webhook used
+
+
+Request:
+
+
+HTTP method
+
+
+Full URL
+
+
+Headers (formatted JSON)
+
+
+Body (formatted JSON)
+
+
+Response:
+
+
+Status code
+
+
+Response time
+
+
+Headers
+
+
+Body
+
+
+IP address
+
+
+User agent
+
+
+Copy buttons for request/response
+
+
+Close button
+
+
+
+KEY TESTING POINTS
+API Keys Tab Testing:
+✅ Tab switches correctlyimage.jpg​
+
+
+✅ "Create API Key" button worksimage.jpg​
+
+
+✅ Empty state displaysimage.jpg​
+
+
+✅ Table columns all visibleimage.jpg​
+
+
+✅ Create key generates secure key
+
+
+✅ Key shown only once at creation
+
+
+✅ Copy key to clipboard works
+
+
+✅ Masked key displays correctly
+
+
+✅ Permissions badges show
+
+
+✅ Rate limits enforced
+
+
+✅ Edit permissions saves
+
+
+✅ Regenerate creates new key
+
+
+✅ Revoke disables key
+
+
+✅ Delete removes key
+
+
+✅ Usage statistics accurate
+
+
+Webhooks Tab Testing:
+✅ All webhooks display
+
+
+✅ Create webhook form works
+
+
+✅ URL validation works
+
+
+✅ Event subscriptions save
+
+
+✅ Test webhook sends payload
+
+
+✅ Active/Paused toggle works
+
+
+✅ Delivery count accurate
+
+
+✅ Success rate calculates correctly
+
+
+✅ Edit webhook saves changes
+
+
+✅ Delete removes webhook
+
+
+Event Logs Tab Testing:
+✅ All events display
+
+
+✅ Filter by type works
+
+
+✅ Filter by date works
+
+
+✅ Filter by status works
+
+
+✅ Real-time updates work
+
+
+✅ Pause auto-refresh works
+
+
+✅ View details shows complete log
+
+
+✅ Export logs downloads file
+
+
+✅ Status codes color-coded
+
+
+✅ Response times accurate
+
+
+Security Testing:
+✅ Keys are hashed in database
+
+
+✅ Plaintext key shown only once
+
+
+✅ Rate limiting enforced
+
+
+✅ Revoked keys blocked
+
+
+✅ HMAC signatures on webhooks
+
+
+✅ SSL required for webhooks
+
+
+
+

@@ -1,0 +1,79 @@
+Rename Categories and Simplify URLs
+Current Problem: Your category names are too long and URLs are confusing. Search engines prefer short, keyword-rich URLs that clearly show what the page contains.​
+
+Recommended Changes:
+
+Main Categories (keep URLs short and keyword-focused):
+
+Forex Trading → URL: /forex-trading/
+
+Expert Advisors → /forex-trading/expert-advisors/
+
+MT4 MT5 Indicators → /forex-trading/indicators/
+
+Source Code → /forex-trading/source-code/
+
+Trading Strategies → /forex-trading/strategies/
+
+NinjaTrader → /forex-trading/ninjatrader/
+
+Video Courses → /forex-trading/courses/
+
+Trading Signals → /forex-trading/signals/
+
+TradingView Tools → /forex-trading/tradingview/
+
+Binary Options → URL: /binary-options/
+
+Trading Robots → /binary-options/robots/
+
+Indicators → /binary-options/indicators/
+
+Strategies → /binary-options/strategies/
+
+Training → /binary-options/training/
+
+Crypto Trading → URL: /cryptocurrency-trading/
+
+Crypto Bots → /cryptocurrency-trading/bots/
+
+Crypto Strategies → /cryptocurrency-trading/strategies/
+
+Crypto Courses → /cryptocurrency-trading/courses/
+
+Blockchain Books → /cryptocurrency-trading/books/
+
+Online Courses → URL: /online-courses/
+
+Programming → /online-courses/programming/
+
+Online Business → /online-courses/business/
+
+Dropshipping → /online-courses/dropshipping/
+
+Social Media Marketing → /online-courses/social-media/
+
+Sports Betting → URL: /sports-betting/
+
+Betting Systems → /sports-betting/systems/
+
+Betting Courses → /sports-betting/courses/
+
+Analysis Tools → /sports-betting/tools/
+
+Casino Poker → URL: /casino-poker/
+
+Community → URL: /community/
+
+Free Downloads → URL: /free-downloads/
+
+Display All URLs in Navigation
+Why: Search engines crawl links in your navigation menu first. When all category URLs are visible in the top navigation, it helps:​
+
+Google understand your site structure better​
+
+Users find content faster
+
+Pages get indexed quicker​
+
+Implementation: Create a mega-menu dropdown that shows all main categories and subcategories with full URLs visible.​

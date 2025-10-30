@@ -11,5 +11,5 @@ R.c("server/chunks/ssr/node_modules_next_dist_client_components_9774470f._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_45780354.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js")
 R.c("server/chunks/ssr/_next-internal_server_app_earn_page_actions_9e918ed2.js")
-R.m(716946)
-module.exports=R.m(716946).exports
+R.m(16946)
+module.exports=R.m(16946).exports

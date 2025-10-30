@@ -1,0 +1,564 @@
+Perfect! I can see the updated Content Moderation page design. This is much cleaner and better organized! Let me provide the complete updated specifications:
+UPDATED CONTENT MODERATION PAGE DESIGN
+Based on the new screenshot , here are the key design updates:image.jpg​
+Page Structure:
+1. Page Header:
+Title: "Content Moderation"image.jpg​
+
+
+2. Four Main Tabs:image.jpg​
+Moderation Queue (active/selected)image.jpg​
+
+
+Reported Contentimage.jpg​
+
+
+Moderation Historyimage.jpg​
+
+
+Statisticsimage.jpg​
+
+
+3. Content Type Filter:image.jpg​
+Title: "Content Type"
+
+
+Three button options:
+
+
+All (selected by default)image.jpg​
+
+
+Threadsimage.jpg​
+
+
+Repliesimage.jpg​
+
+
+4. Main Content Area:
+Title: "Pending Content (0)" showing countimage.jpg​
+
+
+Empty state: "No pending items in queue"image.jpg​
+
+
+
+DETAILED SPECIFICATIONS FOR ALL TABS
+TAB 1: MODERATION QUEUEimage.jpg​
+What This Tab Shows:
+All content awaiting approval
+
+
+New threads created by users
+
+
+New replies/posts
+
+
+Content flagged by auto-moderation
+
+
+When Content Exists, Display Table:
+Table Columns:
+Content (preview/excerpt)
+
+
+Type (Thread/Reply badge)
+
+
+Author (username + profile pic)
+
+
+Category (which forum category)
+
+
+Submitted (date/time)
+
+
+Actions (Approve, Reject, View Full)
+
+
+Content Type Filter Functionality:
+Click "All" → Shows both threads and replies
+
+
+Click "Threads" → Shows only threads
+
+
+Click "Replies" → Shows only replies
+
+
+Active button highlighted/selected state
+
+
+Action Buttons for Each Item:
+✅ Approve (green button) - Publishes content immediately
+
+
+❌ Reject (red button) - Opens modal for rejection reason
+
+
+👁️ View Full - Opens modal with complete content
+
+
+Bulk Actions:
+Checkboxes for each item
+
+
+"Select All" checkbox
+
+
+When selected: "Approve Selected" and "Reject Selected" buttons appear
+
+
+
+TAB 2: REPORTED CONTENT
+What This Tab Shows:
+Content reported by users
+
+
+Flagged for spam, inappropriate content, etc.
+
+
+Table Columns:
+Content (excerpt)
+
+
+Type (Thread/Reply)
+
+
+Author (original poster)
+
+
+Reported By (user who reported)
+
+
+Reason (why reported: Spam, Offensive, Off-topic, etc.)
+
+
+Reports Count (how many users reported)
+
+
+Submitted (when reported)
+
+
+Actions (Review, Approve, Remove, Ban User)
+
+
+Filter Options:
+By report reason (Spam, Offensive, Off-topic, Duplicate, Other)
+
+
+By content type (All, Threads, Replies)
+
+
+By report count (1+, 3+, 5+, 10+)
+
+
+Action Options:
+Keep Content (dismiss report as false)
+
+
+Remove Content (delete and notify user)
+
+
+Remove + Ban User (delete content and ban author)
+
+
+View Reporter Profile
+
+
+
+TAB 3: MODERATION HISTORY
+What This Tab Shows:
+All past moderation decisions
+
+
+Approved content
+
+
+Rejected content
+
+
+Who made the decision and when
+
+
+Table Columns:
+Content (preview)
+
+
+Type (Thread/Reply)
+
+
+Author (original poster)
+
+
+Action (Approved/Rejected badge)
+
+
+Moderator (who made decision)
+
+
+Date (when decision made)
+
+
+Reason (if rejected, why)
+
+
+Actions (View Details, Undo)
+
+
+Filter Options:
+By action (All, Approved, Rejected)
+
+
+By moderator (All, specific admin)
+
+
+By date range
+
+
+By content type
+
+
+Undo Functionality:
+Can undo recent approvals (unpublish content)
+
+
+Can undo rejections (move back to queue)
+
+
+
+TAB 4: STATISTICS
+What This Tab Shows:
+Moderation performance metrics
+
+
+Stats cards and charts
+
+
+Statistics Cards:
+Card 1: Pending Items
+Count of items awaiting moderation
+
+
+Trend vs yesterday
+
+
+Card 2: Avg Response Time
+Average time to moderate content
+
+
+Target: < 1 hour
+
+
+Card 3: Approval Rate
+Percentage of content approved
+
+
+Example: 85%
+
+
+Card 4: Rejection Rate
+Percentage of content rejected
+
+
+Example: 15%
+
+
+Charts:
+Chart 1: Moderation Volume (Last 30 Days)
+Line chart showing daily moderation count
+
+
+Approved vs Rejected (two lines)
+
+
+Chart 2: Content by Category
+Bar chart showing which categories have most content
+
+
+Helps identify busy areas
+
+
+Chart 3: Moderator Performance
+Table showing each moderator's stats:
+
+
+Moderator name
+
+
+Items reviewed
+
+
+Avg response time
+
+
+Approval rate
+
+
+Chart 4: Top Rejection Reasons
+Pie chart showing why content gets rejected
+
+
+Spam, Off-topic, Inappropriate, etc.
+
+
+
+MODALS AND POPUPS
+Modal 1: Approve Content Confirmation
+When clicking Approve:
+Title: "Approve Content?"
+
+
+Preview of content
+
+
+Checkbox: "Notify author"
+
+
+Button: "Approve & Publish" (green)
+
+
+Cancel button
+
+
+Modal 2: Reject Content
+When clicking Reject:
+Title: "Reject Content"
+
+
+Dropdown: Select reason
+
+
+Spam
+
+
+Off-topic
+
+
+Inappropriate language
+
+
+Low quality
+
+
+Duplicate
+
+
+Violates rules
+
+
+Other
+
+
+Text area: Additional notes (shown to user)
+
+
+Checkbox: "Delete content permanently"
+
+
+Checkbox: "Issue warning to user"
+
+
+Checkbox: "Notify user via email"
+
+
+Button: "Reject" (red)
+
+
+Cancel button
+
+
+Modal 3: View Full Content
+When viewing content:
+Title: "Content Review"
+
+
+Complete content display:
+
+
+Title (if thread)
+
+
+Full text
+
+
+Images/attachments
+
+
+Formatting preserved
+
+
+Author information:
+
+
+Username
+
+
+Profile link
+
+
+Join date
+
+
+Post count
+
+
+Previous warnings
+
+
+Quick actions:
+
+
+Approve
+
+
+Reject
+
+
+Edit (fix minor issues)
+
+
+Contact Author
+
+
+View User History
+
+
+Close button
+
+
+Modal 4: Bulk Approve Confirmation
+When bulk approving:
+Title: "Approve X Items?"
+
+
+List of items being approved
+
+
+Checkbox: "Notify all authors"
+
+
+Warning: "This action cannot be undone"
+
+
+Button: "Approve All" (green)
+
+
+Cancel button
+
+
+
+KEY TESTING POINTS FOR THIS PAGE
+Moderation Queue Tab Testing:
+✅ Tab switches correctly
+
+
+✅ "All" filter shows all content
+
+
+✅ "Threads" filter shows only threads
+
+
+✅ "Replies" filter shows only replies
+
+
+✅ Empty state displays correctly
+
+
+✅ Pending count updates in real-time
+
+
+✅ Approve button approves content
+
+
+✅ Reject button opens reject modal
+
+
+✅ View Full button opens content modal
+
+
+✅ Content appears on forum after approval
+
+
+Reported Content Tab Testing:
+✅ All reported items display
+
+
+✅ Report reasons show correctly
+
+
+✅ Report count accurate
+
+
+✅ Can dismiss false reports
+
+
+✅ Can remove content
+
+
+✅ Ban user option works
+
+
+✅ Filters work correctly
+
+
+Moderation History Tab Testing:
+✅ All past decisions shown
+
+
+✅ Filter by action works
+
+
+✅ Filter by moderator works
+
+
+✅ Date range filter works
+
+
+✅ Undo button reverses decisions
+
+
+✅ View details shows full info
+
+
+Statistics Tab Testing:
+✅ All stat cards calculate correctly
+
+
+✅ Charts render with data
+
+
+✅ Moderator performance accurate
+
+
+✅ Export stats to CSV works
+
+
+✅ Date range selector works
+
+
+General Testing:
+✅ Tab navigation smooth
+
+
+✅ Real-time updates work
+
+
+✅ Notifications sent to users
+
+
+✅ Bulk actions work correctly
+
+
+✅ Responsive on mobile
+
+
+✅ No console errors
+
+
+
+This design is excellent - much cleaner than the original! The four-tab structure makes it very organized and professional. Make sure all these features work perfectly!image.jpg​
+https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/82300046/0bce8e7e-edc9-4b8a-9c3c-566c6d56bfbd/image.jpg?AWSAccessKeyId=ASIA2F3EMEYE6K6WSOSB&Signature=44SO4gqSWGvnJbkdEWsH%2B%2BJRGSo%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECMaCXVzLWVhc3QtMSJGMEQCIBKI2q8%2FOBg5QfZizQ0gHLtkkOTEW%2BL%2BIux3Y8Ed3OQ%2FAiBIqZxBujcq3ARyhpjSQiX4pdbIBgtXGbdHy3lYqomHgCr8BAjc%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAEaDDY5OTc1MzMwOTcwNSIMBUBH9pWdT1nakjZ6KtAEs0i0QFMAAwKx3rnHjv5EFhqxlpfrfHDzQ6wN5b9PDtc3I4WYUxiSgei9NrrIeoXvIhusMfr59jbucwdgt0fFDc877ngP0XyFiGG5WLwuq7OeA1NEo7eeLDFlBY7YQmw5guYXERJuhdxCPp2pfYnrqa4m4L8Fnk4tkVRSAvMmkOjWgkhaKQJpHoNo9yGUPM3erOl%2FpQyuCpPHgot%2B%2F%2BZG4ZH2YrjmzECZaYgYKjoHqVbq7DrLJuMPQsEcJsdFJhKkRbd9480g7QsKDyuZnw3DbF2i9%2BhNQ3ZzPXwXMlJ1lrFS3Quwfbyn5erlrMiZ3OkaYjdAGgLMumS7qlc2Ytam%2FN0S2wA9dALv1jf4FIK8xc4VubnNGrRhK9pzYUuUu3mpyjPJPSurIlI%2BtnPzvXF%2FApXLTm2%2FFLLTAn3Lyuu1jO4pGK6x39WBK0Ev3x7zAgSEzgE%2FJtDm54v%2Brl%2BM%2BbGAbkmHf%2F5ZroQjtzBGsCOYSD8qQHczgv%2Fmpn5sP92qjlgNkXfI%2F1zEdIi%2ByHPDBsNx%2BOURSKy4zbZy01s2Bq%2BeT7qNVXoUSxObG7DkZTzn%2BdxP%2F8Un7X1OXcQKDXjKEA02PiiCYRdM16jGna6aiEmHaS3W50cndRobSmOHA8vGQ5GUqvMLndmFwUNGdO9U5HWqzsOROMSJ8h4Kxrs1HqvlBfXqv4kL4Mw%2F5Zmu6XBnziuyGbEvbfXLj6uUfkv8AwVUlF6%2BUAxpRofIFlog6m8nkt7s07lGHk%2F92JcCGlntDEYACoTYvXM3%2F%2BCTkFxsL05KHzCAvonIBjqZAflxwaK3bktBAGzadwUuxDqhHZvSIJXR8p3iNEPJ3m%2FWx8HfBSOwViyGMkQpq5h7%2BGlX2K0OxYqs7qmyRzGrAuhips4vYE3E1MnQwsUG2Hfsq0JNBTucWgd9SR%2FKkr33vEL91MnFyTxV34b1%2BXUA3NWxJLzl%2FbEXsIDJPO9TZmP%2FfajXc7smv5ZTBXKiRc8XOkAlniKqo0eprg%3D%3D&Expires=1761765976
+
