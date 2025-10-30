@@ -50,7 +50,7 @@ export async function setupLocalAuth(app: Express) {
       async (username, password, done) => {
         try {
           // Find user by username or email
-          const [user] = await db
+          let [user] = await db
             .select()
             .from(users)
             .where(eq(users.username, username))
@@ -69,7 +69,7 @@ export async function setupLocalAuth(app: Express) {
             }
             
             // Found by email, continue with that user
-            user || (user = userByEmail);
+            user = userByEmail;
           }
           
           // Check if user has a password (for backward compatibility with Replit-only users)

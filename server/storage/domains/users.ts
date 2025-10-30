@@ -405,12 +405,14 @@ export class UserStorage {
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     
     // Get or create today's activity record
-    let activity = await db.query.userActivity.findFirst({
-      where: and(
+    let [activity] = await db
+      .select()
+      .from(userActivity)
+      .where(and(
         eq(userActivity.userId, userId),
         eq(userActivity.date, today)
-      )
-    });
+      ))
+      .limit(1);
 
     // Calculate coins to award (0.5 coins per 5 minutes, max 50 coins/day)
     const newMinutes = (activity?.activeMinutes || 0) + minutes;
@@ -468,12 +470,14 @@ export class UserStorage {
   async getTodayActivity(userId: string): Promise<{activeMinutes: number, coinsEarned: number} | null> {
     const today = new Date().toISOString().split('T')[0];
     
-    const activity = await db.query.userActivity.findFirst({
-      where: and(
+    const [activity] = await db
+      .select()
+      .from(userActivity)
+      .where(and(
         eq(userActivity.userId, userId),
         eq(userActivity.date, today)
-      )
-    });
+      ))
+      .limit(1);
 
     return activity ? {
       activeMinutes: activity.activeMinutes,

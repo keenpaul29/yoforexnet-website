@@ -261,7 +261,7 @@ let initialDb: ReturnType<typeof drizzle> | null = null;
 })();
 
 // Export the pool for backward compatibility
-export const pool = initialPool as Pool;
+export const pool = initialPool as unknown as Pool;
 
 // Export the db instance for backward compatibility
 export const db = new Proxy({} as ReturnType<typeof drizzle>, {

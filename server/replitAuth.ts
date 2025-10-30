@@ -128,7 +128,7 @@ export async function setupReplitAuth(app: Express) {
       const strategyName = `replitauth:${req.hostname}`;
       
       // Check if strategy exists for this hostname
-      if (!passport._strategies[strategyName]) {
+      if (!domains.includes(req.hostname)) {
         console.error(`No Replit auth strategy for hostname: ${req.hostname}`);
         return res.status(400).json({ 
           error: "Invalid hostname for Replit authentication",
@@ -146,7 +146,7 @@ export async function setupReplitAuth(app: Express) {
     app.get("/api/callback", (req, res, next) => {
       const strategyName = `replitauth:${req.hostname}`;
       
-      if (!passport._strategies[strategyName]) {
+      if (!domains.includes(req.hostname)) {
         console.error(`No Replit auth strategy for hostname: ${req.hostname}`);
         return res.status(400).json({ 
           error: "Invalid hostname for Replit authentication" 

@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage/index.js";
-import { setupAuth, isAuthenticated } from "./replitAuth.js";
+import { setupAuth, isAuthenticated } from "./flexibleAuth.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
