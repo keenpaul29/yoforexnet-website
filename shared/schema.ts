@@ -604,6 +604,59 @@ export const forumCategories = pgTable("forum_categories", {
   parentSlugIdx: index("idx_forum_categories_parent_slug").on(table.parentSlug),
 }));
 
+// SEO-Optimized Categories for Marketplace Content
+export const seoCategories = pgTable("seo_categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(), // URL-friendly slug (e.g., "forex-trading", "expert-advisors")
+  name: text("name").notNull(), // Display name (e.g., "Forex Trading", "Expert Advisors")
+  urlPath: text("url_path").notNull().unique(), // Full URL path (e.g., "/forex-trading/expert-advisors/")
+  parentId: varchar("parent_id").references((): any => seoCategories.id),
+  categoryType: text("category_type").notNull().$type<"main" | "sub" | "leaf">().default("main"),
+  oldSlug: text("old_slug"), // For mapping from old category names
+  
+  // SEO Fields
+  metaTitle: text("meta_title"),
+  metaDescription: text("meta_description"),
+  metaKeywords: text("meta_keywords"),
+  h1Title: text("h1_title"), // Custom H1 for category pages
+  
+  // Display Settings
+  icon: text("icon").notNull().default("Folder"), // Lucide icon name
+  color: text("color").notNull().default("bg-primary"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  showInMenu: boolean("show_in_menu").notNull().default(true),
+  showInSidebar: boolean("show_in_sidebar").notNull().default(true),
+  
+  // Stats
+  contentCount: integer("content_count").notNull().default(0),
+  viewCount: integer("view_count").notNull().default(0),
+  
+  // Status
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index("idx_seo_categories_slug").on(table.slug),
+  urlPathIdx: index("idx_seo_categories_url_path").on(table.urlPath),
+  parentIdIdx: index("idx_seo_categories_parent_id").on(table.parentId),
+  oldSlugIdx: index("idx_seo_categories_old_slug").on(table.oldSlug),
+}));
+
+// Category URL Redirects for SEO preservation
+export const categoryRedirects = pgTable("category_redirects", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  oldUrl: text("old_url").notNull().unique(),
+  newUrl: text("new_url").notNull(),
+  redirectType: integer("redirect_type").notNull().default(301), // 301 for permanent, 302 for temporary
+  hitCount: integer("hit_count").notNull().default(0),
+  lastUsed: timestamp("last_used"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  oldUrlIdx: index("idx_category_redirects_old_url").on(table.oldUrl),
+  isActiveIdx: index("idx_category_redirects_active").on(table.isActive),
+}));
+
 // User Badges & Trust Levels
 export const userBadges = pgTable("user_badges", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -1789,6 +1842,25 @@ export const insertForumCategorySchema = createInsertSchema(forumCategories).omi
   description: z.string().min(10).max(500),
 });
 
+export const insertSeoCategorySchema = createInsertSchema(seoCategories).omit({
+  id: true,
+  contentCount: true,
+  viewCount: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  slug: z.string().min(1).max(100),
+  name: z.string().min(1).max(100),
+  urlPath: z.string().min(1).max(255),
+});
+
+export const insertCategoryRedirectSchema = createInsertSchema(categoryRedirects).omit({
+  id: true,
+  hitCount: true,
+  lastUsed: true,
+  createdAt: true,
+});
+
 export const insertUserBadgeSchema = createInsertSchema(userBadges).omit({
   id: true,
   awardedAt: true,
@@ -1808,6 +1880,10 @@ export type ForumReply = typeof forumReplies.$inferSelect;
 export type InsertForumReply = z.infer<typeof insertForumReplySchema>;
 export type ForumCategory = typeof forumCategories.$inferSelect;
 export type InsertForumCategory = z.infer<typeof insertForumCategorySchema>;
+export type SeoCategory = typeof seoCategories.$inferSelect;
+export type InsertSeoCategory = z.infer<typeof insertSeoCategorySchema>;
+export type CategoryRedirect = typeof categoryRedirects.$inferSelect;
+export type InsertCategoryRedirect = z.infer<typeof insertCategoryRedirectSchema>;
 export type UserBadge = typeof userBadges.$inferSelect;
 export type InsertUserBadge = z.infer<typeof insertUserBadgeSchema>;
 export type ActivityFeed = typeof activityFeed.$inferSelect;
