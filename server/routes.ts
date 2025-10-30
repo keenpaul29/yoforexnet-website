@@ -2747,9 +2747,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (error.name === "ZodError") {
           return res.status(400).json({ error: error.message });
         }
+        
+        // Handle database constraint errors with user-friendly messages
+        const errorMessage = error.message.toLowerCase();
+        
+        // Duplicate slug error
+        if (errorMessage.includes('duplicate key') && errorMessage.includes('slug')) {
+          return res.status(400).json({ 
+            error: "A thread with this title already exists in this category. Please use a different title." 
+          });
+        }
+        
+        // Foreign key constraint errors
+        if (errorMessage.includes('foreign key constraint')) {
+          if (errorMessage.includes('category')) {
+            return res.status(400).json({ 
+              error: "The selected category doesn't exist. Please choose a valid category." 
+            });
+          }
+          if (errorMessage.includes('user')) {
+            return res.status(401).json({ 
+              error: "Your session has expired. Please log in again." 
+            });
+          }
+          return res.status(400).json({ 
+            error: "Invalid data provided. Please check your inputs and try again." 
+          });
+        }
+        
+        // Character limit errors
+        if (errorMessage.includes('too long') || errorMessage.includes('value too long')) {
+          return res.status(400).json({ 
+            error: "One or more fields exceed the maximum character limit. Please shorten your content." 
+          });
+        }
+        
+        // Required field errors
+        if (errorMessage.includes('not null') || errorMessage.includes('violates not-null constraint')) {
+          return res.status(400).json({ 
+            error: "Required fields are missing. Please fill in all required information." 
+          });
+        }
       }
+      
       console.error('Thread creation error:', error);
-      res.status(400).json({ error: "Invalid thread data" });
+      res.status(400).json({ 
+        error: "Unable to create thread. Please check your input and try again." 
+      });
     }
   });
   
