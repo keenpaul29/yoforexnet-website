@@ -1,4 +1,4 @@
-import { AdminDashboardClient } from "./AdminDashboardClient";
+import { AdminDashboardClient } from "./AdminDashboardSimple";
 
 export const metadata = {
   title: "Admin Dashboard | YoForex",
