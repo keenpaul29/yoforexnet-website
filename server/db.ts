@@ -278,21 +278,32 @@ export const db = new Proxy({} as ReturnType<typeof drizzle>, {
   }
 });
 
+// Track if pool has been closed
+let poolClosed = false;
+
 // Graceful shutdown handler
 const gracefulShutdown = async () => {
+  // Prevent multiple close calls
+  if (poolClosed) {
+    console.log('Database pool already closed, skipping...');
+    return;
+  }
+  
   console.log('Gracefully shutting down database connections...');
   
   if (globalPool) {
     try {
+      poolClosed = true;
       await globalPool.end();
       console.log('Database pool closed successfully');
+      globalPool = null;
     } catch (error) {
       console.error('Error closing database pool:', error);
     }
   }
 };
 
-// Register shutdown handlers
-process.on('SIGTERM', gracefulShutdown);
-process.on('SIGINT', gracefulShutdown);
-process.on('beforeExit', gracefulShutdown);
+// Register shutdown handlers (only once each)
+process.once('SIGTERM', gracefulShutdown);
+process.once('SIGINT', gracefulShutdown);
+process.once('beforeExit', gracefulShutdown);

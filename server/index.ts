@@ -89,7 +89,16 @@ app.use((req, res, next) => {
   }, () => {
     log(`serving on port ${port}`);
     
-    // Start background jobs for ranking updates
-    startBackgroundJobs(storage);
+    // Defer background jobs if needed for health checks
+    if (process.env.DEFER_BACKGROUND_JOBS === 'true') {
+      log('Deferring background jobs for 10 seconds to allow health checks to pass...');
+      setTimeout(() => {
+        log('Starting background jobs after deferment period');
+        startBackgroundJobs(storage);
+      }, 10000); // Start after 10 seconds
+    } else {
+      // Start background jobs immediately
+      startBackgroundJobs(storage);
+    }
   });
 })();
