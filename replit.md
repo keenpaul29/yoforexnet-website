@@ -16,8 +16,10 @@ YoForex is a comprehensive trading community platform designed to foster a vibra
 - Type safety is critical
 
 ## Production Status
-- **Status**: ✅ PRODUCTION-READY (Verified: Oct 30, 2025 - Latest rebuild 09:05 UTC)
+- **Status**: ✅ PRODUCTION-READY FOR AWS EC2 (Verified: Oct 30, 2025)
 - **TypeScript**: All compilation errors resolved
+- **Database**: Production-optimized with connection pooling, SSL/TLS support, retry logic
+- **Authentication**: Flexible system supporting Replit OIDC, local auth, or disabled modes
 - **Production Build**: Successful - 48 pages generated, 48MB build size
   - Build ID: dFTzjarCmmqQiSaWiKjYq
   - Compilation: 33.1s
@@ -28,7 +30,14 @@ YoForex is a comprehensive trading community platform designed to foster a vibra
   - Security: Auth guards, rate limiting, sanitized errors - all working
   - SEO: Meta tags, OG/Twitter cards, sitemap.xml, robots.txt - all verified
   - Performance: Sub-50ms API responses, optimized bundles
-- **Deployment**: Configured for Replit VM mode with `start-production.sh`
+- **Deployment Infrastructure**: Complete AWS EC2 Ubuntu automation (Oct 30, 2025)
+  - One-command deployment with `master-deploy.sh`
+  - Docker & Docker Compose for development and production
+  - PM2 cluster mode with auto-restart
+  - Nginx with SSL/TLS automation via Let's Encrypt
+  - Automated backup/restore to S3
+  - Comprehensive health checks and monitoring
+  - Production test suite with 28+ automated tests
 - **Storage Architecture**: Modularized (Oct 30, 2025)
   - OrchestratedStorage: 346 lines (62% reduction from 918 lines)
   - Proxy Pattern: Automatic delegation for ~150 unmigrated methods
