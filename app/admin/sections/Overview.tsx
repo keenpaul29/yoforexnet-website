@@ -290,7 +290,7 @@ export default function AdminOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-avg-posts-user">
-              {stats.content.avgPostsPerUser.toFixed(1)}
+              {(stats.content.avgPostsPerUser || 0).toFixed(1)}
             </div>
             <p className="text-xs text-muted-foreground">
               Per user average
