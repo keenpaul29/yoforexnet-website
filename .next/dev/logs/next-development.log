@@ -1,25 +1,75 @@
-[00:00:01.147] Server  LOG      ✓ Ready in 818ms
-[00:00:02.288] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.185] Server  LOG      ✓ Ready in 706ms
+[00:00:02.118] Server  WARN     ⚠ Cross origin request detected from 87945529-0b43-4f9c-9b13-1739264a6781-00-2zprv3dqpksyc.janeway.replit.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:06.380] Server  LOG      ○ Compiling / ...
-[00:00:11.938] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.954] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.954] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:11.957] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.958] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:11.959] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.959] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:11.990] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.990] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
-[00:00:11.991] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.991] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
-[00:00:11.992] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:11.992] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
-[00:00:12.057] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
-[00:00:13.112] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:04.211] Server  LOG      ○ Compiling / ...
+[00:00:09.214] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.234] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.234] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:09.238] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.238] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:09.239] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.239] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:09.281] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.282] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:09.284] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.285] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:09.286] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.287] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:09.376] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.448] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.448] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[00:00:09.450] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.450] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[00:00:09.451] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:09.451] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[00:00:10.516] Server  WARN     ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:13.195] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:16.628] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[00:00:10.564] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:13.037] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" suppressHydrationWarning={true}>
+                          <head>
+                            <script>
+                            <script
+                              dangerouslySetInnerHTML={{
++                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
+-                               __html: ""
+                              }}
+-                             src="/__replco/static/devtools/injected.js"
+-                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
+                            >
+                          ...
+                  ...
+
+[00:00:14.305] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -73,7 +123,7 @@ It can also happen if the client has a browser extension installed which messes 
                                         type="button"
                                         aria-haspopup="dialog"
                                         aria-expanded={false}
-+                                       aria-controls="radix-_R_j6atqlb_"
++                                       aria-controls="radix-_R_j5bnalb_"
 -                                       aria-controls="radix-_R_2cpbnalb_"
                                         data-state="closed"
                                         onClick={function handleEvent}
@@ -94,12 +144,12 @@ It can also happen if the client has a browser extension installed which messes 
                                                     type="button"
                                                     role="tab"
                                                     aria-selected={true}
-+                                                   aria-controls="radix-_R_16eatqlb_-content-new"
++                                                   aria-controls="radix-_R_16dbnalb_-content-new"
 -                                                   aria-controls="radix-_R_4ppbnalb_-content-new"
                                                     data-state="active"
                                                     data-disabled={undefined}
                                                     disabled={false}
-+                                                   id="radix-_R_16eatqlb_-trigger-new"
++                                                   id="radix-_R_16dbnalb_-trigger-new"
 -                                                   id="radix-_R_4ppbnalb_-trigger-new"
                                                     className="inline-flex items-center justify-center whitespace-nowr..."
                                                     data-testid="tab-new"
@@ -120,12 +170,12 @@ It can also happen if the client has a browser extension installed which messes 
                                                     type="button"
                                                     role="tab"
                                                     aria-selected={false}
-+                                                   aria-controls="radix-_R_16eatqlb_-content-trending"
++                                                   aria-controls="radix-_R_16dbnalb_-content-trending"
 -                                                   aria-controls="radix-_R_4ppbnalb_-content-trending"
                                                     data-state="inactive"
                                                     data-disabled={undefined}
                                                     disabled={false}
-+                                                   id="radix-_R_16eatqlb_-trigger-trending"
++                                                   id="radix-_R_16dbnalb_-trigger-trending"
 -                                                   id="radix-_R_4ppbnalb_-trigger-trending"
                                                     className="inline-flex items-center justify-center whitespace-nowr..."
                                                     data-testid="tab-trending"
@@ -146,12 +196,12 @@ It can also happen if the client has a browser extension installed which messes 
                                                     type="button"
                                                     role="tab"
                                                     aria-selected={false}
-+                                                   aria-controls="radix-_R_16eatqlb_-content-solved"
++                                                   aria-controls="radix-_R_16dbnalb_-content-solved"
 -                                                   aria-controls="radix-_R_4ppbnalb_-content-solved"
                                                     data-state="inactive"
                                                     data-disabled={undefined}
                                                     disabled={false}
-+                                                   id="radix-_R_16eatqlb_-trigger-solved"
++                                                   id="radix-_R_16dbnalb_-trigger-solved"
 -                                                   id="radix-_R_4ppbnalb_-trigger-solved"
                                                     className="inline-flex items-center justify-center whitespace-nowr..."
                                                     data-testid="tab-solved"
@@ -173,10 +223,10 @@ It can also happen if the client has a browser extension installed which messes 
                                                   data-state="active"
                                                   data-orientation="horizontal"
                                                   role="tabpanel"
-+                                                 aria-labelledby="radix-_R_16eatqlb_-trigger-new"
++                                                 aria-labelledby="radix-_R_16dbnalb_-trigger-new"
 -                                                 aria-labelledby="radix-_R_4ppbnalb_-trigger-new"
                                                   hidden={false}
-+                                                 id="radix-_R_16eatqlb_-content-new"
++                                                 id="radix-_R_16dbnalb_-content-new"
 -                                                 id="radix-_R_4ppbnalb_-content-new"
                                                   tabIndex={0}
                                                   className="ring-offset-background focus-visible:outline-none focus-v..."
@@ -191,10 +241,10 @@ It can also happen if the client has a browser extension installed which messes 
                                                   data-state="inactive"
                                                   data-orientation="horizontal"
                                                   role="tabpanel"
-+                                                 aria-labelledby="radix-_R_16eatqlb_-trigger-trending"
++                                                 aria-labelledby="radix-_R_16dbnalb_-trigger-trending"
 -                                                 aria-labelledby="radix-_R_4ppbnalb_-trigger-trending"
                                                   hidden={true}
-+                                                 id="radix-_R_16eatqlb_-content-trending"
++                                                 id="radix-_R_16dbnalb_-content-trending"
 -                                                 id="radix-_R_4ppbnalb_-content-trending"
                                                   tabIndex={0}
                                                   className="ring-offset-background focus-visible:outline-none focus-v..."
@@ -209,10 +259,10 @@ It can also happen if the client has a browser extension installed which messes 
                                                   data-state="inactive"
                                                   data-orientation="horizontal"
                                                   role="tabpanel"
-+                                                 aria-labelledby="radix-_R_16eatqlb_-trigger-solved"
++                                                 aria-labelledby="radix-_R_16dbnalb_-trigger-solved"
 -                                                 aria-labelledby="radix-_R_4ppbnalb_-trigger-solved"
                                                   hidden={true}
-+                                                 id="radix-_R_16eatqlb_-content-solved"
++                                                 id="radix-_R_16dbnalb_-content-solved"
 -                                                 id="radix-_R_4ppbnalb_-content-solved"
                                                   tabIndex={0}
                                                   className="ring-offset-background focus-visible:outline-none focus-v..."
@@ -231,12 +281,12 @@ It can also happen if the client has a browser extension installed which messes 
                                                     type="button"
                                                     role="tab"
                                                     aria-selected={true}
-+                                                   aria-controls="radix-_R_2featqlb_-content-contributors"
++                                                   aria-controls="radix-_R_2fdbnalb_-content-contributors"
 -                                                   aria-controls="radix-_R_9tpbnalb_-content-contributors"
                                                     data-state="active"
                                                     data-disabled={undefined}
                                                     disabled={false}
-+                                                   id="radix-_R_2featqlb_-trigger-contributors"
++                                                   id="radix-_R_2fdbnalb_-trigger-contributors"
 -                                                   id="radix-_R_9tpbnalb_-trigger-contributors"
                                                     className="inline-flex items-center justify-center whitespace-nowr..."
                                                     data-testid="tab-contributors"
@@ -257,12 +307,12 @@ It can also happen if the client has a browser extension installed which messes 
                                                     type="button"
                                                     role="tab"
                                                     aria-selected={false}
-+                                                   aria-controls="radix-_R_2featqlb_-content-uploaders"
++                                                   aria-controls="radix-_R_2fdbnalb_-content-uploaders"
 -                                                   aria-controls="radix-_R_9tpbnalb_-content-uploaders"
                                                     data-state="inactive"
                                                     data-disabled={undefined}
                                                     disabled={false}
-+                                                   id="radix-_R_2featqlb_-trigger-uploaders"
++                                                   id="radix-_R_2fdbnalb_-trigger-uploaders"
 -                                                   id="radix-_R_9tpbnalb_-trigger-uploaders"
                                                     className="inline-flex items-center justify-center whitespace-nowr..."
                                                     data-testid="tab-uploaders"
@@ -283,12 +333,12 @@ It can also happen if the client has a browser extension installed which messes 
                                                     type="button"
                                                     role="tab"
                                                     aria-selected={false}
-+                                                   aria-controls="radix-_R_2featqlb_-content-streaks"
++                                                   aria-controls="radix-_R_2fdbnalb_-content-streaks"
 -                                                   aria-controls="radix-_R_9tpbnalb_-content-streaks"
                                                     data-state="inactive"
                                                     data-disabled={undefined}
                                                     disabled={false}
-+                                                   id="radix-_R_2featqlb_-trigger-streaks"
++                                                   id="radix-_R_2fdbnalb_-trigger-streaks"
 -                                                   id="radix-_R_9tpbnalb_-trigger-streaks"
                                                     className="inline-flex items-center justify-center whitespace-nowr..."
                                                     data-testid="tab-streaks"
@@ -309,10 +359,10 @@ It can also happen if the client has a browser extension installed which messes 
                                                 data-state="active"
                                                 data-orientation="horizontal"
                                                 role="tabpanel"
-+                                               aria-labelledby="radix-_R_2featqlb_-trigger-contributors"
++                                               aria-labelledby="radix-_R_2fdbnalb_-trigger-contributors"
 -                                               aria-labelledby="radix-_R_9tpbnalb_-trigger-contributors"
                                                 hidden={false}
-+                                               id="radix-_R_2featqlb_-content-contributors"
++                                               id="radix-_R_2fdbnalb_-content-contributors"
 -                                               id="radix-_R_9tpbnalb_-content-contributors"
                                                 tabIndex={0}
                                                 className="ring-offset-background focus-visible:outline-none focus-vis..."
@@ -327,10 +377,10 @@ It can also happen if the client has a browser extension installed which messes 
                                                 data-state="inactive"
                                                 data-orientation="horizontal"
                                                 role="tabpanel"
-+                                               aria-labelledby="radix-_R_2featqlb_-trigger-uploaders"
++                                               aria-labelledby="radix-_R_2fdbnalb_-trigger-uploaders"
 -                                               aria-labelledby="radix-_R_9tpbnalb_-trigger-uploaders"
                                                 hidden={true}
-+                                               id="radix-_R_2featqlb_-content-uploaders"
++                                               id="radix-_R_2fdbnalb_-content-uploaders"
 -                                               id="radix-_R_9tpbnalb_-content-uploaders"
                                                 tabIndex={0}
                                                 className="ring-offset-background focus-visible:outline-none focus-vis..."
@@ -345,10 +395,10 @@ It can also happen if the client has a browser extension installed which messes 
                                                 data-state="inactive"
                                                 data-orientation="horizontal"
                                                 role="tabpanel"
-+                                               aria-labelledby="radix-_R_2featqlb_-trigger-streaks"
++                                               aria-labelledby="radix-_R_2fdbnalb_-trigger-streaks"
 -                                               aria-labelledby="radix-_R_9tpbnalb_-trigger-streaks"
                                                 hidden={true}
-+                                               id="radix-_R_2featqlb_-content-streaks"
++                                               id="radix-_R_2fdbnalb_-content-streaks"
 -                                               id="radix-_R_9tpbnalb_-content-streaks"
                                                 tabIndex={0}
                                                 className="ring-offset-background focus-visible:outline-none focus-vis..."
@@ -358,3 +408,7 @@ It can also happen if the client has a browser extension installed which messes 
                               ...
                   ...
 
+[00:00:24.791] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:24.798] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:24.957] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[00:00:25.758] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
