@@ -2637,14 +2637,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 2. Sanitize inputs - allow HTML in body only
       const validated = sanitizeRequestBody(validationResult.data, ['body']);
       
-      // Validate word count (min 150 words)
-      const wordCount = countWords(validated.body);
-      if (wordCount < 150) {
-        return res.status(400).json({ 
-          error: "A little more context helps people reply. Two more sentences?" 
-        });
-      }
-      
       // Generate full slug with category path
       const slug = generateFullSlug(
         validated.categorySlug,

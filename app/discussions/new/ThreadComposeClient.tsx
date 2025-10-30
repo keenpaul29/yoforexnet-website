@@ -63,15 +63,12 @@ const threadFormSchema = z.object({
       { message: "Let's tone this down a bit so more folks read it" }
     ),
   body: z.string()
-    .min(500, "A little more context helps people reply. Add a few more details? (500 characters minimum)")
+    .min(150, "Need more detail—add a few sentences? (150 characters minimum)")
     .max(50000, "Body is too long"),
   categorySlug: z.string().min(1, "Please select a category"),
   subcategorySlug: z.string().optional(),
   threadType: z.enum(["question", "discussion", "review", "journal", "guide", "program_sharing"]).default("discussion"),
-  seoExcerpt: z.string()
-    .min(120, "SEO excerpt should be at least 120 characters")
-    .max(160, "SEO excerpt should not exceed 160 characters")
-    .optional().or(z.literal("")),
+  seoExcerpt: z.string().optional().or(z.literal("")),
   primaryKeyword: z.string().optional().or(z.literal("")),
   instruments: z.array(z.string()).default([]),
   timeframes: z.array(z.string()).default([]),
@@ -605,7 +602,7 @@ export default function ThreadComposeClient({ categories }: ThreadComposeClientP
                           </FormControl>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span>Share the basics: pair, timeframe, broker, your rules/results, and what you need</span>
-                            <span data-testid="text-body-char-count">{bodyCharCount} characters (500-50,000 required)</span>
+                            <span data-testid="text-body-char-count">{bodyCharCount} characters (150-50,000 required)</span>
                           </div>
                           <FormMessage />
                         </FormItem>

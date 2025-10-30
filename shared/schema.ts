@@ -1727,16 +1727,8 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   language: z.string().default("en"),
   
   // Optional SEO fields
-  seoExcerpt: z.string()
-    .min(120, "SEO excerpt should be at least 120 characters")
-    .max(160, "SEO excerpt should not exceed 160 characters")
-    .optional(),
-  primaryKeyword: z.string()
-    .refine(
-      (val) => !val || (val.split(/\s+/).length >= 1 && val.split(/\s+/).length <= 6),
-      { message: "Primary keyword should be 1-6 words" }
-    )
-    .optional(),
+  seoExcerpt: z.string().optional().or(z.literal("")),
+  primaryKeyword: z.string().optional().or(z.literal("")),
   
   // Trading metadata (optional multi-select)
   instruments: z.array(z.string()).optional().default([]),
@@ -1751,8 +1743,8 @@ export const insertForumThreadSchema = createInsertSchema(forumThreads).omit({
   reviewTarget: z.string().optional(),
   reviewVersion: z.string().optional(),
   reviewRating: z.number().int().min(1).max(5).optional(),
-  reviewPros: z.array(z.string()).optional(),
-  reviewCons: z.array(z.string()).optional(),
+  reviewPros: z.array(z.string()).optional().default([]),
+  reviewCons: z.array(z.string()).optional().default([]),
   
   // Question-specific fields (conditional)
   questionSummary: z.string().max(200).optional(),
