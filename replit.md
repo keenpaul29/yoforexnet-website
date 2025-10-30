@@ -65,6 +65,7 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 - **Community Members**: 3-column responsive layout with advanced member filters, leaderboard (6 types), community stats, member search, and member cards. Advanced filter UI is implemented but non-functional pending user schema extension.
 - **Client Dashboard**: Includes new tables for trading journal entries, watchlists, price alerts, saved searches, user habits, chat rooms, and dashboard customization (widgets, layouts).
 - **Admin Dashboard**: Provides comprehensive tools for content moderation, marketplace management, finance management, broker management, schema validation, and analytics monitoring. Includes systems for admin authentication, broker management, and SEO & Marketing with meta tag CRUD, campaign tracking, and analytics.
+- **SEO Category System** (Oct 30, 2025): Complete hierarchical category structure with SEO-friendly URLs, automatic redirects, mega-menu navigation, and comprehensive migration system. Features 31 categories organized in 8 main sections (Forex Trading, Binary Options, Cryptocurrency Trading, Online Courses, Sports Betting, Casino & Poker, Community, Free Downloads) with optimized URL paths like `/forex-trading/expert-advisors/`. Includes automatic 301 redirects from old URLs, view tracking, and sitemap integration.
 
 ## External Dependencies
 - **Database**: Neon (PostgreSQL-compatible, serverless)
