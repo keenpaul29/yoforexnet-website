@@ -176,6 +176,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth (OIDC) - must be called before any routes
   await setupAuth(app);
 
+  // HEALTH CHECK ENDPOINTS
+  // Database health check endpoint for monitoring and load balancers
+  app.get("/api/health", async (req, res) => {
+    try {
+      const { checkDatabaseHealth } = await import('./db.js');
+      const dbHealth = await checkDatabaseHealth();
+      
+      const overallHealth = {
+        status: dbHealth.healthy ? 'healthy' : 'unhealthy',
+        timestamp: new Date().toISOString(),
+        services: {
+          database: dbHealth,
+        },
+        environment: {
+          nodeEnv: process.env.NODE_ENV,
+          appName: process.env.APP_NAME || 'yoforex-api',
+        },
+      };
+      
+      // Return appropriate status code based on health
+      const statusCode = dbHealth.healthy ? 200 : 503;
+      res.status(statusCode).json(overallHealth);
+    } catch (error: any) {
+      console.error('Health check failed:', error);
+      res.status(503).json({
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        error: error.message || 'Health check failed',
+      });
+    }
+  });
+  
+  // Simple liveness probe for container orchestration
+  app.get("/api/health/live", (req, res) => {
+    res.status(200).json({ 
+      status: 'alive',
+      timestamp: new Date().toISOString(),
+    });
+  });
+  
+  // Readiness probe that checks database connectivity
+  app.get("/api/health/ready", async (req, res) => {
+    try {
+      const { checkDatabaseHealth } = await import('./db.js');
+      const dbHealth = await checkDatabaseHealth();
+      
+      if (dbHealth.healthy) {
+        res.status(200).json({ 
+          status: 'ready',
+          timestamp: new Date().toISOString(),
+        });
+      } else {
+        res.status(503).json({ 
+          status: 'not ready',
+          timestamp: new Date().toISOString(),
+          reason: dbHealth.message,
+        });
+      }
+    } catch (error: any) {
+      res.status(503).json({ 
+        status: 'not ready',
+        timestamp: new Date().toISOString(),
+        error: error.message || 'Readiness check failed',
+      });
+    }
+  });
+
   // FILE UPLOAD ENDPOINT
   app.post("/api/upload", isAuthenticated, upload.array('files', 10), async (req, res) => {
     try {

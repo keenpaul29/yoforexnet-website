@@ -416,6 +416,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/seo-categories/tree/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/seo-categories/tree">> = Specific
+  const handler = {} as typeof import("../../app/api/seo-categories/tree/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/threads/by-slug/[slug]/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/threads/by-slug/[slug]">> = Specific
