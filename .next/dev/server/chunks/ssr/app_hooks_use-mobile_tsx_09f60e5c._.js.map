@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/app/hooks/use-mobile.tsx"],"sourcesContent":["\"use client\";\n\nimport * as React from \"react\"\n\nconst MOBILE_BREAKPOINT = 768\n\nexport function useIsMobile() {\n  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)\n\n  React.useEffect(() => {\n    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)\n    const onChange = () => {\n      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\n    }\n    mql.addEventListener(\"change\", onChange)\n    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\n    return () => mql.removeEventListener(\"change\", onChange)\n  }, [])\n\n  return !!isMobile\n}\n"],"names":[],"mappings":";;;;AAEA;AAFA;;AAIA,MAAM,oBAAoB;AAEnB,SAAS;IACd,MAAM,CAAC,UAAU,YAAY,GAAG,iNAAc,CAAsB;IAEpE,kNAAe,CAAC;QACd,MAAM,MAAM,OAAO,UAAU,CAAC,CAAC,YAAY,EAAE,oBAAoB,EAAE,GAAG,CAAC;QACvE,MAAM,WAAW;YACf,YAAY,OAAO,UAAU,GAAG;QAClC;QACA,IAAI,gBAAgB,CAAC,UAAU;QAC/B,YAAY,OAAO,UAAU,GAAG;QAChC,OAAO,IAAM,IAAI,mBAAmB,CAAC,UAAU;IACjD,GAAG,EAAE;IAEL,OAAO,CAAC,CAAC;AACX","debugId":null}}]
-}

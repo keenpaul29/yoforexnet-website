@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/app/dashboard/layout.tsx"],"sourcesContent":["import type { Metadata } from 'next';\n\nexport const metadata: Metadata = {\n  title: {\n    default: 'Dashboard - YoForex',\n    template: '%s | Dashboard - YoForex',\n  },\n  robots: {\n    index: false,\n    follow: false,\n  },\n};\n\nexport default function DashboardLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return <>{children}</>;\n}\n"],"names":[],"mappings":";;;;;;;;AAEO,MAAM,WAAqB;IAChC,OAAO;QACL,SAAS;QACT,UAAU;IACZ;IACA,QAAQ;QACN,OAAO;QACP,QAAQ;IACV;AACF;AAEe,SAAS,gBAAgB,EACtC,QAAQ,EAGT;IACC,qBAAO;kBAAG;;AACZ","debugId":null}}]
-}
