@@ -5,6 +5,20 @@ YoForex is a comprehensive trading community platform built with Next.js, design
 
 ## Recent Changes (Oct 30, 2025)
 
+### Create Thread Validation Bug Fixes (CRITICAL FIX)
+- **Fixed Validation Mismatch**: Resolved critical bugs causing thread creation errors
+  - **Frontend**: Changed body validation from 500 characters to **150 characters** minimum (aligned with backend schema)
+  - **Backend**: Removed redundant 150-word validation check (conflicted with 150-char requirement)
+  - **Schema**: Made `seoExcerpt` and `primaryKeyword` truly optional (allow empty strings without validation errors)
+  - **Arrays**: Ensured all array fields (`reviewPros`, `reviewCons`, etc.) have safe `.default([])` fallbacks
+  - **Error Messages**: Updated all validation messages to be clear and actionable
+- **Impact**: Users can now successfully create threads with 150+ characters without validation errors. Eliminated confusing mismatch between frontend (500 chars) and backend (150 words).
+- **Files Modified**: 
+  - `app/discussions/new/ThreadComposeClient.tsx`: Updated body validation and character count display
+  - `shared/schema.ts`: Fixed optional field validation, added array defaults
+  - `server/routes.ts`: Removed conflicting word count check
+- **Tested**: Verified Create Thread page loads correctly with updated validation requirements
+
 ### Client Dashboard Implementation (NEW)
 - **Master Plan**: Created comprehensive 210-step implementation plan across 15 phases (`docs/CLIENT_DASHBOARD_MASTER_PLAN.md`)
 - **Research**: Deep research on 2025 best practices for client dashboards, trading platforms, gamification, and social features
