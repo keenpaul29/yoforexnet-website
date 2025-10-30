@@ -21,10 +21,6 @@
     <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/trading-strategies</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
     <loc>http://localhost:5000/category/trading-strategies/scalping-m1-m15</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
@@ -257,6 +253,34 @@
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
+    <loc>http://localhost:5000/category/trading-strategies</loc>
+    <lastmod>2025-10-30</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category/ea-library/trend-following-eas/trend-following-ea-70-win-rate-backtest</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category/broker-reviews/scam-watch/xm-broker-blocked-my-withdrawal-scam-alert</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category/coding-dev/mql4/mql4-vs-mql5-which-should-i-learn-first</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category/trading-strategies/swing-trading/swing-trading-on-d1-patience-is-key</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category/trading-strategies/news-scalping/news-scalping-on-nfp-best-pairs-to-trade</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category/tools-services/vps-services/vps-recommendations-for-mt4-eas</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
     <loc>http://localhost:5000/category/ea-library/free-eas-0/free-scalping-ea-tested-on-demo-for-3-months</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
@@ -265,27 +289,7 @@
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/tools-services/vps-services/vps-recommendations-for-mt4-eas</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/broker-reviews/ecn-brokers/ic-markets-vs-pepperstone-for-scalping</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/trading-strategies/swing-trading/swing-trading-on-d1-patience-is-key</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/trading-strategies/hedging/hedging-strategy-for-correlated-pairs</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/coding-dev/mql4/mql4-vs-mql5-which-should-i-learn-first</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/ea-library/trend-following-eas/trend-following-ea-70-win-rate-backtest</loc>
+    <loc>http://localhost:5000/category/trading-strategies/grid-martingale/martingale-on-eurusd-lost-my-account-again-</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
@@ -293,19 +297,11 @@
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/trading-strategies/grid-martingale/martingale-on-eurusd-lost-my-account-again-</loc>
+    <loc>http://localhost:5000/category/trading-strategies/hedging/hedging-strategy-for-correlated-pairs</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/broker-reviews/scam-watch/xm-broker-blocked-my-withdrawal-scam-alert</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/trading-strategies/news-scalping/news-scalping-on-nfp-best-pairs-to-trade</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
-    <loc>http://localhost:5000/category/trading-strategies/crypto-scalping/my-btcusd-scalping-strategy-500-pips-in-2-weeks</loc>
+    <loc>http://localhost:5000/category/broker-reviews/ecn-brokers/ic-markets-vs-pepperstone-for-scalping</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
@@ -313,48 +309,56 @@
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
+    <loc>http://localhost:5000/category/trading-strategies/crypto-scalping/my-btcusd-scalping-strategy-500-pips-in-2-weeks</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
     <loc>http://localhost:5000/category/indicators-templates/oscillators-momentum/oscillator-indicators-rsi-vs-stochastic</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/indicators-templates/template-packs/scalper-template-package</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category/trading-strategies/trading-strategies/eurusd-scalping/esfsdfsdfsdfsdfs</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/ea-library/scalping-eas/gold-scalper-pro-ea</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//trend-rider-pro</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/ea-library/trend-following-eas/trend-rider-pro</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//dynamic-sr-zones</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/indicators-templates/sr-tools/dynamic-sr-zones</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//nfp-news-trader-ea</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/ea-library/news-trading-eas/nfp-news-trader-ea</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//multi-pair-grid-ea</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/ea-library/scalping-eas/eurusd-night-scalper</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//advanced-rsi-divergence</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/ea-library/grid-trading-eas/multi-pair-grid-ea</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//eurusd-night-scalper</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/indicators-templates/oscillators-momentum/advanced-rsi-divergence</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//price-action-trader-setup</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/indicators-templates/volume-indicators/volume-profile-indicator</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//scalper-template-package</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/category/indicators-templates/template-packs/price-action-trader-setup</loc>
-    <lastmod>2025-10-29</lastmod>
+    <loc>http://localhost:5000/category//volume-profile-indicator</loc>
+    <lastmod>2025-10-30</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/category//gold-scalper-pro-ea</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
   <url>
     <loc>http://localhost:5000/user/forex_newbie423</loc>
@@ -417,6 +421,10 @@
     <lastmod>2025-10-30</lastmod>
   </url>
   <url>
+    <loc>http://localhost:5000/user/puspalpaul8@gmail.com</loc>
+    <lastmod>2025-10-30</lastmod>
+  </url>
+  <url>
     <loc>http://localhost:5000/user/lesbraumgerome@gmail.com</loc>
     <lastmod>2025-10-30</lastmod>
   </url>
@@ -433,10 +441,6 @@
     <lastmod>2025-10-29</lastmod>
   </url>
   <url>
-    <loc>http://localhost:5000/brokers/fbs</loc>
-    <lastmod>2025-10-29</lastmod>
-  </url>
-  <url>
     <loc>http://localhost:5000/brokers/exness</loc>
     <lastmod>2025-10-29</lastmod>
   </url>
@@ -447,5 +451,17 @@
   <url>
     <loc>http://localhost:5000/brokers/tickmill</loc>
     <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/brokers/fbs</loc>
+    <lastmod>2025-10-29</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/brokers/scam-broker</loc>
+    <lastmod>2025-10-30</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:5000/brokers/xm</loc>
+    <lastmod>2025-10-30</lastmod>
   </url>
 </urlset>
