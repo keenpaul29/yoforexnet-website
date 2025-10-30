@@ -3214,6 +3214,10 @@ body {
   background-color: hsl(var(--destructive) / var(--tw-bg-opacity, 1));
 }
 
+.bg-destructive\/10 {
+  background-color: hsl(var(--destructive) / .1);
+}
+
 .bg-destructive\/5 {
   background-color: hsl(var(--destructive) / .05);
 }

@@ -43,7 +43,7 @@ export function getSession() {
   });
 }
 
-function updateUserSession(
+async function updateUserSession(
   user: any,
   tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers
 ) {
@@ -51,6 +51,11 @@ function updateUserSession(
   user.access_token = tokens.access_token;
   user.refresh_token = tokens.refresh_token;
   user.expires_at = user.claims?.exp;
+  
+  const dbUser = await storage.getUser(user.claims.sub);
+  if (dbUser) {
+    user.claims.role = dbUser.role;
+  }
 }
 
 async function upsertUser(claims: any) {
@@ -87,8 +92,8 @@ export async function setupAuth(app: Express) {
     verified: passport.AuthenticateCallback
   ) => {
     const user = {};
-    updateUserSession(user, tokens);
     await upsertUser(tokens.claims());
+    await updateUserSession(user, tokens);
     verified(null, user);
   };
 
@@ -155,7 +160,7 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
   try {
     const config = await getOidcConfig();
     const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
-    updateUserSession(user, tokenResponse);
+    await updateUserSession(user, tokenResponse);
     return next();
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
