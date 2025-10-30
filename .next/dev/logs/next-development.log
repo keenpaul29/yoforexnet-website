@@ -721,3 +721,113 @@ https://react.dev/link/hydration-mismatch
 [06:03:36.583] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
 [06:03:36.584] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
 [06:03:36.584] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[06:03:37.121] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[06:03:37.121] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[06:03:37.122] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[06:03:37.122] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[06:03:37.124] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[06:03:37.124] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[06:03:37.968] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[06:03:37.969] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[06:03:37.970] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[06:03:37.970] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[06:03:37.971] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[06:03:37.971] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[06:03:41.562] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[06:03:41.563] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="page.tsx">
+              <SegmentTrieNode>
+              <HomePage>
+                <HomeClient initialStats={{...}} initialCategories={[...]} initialThreads={[...]}>
+                  <div className="min-h-scre...">
+                    <Header>
+                    <StatsBar initialStats={{...}}>
+                      <div className="border-y b...">
+                        <div className="container ...">
+                          <div>
+                          <div className="grid grid-...">
+                            <div>
+                            <div>
+                            <div>
+                            <div className="flex items...">
+                              <div>
+                              <div>
+                                <div className="text-2xl font-bold" data-testid="text-stat-activity">
++                                 +0
+-                                 +15
+                                ...
+                    ...
+            ...
+          ...
+
+[06:03:42.826] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" suppressHydrationWarning={true}>
+                          <head>
+                            <script>
+                            <script
+                              dangerouslySetInnerHTML={{
++                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
+-                               __html: ""
+                              }}
+-                             src="/__replco/static/devtools/injected.js"
+-                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
+                            >
+                          ...
+                            <div className="grid grid-...">
+                              <div>
+                              <div>
+                              <div>
+                              <div className="flex items...">
+                                <div>
+                                <div>
+                                  <div className="text-2xl font-bold" data-testid="text-stat-activity">
++                                   +0
+-                                   +15
+                                  ...
+                  ...
+
