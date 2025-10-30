@@ -3,6 +3,12 @@
 ## Overview
 YoForex is a comprehensive trading community platform designed to foster a vibrant community for traders. It features forum discussions, trading journals, an Expert Advisor (EA) marketplace, broker reviews, and a user reputation and badge system, all underpinned by a coin-based economy. The platform aims to provide a rich, interactive environment for traders to share knowledge, access tools, and grow their skills, with robust SEO optimizations for global search visibility.
 
+## Production Domain
+- **Primary Domain**: https://yoforex.net
+- **Environment**: Production-ready
+- **SSL/HTTPS**: Required (enforced)
+- **SEO Optimized**: Configured for search engine indexing
+
 ## User Preferences
 - Prefer clear, concise code
 - Minimize file count where possible
@@ -47,10 +53,11 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 - **Type Safety**: Comprehensive TypeScript implementation with strict type checking across the entire codebase.
 - **API Connectivity**: A centralized Express API backend (port 3001) is robustly connected to the Next.js frontend (port 5000) using React Query.
 - **SEO Optimization**: Enhanced with Google Tag Manager, a dynamic sitemap, Schema.org Breadcrumbs, and comprehensive schema properties for entity relationships.
+- **Custom UI Components**: Professional scrollbar styling with theme-aware design (.custom-scrollbar utility class), smooth transitions, and optimal visibility in both light and dark modes (Oct 30, 2025).
 
 **Feature Specifications:**
 - **Forum System**: Supports discussions, replies, and interaction statistics.
-  - **WeekHighlights Component** (Oct 30, 2025): Enhanced with limit selector (10/20/50 items), scrollable container (max-height: 600px), responsive dropdown UI
+  - **WeekHighlights Component** (Oct 30, 2025): Enhanced with limit selector (10/20/50 items), scrollable container (max-height: 600px), responsive dropdown UI, professional custom scrollbars with dark mode support
 - **Marketplace**: Allows listing and selling of Expert Advisors, indicators, and templates with detailed product schemas.
 - **User Profiles**: Comprehensive profiles with reputation scores, badges, social links, and expertise areas.
 - **Coin-based Economy**: Rewards users for platform engagement.
@@ -64,3 +71,18 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 - **Authentication**: Replit Auth (OIDC)
 - **Analytics**: Google Analytics 4, Yandex Webmaster Tools, Bing Webmaster Tools, Seznam Webmaster
 - **Tag Management**: Google Tag Manager (via `NEXT_PUBLIC_GTM_ID`)
+
+## Production Deployment Configuration
+- **Frontend Port**: 5000 (Next.js - user-facing)
+- **Backend Port**: 3001 (Express API - internal)
+- **Production URLs**:
+  - Public: https://yoforex.net
+  - API (internal): http://127.0.0.1:3001
+- **Environment Variables**: See `.env.production.example` for complete configuration
+- **Required ENV Vars**:
+  - `NEXT_PUBLIC_SITE_URL=https://yoforex.net`
+  - `EXPRESS_URL=http://127.0.0.1:3001` (internal communication)
+  - `DATABASE_URL` (Neon PostgreSQL connection)
+  - `SESSION_SECRET` (secure random string)
+- **SEO Configuration**: All metadata, sitemaps, and schema.org markup configured for yoforex.net
+- **CORS & Origins**: Configured for yoforex.net and www.yoforex.net
