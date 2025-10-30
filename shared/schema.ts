@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, json, check, uniqueIndex, numeric, serial, date } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, json, check, uniqueIndex, numeric, serial, date, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -1227,6 +1227,198 @@ export const contentRevisions = pgTable("content_revisions", {
   createdAtIdx: index("idx_content_revisions_created_at").on(table.createdAt),
 }));
 
+// ========================================
+// CLIENT DASHBOARD TABLES
+// ========================================
+
+// Trading Journal - Track user trades and performance
+export const tradingJournalEntries = pgTable("trading_journal_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  tradingPair: varchar("trading_pair").notNull(),
+  entryPrice: decimal("entry_price", { precision: 20, scale: 8 }).notNull(),
+  exitPrice: decimal("exit_price", { precision: 20, scale: 8 }),
+  positionSize: decimal("position_size", { precision: 20, scale: 8 }).notNull(),
+  positionType: varchar("position_type").notNull().$type<"long" | "short">(),
+  entryDate: timestamp("entry_date").notNull(),
+  exitDate: timestamp("exit_date"),
+  profitLoss: decimal("profit_loss", { precision: 20, scale: 8 }),
+  profitLossPercent: decimal("profit_loss_percent", { precision: 10, scale: 4 }),
+  strategy: varchar("strategy"),
+  notes: text("notes"),
+  tags: text("tags").array().default(sql`'{}'::text[]`),
+  screenshotUrls: text("screenshot_urls").array().default(sql`'{}'::text[]`),
+  broker: varchar("broker"),
+  status: varchar("status").notNull().default("open").$type<"open" | "closed">(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_trading_journal_user_id").on(table.userId),
+  statusIdx: index("idx_trading_journal_status").on(table.status),
+  entryDateIdx: index("idx_trading_journal_entry_date").on(table.entryDate),
+  tradingPairIdx: index("idx_trading_journal_trading_pair").on(table.tradingPair),
+}));
+
+// Watchlists - User custom symbol lists
+export const watchlists = pgTable("watchlists", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  symbols: text("symbols").array().default(sql`'{}'::text[]`),
+  isDefault: boolean("is_default").notNull().default(false),
+  color: varchar("color"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_watchlists_user_id").on(table.userId),
+  isDefaultIdx: index("idx_watchlists_is_default").on(table.isDefault),
+}));
+
+// Price Alerts - Real-time price notifications
+export const priceAlerts = pgTable("price_alerts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  symbol: varchar("symbol").notNull(),
+  targetPrice: decimal("target_price", { precision: 20, scale: 8 }).notNull(),
+  condition: varchar("condition").notNull().$type<"above" | "below" | "equals">(),
+  isActive: boolean("is_active").notNull().default(true),
+  isTriggered: boolean("is_triggered").notNull().default(false),
+  triggeredAt: timestamp("triggered_at"),
+  notificationMethod: varchar("notification_method").notNull().default("in_app").$type<"in_app" | "email" | "push" | "all">(),
+  note: text("note"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_price_alerts_user_id").on(table.userId),
+  symbolIdx: index("idx_price_alerts_symbol").on(table.symbol),
+  isActiveIdx: index("idx_price_alerts_is_active").on(table.isActive),
+  isTriggeredIdx: index("idx_price_alerts_is_triggered").on(table.isTriggered),
+}));
+
+// Saved Searches - Quick access to frequent searches
+export const savedSearches = pgTable("saved_searches", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  query: text("query").notNull(),
+  filters: jsonb("filters"),
+  category: varchar("category").$type<"content" | "threads" | "users" | "brokers" | "all">(),
+  useCount: integer("use_count").notNull().default(0),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_saved_searches_user_id").on(table.userId),
+  categoryIdx: index("idx_saved_searches_category").on(table.category),
+}));
+
+// User Habits - Track daily/weekly engagement patterns
+export const userHabits = pgTable("user_habits", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  habitType: varchar("habit_type").notNull().$type<"daily_login" | "post_thread" | "trading_journal" | "learning_course" | "marketplace_visit">(),
+  currentStreak: integer("current_streak").notNull().default(0),
+  longestStreak: integer("longest_streak").notNull().default(0),
+  lastCompletedAt: timestamp("last_completed_at"),
+  totalCompletions: integer("total_completions").notNull().default(0),
+  streakData: jsonb("streak_data"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_user_habits_user_id").on(table.userId),
+  habitTypeIdx: index("idx_user_habits_habit_type").on(table.habitType),
+  currentStreakIdx: index("idx_user_habits_current_streak").on(table.currentStreak),
+}));
+
+// Chat Rooms - Group discussions and channels
+export const chatRooms = pgTable("chat_rooms", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  roomType: varchar("room_type").notNull().$type<"public" | "private" | "trading_pair" | "strategy">(),
+  category: varchar("category"),
+  memberCount: integer("member_count").notNull().default(0),
+  messageCount: integer("message_count").notNull().default(0),
+  lastMessageAt: timestamp("last_message_at"),
+  createdBy: varchar("created_by").notNull().references(() => users.id),
+  isActive: boolean("is_active").notNull().default(true),
+  settings: jsonb("settings"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  roomTypeIdx: index("idx_chat_rooms_room_type").on(table.roomType),
+  categoryIdx: index("idx_chat_rooms_category").on(table.category),
+  isActiveIdx: index("idx_chat_rooms_is_active").on(table.isActive),
+  lastMessageAtIdx: index("idx_chat_rooms_last_message_at").on(table.lastMessageAt),
+}));
+
+// Chat Room Members - Track room membership
+export const chatRoomMembers = pgTable("chat_room_members", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  roomId: varchar("room_id").notNull().references(() => chatRooms.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  role: varchar("role").notNull().default("member").$type<"admin" | "moderator" | "member">(),
+  joinedAt: timestamp("joined_at").notNull().defaultNow(),
+  lastReadAt: timestamp("last_read_at"),
+  isMuted: boolean("is_muted").notNull().default(false),
+}, (table) => ({
+  roomIdIdx: index("idx_chat_room_members_room_id").on(table.roomId),
+  userIdIdx: index("idx_chat_room_members_user_id").on(table.userId),
+  roomUserIdx: index("idx_chat_room_members_room_user").on(table.roomId, table.userId),
+}));
+
+// Chat Room Messages - Real-time messaging
+export const chatRoomMessages = pgTable("chat_room_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  roomId: varchar("room_id").notNull().references(() => chatRooms.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  messageType: varchar("message_type").notNull().default("text").$type<"text" | "image" | "file" | "system">(),
+  attachmentUrl: text("attachment_url"),
+  replyToId: varchar("reply_to_id"),
+  editedAt: timestamp("edited_at"),
+  deletedAt: timestamp("deleted_at"),
+  reactions: jsonb("reactions"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+  roomIdIdx: index("idx_chat_room_messages_room_id").on(table.roomId),
+  userIdIdx: index("idx_chat_room_messages_user_id").on(table.userId),
+  createdAtIdx: index("idx_chat_room_messages_created_at").on(table.createdAt),
+}));
+
+// Dashboard Widgets - User dashboard customization
+export const dashboardWidgets = pgTable("dashboard_widgets", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  widgetType: varchar("widget_type").notNull().$type<"kpi_cards" | "activity_feed" | "trading_journal" | "leaderboard" | "market_ticker" | "watchlist" | "portfolio" | "chat" | "achievements" | "news_feed" | "learning_progress" | "quick_actions">(),
+  position: jsonb("position").notNull(),
+  size: jsonb("size").notNull(),
+  settings: jsonb("settings"),
+  isVisible: boolean("is_visible").notNull().default(true),
+  layoutName: varchar("layout_name").notNull().default("default"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_dashboard_widgets_user_id").on(table.userId),
+  layoutNameIdx: index("idx_dashboard_widgets_layout_name").on(table.layoutName),
+  widgetTypeIdx: index("idx_dashboard_widgets_widget_type").on(table.widgetType),
+}));
+
+// User Dashboard Layouts - Save multiple dashboard configurations
+export const dashboardLayouts = pgTable("dashboard_layouts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  isDefault: boolean("is_default").notNull().default(false),
+  layoutType: varchar("layout_type").notNull().default("trader").$type<"trader" | "publisher" | "learner" | "custom">(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_dashboard_layouts_user_id").on(table.userId),
+  isDefaultIdx: index("idx_dashboard_layouts_is_default").on(table.isDefault),
+}));
+
 // Upsert User schema for Replit Auth (OIDC)
 export const upsertUserSchema = createInsertSchema(users).pick({
   id: true,
@@ -2028,3 +2220,130 @@ export type ModerationActionLog = {
   timestamp: Date;
   metadata: any;
 };
+
+// ============================================================================
+// CLIENT DASHBOARD SCHEMAS AND TYPES (New client dashboard tables)
+// ============================================================================
+
+// Trading Journal Entries
+export const insertTradingJournalEntrySchema = createInsertSchema(tradingJournalEntries).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  tradingPair: z.string().min(1, "Trading pair is required"),
+  entryPrice: z.string().min(1, "Entry price is required"),
+  positionSize: z.string().min(1, "Position size is required"),
+  positionType: z.enum(["long", "short"]),
+  entryDate: z.date().or(z.string()),
+  exitDate: z.date().or(z.string()).optional(),
+});
+export type InsertTradingJournalEntry = z.infer<typeof insertTradingJournalEntrySchema>;
+export type TradingJournalEntry = typeof tradingJournalEntries.$inferSelect;
+
+// Watchlists
+export const insertWatchlistSchema = createInsertSchema(watchlists).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(1, "Watchlist name is required").max(100),
+  symbols: z.array(z.string()).default([]),
+});
+export type InsertWatchlist = z.infer<typeof insertWatchlistSchema>;
+export type Watchlist = typeof watchlists.$inferSelect;
+
+// Price Alerts
+export const insertPriceAlertSchema = createInsertSchema(priceAlerts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  isTriggered: true,
+  triggeredAt: true,
+}).extend({
+  symbol: z.string().min(1, "Symbol is required"),
+  targetPrice: z.string().min(1, "Target price is required"),
+  condition: z.enum(["above", "below", "equals"]),
+});
+export type InsertPriceAlert = z.infer<typeof insertPriceAlertSchema>;
+export type PriceAlert = typeof priceAlerts.$inferSelect;
+
+// Saved Searches
+export const insertSavedSearchSchema = createInsertSchema(savedSearches).omit({
+  id: true,
+  createdAt: true,
+  useCount: true,
+  lastUsedAt: true,
+}).extend({
+  name: z.string().min(1, "Search name is required").max(100),
+  query: z.string().min(1, "Search query is required"),
+});
+export type InsertSavedSearch = z.infer<typeof insertSavedSearchSchema>;
+export type SavedSearch = typeof savedSearches.$inferSelect;
+
+// User Habits
+export const insertUserHabitSchema = createInsertSchema(userHabits).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  currentStreak: true,
+  longestStreak: true,
+  totalCompletions: true,
+});
+export type InsertUserHabit = z.infer<typeof insertUserHabitSchema>;
+export type UserHabit = typeof userHabits.$inferSelect;
+
+// Chat Rooms
+export const insertChatRoomSchema = createInsertSchema(chatRooms).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  memberCount: true,
+  messageCount: true,
+  lastMessageAt: true,
+}).extend({
+  name: z.string().min(1, "Room name is required").max(100),
+  roomType: z.enum(["public", "private", "trading_pair", "strategy"]),
+});
+export type InsertChatRoom = z.infer<typeof insertChatRoomSchema>;
+export type ChatRoom = typeof chatRooms.$inferSelect;
+
+// Chat Room Members
+export const insertChatRoomMemberSchema = createInsertSchema(chatRoomMembers).omit({
+  id: true,
+  joinedAt: true,
+});
+export type InsertChatRoomMember = z.infer<typeof insertChatRoomMemberSchema>;
+export type ChatRoomMember = typeof chatRoomMembers.$inferSelect;
+
+// Chat Room Messages
+export const insertChatRoomMessageSchema = createInsertSchema(chatRoomMessages).omit({
+  id: true,
+  createdAt: true,
+  editedAt: true,
+  deletedAt: true,
+}).extend({
+  content: z.string().min(1, "Message content is required").max(2000),
+});
+export type InsertChatRoomMessage = z.infer<typeof insertChatRoomMessageSchema>;
+export type ChatRoomMessage = typeof chatRoomMessages.$inferSelect;
+
+// Dashboard Widgets
+export const insertDashboardWidgetSchema = createInsertSchema(dashboardWidgets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type InsertDashboardWidget = z.infer<typeof insertDashboardWidgetSchema>;
+export type DashboardWidget = typeof dashboardWidgets.$inferSelect;
+
+// Dashboard Layouts
+export const insertDashboardLayoutSchema = createInsertSchema(dashboardLayouts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(1, "Layout name is required").max(100),
+});
+export type InsertDashboardLayout = z.infer<typeof insertDashboardLayoutSchema>;
+export type DashboardLayout = typeof dashboardLayouts.$inferSelect;

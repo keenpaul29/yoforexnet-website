@@ -135,3 +135,114 @@ https://react.dev/link/hydration-mismatch
                                   ...
                   ...
 
+[01:04:22.295] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:22.295] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[01:04:22.297] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:22.298] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[01:04:22.300] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:22.300] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[01:04:23.143] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:23.143] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[01:04:23.144] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:23.144] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[01:04:23.145] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:23.147] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[01:04:27.968] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:04:27.968] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="grid grid-...">
+      <aside>
+      <div className="lg:col-spa...">
+        <section>
+        <section>
+        <section>
+          <div>
+          <div className="space-y-2 ...">
+            <ForumThreadCard id="32f6397f-e..." authorId="1e6a2fa2-2..." categorySlug="oscillator..." ...>
+              <LinkComponent href="/thread/os..." data-testid="link-threa...">
+                <a data-testid="link-threa..." ref={function} onClick={function onClick} ...>
+                  <_c className={"\n      ..."} data-testid="card-forum...">
+                    <div ref={null} className="shadcn-car..." data-testid="card-forum...">
+                      <_c2>
+                      <_c8 className="pt-0 pb-3">
+                        <div ref={null} className="p-4 pt-0 pb-3">
+                          <div className="flex items...">
+                            <div>
+                            <div className="flex items..." data-testid="stat-views">
+                              <Eye>
+                              <span>
++                               368
+-                               365
+                                ...
+            ...
+      ...
+
+[01:04:32.850] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:32.850] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/stats
+[01:04:32.855] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:32.855] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/categories/tree/top?limit=6
+[01:04:32.857] Server  LOG     [API Config] Internal API URL: http://127.0.0.1:3001
+[01:04:32.857] Server  LOG     [SSR Fetch] Fetching: http://127.0.0.1:3001/api/threads
+[01:04:36.734] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" suppressHydrationWarning={true}>
+                          <head>
+                            <script>
+                            <script
+                              dangerouslySetInnerHTML={{
++                               __html: "\n              window.dataLayer = window.dataLayer || [];\n              fun..."
+-                               __html: ""
+                              }}
+-                             src="/__replco/static/devtools/injected.js"
+-                             onerror={"parent.postMessage({event:'error',payload:'script.onerror: Failed to load '+e..."}
+                            >
+                          ...
+                            <div className="flex items...">
+                              <div>
+                              <div className="flex items..." data-testid="stat-views">
+                                <Eye>
+                                <span>
++                                 368
+-                                 365
+                                  ...
+                  ...
+
