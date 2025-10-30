@@ -5,6 +5,7 @@ import { generalApiLimiter } from "./rateLimiting";
 import { storage } from "./storage";
 import { startBackgroundJobs } from "./jobs/backgroundJobs";
 import { setupSecurityHeaders } from "./middleware/securityHeaders";
+import { categoryRedirectMiddleware, trackCategoryViews } from "./middleware/categoryRedirects";
 
 const app = express();
 
@@ -13,6 +14,10 @@ app.set("trust proxy", 1);
 
 // Apply security headers to all requests
 setupSecurityHeaders(app);
+
+// Apply category redirect middleware early in the stack
+app.use(categoryRedirectMiddleware);
+app.use(trackCategoryViews);
 
 declare module 'http' {
   interface IncomingMessage {
