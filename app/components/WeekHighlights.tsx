@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageCircle, TrendingUp, CheckCircle2, Eye, Clock } from "lucide-react";
@@ -140,12 +141,13 @@ export default function WeekHighlights({
   solvedThreads = defaultSolvedThreads 
 }: WeekHighlightsProps) {
   const router = useRouter();
+  const [itemsLimit, setItemsLimit] = useState<number>(10);
 
   // Fetch real trending threads from API (no auto-refresh for performance)
   const { data: trendingData, refetch: refetchTrending } = useQuery<ForumThread[]>({
-    queryKey: ['/api/threads', { sortBy: 'trending', limit: 3 }],
+    queryKey: ['/api/threads', { sortBy: 'trending', limit: itemsLimit }],
     queryFn: async () => {
-      const res = await fetch('/api/threads?sortBy=trending&limit=3', { credentials: 'include' });
+      const res = await fetch(`/api/threads?sortBy=trending&limit=${itemsLimit}`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch trending threads');
       return res.json();
     },
@@ -154,9 +156,9 @@ export default function WeekHighlights({
 
   // Fetch newest threads (no auto-refresh for performance)
   const { data: newData, refetch: refetchNew } = useQuery<ForumThread[]>({
-    queryKey: ['/api/threads', { sortBy: 'newest', limit: 3 }],
+    queryKey: ['/api/threads', { sortBy: 'newest', limit: itemsLimit }],
     queryFn: async () => {
-      const res = await fetch('/api/threads?sortBy=newest&limit=3', { credentials: 'include' });
+      const res = await fetch(`/api/threads?sortBy=newest&limit=${itemsLimit}`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch newest threads');
       return res.json();
     },
@@ -165,9 +167,9 @@ export default function WeekHighlights({
 
   // Fetch solved threads (answered) (no auto-refresh for performance)
   const { data: solvedData, refetch: refetchSolved } = useQuery<ForumThread[]>({
-    queryKey: ['/api/threads', { sortBy: 'answered', limit: 3 }],
+    queryKey: ['/api/threads', { sortBy: 'answered', limit: itemsLimit }],
     queryFn: async () => {
-      const res = await fetch('/api/threads?sortBy=answered&limit=3', { credentials: 'include' });
+      const res = await fetch(`/api/threads?sortBy=answered&limit=${itemsLimit}`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch answered threads');
       return res.json();
     },
@@ -241,7 +243,7 @@ export default function WeekHighlights({
   };
 
   const renderThreadList = (threads: HighlightThread[]) => (
-    <div className="space-y-0 divide-y divide-border/40">
+    <div className="space-y-0 divide-y divide-border/40 max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/30">
       {threads.map((thread, index) => (
         <div 
           key={thread.id} 
@@ -337,11 +339,26 @@ export default function WeekHighlights({
             <TrendingUp className="h-5 w-5 text-primary" />
             <h3 className="font-semibold text-base">This Week's Highlights</h3>
           </div>
-          <RefreshButton 
-            onRefresh={handleRefreshAll}
-            size="icon"
-            variant="ghost"
-          />
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-muted-foreground">Show:</span>
+              <select 
+                value={itemsLimit} 
+                onChange={(e) => setItemsLimit(Number(e.target.value))}
+                className="h-7 px-2 rounded-md border border-input bg-background text-xs hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 cursor-pointer transition-colors"
+                data-testid="select-limit"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
+            <RefreshButton 
+              onRefresh={handleRefreshAll}
+              size="icon"
+              variant="ghost"
+            />
+          </div>
         </div>
         
         {/* Tabs */}

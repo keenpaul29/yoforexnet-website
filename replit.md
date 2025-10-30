@@ -10,9 +10,12 @@ YoForex is a comprehensive trading community platform designed to foster a vibra
 - Type safety is critical
 
 ## Production Status
-- **Status**: ✅ PRODUCTION-READY (Verified: Oct 30, 2025)
-- **TypeScript**: All compilation errors resolved (metaTitle/metaKeywords fixes in server/storage.ts)
-- **Production Build**: Successful - 48 pages generated, 707KB Express bundle, 5MB static assets
+- **Status**: ✅ PRODUCTION-READY (Verified: Oct 30, 2025 - Latest rebuild 09:05 UTC)
+- **TypeScript**: All compilation errors resolved
+- **Production Build**: Successful - 48 pages generated, 48MB build size
+  - Build ID: dFTzjarCmmqQiSaWiKjYq
+  - Compilation: 33.1s
+  - Static Generation: 4.6s
 - **Testing**: Comprehensive production testing completed
   - API: 7/7 endpoints working (30-70ms response times)
   - Frontend: All pages verified (Home, Discussions, Threads, Marketplace, Brokers, Members, 404)
@@ -20,7 +23,11 @@ YoForex is a comprehensive trading community platform designed to foster a vibra
   - SEO: Meta tags, OG/Twitter cards, sitemap.xml, robots.txt - all verified
   - Performance: Sub-50ms API responses, optimized bundles
 - **Deployment**: Configured for Replit VM mode with `start-production.sh`
-- **Architect Review**: PASSED - No critical issues identified
+- **Storage Architecture**: Modularized (Oct 30, 2025)
+  - OrchestratedStorage: 346 lines (62% reduction from 918 lines)
+  - Proxy Pattern: Automatic delegation for ~150 unmigrated methods
+  - Domain Modules: 58 methods across users, forum, content domains
+  - Zero breaking changes - all IStorage methods functional
 
 ## System Architecture
 The platform is built with a modern tech stack:
@@ -43,6 +50,7 @@ The platform emphasizes a clean, intuitive interface designed for ease of use an
 
 **Feature Specifications:**
 - **Forum System**: Supports discussions, replies, and interaction statistics.
+  - **WeekHighlights Component** (Oct 30, 2025): Enhanced with limit selector (10/20/50 items), scrollable container (max-height: 600px), responsive dropdown UI
 - **Marketplace**: Allows listing and selling of Expert Advisors, indicators, and templates with detailed product schemas.
 - **User Profiles**: Comprehensive profiles with reputation scores, badges, social links, and expertise areas.
 - **Coin-based Economy**: Rewards users for platform engagement.
