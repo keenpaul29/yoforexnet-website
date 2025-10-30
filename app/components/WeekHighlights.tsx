@@ -243,7 +243,7 @@ export default function WeekHighlights({
   };
 
   const renderThreadList = (threads: HighlightThread[]) => (
-    <div className="space-y-0 divide-y divide-border/40 max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/30">
+    <div className="space-y-0 divide-y divide-border/40 max-h-[600px] overflow-y-auto custom-scrollbar">
       {threads.map((thread, index) => (
         <div 
           key={thread.id} 
